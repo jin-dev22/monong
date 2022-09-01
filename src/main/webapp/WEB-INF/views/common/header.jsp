@@ -55,7 +55,7 @@
 					<a class="nav-link" href="#">&#128722;</a>
 				</nav>
 				<nav class="nav justify-content-end">
-					<a class="nav-link" href="#">로그인</a>
+					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
 					<a class="nav-link" href="#">회원가입</a>
 				</nav>
 			</nav>
