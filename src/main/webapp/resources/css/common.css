@@ -74,7 +74,7 @@ footer .btn {
 header, footer {
 	max-width: 1400px;
 	min-width: 1200px;
-	background-color: transparent;
+	background-color: #fff;
 }
 
 #header {
@@ -84,6 +84,8 @@ header, footer {
 	align-items: center;
 	margin: auto;
 	padding: 0 20px;
+	position: fixed;
+	top: 0;
 }
 
 .logo {
@@ -198,9 +200,11 @@ footer {
 /*
 ------------------- 메인영역 -------------------
 */
-#context {
+#content {
 	width: 1240px;
-	margin: 50px auto;
+	margin: auto;
+	/* header때문에 추가해야함 */
+	padding-top: 150px;
 }
 
 /*
