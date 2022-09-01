@@ -1,0 +1,260 @@
+/*
+------------------- 공통 -------------------
+*/
+@font-face {
+	font-family: 'GmarketSansMedium';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+:root {
+	max-width: 1400px;
+	min-width: 1200px;
+	margin: auto;
+	padding: 0 10px;
+}
+
+body {
+	font-family: 'GmarketSansMedium', sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+	color: #333;
+}
+
+a {
+	text-align: none;
+	color: #333;
+}
+
+.nav-link {
+	color: #333;
+}
+
+footer .btn {
+	width: 150px;
+	height: 50px;
+	border-radius: 10px;
+	margin-right: 10px;
+}
+/*
+------ footer에 있는 버튼으로 해당 색상으로 클래스명 생성했습니다. -------
+------ 해당 색상의 아이콘 사용하시려면 클래스에 추가하시면 됩니다. --------
+*/
+.btn-EA5C2B {
+	color: #fff;
+	background-color: #EA5C2B;
+}
+
+.btn-EA5C2B:hover {
+	color: #EA5C2B;
+	border: 1px solid #EA5C2B;
+	background-color: inherit;
+}
+
+.btn-EA5C2B-reverse {
+	color: #EA5C2B;
+	border: 1px solid #EA5C2B;
+}
+
+.btn-EA5C2B-reverse:hover {
+	color: #fff;
+	background-color: #EA5C2B;
+}
+
+.btn:focus {
+	box-shadow: none;
+}
+
+/*
+------------------- header -------------------
+*/
+header, footer {
+	max-width: 1400px;
+	min-width: 1200px;
+	background-color: transparent;
+}
+
+#header {
+	height: 120px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: auto;
+	padding: 0 20px;
+}
+
+.logo {
+	width: 100px;
+	height: 100px;
+	display: flex;
+	align-items: center;
+}
+
+.logo img {
+	display: block;
+	width: inherit;
+}
+
+.mainmenu {
+	width: calc(100% - 120px - 40px - 250px);
+}
+
+.mainmenu .nav-link {
+	padding: 0 20px;
+	height: 30px;
+}
+
+.mainmenu .nav-link::after {
+	content: '';
+	display: block;
+	width: calc(100% - 10px);
+	border-bottom: 2px solid #EA5C2B;
+	display: none;
+}
+
+.mainmenu .nav-link:hover::after {
+	display: block;
+}
+
+.mainmenu .nav-link:hover {
+	color: #333;
+}
+
+.login {
+	width: 250px;
+}
+
+.login .nav-link:hover {
+	color: #EA5C2B;
+	transform: scale(1.1);
+}
+
+/*
+------------------- footer -------------------
+*/
+footer {
+	font-size: 14px;
+	padding: 30px 20px 10px 20px;
+}
+
+.footer1 {
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #EA5C2B;
+	margin-bottom: 30px;
+}
+
+.service-center span {
+	margin: 5px 0;
+}
+
+.service-center span:nth-child(1), .service-center span:nth-child(2) {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.service-center span:nth-of-type(2n+1) {
+	display: inline-block;
+	width: 150px;
+}
+
+.footer1 div:nth-child(2) {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-end;
+}
+
+.footer2 img {
+	margin-bottom: 20px;
+}
+
+.footer2 div {
+	display: flex;
+	height: 21px;
+	margin: 5px 0;
+}
+
+.footer2 div:last-child {
+	margin-top: 20px;
+}
+
+.footer2 div span::after {
+	content: '|';
+	margin: 0 10px;
+}
+
+.footer2 div span:last-child::after {
+	content: '';
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+/*
+------------------- 메인영역 -------------------
+*/
+#context {
+	width: 1240px;
+	margin: 50px auto;
+}
+
+/*
+------------------- FAQ -------------------
+*/
+#faq {
+	width: 1240px;
+	margin: 50px auto;
+}
+
+#faq .navbar {
+	justify-content: flex-end;
+}
+
+#faq .navbar [type=search]:focus-visible {
+	outline: none;
+}
+
+.faq-menu {
+	display: flex;
+}
+
+.faq-menu-gruop {
+	width: 150px;
+	text-align: center;
+	list-style: none;
+	padding: 0;
+}
+
+.faq-menu-list {
+	border-bottom: 1px solid #F6D860;
+	padding: 20px;
+	cursor: pointer;
+}
+
+.faq-menu-list:hover, .faq-menu-list:active {
+	background-color: #F6D860;;
+}
+
+.faq-wrapper {
+	width: calc(100% - 150px - 30px);
+	margin-left: 30px;
+}
+
+.faq-menu-title {
+	font-weight: 700;
+	padding: 10px 20px;
+	line-height: 2.5;
+	border-bottom: 1px solid #F6D860;
+}
+
+.faq-menu-content {
+	font-weight: 400;
+	line-height: 1.5;
+	padding: 10px;
+	display: none;
+}

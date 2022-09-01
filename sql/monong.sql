@@ -27,47 +27,6 @@ CREATE TABLE "direct_product" (
 	"d_product_updated_at"	date		NULL
 );
 
-CREATE TABLE "subscription" (
-	"s_no"	varchar2(100)		NOT NULL,
-	"card_info_no"	number		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"s_product_code"	varchar2(6)		NOT NULL,
-	"s_exclude_vegs"	varchar2(500)		NULL,
-	"s_delivery_cycle"	number		NOT NULL,
-	"s_next_delivery_date"	date		NOT NULL,
-	"s_delay_yn"	varchar2(1)	DEFAULT 'N'	NULL,
-	"s_recipient"	varchar2(100)		NOT NULL,
-	"s_phone"	varchar2(11)		NOT NULL,
-	"s_address"	varchar2(100)		NOT NULL,
-	"s_address_ex"	varchar2(100)		NULL,
-	"s_delivery_request"	varchar2(150)		NULL
-);
-
-COMMENT ON COLUMN "subscription"."card_info_no" IS '시퀀스 처리';
-
-COMMENT ON COLUMN "subscription"."s_product_code" IS 'SP1, SP2, SP3';
-
-COMMENT ON COLUMN "subscription"."s_next_delivery_date" IS '금요일 (다음결제일 기준 + 2)';
-
-COMMENT ON COLUMN "subscription"."s_delay_yn" IS 'Y : 원래 배송일(금) + 7일, N : 원래 배송일';
-
-COMMENT ON COLUMN "subscription"."s_address" IS '수정 시 저장할 컬럼';
-
-COMMENT ON COLUMN "subscription"."s_address_ex" IS '수정 시 저장할 컬럼';
-
-CREATE TABLE "subscription_review" (
-	"s_review_no"	varchar2(100)		NOT NULL,
-	"s_order_no"	varchar2(100)		NOT NULL,
-	"s_review_title"	varchar2(255)		NOT NULL,
-	"s_review_content"	varchar2(2000)		NOT NULL,
-	"s_review_star"	number		NOT NULL,
-	"s_review_recommend_num"	number	DEFAULT 0	NULL,
-	"s_review_created_at"	date	DEFAULT current_date	NULL,
-	"s_review_updated_at"	date		NULL
-);
-
-COMMENT ON COLUMN "subscription_review"."s_review_no" IS 'SR+숫자';
-
 CREATE TABLE "member_notification" (
 	"noti_no"	varchar2(100)		NOT NULL,
 	"member_id"	varchar2(100)		NOT NULL,
@@ -107,19 +66,6 @@ CREATE TABLE "direct_inquire_answer" (
 	"d_inquire_created_at"	date	DEFAULT current_date	NULL
 );
 
-CREATE TABLE "subscription_review_attachment" (
-	"s_attach_no"	number	DEFAULT seq_attach_no.nextval	NOT NULL,
-	"s_review_no"	varchar2(100)		NOT NULL,
-	"s_review_origin_filename"	varchar2(256)		NOT NULL,
-	"s_review_renamed_filename"	varchar2(256)		NOT NULL,
-	"s_review_created_at"	date	DEFAULT current_date	NULL
-);
-
-CREATE TABLE "Untitled16" (
-	"io_no"	number		NOT NULL,
-	"Field2"	VARCHAR(255)		NULL,
-	"Field"	VARCHAR(255)		NULL
-);
 
 CREATE TABLE "direct_order" (
 	"d_order_no"	varchar2(100)		NOT NULL,
@@ -142,13 +88,6 @@ COMMENT ON COLUMN "direct_order"."d_dest_address" IS '주문 페이지에서 작
 COMMENT ON COLUMN "direct_order"."d_payments" IS '카드, 카카오페이';
 
 COMMENT ON COLUMN "direct_order"."d_order_status" IS '결제완료, 상품준비중, 주문취소, 배송중, 배송완료';
-
-CREATE TABLE "subscription_week_vegs" (
-	"week_criterion"	varchar2(6)		NOT NULL,
-	"veg_composition"	varchar2(500)		NOT NULL
-);
-
-COMMENT ON COLUMN "subscription_week_vegs"."week_criterion" IS 'yyMMdd';
 
 CREATE TABLE "cart" (
 	"cart_no"	varchar2(100)		NOT NULL,
@@ -222,14 +161,6 @@ CREATE TABLE "direct_inquire" (
 
 COMMENT ON COLUMN "direct_inquire"."status" IS '답변대기중, 답변완료';
 
-CREATE TABLE "subscription_product" (
-	"s_product_code"	varchar2(6)		NOT NULL,
-	"s_product_name"	varchar2(30)		NOT NULL,
-	"s_product_price"	number		NOT NULL
-);
-
-COMMENT ON COLUMN "subscription_product"."s_product_code" IS 'SP1, SP2, SP3';
-
 CREATE TABLE "direct_product_attachment" (
 	"d_product_attach_no"	number		NOT NULL,
 	"d_product_no"	varchar2(100)		NOT NULL,
@@ -242,12 +173,6 @@ CREATE TABLE "seller_info_attachment" (
 	"member_id"	varchar2(100)		NOT NULL,
 	"original_filename"	varchar2(256)		NOT NULL,
 	"renamed_filename"	varchar2(256)		NOT NULL
-);
-
-CREATE TABLE "vegetables" (
-	"veg_code"	varchar2(30)		NOT NULL,
-	"veg_category"	varchar2(50)		NOT NULL,
-	"veg_name"	varchar2(100)		NOT NULL
 );
 
 CREATE TABLE "seller_info" (
@@ -271,16 +196,6 @@ CREATE TABLE "member_authority" (
 	"member_id"	varchar2(100)		NOT NULL
 );
 
-CREATE TABLE "subscription_order" (
-	"s_order_no"	varchar2(100)		NOT NULL,
-	"s_no"	varchar2(100)		NOT NULL,
-	"s_times"	number		NOT NULL,
-	"s_price"	number		NOT NULL,
-	"s_order_date"	date		NOT NULL,
-	"s_order_status"	varchar2(20)		NOT NULL
-);
-
-COMMENT ON COLUMN "subscription_order"."s_order_status" IS ''상품준비중', '배송중', '배송완료'';
 
 CREATE TABLE "direct_product_option" (
 	"d_option_no"	varchar2(100)		NOT NULL,
@@ -293,172 +208,143 @@ CREATE TABLE "direct_product_option" (
 
 COMMENT ON COLUMN "direct_product_option"."d_sale_status" IS '판매중, 판매중단, 판매마감';
 
-CREATE TABLE "card_info" (
-	"card_info_no"	number		NOT NULL,
-	"card_no"	varchar2(16)		NOT NULL,
-	"card_expire_date"	varchar2(12)		NOT NULL,
-	"card_birth_date"	varchar2(12)		NOT NULL,
-	"card_password"	varchar2(2)		NOT NULL,
-	"customer_uid"	varchar2(100)		NOT NULL
+
+
+ALTER TABLE member ADD CONSTRAINT "PK_MEMBER" PRIMARY KEY ("member_id");
+
+ALTER TABLE "direct_product" ADD CONSTRAINT "PK_DIRECT_PRODUCT" PRIMARY KEY ("d_product_no");
+
+ALTER TABLE "member_notification" ADD CONSTRAINT "PK_MEMBER_NOTIFICATION" PRIMARY KEY ("noti_no");
+
+ALTER TABLE "inquire" ADD CONSTRAINT "PK_INQUIRE" PRIMARY KEY ("inquire_no");
+
+ALTER TABLE "inquire_answer" ADD CONSTRAINT "PK_INQUIRE_ANSWER" PRIMARY KEY ("inquire_a_no","inquire_no");
+
+ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "PK_DIRECT_INQUIRE_ANSWER" PRIMARY KEY ("d_inquire_no");
+
+ALTER TABLE "direct_order" ADD CONSTRAINT "PK_DIRECT_ORDER" PRIMARY KEY ("d_order_no");
+
+ALTER TABLE "cart" ADD CONSTRAINT "PK_CART" PRIMARY KEY ("cart_no");
+
+ALTER TABLE "member_direct_order" ADD CONSTRAINT "PK_MEMBER_DIRECT_ORDER" PRIMARY KEY ("d_option_no","d_order_no");
+
+ALTER TABLE "direct_review_attachment" ADD CONSTRAINT "PK_DIRECT_REVIEW_ATTACHMENT" PRIMARY KEY ("d_review_attach_no");
+
+ALTER TABLE "direct_review" ADD CONSTRAINT "PK_DIRECT_REVIEW" PRIMARY KEY ("d_review_no");
+
+ALTER TABLE "direct_inquire" ADD CONSTRAINT "PK_DIRECT_INQUIRE" PRIMARY KEY ("d_inquire_no");
+
+ALTER TABLE "direct_product_attachment" ADD CONSTRAINT "PK_DIRECT_PRODUCT_ATTACHMENT" PRIMARY KEY ("d_product_attach_no");
+
+ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "PK_SELLER_INFO_ATTACHMENT" PRIMARY KEY ("seller_attach_no","member_id");
+
+ALTER TABLE "seller_info" ADD CONSTRAINT "PK_SELLER_INFO" PRIMARY KEY ("member_id");
+
+ALTER TABLE "member_authority" ADD CONSTRAINT "PK_MEMBER_AUTHORITY" PRIMARY KEY ("auth","member_id");
+
+ALTER TABLE "direct_product_option" ADD CONSTRAINT "PK_DIRECT_PRODUCT_OPTION" PRIMARY KEY ("d_option_no");
+
+ALTER TABLE "inquire_answer" ADD CONSTRAINT "FK_inquire_TO_inquire_answer_1" FOREIGN KEY ("inquire_no")REFERENCES "inquire" ("inquire_no");
+
+ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "FK_direct_inquire_TO_direct_inquire_answer_1" FOREIGN KEY ("d_inquire_no")REFERENCES "direct_inquire" ("d_inquire_no");
+
+ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_product_option_TO_member_direct_order_1" FOREIGN KEY ("d_option_no")REFERENCES "direct_product_option" ("d_option_no");
+
+ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_order_TO_member_direct_order_1" FOREIGN KEY ("d_order_no")REFERENCES "direct_order" ("d_order_no");
+
+ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "FK_seller_info_TO_seller_info_attachment_1" FOREIGN KEY ("member_id")REFERENCES "seller_info" ("member_id");
+
+ALTER TABLE "seller_info" ADD CONSTRAINT "FK_member_TO_seller_info_1" FOREIGN KEY ("member_id")REFERENCES "member" ("member_id");
+
+ALTER TABLE "member_authority" ADD CONSTRAINT "FK_member_TO_member_authority_1" FOREIGN KEY ("member_id")REFERENCES "member" ("member_id");
+
+-- 정기구독시작(정기구독 관련 테이블)
+CREATE TABLE  subscription (
+	s_no	varchar2(100)		NOT NULL,
+	card_info_no	number		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	s_product_code	varchar2(6)		NOT NULL,
+	s_exclude_vegs	varchar2(500)		NULL,
+	s_delivery_cycle	number		NOT NULL,
+	s_next_delivery_date	date		NOT NULL,
+	s_delay_yn	varchar2(1)	DEFAULT 'N'	NULL,
+	s_recipient	varchar2(100)		NOT NULL,
+	s_phone	varchar2(11)		NOT NULL,
+	s_address	varchar2(100)		NOT NULL,
+	s_address_ex	varchar2(100)		NULL,
+	s_delivery_request	varchar2(150)		NULL
 );
 
-COMMENT ON COLUMN "card_info"."card_info_no" IS '시퀀스 처리';
+ALTER TABLE subscription ADD CONSTRAINT fk_s_card_info_no FOREIGN KEY (card_info_no)REFERENCES card_info (card_info_no);
+ALTER TABLE subscription ADD CONSTRAINT fk_s_s_product_code FOREIGN KEY (s_product_code)REFERENCES subscription_product (s_product_code);
+-- member pk설정이 안되어 있어서 보류
+ALTER TABLE subscription ADD CONSTRAINT fk_s_member_id FOREIGN KEY (member_id)REFERENCES member (member_id);
 
-COMMENT ON COLUMN "card_info"."card_password" IS '비밀번호 앞 2자리';
+CREATE TABLE subscription_order (
+	s_order_no	varchar2(100)		NOT NULL,
+	s_no	varchar2(100)		NOT NULL,
+	s_times	number		NOT NULL,
+	s_price	number		NOT NULL,
+	s_order_date	date		NOT NULL,
+	s_order_status	varchar2(20)		NOT NULL
+);
+ALTER TABLE subscription_order ADD CONSTRAINT fk_s_o_s_no FOREIGN KEY (s_no)REFERENCES subscription (s_no);
 
-ALTER TABLE member ADD CONSTRAINT "PK_MEMBER" PRIMARY KEY (
-	"member_id"
+CREATE TABLE subscription_review (
+	s_review_no	varchar2(100)		NOT NULL,
+	s_order_no	varchar2(100)		NOT NULL,
+	s_review_title	varchar2(255)		NOT NULL,
+	s_review_content	varchar2(2000)		NOT NULL,
+	s_review_star	number		NOT NULL,
+	s_review_recommend_num	number	DEFAULT 0	NULL,
+	s_review_created_at	date	DEFAULT current_date	NULL,
+	s_review_updated_at	date		NULL
+);
+ALTER TABLE subscription_review ADD CONSTRAINT fk_s_r_s_order_no FOREIGN KEY (s_order_no)REFERENCES subscription_order (s_order_no);
+
+CREATE TABLE subscription_review_attachment (
+	s_attach_no	number	NOT NULL,
+	s_review_no	varchar2(100)		NOT NULL,
+	s_review_origin_filename	varchar2(256)		NOT NULL,
+	s_review_renamed_filename	varchar2(256)		NOT NULL,
+	s_review_created_at	date	DEFAULT current_date	NULL
+);
+ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no);
+
+create sequence seq_s_attach_no;
+
+CREATE TABLE vegetables (
+	veg_code	varchar2(30)		NOT NULL,
+	veg_category	varchar2(50)		NOT NULL,
+	veg_name	varchar2(100)		NOT NULL
 );
 
-ALTER TABLE "direct_product" ADD CONSTRAINT "PK_DIRECT_PRODUCT" PRIMARY KEY (
-	"d_product_no"
+CREATE TABLE subscription_week_vegs (
+	week_criterion	varchar2(6)		NOT NULL,
+	veg_composition	varchar2(500)		NOT NULL
 );
 
-ALTER TABLE "subscription" ADD CONSTRAINT "PK_SUBSCRIPTION" PRIMARY KEY (
-	"s_no"
+CREATE TABLE subscription_product (
+	s_product_code	varchar2(6)		NOT NULL,
+	s_product_name	varchar2(30)		NOT NULL,
+	s_product_price	number		NOT NULL
 );
 
-ALTER TABLE "subscription_review" ADD CONSTRAINT "PK_SUBSCRIPTION_REVIEW" PRIMARY KEY (
-	"s_review_no"
+CREATE TABLE card_info (
+	card_info_no	number		NOT NULL,
+	card_no	varchar2(16)		NOT NULL,
+	card_expire_date	varchar2(12)		NOT NULL,
+	card_birth_date	varchar2(12)		NOT NULL,
+	card_password	varchar2(2)		NOT NULL,
+	customer_uid	varchar2(100)		NOT NULL
 );
 
-ALTER TABLE "member_notification" ADD CONSTRAINT "PK_MEMBER_NOTIFICATION" PRIMARY KEY (
-	"noti_no"
-);
-
-ALTER TABLE "inquire" ADD CONSTRAINT "PK_INQUIRE" PRIMARY KEY (
-	"inquire_no"
-);
-
-ALTER TABLE "inquire_answer" ADD CONSTRAINT "PK_INQUIRE_ANSWER" PRIMARY KEY (
-	"inquire_a_no",
-	"inquire_no"
-);
-
-ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "PK_DIRECT_INQUIRE_ANSWER" PRIMARY KEY (
-	"d_inquire_no"
-);
-
-ALTER TABLE "subscription_review_attachment" ADD CONSTRAINT "PK_SUBSCRIPTION_REVIEW_ATTACHMENT" PRIMARY KEY (
-	"s_attach_no"
-);
-
-ALTER TABLE "Untitled16" ADD CONSTRAINT "PK_UNTITLED16" PRIMARY KEY (
-	"io_no"
-);
-
-ALTER TABLE "direct_order" ADD CONSTRAINT "PK_DIRECT_ORDER" PRIMARY KEY (
-	"d_order_no"
-);
-
-ALTER TABLE "subscription_week_vegs" ADD CONSTRAINT "PK_SUBSCRIPTION_WEEK_VEGS" PRIMARY KEY (
-	"week_criterion"
-);
-
-ALTER TABLE "cart" ADD CONSTRAINT "PK_CART" PRIMARY KEY (
-	"cart_no"
-);
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "PK_MEMBER_DIRECT_ORDER" PRIMARY KEY (
-	"d_option_no",
-	"d_order_no"
-);
-
-ALTER TABLE "direct_review_attachment" ADD CONSTRAINT "PK_DIRECT_REVIEW_ATTACHMENT" PRIMARY KEY (
-	"d_review_attach_no"
-);
-
-ALTER TABLE "direct_review" ADD CONSTRAINT "PK_DIRECT_REVIEW" PRIMARY KEY (
-	"d_review_no"
-);
-
-ALTER TABLE "direct_inquire" ADD CONSTRAINT "PK_DIRECT_INQUIRE" PRIMARY KEY (
-	"d_inquire_no"
-);
-
-ALTER TABLE "subscription_product" ADD CONSTRAINT "PK_SUBSCRIPTION_PRODUCT" PRIMARY KEY (
-	"s_product_code"
-);
-
-ALTER TABLE "direct_product_attachment" ADD CONSTRAINT "PK_DIRECT_PRODUCT_ATTACHMENT" PRIMARY KEY (
-	"d_product_attach_no"
-);
-
-ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "PK_SELLER_INFO_ATTACHMENT" PRIMARY KEY (
-	"seller_attach_no",
-	"member_id"
-);
-
-ALTER TABLE "vegetables" ADD CONSTRAINT "PK_VEGETABLES" PRIMARY KEY (
-	"veg_code"
-);
-
-ALTER TABLE "seller_info" ADD CONSTRAINT "PK_SELLER_INFO" PRIMARY KEY (
-	"member_id"
-);
-
-ALTER TABLE "member_authority" ADD CONSTRAINT "PK_MEMBER_AUTHORITY" PRIMARY KEY (
-	"auth",
-	"member_id"
-);
-
-ALTER TABLE "subscription_order" ADD CONSTRAINT "PK_SUBSCRIPTION_ORDER" PRIMARY KEY (
-	"s_order_no"
-);
-
-ALTER TABLE "direct_product_option" ADD CONSTRAINT "PK_DIRECT_PRODUCT_OPTION" PRIMARY KEY (
-	"d_option_no"
-);
-
-ALTER TABLE "card_info" ADD CONSTRAINT "PK_CARD_INFO" PRIMARY KEY (
-	"card_info_no"
-);
-
-ALTER TABLE "inquire_answer" ADD CONSTRAINT "FK_inquire_TO_inquire_answer_1" FOREIGN KEY (
-	"inquire_no"
-)
-REFERENCES "inquire" (
-	"inquire_no"
-);
-
-ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "FK_direct_inquire_TO_direct_inquire_answer_1" FOREIGN KEY (
-	"d_inquire_no"
-)
-REFERENCES "direct_inquire" (
-	"d_inquire_no"
-);
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_product_option_TO_member_direct_order_1" FOREIGN KEY (
-	"d_option_no"
-)
-REFERENCES "direct_product_option" (
-	"d_option_no"
-);
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_order_TO_member_direct_order_1" FOREIGN KEY (
-	"d_order_no"
-)
-REFERENCES "direct_order" (
-	"d_order_no"
-);
-
-ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "FK_seller_info_TO_seller_info_attachment_1" FOREIGN KEY (
-	"member_id"
-)
-REFERENCES "seller_info" (
-	"member_id"
-);
-
-ALTER TABLE "seller_info" ADD CONSTRAINT "FK_member_TO_seller_info_1" FOREIGN KEY (
-	"member_id"
-)
-REFERENCES "member" (
-	"member_id"
-);
-
-ALTER TABLE "member_authority" ADD CONSTRAINT "FK_member_TO_member_authority_1" FOREIGN KEY (
-	"member_id"
-)
-REFERENCES "member" (
-	"member_id"
-);
+ALTER TABLE subscription ADD CONSTRAINT PK_SUBSCRIPTION PRIMARY KEY (s_no);
+ALTER TABLE subscription_review ADD CONSTRAINT PK_SUBSCRIPTION_REVIEW PRIMARY KEY (s_review_no);
+ALTER TABLE subscription_review_attachment ADD CONSTRAINT PK_SUBSCRIPTION_REVIEW_ATTACHMENT PRIMARY KEY (s_attach_no);
+ALTER TABLE subscription_week_vegs ADD CONSTRAINT PK_SUBSCRIPTION_WEEK_VEGS PRIMARY KEY (week_criterion);
+ALTER TABLE subscription_product ADD CONSTRAINT PK_SUBSCRIPTION_PRODUCT PRIMARY KEY (s_product_code);
+ALTER TABLE vegetables ADD CONSTRAINT PK_VEGETABLES PRIMARY KEY (veg_code);
+ALTER TABLE subscription_order ADD CONSTRAINT PK_SUBSCRIPTION_ORDER PRIMARY KEY (s_order_no);
+ALTER TABLE card_info ADD CONSTRAINT PK_CARD_INFO PRIMARY KEY (card_info_no);
+-- 정기구독 끝
