@@ -149,187 +149,6 @@ create sequence seq_inquire_a_no;
 
 --회원관련 테이블 끝
 
-CREATE TABLE "direct_product" (
-	"d_product_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"d_product_name"	varchar2(100)		NOT NULL,
-	"d_product_content"	clob		NOT NULL,
-	"d_product_created_at"	date	DEFAULT current_date	NULL,
-	"d_product_updated_at"	date		NULL
-);
-
-
-
-CREATE TABLE "direct_inquire_answer" (
-	"d_inquire_no"	varchar2(100)		NOT NULL,
-	"d_inquire_a_content"	varchar2(2000)		NOT NULL,
-	"d_inquire_created_at"	date	DEFAULT current_date	NULL
-);
-
-
-CREATE TABLE "direct_order" (
-	"d_order_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"d_total_price"	number		NOT NULL,
-	"d_dest_address"	varchar2(100)		NOT NULL,
-	"d_dest_address_2"	varchar2(100)		NULL,
-	"d_delivery_request"	varchar2(150)		NULL,
-	"d_recipient"	varchar2(50)		NOT NULL,
-	"d_order_phone"	varchar2(11)		NOT NULL,
-	"d_order_date"	date	DEFAULT current_date	NOT NULL,
-	"d_payments"	varchar2(10)		NOT NULL,
-	"d_order_status"	varchar2(30)	DEFAULT 'P'	NOT NULL
-);
-
-COMMENT ON COLUMN "direct_order"."d_total_price" IS '주문건당 총 결제금액';
-
-COMMENT ON COLUMN "direct_order"."d_dest_address" IS '주문 페이지에서 작성한 배송지정보';
-
-COMMENT ON COLUMN "direct_order"."d_payments" IS '카드, 카카오페이';
-
-COMMENT ON COLUMN "direct_order"."d_order_status" IS '결제완료, 상품준비중, 주문취소, 배송중, 배송완료';
-
-CREATE TABLE "cart" (
-	"cart_no"	varchar2(100)		NOT NULL,
-	"d_option_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"product_count"	number		NULL
-);
-
-CREATE TABLE "member_direct_order" (
-	"d_option_no"	varchar2(100)		NOT NULL,
-	"d_order_no"	varchar2(100)		NOT NULL,
-	"d_option_count"	number		NOT NULL
-);
-
-COMMENT ON COLUMN "member_direct_order"."d_option_count" IS '옵션별 수량';
-
-CREATE TABLE "direct_review_attachment" (
-	"d_review_attach_no"	number	DEFAULT seq_attach_no.nextval	NOT NULL,
-	"d_review_no"	number	DEFAULT seq_rNo.nextval	NOT NULL,
-	"d_review_origin_filename"	varchar2(256)		NOT NULL,
-	"d_review_renamed_filename"	varchar2(256)		NOT NULL,
-	"d_review_created_at"	date	DEFAULT current_date	NULL
-);
-
-COMMENT ON COLUMN "direct_review_attachment"."d_review_attach_no" IS '직거래 후기 첨부파일 번호';
-
-COMMENT ON COLUMN "direct_review_attachment"."d_review_no" IS '직거래 후기게시판 번호';
-
-COMMENT ON COLUMN "direct_review_attachment"."d_review_origin_filename" IS '직거래 후기 첨부파일 기존파일이름';
-
-COMMENT ON COLUMN "direct_review_attachment"."d_review_renamed_filename" IS '직거래 후기 첨부파일 새로운파일이름';
-
-COMMENT ON COLUMN "direct_review_attachment"."d_review_created_at" IS '직거래 후기 첨부파일 등록일';
-
-CREATE TABLE "direct_review" (
-	"d_review_no"	varchar2(100)	DEFAULT seq_rNo.nextval	NOT NULL,
-	"d_option_no"	varchar2(100)		NOT NULL,
-	"d_order_no"	varchar2(100)		NOT NULL,
-	"d_review_title"	varchar2(512)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"d_review_content"	varchar2(2000)		NOT NULL,
-	"review_rating"	number	DEFAULT 5	NULL,
-	"d_review_recommend"	number	DEFAULT 0	NULL,
-	"d_review_created_at"	date	DEFAULT current_date	NULL,
-	"d_review_updated_at"	date		NULL
-);
-
-COMMENT ON COLUMN "direct_review"."d_review_no" IS '직거래 후기 게시판 번호';
-
-COMMENT ON COLUMN "direct_review"."d_review_title" IS '직거래 후기 게시판 제목';
-
-COMMENT ON COLUMN "direct_review"."d_review_content" IS '직거래 후기 내용';
-
-COMMENT ON COLUMN "direct_review"."review_rating" IS '직거래 후기 별점(기본값 5)';
-
-COMMENT ON COLUMN "direct_review"."d_review_recommend" IS '직거래 후기 추천 수';
-
-COMMENT ON COLUMN "direct_review"."d_review_created_at" IS '직거래 후기 작성일';
-
-COMMENT ON COLUMN "direct_review"."d_review_updated_at" IS '직거래 후기 수정일(관리용)';
-
-CREATE TABLE "direct_inquire" (
-	"d_inquire_no"	varchar2(100)		NOT NULL,
-	"d_product_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"inquire_title"	varchar2(255)		NULL,
-	"content"	varchar2(2000)		NOT NULL,
-	"created_at"	date	DEFAULT current_date	NULL,
-	"status"	varchar2(1)	DEFAULT 'W'	NOT NULL
-);
-
-COMMENT ON COLUMN "direct_inquire"."status" IS '답변대기중, 답변완료';
-
-CREATE TABLE "direct_product_attachment" (
-	"d_product_attach_no"	number		NOT NULL,
-	"d_product_no"	varchar2(100)		NOT NULL,
-	"d_product_original_filename"	varchar2(255)		NULL,
-	"d_product_renamed_filename"	varchar2(255)		NULL
-);
-
-
-CREATE TABLE "direct_product_option" (
-	"d_option_no"	varchar2(100)		NOT NULL,
-	"d_product_no"	number		NOT NULL,
-	"d_option_name"	varchar2(100)		NULL,
-	"d_sale_status"	varchar2(100)		NULL,
-	"d_price"	number		NULL,
-	"d_stock"	varchar2(100)		NULL
-);
-
-COMMENT ON COLUMN "direct_product_option"."d_sale_status" IS '판매중, 판매중단, 판매마감';
-
-
-
-ALTER TABLE member ADD CONSTRAINT "PK_MEMBER" PRIMARY KEY ("member_id");
-
-ALTER TABLE "direct_product" ADD CONSTRAINT "PK_DIRECT_PRODUCT" PRIMARY KEY ("d_product_no");
-
-ALTER TABLE "member_notification" ADD CONSTRAINT "PK_MEMBER_NOTIFICATION" PRIMARY KEY ("noti_no");
-
-ALTER TABLE "inquire" ADD CONSTRAINT "PK_INQUIRE" PRIMARY KEY ("inquire_no");
-
-ALTER TABLE "inquire_answer" ADD CONSTRAINT "PK_INQUIRE_ANSWER" PRIMARY KEY ("inquire_a_no","inquire_no");
-
-ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "PK_DIRECT_INQUIRE_ANSWER" PRIMARY KEY ("d_inquire_no");
-
-ALTER TABLE "direct_order" ADD CONSTRAINT "PK_DIRECT_ORDER" PRIMARY KEY ("d_order_no");
-
-ALTER TABLE "cart" ADD CONSTRAINT "PK_CART" PRIMARY KEY ("cart_no");
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "PK_MEMBER_DIRECT_ORDER" PRIMARY KEY ("d_option_no","d_order_no");
-
-ALTER TABLE "direct_review_attachment" ADD CONSTRAINT "PK_DIRECT_REVIEW_ATTACHMENT" PRIMARY KEY ("d_review_attach_no");
-
-ALTER TABLE "direct_review" ADD CONSTRAINT "PK_DIRECT_REVIEW" PRIMARY KEY ("d_review_no");
-
-ALTER TABLE "direct_inquire" ADD CONSTRAINT "PK_DIRECT_INQUIRE" PRIMARY KEY ("d_inquire_no");
-
-ALTER TABLE "direct_product_attachment" ADD CONSTRAINT "PK_DIRECT_PRODUCT_ATTACHMENT" PRIMARY KEY ("d_product_attach_no");
-
-ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "PK_SELLER_INFO_ATTACHMENT" PRIMARY KEY ("seller_attach_no","member_id");
-
-ALTER TABLE "seller_info" ADD CONSTRAINT "PK_SELLER_INFO" PRIMARY KEY ("member_id");
-
-ALTER TABLE "member_authority" ADD CONSTRAINT "PK_MEMBER_AUTHORITY" PRIMARY KEY ("auth","member_id");
-
-ALTER TABLE "direct_product_option" ADD CONSTRAINT "PK_DIRECT_PRODUCT_OPTION" PRIMARY KEY ("d_option_no");
-
-ALTER TABLE "inquire_answer" ADD CONSTRAINT "FK_inquire_TO_inquire_answer_1" FOREIGN KEY ("inquire_no")REFERENCES "inquire" ("inquire_no");
-
-ALTER TABLE "direct_inquire_answer" ADD CONSTRAINT "FK_direct_inquire_TO_direct_inquire_answer_1" FOREIGN KEY ("d_inquire_no")REFERENCES "direct_inquire" ("d_inquire_no");
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_product_option_TO_member_direct_order_1" FOREIGN KEY ("d_option_no")REFERENCES "direct_product_option" ("d_option_no");
-
-ALTER TABLE "member_direct_order" ADD CONSTRAINT "FK_direct_order_TO_member_direct_order_1" FOREIGN KEY ("d_order_no")REFERENCES "direct_order" ("d_order_no");
-
-ALTER TABLE "seller_info_attachment" ADD CONSTRAINT "FK_seller_info_TO_seller_info_attachment_1" FOREIGN KEY ("member_id")REFERENCES "seller_info" ("member_id");
-
-ALTER TABLE "seller_info" ADD CONSTRAINT "FK_member_TO_seller_info_1" FOREIGN KEY ("member_id")REFERENCES "member" ("member_id");
-
-ALTER TABLE "member_authority" ADD CONSTRAINT "FK_member_TO_member_authority_1" FOREIGN KEY ("member_id")REFERENCES "member" ("member_id");
-
 -- 정기구독시작(정기구독 관련 테이블)
 CREATE TABLE  subscription (
 	s_no	varchar2(100)		NOT NULL,
@@ -349,8 +168,9 @@ CREATE TABLE  subscription (
 
 ALTER TABLE subscription ADD CONSTRAINT fk_s_card_info_no FOREIGN KEY (card_info_no)REFERENCES card_info (card_info_no);
 ALTER TABLE subscription ADD CONSTRAINT fk_s_s_product_code FOREIGN KEY (s_product_code)REFERENCES subscription_product (s_product_code);
--- member pk설정이 안되어 있어서 보류
 ALTER TABLE subscription ADD CONSTRAINT fk_s_member_id FOREIGN KEY (member_id)REFERENCES member (member_id);
+-- check 조건 추가
+alter table subscription add constraint ck_s_s_delay_yn check(s_delay_yn in ('Y', 'N'));
 
 CREATE TABLE subscription_order (
 	s_order_no	varchar2(100)		NOT NULL,
@@ -401,6 +221,8 @@ CREATE TABLE subscription_product (
 	s_product_name	varchar2(30)		NOT NULL,
 	s_product_price	number		NOT NULL
 );
+-- 고정배송비 컬럼 추가
+alter table subscription_product add s_delivery_fee number default 3000;
 
 CREATE TABLE card_info (
 	card_info_no	number		NOT NULL,
