@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	@Autowired
 	private MemberService memberService;
-	
+	//-------------수진 시작
 	@RequestMapping("/test")
 	public String devList(Model model) {
 		MemberEntity tester = memberService.selectTest();
@@ -28,4 +28,8 @@ public class MemberController {
 		model.addAttribute("tester", tester);
 		return null;
 	}
+	
+	//----------------------수진 끝
+	//----------------------수아 시작
+	//----------------------수아 끝
 }
