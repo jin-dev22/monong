@@ -67,7 +67,23 @@ footer .btn {
 .btn:focus {
 	box-shadow: none;
 }
-
+.btn-116530{
+	color: #fff;
+	background-color : #116530;
+}
+.btn-116530:hover{
+	color: #116530;
+	border: 1px solid #116530;
+	background-color: inherit;
+}
+.btn-116530-reverse {
+	color: #116530;
+	border: 1px solid #116530;
+}
+.btn-116530-reverse:hover{
+	color: #fff;
+	background-color: #116530;
+}
 /*
 ------------------- header -------------------
 */
