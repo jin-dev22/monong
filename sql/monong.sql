@@ -270,7 +270,7 @@ CREATE TABLE direct_product_option (
 	d_option_name	varchar2(100)		NULL,
 	d_sale_status	varchar2(100)		NULL,
 	d_price	number		NULL,
-	d_stock	varchar2(100)		NULL,
+	d_stock	number		NULL,
 	constraint pk_direct_product_option_no primary key(d_option_no),
 	constraint fk_direct_product_option_no foreign key(d_product_no) references direct_product(d_product_no)
 );
@@ -280,7 +280,7 @@ CREATE TABLE direct_order (
 	member_id	varchar2(100)		NOT NULL,
 	d_total_price	number		NOT NULL,
 	d_dest_address	varchar2(100)		NOT NULL,
-	d_dest_address_2	varchar2(100)		NULL,
+	d_dest_address_ex	varchar2(100)		NULL,
 	d_delivery_request	varchar2(150)		NULL,
 	d_recipient	varchar2(50)		NOT NULL,
 	d_order_phone	varchar2(11)		NOT NULL,
@@ -349,7 +349,7 @@ CREATE TABLE direct_review (
 CREATE TABLE direct_review_attachment (
 	d_review_attach_no	number NOT NULL,
 	d_review_no	varchar2(100) NOT NULL,
-	d_review_origin_filename	varchar2(256)		NOT NULL,
+	d_review_original_filename	varchar2(256)		NOT NULL,
 	d_review_renamed_filename	varchar2(256)		NOT NULL,
 	d_review_created_at	date	DEFAULT current_date	NULL,
 	constraint pk_direct_review_attachment_no primary key(d_review_attach_no),
