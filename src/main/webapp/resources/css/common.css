@@ -29,6 +29,9 @@ a {
 	color: #333;
 }
 
+img {
+	display: block;
+}
 .nav-link {
 	color: #333;
 }
@@ -75,6 +78,7 @@ header, footer {
 	max-width: 1400px;
 	min-width: 1200px;
 	background-color: #fff;
+	z-index: 10;
 }
 
 #header {
@@ -86,11 +90,12 @@ header, footer {
 	padding: 0 20px;
 	position: fixed;
 	top: 0;
+	left: 0;
+	right: 0;
 }
 
 .logo {
 	width: 100px;
-	height: 100px;
 	display: flex;
 	align-items: center;
 }
@@ -140,6 +145,7 @@ header, footer {
 footer {
 	font-size: 14px;
 	padding: 30px 20px 10px 20px;
+	margin-top: 30px;
 }
 
 .footer1 {
