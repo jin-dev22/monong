@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
 </jsp:include>
-
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 <div id="enroll-container" class="mx-auto text-center">
 	<form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
@@ -123,7 +123,7 @@
 			</tr>
 			<tr>
 				<td>
-			        <input type="checkbox" id="privacyAgree1Cbx" name="agreeCheckBox" class="agree-check-box"/>
+			        <input type="checkbox" id="privacyAgree1Cbx" name="agreeF" class="agree-check-box"/>
 				    <label for="privacyAgree" id="privacyAgree1">(필수) 서비스 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
@@ -219,7 +219,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" id="privacyAgree2Cbx" name="agreeCheckBox" class="agree-check-box"/>
+					<input type="checkbox" id="privacyAgree2Cbx" name="privacyAgree" class="agree-check-box"/>
        				<label for="privacyAgree" id="privacyAgree2">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
