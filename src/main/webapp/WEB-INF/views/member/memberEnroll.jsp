@@ -51,25 +51,25 @@
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@gmail.com">
+					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@gmail.com" required>
 				</td>
 			</tr>
 			<tr>
 				<th>주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123">
+					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123" required>
 				</td>
 			</tr>
 			<tr>
 				<th>상세주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123">
+					<input type="text" class="form-control" placeholder="" name="address-ex" id="address-ex" value="서울시 강남구 역삼동 123">
 				</td>
 			</tr>
 			<tr>
 				<th>생년월일</th>
 				<td>	
-					<input type="date" class="form-control" name="birthday" id="birthday" value="1999-09-09"/>
+					<input type="date" class="form-control" name="birthday" id="birthday" value="1999-09-09" required/>
 				</td>
 			</tr> 
 			<tr>
@@ -123,8 +123,8 @@
 			</tr>
 			<tr>
 				<td>
-			        <input type="checkbox" id="privacyAgree1Cbx" name="agreeF" class="agree-check-box"/>
-				    <label for="privacyAgree" id="privacyAgree1">(필수) 서비스 이용약관에 동의합니다.</label>
+			        <input type="checkbox" id="agree-terms" name="agreement-required" class="agree-check-box"/>
+				    <label for="agree-terms">(필수) 서비스 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
 			<tr>
@@ -219,8 +219,8 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" id="privacyAgree2Cbx" name="privacyAgree" class="agree-check-box"/>
-       				<label for="privacyAgree" id="privacyAgree2">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
+					<input type="checkbox" id="agree-privacy" name="agreement-required" class="agree-check-box"/>
+       				<label for="agree-privacy">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
 		</table>
@@ -230,17 +230,30 @@
 </div>
 <script>
 document.memberEnrollFrm.addEventListener('submit', (e) => {
+	//아이디 체크
 	if(idValid.value === "0"){
 		e.preventDefault();
 		alert("유효한 아이디를 입력해주세요.");
 		return;
 	}
+	//필수항목 체크
+	const agreeRequired = document.querySelectorAll('input[name="agreement-required"]');
+	agreeRequired.forEach((e)=>{
+		if(e.checked){
+			e.preventDefault();
+			alert("필수항목에 체크해주세요.");
+			return;
+		}		
+	});
 });
 
 const ok = document.querySelector(".guide.ok");
 const error = document.querySelector(".guide.error");
 const idValid = document.querySelector("#idValid");
 
+/*
+ * 아이디 중복 체크
+ */
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	const {value : memberId} = e.target;
 	console.log(memberId);	
