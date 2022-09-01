@@ -1,4 +1,4 @@
-package com.kh.monong.security.model.dao;
+package com.kh.security.model.dao;
 
 import com.kh.monong.member.model.dto.Member;
 
