@@ -1,15 +1,11 @@
 package com.kh.monong.member.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.member.model.dto.MemberEntity;
 import com.kh.monong.member.model.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,19 +17,12 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	//-------------수진 시작
-	@RequestMapping("/test")
-	public String devList(Model model) {
-		MemberEntity tester = memberService.selectTest();
-		log.debug("tester = {}", tester);
-		log.debug("controller");
-		model.addAttribute("tester", tester);
-		return null;
-	}
-	
 	@GetMapping("/memberEnroll")
 	public String memberEnroll() {
 		return "member/memberEnroll";
 	}
+	
+	
 	//----------------------수진 끝
 	//----------------------수아 시작
 	//----------------------수아 끝
