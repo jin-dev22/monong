@@ -17,7 +17,7 @@
 				<th>아이디</th>
 				<td>
 					<div id="memberId-container">
-			            <input type="text" class="form-control" placeholder="아이디(4글자이상)" name="memberId" id="memberId" required>
+			            <input type="text" class="form-control" placeholder="아이디(영문,숫자4글자이상)" name="memberId" id="memberId" required>
 			            <span class="guide ok">이 아이디는 사용가능합니다.</span>
 			            <span class="guide error">이 아이디는 사용할 수 없습니다.</span>
 			            <input type="hidden" id="idValid" value="0"/><!-- 사용불가한 아이디 0, 사용가능한 아이디 1 -->
@@ -57,13 +57,13 @@
 			<tr>
 				<th>주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123" required>
+					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123" readonly required>
 				</td>
 			</tr>
 			<tr>
 				<th>상세주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address-ex" id="address-ex" value="서울시 강남구 역삼동 123">
+					<input type="text" class="form-control" placeholder="" name="address-ex" id="address-ex" value="">
 				</td>
 			</tr>
 			<tr>
@@ -228,6 +228,27 @@
 		<input type="reset" value="취소">
 	</form>
 </div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+document.querySelector("#address").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});    
+document.querySelector("#bnt-srch").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});
+</script>
 <script>
 document.memberEnrollFrm.addEventListener('submit', (e) => {
 	//아이디 체크
@@ -241,7 +262,7 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	agreeRequired.forEach((e)=>{
 		if(e.checked){
 			e.preventDefault();
-			alert("필수항목에 체크해주세요.");
+			alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
 			return;
 		}		
 	});
@@ -270,7 +291,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	console.log(headers);
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
 		method : "POST",
 		headers,
 		data : {memberId},

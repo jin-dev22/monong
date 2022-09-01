@@ -22,6 +22,11 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectOneMember(String memberId) {
 		return memberDao.selectOneMember(memberId);
 	}
+	
+	@Override
+	public int insertMember(Member member) {
+		return 0;
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작
