@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.monong.subscribe.model.dao.SubscribeDao">
+  <!-- 선아코드 시작 -->
+  <!-- 선아코드 끝 -->
+  
+  <!-- 미송코드 시작 -->
+  <!-- 미송코드 끝 -->
+</mapper>
