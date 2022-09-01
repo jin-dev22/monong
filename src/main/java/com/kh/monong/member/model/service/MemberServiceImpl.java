@@ -16,10 +16,14 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberDao memberDao;
-	
+	//------------------수진 시작
 	@Override
 	public MemberEntity selectTest() {
 		log.debug("service");
 		return memberDao.selectTest();
 	}
+	//------------------수진 끝
+	
+	//------------------수아 시작
+	//------------------수아 끝
 }
