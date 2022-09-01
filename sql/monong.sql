@@ -1,3 +1,4 @@
+--회원관련 테이블 
 CREATE TABLE member (
 	member_id 	varchar2(100)		NOT NULL,
 	member_name	varchar2(30)		NOT NULL,
@@ -11,12 +12,142 @@ CREATE TABLE member (
 	member_enroll_date	date	DEFAULT current_date	NOT NULL,
 	member_quit_date	date		NULL
 );
---수진
---drop table member;
---수진끝
-COMMENT ON COLUMN "member"."member_birthday" IS ''0000-00-00'';
 
-COMMENT ON COLUMN "member"."member_enroll_date" IS ''0000-00-00'';
+COMMENT ON COLUMN member.member_birthday IS '0000-00-00';
+
+COMMENT ON COLUMN member.member_enroll_date IS '0000-00-00';
+
+CREATE TABLE member_notification (
+	noti_no	varchar2(100)		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	noti_content	varchar2(2000)		NOT NULL,
+	noti_created_at	date	DEFAULT current_date	NULL,
+	noti_is_read 	varchar2(1)	DEFAULT 'N'	NULL,
+	d_inquire_no	number		NULL,
+	d_order_no	number		NULL,
+	s_order_no	number		NULL
+);
+COMMENT ON COLUMN member_notification.d_inquire_no IS '답변완료시 알림';
+
+COMMENT ON COLUMN member_notification.d_order_no IS '주문관련 알림';
+
+COMMENT ON COLUMN member_notification.s_order_no IS '주문상태 변경시 알림';
+
+CREATE TABLE inquire (
+	inquire_no	varchar2(100)		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	inquire_title	varchar2(512)		NOT NULL,
+	inquire_content	varchar2(2000)		NULL,
+	inquire_created_at	date	DEFAULT current_date	NULL,
+	has_answer	varchar2(1)	DEFAULT 'N'	NULL
+);
+
+CREATE TABLE inquire_answer (
+	inquire_a_no	varchar2(100)	NOT NULL,
+	inquire_no	varchar2(100)		NOT NULL,
+	inquire_a_content	varchar2(2000)		NULL,
+	inquire_answered_at	date	DEFAULT current_date	NULL
+);
+
+CREATE TABLE seller_info (
+	member_id	varchar2(100)		NOT NULL,
+	seller_reg_no	varchar2(12)		NOT NULL,
+	seller_name	varchar2(100)		NOT NULL,
+	seller_status	varchar2(8)	DEFAULT 'REG_W'	NULL,
+	seller_quit_date	date		NULL,
+	seller_enroll_date	date		NULL,
+	seller_del	varchar2(1)	DEFAULT 'N'	NULL
+);
+
+CREATE TABLE seller_info_attachment (
+	seller_attach_no	number		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	original_filename	 varchar2(256)		NOT NULL,
+	renamed_filename	varchar2(256)		NOT NULL
+);
+
+COMMENT ON COLUMN seller_info.seller_reg_no IS '000-00-00000';
+
+COMMENT ON COLUMN seller_info.seller_status IS '가입대기, 가입승인';
+
+COMMENT ON COLUMN seller_info.seller_del IS 'Y, N';
+
+CREATE TABLE member_authority (
+	auth varchar2(50)		NOT NULL,
+	member_id	varchar2(100)		NOT NULL
+);
+--회원관련 PK,FK
+ALTER TABLE member ADD CONSTRAINT PK_MEMBER PRIMARY KEY (
+	member_id
+);
+
+ALTER TABLE seller_info_attachment ADD CONSTRAINT PK_SELLER_INFO_ATTACHMENT PRIMARY KEY (
+	seller_attach_no,
+	member_id
+);
+
+ALTER TABLE seller_info ADD CONSTRAINT PK_SELLER_INFO PRIMARY KEY (
+	member_id
+);
+
+ALTER TABLE member_authority ADD CONSTRAINT PK_MEMBER_AUTHORITY PRIMARY KEY (
+	auth,
+	member_id
+);
+ALTER TABLE member_notification ADD CONSTRAINT PK_MEMBER_NOTIFICATION PRIMARY KEY (
+	noti_no
+);
+
+ALTER TABLE inquire ADD CONSTRAINT PK_INQUIRE PRIMARY KEY (
+	inquire_no
+);
+
+ALTER TABLE inquire_answer ADD CONSTRAINT PK_INQUIRE_ANSWER PRIMARY KEY (
+	inquire_a_no,
+	inquire_no
+);
+
+ALTER TABLE inquire_answer ADD CONSTRAINT FK_inquire_TO_inquire_answer_1 FOREIGN KEY (
+	inquire_no
+)
+REFERENCES inquire (
+	inquire_no
+);
+
+ALTER TABLE seller_info_attachment ADD CONSTRAINT FK_seller_info_TO_seller_info_attachment_1 FOREIGN KEY (
+	member_id
+)
+REFERENCES seller_info (
+	member_id
+);
+
+ALTER TABLE seller_info ADD CONSTRAINT FK_member_TO_seller_info_1 FOREIGN KEY (
+	member_id
+)
+REFERENCES member (
+	member_id
+);
+
+ALTER TABLE member_authority ADD CONSTRAINT FK_member_TO_member_authority_1 FOREIGN KEY (
+	member_id
+)
+REFERENCES member (
+	member_id
+);
+ALTER TABLE member_notification ADD CONSTRAINT FK_member_id_TO_motification FOREIGN KEY (
+	member_id
+) 
+REFERENCES member
+(
+	member_id
+);
+--회원관련 시퀀스
+create sequence seq_noti_no;
+create sequence seq_seller_attach_no;
+create sequence seq_inquire_no;
+create sequence seq_inquire_a_no;
+
+--회원관련 테이블 끝
 
 CREATE TABLE "direct_product" (
 	"d_product_no"	varchar2(100)		NOT NULL,
@@ -27,38 +158,7 @@ CREATE TABLE "direct_product" (
 	"d_product_updated_at"	date		NULL
 );
 
-CREATE TABLE "member_notification" (
-	"noti_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"noti_content"	varchar2(2000)		NOT NULL,
-	"noti_created_at"	date	DEFAULT current_date	NULL,
-	"noti_is_read"	varchar2(1)	DEFAULT 'N'	NULL,
-	"d_inquire_no"	number		NULL,
-	"d_order_no"	number		NULL,
-	"s_order_no"	number		NULL
-);
 
-COMMENT ON COLUMN "member_notification"."d_inquire_no" IS '답변완료시 알림';
-
-COMMENT ON COLUMN "member_notification"."d_order_no" IS '주문관련 알림';
-
-COMMENT ON COLUMN "member_notification"."s_order_no" IS '주문상태 변경시 알림';
-
-CREATE TABLE "inquire" (
-	"inquire_no"	varchar2(100)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"inquire_title"	varchar2(512)		NOT NULL,
-	"inquire_content"	varchar2(2000)		NULL,
-	"inquire_created_at"	date	DEFAULT current_date	NULL,
-	"has_answer"	varchar2(1)	DEFAULT 'N'	NULL
-);
-
-CREATE TABLE "inquire_answer" (
-	"inquire_a_no"	varchar2(100)	DEFAULT seq_answer_no.nextval	NOT NULL,
-	"inquire_no"	varchar2(100)		NOT NULL,
-	"inquire_a_content"	varchar2(2000)		NULL,
-	"inquire_answered_at"	date	DEFAULT current_date	NULL
-);
 
 CREATE TABLE "direct_inquire_answer" (
 	"d_inquire_no"	varchar2(100)		NOT NULL,
@@ -166,34 +266,6 @@ CREATE TABLE "direct_product_attachment" (
 	"d_product_no"	varchar2(100)		NOT NULL,
 	"d_product_original_filename"	varchar2(255)		NULL,
 	"d_product_renamed_filename"	varchar2(255)		NULL
-);
-
-CREATE TABLE "seller_info_attachment" (
-	"seller_attach_no"	number		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL,
-	"original_filename"	varchar2(256)		NOT NULL,
-	"renamed_filename"	varchar2(256)		NOT NULL
-);
-
-CREATE TABLE "seller_info" (
-	"member_id"	varchar2(100)		NOT NULL,
-	"seller_reg_no"	varchar2(12)		NOT NULL,
-	"seller_name"	varchar2(100)		NOT NULL,
-	"seller_status"	varchar2(8)	DEFAULT REG_W	NULL,
-	"seller_quit_date"	date		NULL,
-	"seller_enroll_date"	date		NULL,
-	"seller_del"	varchar2(1)	DEFAULT 'N'	NULL
-);
-
-COMMENT ON COLUMN "seller_info"."seller_reg_no" IS '000-00-00000';
-
-COMMENT ON COLUMN "seller_info"."seller_status" IS '가입대기, 가입승인';
-
-COMMENT ON COLUMN "seller_info"."seller_del" IS ''Y', 'N'';
-
-CREATE TABLE "member_authority" (
-	"auth"	varchar2(50)		NOT NULL,
-	"member_id"	varchar2(100)		NOT NULL
 );
 
 
