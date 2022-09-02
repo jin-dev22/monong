@@ -37,6 +37,11 @@ public class MemberController {
 		return "member/memberEnroll";
 	}
 	
+	@GetMapping("/sellerEnroll")
+	public String sellerEnroll() {
+		return "member/sellerEnroll";
+	}
+	
 	@PostMapping("/checkIdDuplicate")
 	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
 		Member member = memberService.selectOneMember(memberId);
@@ -62,7 +67,7 @@ public class MemberController {
 			
 //			int result = memberService.insertMember(member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-			return "redirect:/";
+			return null;//"redirect:/";
 		} catch(Exception e) {
 			log.error("회원등록 오류 : " + e.getMessage(), e);
 			throw e;
