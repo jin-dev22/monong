@@ -20,6 +20,7 @@ public class MemberServiceImpl implements MemberService {
 	//------------------수진 시작
 	@Override
 	public Member selectOneMember(String memberId) {
+		log.debug("memberId = {}",memberId);
 		return memberDao.selectOneMember(memberId);
 	}
 	

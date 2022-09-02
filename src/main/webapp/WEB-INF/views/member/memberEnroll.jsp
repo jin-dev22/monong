@@ -10,6 +10,8 @@
 	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <div id="enroll-container" class="mx-auto text-center">
 	<form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
@@ -73,7 +75,7 @@
 				</td>
 			</tr> 
 			<tr>
-				<td>
+				<td colspan="2">
 					<textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
 [시행 2008. 7. 30.] [문화체육관광부훈령 제2008-0호, 2008. 7. 30., 제정]
 과학기술정보통신부(디지털콘텐츠과), 044-202-6352
@@ -122,13 +124,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan="2">
 			        <input type="checkbox" id="agree-terms" name="agreement-required" class="agree-check-box"/>
 				    <label for="agree-terms">(필수) 서비스 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan="2">
 					<textarea class="enroll-agreement-content" cols="73" rows="5">monong-monong 개인정보처리방침
 
 [monong-monong]('monong.com', 이하 모농모농)이(가) 취급하는 모든 개인정보는 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하여 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.
@@ -218,7 +220,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan="2">
 					<input type="checkbox" id="agree-privacy" name="agreement-required" class="agree-check-box"/>
        				<label for="agree-privacy">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
 				</td>
@@ -228,27 +230,7 @@
 		<input type="reset" value="취소">
 	</form>
 </div>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-document.querySelector("#address").addEventListener('click', function(){
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-            document.querySelector("#address").value = data.address;
-            document.querySelector("#address-ex").focus();
-        }
-    }).open();
-});    
-document.querySelector("#bnt-srch").addEventListener('click', function(){
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-            document.querySelector("#address").value = data.address;
-            document.querySelector("#address-ex").focus();
-        }
-    }).open();
-});
-</script>
+
 <script>
 document.memberEnrollFrm.addEventListener('submit', (e) => {
 	//아이디 체크
@@ -291,7 +273,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	console.log(headers);
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
 		method : "POST",
 		headers,
 		data : {memberId},
@@ -311,13 +293,35 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			}
 			
 		},
-		error(jqxhr, statusText, err){
-			console.log(jqxhr, statusText, err);
+		error(err){
+			console.log(err);
 		}
 	});
 	
 	
 });
+
+//주소입력 라이브러리
+document.querySelector("#address").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});  
+/*
+document.querySelector("#bnt-srch").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});
+*/
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

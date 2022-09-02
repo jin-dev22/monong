@@ -35,7 +35,7 @@ public class MemberController {
 		return "member/memberEnroll";
 	}
 	
-	@PostMapping("/checkIdDuplicate")
+	@PostMapping("/checkIdDuplicate.do")
 	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
 		Member member = memberService.selectOneMember(memberId);
 		boolean available = member == null;
