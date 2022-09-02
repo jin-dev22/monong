@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.monong.member.model.dao.MemberDao;
+import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.MemberEntity;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,14 @@ public class MemberServiceImpl implements MemberService {
 	private MemberDao memberDao;
 	//------------------수진 시작
 	@Override
-	public MemberEntity selectTest() {
-		log.debug("service");
-		return memberDao.selectTest();
+	public Member selectOneMember(String memberId) {
+		log.debug("memberId = {}",memberId);
+		return memberDao.selectOneMember(memberId);
+	}
+	
+	@Override
+	public int insertMember(Member member) {
+		return 0;
 	}
 	//------------------수진 끝
 	

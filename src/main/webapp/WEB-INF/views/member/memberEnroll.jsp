@@ -10,6 +10,8 @@
 	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <div id="enroll-container" class="mx-auto text-center">
 	<form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
@@ -17,7 +19,7 @@
 				<th>아이디</th>
 				<td>
 					<div id="memberId-container">
-			            <input type="text" class="form-control" placeholder="아이디(4글자이상)" name="memberId" id="memberId" required>
+			            <input type="text" class="form-control" placeholder="아이디(영문,숫자4글자이상)" name="memberId" id="memberId" required>
 			            <span class="guide ok">이 아이디는 사용가능합니다.</span>
 			            <span class="guide error">이 아이디는 사용할 수 없습니다.</span>
 			            <input type="hidden" id="idValid" value="0"/><!-- 사용불가한 아이디 0, 사용가능한 아이디 1 -->
@@ -27,7 +29,7 @@
 			<tr>
 				<th>패스워드</th>
 				<td>
-					<input type="password" class="form-control" name="password" id="password" value="1234" required>
+					<input type="password" class="form-control" name="memberPassword" id="password" value="1234" required>
 				</td>
 			</tr>
 			<tr>
@@ -39,7 +41,7 @@
 			<tr>
 				<th>이름</th>
 				<td>	
-					<input type="text" class="form-control" name="name" id="name" value="홍길동" required>
+					<input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
 				</td>
 			</tr>
 			<tr>
@@ -51,29 +53,29 @@
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@gmail.com">
+					<input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="email" value="honggd@gmail.com" required>
 				</td>
 			</tr>
 			<tr>
 				<th>주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123">
+					<input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
 				</td>
 			</tr>
 			<tr>
 				<th>상세주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123">
+					<input type="text" class="form-control" placeholder="" name="memberAddress-ex" id="address-ex" value="">
 				</td>
 			</tr>
 			<tr>
 				<th>생년월일</th>
 				<td>	
-					<input type="date" class="form-control" name="birthday" id="birthday" value="1999-09-09"/>
+					<input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
 				</td>
 			</tr> 
 			<tr>
-				<td>
+				<td colspan="2">
 					<textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
 [시행 2008. 7. 30.] [문화체육관광부훈령 제2008-0호, 2008. 7. 30., 제정]
 과학기술정보통신부(디지털콘텐츠과), 044-202-6352
@@ -122,13 +124,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-			        <input type="checkbox" id="privacyAgree1Cbx" name="agreeF" class="agree-check-box"/>
-				    <label for="privacyAgree" id="privacyAgree1">(필수) 서비스 이용약관에 동의합니다.</label>
+				<td colspan="2">
+			        <input type="checkbox" id="agree-terms" name="agreement-required" class="agree-check-box"/>
+				    <label for="agree-terms">(필수) 서비스 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
 			<tr>
-				<td>
+				<td colspan="2">
 					<textarea class="enroll-agreement-content" cols="73" rows="5">monong-monong 개인정보처리방침
 
 [monong-monong]('monong.com', 이하 모농모농)이(가) 취급하는 모든 개인정보는 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하여 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.
@@ -218,9 +220,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<input type="checkbox" id="privacyAgree2Cbx" name="privacyAgree" class="agree-check-box"/>
-       				<label for="privacyAgree" id="privacyAgree2">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
+				<td colspan="2">
+					<input type="checkbox" id="agree-privacy" name="agreement-required" class="agree-check-box"/>
+       				<label for="agree-privacy">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
 				</td>
 			</tr>
 		</table>
@@ -228,19 +230,33 @@
 		<input type="reset" value="취소">
 	</form>
 </div>
+
 <script>
 document.memberEnrollFrm.addEventListener('submit', (e) => {
+	//아이디 체크
 	if(idValid.value === "0"){
 		e.preventDefault();
 		alert("유효한 아이디를 입력해주세요.");
 		return;
 	}
+	//필수항목 체크
+	const agreeRequired = document.querySelectorAll('input[name="agreement-required"]');
+	agreeRequired.forEach((e)=>{
+		if(e.checked){
+			e.preventDefault();
+			alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
+			return;
+		}		
+	});
 });
 
 const ok = document.querySelector(".guide.ok");
 const error = document.querySelector(".guide.error");
 const idValid = document.querySelector("#idValid");
 
+/*
+ * 아이디 중복 체크
+ */
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	const {value : memberId} = e.target;
 	console.log(memberId);	
@@ -254,17 +270,19 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);
+	console.log(headers);//값이 없음.
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
 		method : "POST",
-		headers,
+	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
 		data : {memberId},
 		success(response){
-			console.log(response); // js object
+			console.log(response, typeof response); // js object
 			
 			const {available} = response;
+			console.log(available);//undefined...?
+			
 			if(available){
 				error.style.display = "none";
 				ok.style.display = "inline";
@@ -284,6 +302,28 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	
 });
+
+//주소입력 라이브러리
+document.querySelector("#address").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});  
+/*
+document.querySelector("#bnt-srch").addEventListener('click', function(){
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            document.querySelector("#address").value = data.address;
+            document.querySelector("#address-ex").focus();
+        }
+    }).open();
+});
+*/
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
