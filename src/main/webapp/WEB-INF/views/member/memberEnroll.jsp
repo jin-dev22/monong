@@ -12,6 +12,12 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+<style>
+div#enroll-container table th{
+	width: 150px;
+}
+</style>
+
 <div id="enroll-container" class="mx-auto text-center">
 	<form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
@@ -241,13 +247,16 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	}
 	//필수항목 체크
 	const agreeRequired = document.querySelectorAll('input[name="agreement-required"]');
-	agreeRequired.forEach((e)=>{
-		if(e.checked){
-			e.preventDefault();
-			alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
-			return;
+	let cntChkd = 0;
+	agreeRequired.forEach((checkbox)=>{
+		if(!checkbox.checked){
+			cntChkd++;
 		}		
 	});
+	if(cntChkd > 0){
+		e.preventDefault();
+		alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
+	}
 });
 
 const ok = document.querySelector(".guide.ok");
@@ -313,7 +322,7 @@ document.querySelector("#address").addEventListener('click', function(){
         }
     }).open();
 });  
-/*
+/*//검색버튼?
 document.querySelector("#bnt-srch").addEventListener('click', function(){
     new daum.Postcode({
         oncomplete: function(data) {
