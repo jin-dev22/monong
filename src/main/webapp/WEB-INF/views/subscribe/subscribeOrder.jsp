@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/subscribe.css">
 
 <h2 class="pay-title">결제 &#128179;</h2>
 <div class="s-product_selected">
