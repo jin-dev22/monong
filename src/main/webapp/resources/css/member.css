@@ -15,3 +15,27 @@ div#memberId-container { position:relative; padding:0px; }
 div#memberId-container span.guide { display:none; font-size:12px;}
 div#memberId-container span.ok { color:green; }
 div#memberId-container span.error { color:red; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 로그인 */
+div#login-container{
+	width: 500px;
+
+}

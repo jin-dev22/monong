@@ -3,9 +3,12 @@ package com.kh.monong.member.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.member.model.dto.Member;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -81,5 +82,23 @@ public class MemberController {
 	}
 	
 
+	@PostMapping("/memberLoginSuccess.do")
+	public String memberLoginSuccess(HttpSession session) {
+		log.debug("memberLoginSuccess.do 호출!");
+		// 로그인 후처리
+		String location = "/";
+		
+		SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+		if(savedRequest != null) {
+			location = savedRequest.getRedirectUrl();
+		}
+		log.debug("location = {}", location);
+		return "redirect:" + location;
+	}
+
+	@GetMapping("/memberIdSearchForm.do")
+	public void memberIdSearch() {
+		
+	}
 	//----------------------수아 끝
 }

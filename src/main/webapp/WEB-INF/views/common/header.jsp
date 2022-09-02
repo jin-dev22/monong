@@ -26,14 +26,14 @@
 <!-- stompjs cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<%--
+
 <sec:authorize access="isAuthenticated()">
 	<script>
 	const memberId = "<sec:authentication property='principal.username'/>";
 	</script>
 <script src="${pageContext.request.contextPath}/resources/js/ws.js"></script>
 </sec:authorize>
---%>
+
 </head>
 <body>
 
@@ -48,8 +48,8 @@
 			<a class="nav-link" href="#">직거래&#127805;</a>
 			<a class="nav-link" href="#">관리자페이지</a>
 		</nav>
-		<!-- security 완료되면 주석 삭제 -->
-		<%-- <sec:authorize access="isAnonymous()"> --%>
+		
+		  <sec:authorize access="isAnonymous()"> 
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="#">&#128722;</a>
@@ -59,7 +59,7 @@
 					<a class="nav-link" href="#">회원가입</a>
 				</nav>
 			</nav>
-		<%-- </sec:authorize> --%>
+		 </sec:authorize>
 		<%--
 		<sec:authorize accsee="isAuthenticated()">
 			<nav class="nav flex-column login">
