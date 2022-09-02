@@ -245,7 +245,7 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		alert("유효한 아이디를 입력해주세요.");
 		return;
 	}
-	//필수항목 체크
+	//동의여부 체크
 	const agreeRequired = document.querySelectorAll('input[name="agreement-required"]');
 	let cntChkd = 0;
 	agreeRequired.forEach((checkbox)=>{
@@ -290,7 +290,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			console.log(response, typeof response); // js object
 			
 			const {available} = response;
-			console.log(available);//undefined...?
+			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
 			if(available){
 				error.style.display = "none";
@@ -308,9 +308,42 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			console.log(jqxhr, statusText, err);
 		}
 	});
-	
-	
 });
+//중복여부 체크함수
+const checkDuplicate = (url, data)=>{	
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	console.log(headers);//값이 없음.
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
+		method : "POST",
+	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
+		data : {memberId},
+		success(response){
+			console.log(response, typeof response); // js object
+			
+			const {available} = response;
+			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
+			
+			if(available){
+				error.style.display = "none";
+				ok.style.display = "inline";
+				idValid.value = "1";
+			}
+			else {
+				error.style.display = "inline";
+				ok.style.display = "none";
+				idValid.value = "0";
+			}
+			
+		},
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
+		}
+	});
+}; 
+
 
 //주소입력 라이브러리
 document.querySelector("#address").addEventListener('click', function(){
