@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,19 +32,19 @@ public class MemberController {
 	private MemberService memberService;
 	@Autowired
 	private MemberSecurityService memberSecurityService;
+	@Autowired
+	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
-	@GetMapping("/memberEnroll")
-	public String memberEnroll() {
-		return "member/memberEnroll";
+	@GetMapping("/memberEnroll.do")
+	public void memberEnroll() {
 	}
 	
-	@GetMapping("/sellerEnroll")
-	public String sellerEnroll() {
-		return "member/sellerEnroll";
+	@GetMapping("/sellerEnroll.do")
+	public void sellerEnroll() {
 	}
 	
-	@PostMapping("/checkIdDuplicate")
+	@PostMapping("/checkIdDuplicate.do")
 	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
 		Member member = memberService.selectOneMember(memberId);
 		boolean available = member == null;
@@ -55,20 +56,20 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
-	@PostMapping("/memberEnroll")
+	@PostMapping("/memberEnroll.do")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr) {
 		try {
 			log.debug("member = {}", member);
 			
 			// 비밀번호 암호화
 			String rawPassword = member.getPassword();
-//			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-//			member.setMemberPassword(encodedPassword);
-//			log.debug("encodedPassword = {}", encodedPassword);
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			member.setMemberPassword(encodedPassword);
+			log.debug("encodedPassword = {}", encodedPassword);
 			
-//			int result = memberService.insertMember(member);
+			int result = memberService.insertMember(member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-			return null;//"redirect:/";
+			return "redirect:/";
 		} catch(Exception e) {
 			log.error("회원등록 오류 : " + e.getMessage(), e);
 			throw e;
