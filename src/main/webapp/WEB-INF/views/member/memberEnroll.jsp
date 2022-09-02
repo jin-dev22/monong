@@ -47,7 +47,7 @@
 			<tr>
 				<th>휴대폰</th>
 				<td>	
-					<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="11" value="01098989898" required>
+					<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="phone" maxlength="11" value="01098989898" required>
 				</td>
 			</tr>
 			<tr>
