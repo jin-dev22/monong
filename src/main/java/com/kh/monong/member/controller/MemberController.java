@@ -49,7 +49,7 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
-	@PostMapping("/memberEnroll.do")
+	@PostMapping("/memberEnroll")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr) {
 		try {
 			log.debug("member = {}", member);

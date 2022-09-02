@@ -29,7 +29,7 @@
 			<tr>
 				<th>패스워드</th>
 				<td>
-					<input type="password" class="form-control" name="password" id="password" value="1234" required>
+					<input type="password" class="form-control" name="memberPassword" id="password" value="1234" required>
 				</td>
 			</tr>
 			<tr>
@@ -41,7 +41,7 @@
 			<tr>
 				<th>이름</th>
 				<td>	
-					<input type="text" class="form-control" name="name" id="name" value="홍길동" required>
+					<input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
 				</td>
 			</tr>
 			<tr>
@@ -53,25 +53,25 @@
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@gmail.com" required>
+					<input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="email" value="honggd@gmail.com" required>
 				</td>
 			</tr>
 			<tr>
 				<th>주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address" id="address" value="서울시 강남구 역삼동 123" readonly required>
+					<input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
 				</td>
 			</tr>
 			<tr>
 				<th>상세주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="address-ex" id="address-ex" value="">
+					<input type="text" class="form-control" placeholder="" name="memberAddress-ex" id="address-ex" value="">
 				</td>
 			</tr>
 			<tr>
 				<th>생년월일</th>
 				<td>	
-					<input type="date" class="form-control" name="birthday" id="birthday" value="1999-09-09" required/>
+					<input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
 				</td>
 			</tr> 
 			<tr>
