@@ -270,7 +270,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);
+	console.log(headers);//값이 없음.
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
@@ -278,9 +278,11 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
 		data : {memberId},
 		success(response){
-			console.log(response); // js object
+			console.log(response, typeof response); // js object
 			
 			const {available} = response;
+			console.log(available);//undefined...?
+			
 			if(available){
 				error.style.display = "none";
 				ok.style.display = "inline";
