@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.member.model.dto.Member;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.kh.monong.member.model.service.MemberService;
-import com.kh.monong.security.model.service.MemberSecurityService;
+import com.kh.security.model.service.MemberSecurityService;
 
 import lombok.extern.slf4j.Slf4j;
 
