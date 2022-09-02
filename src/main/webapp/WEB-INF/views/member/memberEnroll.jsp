@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
 </jsp:include>
-<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/member.css" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
@@ -19,7 +19,7 @@ div#enroll-container table th{
 </style>
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="" method="POST">
+	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/memberEnroll.do" method="POST">
 		<table class="mx-auto">
 			<tr>
 				<th>아이디</th>
@@ -71,7 +71,7 @@ div#enroll-container table th{
 			<tr>
 				<th>상세주소</th>
 				<td>	
-					<input type="text" class="form-control" placeholder="" name="memberAddress-ex" id="address-ex" value="">
+					<input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex" value="">
 				</td>
 			</tr>
 			<tr>
@@ -232,6 +232,7 @@ div#enroll-container table th{
 				</td>
 			</tr>
 		</table>
+		<sec:csrfInput />
 		<input type="submit" value="가입" >
 		<input type="reset" value="취소">
 	</form>
@@ -262,6 +263,40 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 const ok = document.querySelector(".guide.ok");
 const error = document.querySelector(".guide.error");
 const idValid = document.querySelector("#idValid");
+/* //중복여부 체크함수
+const checkDuplicate = (urlEnd, data)=>{	
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	console.log(headers);//값이 없음.
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/member/"+urlEnd,
+		method : "POST",
+	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
+		data : {data},
+		success(response){
+			console.log(response, typeof response); // js object
+			
+			const {available} = response;
+			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
+			
+			if(available){
+				error.style.display = "none";
+				ok.style.display = "inline";
+				idValid.value = "1";
+			}
+			else {
+				error.style.display = "inline";
+				ok.style.display = "none";
+				idValid.value = "0";
+			}
+			
+		},
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
+		}
+	});
+};  */
 
 /*
  * 아이디 중복 체크
@@ -282,9 +317,9 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	console.log(headers);//값이 없음.
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
 		method : "POST",
-	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
+		headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
 		data : {memberId},
 		success(response){
 			console.log(response, typeof response); // js object
@@ -308,41 +343,9 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			console.log(jqxhr, statusText, err);
 		}
 	});
-});
-//중복여부 체크함수
-const checkDuplicate = (url, data)=>{	
-	const headers = {};
-	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);//값이 없음.
 	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
-		method : "POST",
-	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
-		data : {memberId},
-		success(response){
-			console.log(response, typeof response); // js object
-			
-			const {available} = response;
-			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
-			
-			if(available){
-				error.style.display = "none";
-				ok.style.display = "inline";
-				idValid.value = "1";
-			}
-			else {
-				error.style.display = "inline";
-				ok.style.display = "none";
-				idValid.value = "0";
-			}
-			
-		},
-		error(jqxhr, statusText, err){
-			console.log(jqxhr, statusText, err);
-		}
-	});
-}; 
+});
+
 
 
 //주소입력 라이브러리

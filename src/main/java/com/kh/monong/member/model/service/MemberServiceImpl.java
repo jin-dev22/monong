@@ -26,7 +26,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public int insertMember(Member member) {
-		return 0;
+		return memberDao.insertMember(member);
 	}
 	//------------------수진 끝
 	
