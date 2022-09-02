@@ -273,9 +273,9 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	console.log(headers);
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
+		url : "${pageContext.request.contextPath}/member/checkIdDuplicate",
 		method : "POST",
-		headers,
+	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
 		data : {memberId},
 		success(response){
 			console.log(response); // js object
@@ -293,8 +293,8 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			}
 			
 		},
-		error(err){
-			console.log(err);
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
 		}
 	});
 	
