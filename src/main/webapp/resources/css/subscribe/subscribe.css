@@ -2,179 +2,203 @@
 /* 정기구독 00페이지 */
 /* 미송 시작 */
 
-
 /* 미송 끝 */
 
 /* 정기구독 결제페이지 */
 /* 선아 시작 */
 .pay-title {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #333;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #333;
 }
+
 .s-product_selected {
-  width: 100%;
-  padding: 20px 60px 30px 30px;
+	width: 100%;
+	padding: 20px 60px 30px 30px;
 }
+
 .s-product_selected h4 {
-  color: #EA5C2B;
-  font-weight: 700;
+	color: #EA5C2B;
+	font-weight: 700;
 }
+
 .s-product-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 50px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 50px;
 }
+
 .s-product-info img {
-  width: 350px;
-  height: 350px;
-  border-radius: 10px;
+	width: 350px;
+	height: 350px;
+	border-radius: 10px;
 }
+
 .s-product-info-content {
-  width: 550px;
-  border-bottom: 1px solid #333;
-  margin: auto 0;
+	width: 550px;
+	border-bottom: 1px solid #333;
+	margin: auto 0;
 }
+
 .s-product-info-content .bold {
-  font-weight: 700;
+	font-weight: 700;
 }
+
 .s-product-info-content p {
-  display: inline-block;
+	display: inline-block;
 }
+
 .s-product-info-content p:nth-child(2n) {
-  width: 150px;
+	width: 150px;
 }
+
 .s-product-info-content p:nth-child(2n+1):not(p:first-child) {
-  width: calc(100% - 200px);
-  text-align: right;
+	width: calc(100% - 200px);
+	text-align: right;
 }
+
 .s-product-info-content p:first-child::after {
-  content: '';
-  display: block;
-  width: 550px;
-  margin-top: 8px;
-  border-bottom: 1px solid #333;
+	content: '';
+	display: block;
+	width: 550px;
+	margin-top: 8px;
+	border-bottom: 1px solid #333;
 }
+
 .s-order-wrapper {
-  display: flex;
-  justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
-.s-order-addr-info,
-.s-pay-info {
-  width: calc((100% - 50px) / 2);
+
+.s-order-addr-info, .s-pay-info {
+	width: calc(( 100% - 50px)/2);
 }
-.s-order-addr-info > h4,
-.s-pay-info > h4 {
-  font-weight: 700;
+
+.s-order-addr-info>h4, .s-pay-info>h4 {
+	font-weight: 700;
 }
-.s-order-addr-info-content,
-.s-pay-info-content {
-  margin: 20px 0;
+
+.s-order-addr-info-content, .s-pay-info-content {
+	margin: 20px 0;
 }
+
 .s-order-addr-info-content input[type=text] {
-  height: 40px;
-  border-style: none;
-  border-bottom: 1px solid #333;
-  width: 80%;
+	height: 40px;
+	border-style: none;
+	border-bottom: 1px solid #333;
+	width: 80%;
 }
+
 .s-order-addr-info-content input[type=text]:focus-visible {
-  outline: none;
+	outline: none;
 }
+
 .s-order-addr-info-content label {
-  margin-top: 20px;
+	margin-top: 20px;
 }
+
 .s-order-addr-info-content .btn-EA5C2B {
-  margin-left: 10px;
+	margin-left: 10px;
 }
+
 .s-pay-info-content p {
-  display: inline-block;
+	display: inline-block;
 }
+
 .s-pay-info-content p:nth-of-type(2n+1) {
-  width: 150px;
+	width: 150px;
 }
+
 .s-pay-info-content p:nth-of-type(2n) {
-  width: calc(100% - 200px);
-  text-align: right;
+	width: calc(100% - 200px);
+	text-align: right;
 }
-.s-pay-info > p {
-  width: 150px;
+
+.s-pay-info>p {
+	width: 150px;
 }
+
 #s-order-card {
-  display: flex;
-  margin: 20px 0;
-  align-items: center;
-  justify-content: space-between;
+	display: flex;
+	margin: 20px 0;
+	align-items: center;
+	justify-content: space-between;
 }
-#s-order-card > p {
-  width: 150px;
-  display: inline-block;
+
+#s-order-card>p {
+	width: 150px;
+	display: inline-block;
 }
+
 .s-card {
-  width: 200px;
-  height: 160px;
-  margin-right: 40px;
-  border: 1px solid #EA5C2B;
-  border-radius: 10px;
-  text-align: center;
-  position: relative;
-  background-color: #f6d8601c;
+	width: 200px;
+	height: 160px;
+	margin-right: 40px;
+	border: 1px solid #EA5C2B;
+	border-radius: 10px;
+	text-align: center;
+	position: relative;
+	background-color: #f6d8601c;
 }
-.s-card > label {
-  width: 100%;
+
+.s-card>label {
+	width: 100%;
 }
-.s-card > input {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  accent-color: #EA5C2B;
+
+.s-card>input {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	accent-color: #EA5C2B;
 }
-.s-card img,
-.s-card > span {
-  display: block;
+
+.s-card img, .s-card>span {
+	display: block;
 }
+
 .s-card img {
-  width: 120px;
-  margin: auto;
+	width: 120px;
+	margin: auto;
 }
+
 .s-order-totle-price {
-  display: flex;
-  padding: 20px 0;
-  align-items: center;
+	display: flex;
+	padding: 20px 0;
+	align-items: center;
 }
-.s-order-totle-price > span {
-  display: block;
-  margin-right: 20px;
-  font-size: 20px;
-  font-weight: 700;
+
+.s-order-totle-price>span {
+	display: block;
+	margin-right: 20px;
+	font-size: 20px;
+	font-weight: 700;
 }
+
 .s-order-totle-price .s-times {
-  padding: 5px;
-  background-color: #116530;
-  border-radius: 10px;
-  color: #fff;
+	padding: 5px;
+	background-color: #116530;
+	border-radius: 10px;
+	color: #fff;
 }
-.s-order-totle-price ul {
-  margin: 0 40px 0 0;
-  text-align: right;
-  list-style: none;
-  flex-grow: 1;
+
+.s-order-totle-price .s-price {
+	margin: 0 40px 0 0;
+	text-align: right;
+	list-style: none;
+	flex-grow: 1;
+	font-size: 28px;
+	color: #EA5C2B;
+	font-weight: 700;
 }
-.s-order-totle-price ul .s-total-price {
-  font-size: 28px;
-  color: #EA5C2B;
-  font-weight: 700;
+
+.s-order-totle-price span:last-child {
+	font-size: 20px;
+	color: #333;
 }
-.s-order-totle-price ul span {
-  font-size: 20px;
-  color: #333;
-}
-.s-order-totle-price ul .s-original-price {
-  font-size: 14px;
-  text-decoration: line-through;
-}
+
 .btn-s-pay {
-  display: block;
-  width: 220px;
-  padding: 15px;
-  margin: 20px auto;
+	display: block;
+	width: 220px;
+	padding: 15px;
+	margin: 20px auto;
 }
 /* 선아 시작 */
