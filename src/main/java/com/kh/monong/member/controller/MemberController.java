@@ -37,7 +37,7 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
-	@GetMapping("/selectEnrollType")
+	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {}
 	
 	@GetMapping("/memberEnroll.do")
