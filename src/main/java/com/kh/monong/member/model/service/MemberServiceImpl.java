@@ -19,9 +19,13 @@ public class MemberServiceImpl implements MemberService {
 	private MemberDao memberDao;
 	//------------------수진 시작
 	@Override
-	public Member selectOneMember(String memberId) {
-		log.debug("memberId = {}",memberId);
-		return memberDao.selectOneMember(memberId);
+	public Member selectMemberById(String memberId) {
+		return memberDao.selectMemberById(memberId);
+	}
+	
+	@Override
+	public Member selectMemberByEmail(String email) {
+		return memberDao.selectmemberByEmail(email);
 	}
 	
 	@Override

@@ -14,7 +14,10 @@ public interface MemberDao {
 
 	//------------------------수진 시작
 	@Select("select * from member where member_id = #{memberId}")
-	Member selectOneMember(String memberId);
+	Member selectMemberById(String memberId);
+	
+	@Select("select * from member where member_email = #{email}")
+	Member selectmemberByEmail(String email);
 
 	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null)")
 	int insertMember(Member member);

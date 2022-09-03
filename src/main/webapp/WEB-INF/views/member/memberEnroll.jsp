@@ -19,7 +19,7 @@ div#enroll-container table th{
 </style>
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/memberEnroll.do" method="POST">
+	<form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto">
 			<tr>
 				<th>아이디</th>
@@ -53,13 +53,20 @@ div#enroll-container table th{
 			<tr>
 				<th>휴대폰</th>
 				<td>	
-					<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="phone" maxlength="11" value="01098989898" required>
+					<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" value="01098989898" required>
 				</td>
 			</tr>
 			<tr>
 				<th>이메일</th>
-				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="email" value="honggd@gmail.com" required>
+				<td>
+					<div id="memberEmail-container">
+			            <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" value="" required>
+			            <span class="invalid-feedback">이미 가입된 이메일입니다.</span>
+			            <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
+			        </div>
+				</td>
+				<td>
+			        <input type="button" value="이메일 인증"/>
 				</td>
 			</tr>
 			<tr>
@@ -262,41 +269,9 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 
 const ok = document.querySelector(".guide.ok");
 const error = document.querySelector(".guide.error");
+const invalidFeedBack = document.querySelector(".invalid-feedback");
 const idValid = document.querySelector("#idValid");
-/* //중복여부 체크함수
-const checkDuplicate = (urlEnd, data)=>{	
-	const headers = {};
-	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);//값이 없음.
-	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/member/"+urlEnd,
-		method : "POST",
-	//	headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
-		data : {data},
-		success(response){
-			console.log(response, typeof response); // js object
-			
-			const {available} = response;
-			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
-			
-			if(available){
-				error.style.display = "none";
-				ok.style.display = "inline";
-				idValid.value = "1";
-			}
-			else {
-				error.style.display = "inline";
-				ok.style.display = "none";
-				idValid.value = "0";
-			}
-			
-		},
-		error(jqxhr, statusText, err){
-			console.log(jqxhr, statusText, err);
-		}
-	});
-};  */
+const emailValid = document.querySelector("#emailValid");
 
 /*
  * 아이디 중복 체크
@@ -314,7 +289,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);//값이 없음.
+	console.log(headers);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
@@ -346,7 +321,42 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 });
 
-
+//email 중복 체크
+document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
+	const {value : email} = e.target;
+	console.log(email);	
+	
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	console.log(headers);
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/member/checkEmailDuplicate.do",
+		method : "POST",
+		headers, 
+		data : {email},
+		success(response){
+			console.log(response, typeof response); // js object
+			
+			const {available} = response;
+			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
+			
+			if(available){
+				invalidFeedBack.style.display = "none";
+				emailValid.value = "1";
+			}
+			else {
+				invalidFeedBack.style.display = "inline";
+				emailValid.value = "0";
+			}
+			
+		},
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
+		}
+	});
+	
+});
 
 //주소입력 라이브러리
 document.querySelector("#address").addEventListener('click', function(){

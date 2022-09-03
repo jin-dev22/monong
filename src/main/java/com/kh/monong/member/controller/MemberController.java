@@ -22,6 +22,7 @@ import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.proxy.annotation.Post;
 
 
 @Controller
@@ -36,6 +37,9 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
+	@GetMapping("/selectEnrollType")
+	public void selectEnrollType() {}
+	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {
 	}
@@ -45,12 +49,24 @@ public class MemberController {
 	}
 	
 	@PostMapping("/checkIdDuplicate.do")
-	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
-		Member member = memberService.selectOneMember(memberId);
+	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId) {
+		Member member = memberService.selectMemberById(memberId);
 		boolean available = member == null;
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", memberId);
+		map.put("available", available);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(map);
+	}
+	
+	@PostMapping("/checkEmailDuplicate.do")
+	public ResponseEntity<?> checkEmailDuplicate(@RequestParam String email){
+		Member member = memberService.selectMemberByEmail(email);
+		boolean available = member == null;
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberEmail", email);
 		map.put("available", available);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(map);

@@ -7,7 +7,9 @@ import com.kh.monong.member.model.dto.MemberEntity;
 
 public interface MemberService {
 //-----------수진시작
-	Member selectOneMember(String memberId);
+	Member selectMemberById(String memberId);
+	
+	Member selectMemberByEmail(String email);
 	
 	int insertMember(Member member);
 //-----------수진 끝

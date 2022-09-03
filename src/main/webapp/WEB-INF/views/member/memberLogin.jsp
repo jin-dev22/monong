@@ -46,7 +46,7 @@
 				<button type="submit" class="btn btn-EA5C2B">로그인</button>
 			</div>
 		</form:form>
-		<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do';">회원가입</button>
+		<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
 		<input type="button" value="아이디 찾기" id="btn-loginSearch" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/member/memberIdSearchForm.do';" />
 </div>
 
