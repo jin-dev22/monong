@@ -47,7 +47,6 @@
 			</div>
 		</form:form>
 		<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
-		<input type="button" value="아이디 찾기" id="btn-loginSearch" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/member/memberIdSearchForm.do';" />
-</div>
+		<button type="button" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/member/memberIdSearchForm.do';">아이디찾기</button></div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
