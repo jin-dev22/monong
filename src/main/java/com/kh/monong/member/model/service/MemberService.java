@@ -16,7 +16,14 @@ public interface MemberService {
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
+
+	int updateTempPw(Map<String, Object> map);
+	
+	
 //-----------수아 끝
+
+
+	
 
 	
 }

@@ -41,5 +41,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.findMemberId(map);
 	}
 	
+	@Override
+	public int updateTempPw(Map<String, Object> map) {
+		return memberDao.updateTempPw(map);
+	}
 	//------------------수아 끝
 }
