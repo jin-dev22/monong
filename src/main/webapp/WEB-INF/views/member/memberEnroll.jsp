@@ -66,11 +66,12 @@ div#enroll-container table th{
 			        </div>
 				</td>
 				<td>
-			        <input type="button" value="이메일 인증"/>
+			        <input type="button" id="btn-email-sendCode" value="이메일 인증"/>
 				</td>
 			</tr>
 			<tr>
-				<td></td>
+				<td><input type="text" placeholder="인증코드를 입력하세요."/></td>
+				<td><input type="button" id="btn-email-enterCode" value="확인"/></td>
 			</tr>
 			<tr>
 				<th>주소</th>
@@ -386,5 +387,40 @@ document.querySelector("#bnt-srch").addEventListener('click', function(){
 });
 */
 
+document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
+	if(emailValid.value == "0"){
+		alert("유효한 이메일을 입력해주세요.");
+		return;
+	}
+	
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	console.log(headers);
+	
+	const email = document.querySelector("#memberEmail");
+	console.log(email);
+	$.ajax({
+		url : "${pageContext.request.contextPath}/member/sendEmailCode.do",
+		method : "POST",
+		headers, 
+		data : {email},
+		success(response){
+			const {sendResult} = response;
+			console.log(sendResult);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
+			
+			if(sendResult){
+				alert("입력하신 이메일로 인증코드가 전송되었습니다.");
+			}
+			else {
+				alert("인증코드 전송에 실패했습니다. 다시 한 번 시도해 주세요.");
+			}
+			
+		},
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
+		}
+	});
+	
+});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

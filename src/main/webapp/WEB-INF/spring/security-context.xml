@@ -24,8 +24,7 @@
 		<intercept-url pattern="/member/memberIdSearchForm.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberLogout.do" access="permitAll"/>
-		<!-- 회원가입 페이지 설정 후 수정할것 -->
-		<intercept-url pattern="/member/**" access="permitAll"/>
+		<intercept-url pattern="/member/**" access="permitAll"/><!-- 회원가입 페이지 설정 후 수정할것 -->
 		<intercept-url pattern="/direct/directProductDetail.do" access="permitAll"/>
 		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		
