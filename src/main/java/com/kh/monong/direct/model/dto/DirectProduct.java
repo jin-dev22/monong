@@ -24,4 +24,5 @@ public class DirectProduct {
 	private String dProductContent;
 	private LocalDateTime dProductCreatedAt;
 	private LocalDateTime dProductUpdatedAt;
+	private int dDefaultPrice;
 }

@@ -1,6 +1,7 @@
 package com.kh.monong.member.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +15,10 @@ public interface MemberDao {
 
 	//------------------------수진 시작
 	@Select("select * from member where member_id = #{memberId}")
-	Member selectOneMember(String memberId);
+	Member selectMemberById(String memberId);
+	
+	@Select("select * from member where member_email = #{email}")
+	Member selectmemberByEmail(String email);
 
 	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null)")
 	int insertMember(Member member);
@@ -22,5 +26,12 @@ public interface MemberDao {
 	//------------------------수진 시작
 	
 	//------------------------수아 시작
+
+	@Select("select * from member where member_name = #{name} and member_email = #{email}")
+	Member findMemberId(Map<String, Object> map);
+	
+	
 	//------------------------수아 끝
+
+	
 }

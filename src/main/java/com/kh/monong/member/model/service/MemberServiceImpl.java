@@ -1,13 +1,13 @@
 package com.kh.monong.member.model.service;
 
-import java.util.List;
+import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
-import com.kh.monong.member.model.dto.MemberEntity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,9 +19,13 @@ public class MemberServiceImpl implements MemberService {
 	private MemberDao memberDao;
 	//------------------수진 시작
 	@Override
-	public Member selectOneMember(String memberId) {
-		log.debug("memberId = {}",memberId);
-		return memberDao.selectOneMember(memberId);
+	public Member selectMemberById(String memberId) {
+		return memberDao.selectMemberById(memberId);
+	}
+	
+	@Override
+	public Member selectMemberByEmail(String email) {
+		return memberDao.selectmemberByEmail(email);
 	}
 	
 	@Override
@@ -31,5 +35,11 @@ public class MemberServiceImpl implements MemberService {
 	//------------------수진 끝
 	
 	//------------------수아 시작
+	
+	@Override
+	public Member findMemberId(Map<String, Object> map) {
+		return memberDao.findMemberId(map);
+	}
+	
 	//------------------수아 끝
 }
