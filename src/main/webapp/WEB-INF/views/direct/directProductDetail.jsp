@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농-상품 상세 페이지" />
 </jsp:include>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <main class="main-container">
@@ -38,29 +38,34 @@
     </div>
   </div>
   <div class="pInfo-container">
-    <span>유기농 블루베리</span><br>
-    <span>29,900원</span><span>여기에 별</span><span>별점</span>
+    <span>${directProduct.DProductName}</span><br>
+    <span><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><span>여기에 별</span><span>별점</span>
     <div style="border: 0.5px solid black; background-color: black;"></div>
-    <span>배송비</span><span></span><br>
+    <span>배송비</span><span>3,000원</span><br>
     <span>판매자</span><span></span>
-    <div style="border: 0.5px solid black; background-color: black;"></div>
+    <br />
     <div class="dropdown">
 	    <button class="dropbtn">
-	      <span class="dropbtn_content">Select a menu...</span>
+	      <span class="dropbtn_content">옵션 선택</span>
 	      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
 	    </button>
 	    <div class="dropdown-content">
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Burgerking</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Mcdonals</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Lotteria</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Mom's touch</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">In n out</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Subway</div>
-	      <div class="fastfood" onclick="showMenu(this.innerText)">Shake shack</div>
+	      <c:forEach items="${directProduct.directProductOptions}" var="option">
+		      <div class="select_option" onclick="showMenu(this.innerText)">
+		      	${directProduct.DProductName}${option.DOptionName}${option.DPrice}
+		      </div>
+	      </c:forEach>
 	    </div>
 	</div>
+    <div style="border: 0.5px solid black; background-color: black;"></div>
+	<div class="pOption-container">
+	</div>
+	<div class="pPrice-container">
+		<span class="total-price">총 상품 금액</span>
+		<span class="total-price-num">13,000원</span>
+	</div>
+    <button type="button" class="btn-add-cart">장바구니</button>
   </div>
-  
 </main>
 <script>
 //기존 버튼형 슬라이더
@@ -127,7 +132,7 @@ document.querySelector('.dropbtn').addEventListener('click', () => {
   //   dropdown();
   // });
   
-  document.getElementsByClassName('fastfood').onclick = (value)=>{
+  document.getElementsByClassName('select_option').onclick = (value)=>{
     showMenu(value);
   };
   dropdown = () => {
@@ -173,4 +178,5 @@ document.querySelector('.dropbtn').addEventListener('click', () => {
     }
   });
 </script>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
