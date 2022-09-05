@@ -10,33 +10,12 @@
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/direct.css" />
-<main>
-    <div class="container">
-        <section class="py-5 text-center container">
-            <h3>직거래&#127805</h3>
-        </section>		    
-			<div class="col">
-		        <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg">
-		          <div class="d-flex flex-column h-100 p-5 pb-3 text-black text-shadow-2">
-		          <a id="moveToPage">
-		            <h6 class="pt-5 mt-5 mb-5 display-8 lh-10"></h6>
-		          </a>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto">
-		                <small></small>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		              	<small></small>
-		              </li>
-		              <li class="d-flex align-items-center">
-		                <small>&nbsp;</small>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		     </div>
-		</div>
-	</div>
-		<p class="pagination justify-content-center"></p>
-</main>
+<div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
