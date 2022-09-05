@@ -30,6 +30,11 @@ public class DirectServiceImpl implements DirectService {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return directDao.selectProductList(rowBounds);
 			};
+			
+	@Override
+	public int getDirectProductTotalContent() {
+		return directDao.getDirectProductTotalContent();
+	}
 	}
 	
 	
