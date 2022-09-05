@@ -66,6 +66,13 @@ CREATE TABLE seller_info_attachment (
 	renamed_filename	varchar2(256)		NOT NULL
 );
 
+--회원 이메일 인증키 저장 테이블 추가: member 테이블과 연결X
+create table member_email_identify(
+    member_email varchar2(100), 
+    identify_key varchar2(50) not null,
+    constraint pk_member_email primary key(member_email)
+);
+
 COMMENT ON COLUMN seller_info.seller_reg_no IS '000-00-00000';
 
 COMMENT ON COLUMN seller_info.seller_status IS '가입대기, 가입승인';
@@ -141,6 +148,8 @@ REFERENCES member
 (
 	member_id
 );
+--회원 이메일인증 관련 컬럼 추가
+alter table member add member_identified varchar2(1);
 --회원관련 시퀀스
 create sequence seq_noti_no;
 create sequence seq_seller_attach_no;
