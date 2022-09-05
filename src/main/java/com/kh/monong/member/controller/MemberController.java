@@ -76,7 +76,7 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberEmail", email);
 		map.put("available", available);
-		
+		log.debug("result map = {}", map);
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
@@ -92,9 +92,6 @@ public class MemberController {
 			log.debug("encodedPassword = {}", encodedPassword);
 			
 			//회원권한 db입력용 설정.
-//			List<SimpleGrantedAuthority> auths = new ArrayList<>();
-//			auths.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
-//			member.setAuthorities(auths);
 			Map<String, Object> memberAuthMap = new HashMap<>();
 			memberAuthMap.put("memberId", member.getMemberId());
 			memberAuthMap.put("memberAuth", "ROLE_MEMBER");

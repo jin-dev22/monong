@@ -70,6 +70,9 @@ div#enroll-container table th{
 				</td>
 			</tr>
 			<tr>
+				<td></td>
+			</tr>
+			<tr>
 				<th>주소</th>
 				<td>	
 					<input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
@@ -293,7 +296,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
 		method : "POST",
-		headers, //나중에 시큐리티 관련 설정하면 주석해제하기.
+		headers,
 		data : {memberId},
 		success(response){
 			console.log(response, typeof response); // js object
@@ -324,6 +327,12 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
 	const {value : email} = e.target;
 	console.log(email);	
+
+	if(email.length < 7){
+		idValid.value = "0";
+		invalidFeedBack.style.display = "none";
+		return;
+	}
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
@@ -335,8 +344,6 @@ document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
 		headers, 
 		data : {email},
 		success(response){
-			console.log(response, typeof response); // js object
-			
 			const {available} = response;
 			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			

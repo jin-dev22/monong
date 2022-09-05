@@ -17,7 +17,7 @@ public interface MemberDao {
 	@Select("select * from member where member_id = #{memberId}")
 	Member selectMemberById(String memberId);
 	
-	@Select("select * from member where member_email = #{email}")
+	@Select("select * from member where member_email = #{email} and member_quit_date is null")
 	Member selectmemberByEmail(String email);
 
 	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null)")
@@ -26,7 +26,7 @@ public interface MemberDao {
 	@Insert("insert into member_authority values(#{memberAuth}, #{memberId})")
 	int insertMemberAuth(Map<String, Object> memberAuthMap);
 
-	//------------------------수진 시작
+	//------------------------수진 끝 
 	
 	//------------------------수아 시작
 
