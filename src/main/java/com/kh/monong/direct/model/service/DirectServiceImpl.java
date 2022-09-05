@@ -22,7 +22,7 @@ public class DirectServiceImpl implements DirectService {
 	private DirectDao directDao;
 	
 	@Override
-	public List<DirectProduct> selectProductList(Map<String, Integer> param) {
+	public List<DirectProduct> selectDirectProductList(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
 		// offset limit
 		int limit = param.get("limit");
@@ -30,6 +30,11 @@ public class DirectServiceImpl implements DirectService {
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		return directDao.selectProductList(rowBounds);
 			};
+			
+	@Override
+	public int getDirectProductTotalContent() {
+		return directDao.getDirectProductTotalContent();
+	}
 	}
 	
 	
