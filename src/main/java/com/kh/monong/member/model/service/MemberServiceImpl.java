@@ -51,6 +51,11 @@ public class MemberServiceImpl implements MemberService {
 	public int insertEmailIdentify(Map<String, Object> map) {
 		return memberDao.insertEmailIdentify(map);
 	}
+	
+	@Override
+	public String getEmailKey(String email) {
+		return memberDao.getEmailKey(email);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

@@ -34,6 +34,5 @@ public class MemberEntity {
 	protected YN memberDel;
 	protected LocalDate memberEnrollDate;
 	protected LocalDate memberQuitDate;
-	protected YN is_identified;
-	protected String mail_key;
+	protected YN memberIdentified;
 }

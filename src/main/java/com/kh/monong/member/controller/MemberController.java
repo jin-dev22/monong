@@ -103,12 +103,12 @@ public class MemberController {
 		}
 	}
 	
-	@PostMapping("/sendEmailCode.do")
-	public ResponseEntity<?> sendEmailCode(@RequestParam String email){
+	@PostMapping("/sendEmailKey.do")
+	public ResponseEntity<?> sendEmailKey(@RequestParam String email){
+		Map<String, Object> map = new HashMap<>();
 		try {
 			MailUtils sendMail = new MailUtils(mailSender);
 			String identifyKey = new TempKey().getKey(4,false);
-			Map<String, Object> map = new HashMap<>();
 			map.put("identifyKey", identifyKey);
 			map.put("memberEmail", email);
 			
@@ -126,11 +126,23 @@ public class MemberController {
 			log.debug("after db ={}", map.remove("identifyKey"));
 			map.put("msg", "입력하신 이메일로 인증코드가 전송되었습니다.");
 			
-			return ResponseEntity.status(HttpStatus.OK).body(map);
 		} catch(Exception e) {
 			log.error("이메일 인증코드 전송오류 : " + e.getMessage(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+		return ResponseEntity.status(HttpStatus.OK).body(map);
+	}
+	
+	@PostMapping("/checkEmailKey.do")
+	public ResponseEntity<?> checkEmailKey(@RequestParam String email, @RequestParam String emailKey){
+		Map<String, Object> map = new HashMap<>();
+		String key = memberService.getEmailKey(email);
+		log.debug("db key ={}", key);
+		boolean isIdentified = emailKey.equals(key);
+		String msg = isIdentified? "이메일 인증 완료!" : "인증코드가 일치하지 않아요. 다시 확인해주세요.";
+		map.put("msg", msg);
+		map.put("isIdentified", isIdentified);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작

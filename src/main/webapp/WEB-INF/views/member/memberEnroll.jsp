@@ -66,12 +66,15 @@ div#enroll-container table th{
 			        </div>
 				</td>
 				<td>
-			        <input type="button" id="btn-email-sendCode" value="이메일 인증"/>
+			        <input type="button" id="btn-email-sendKey" value="이메일 인증"/>
 				</td>
 			</tr>
 			<tr>
-				<td><input type="text" placeholder="인증코드를 입력하세요."/></td>
-				<td><input type="button" id="btn-email-enterCode" value="확인"/></td>
+				<td>
+					<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required/>
+					<input type="hidden" id="emailKeyValid" value="0"/><!-- 불일치 0, 일치 1 -->
+				</td>
+				<td><input type="button" id="btn-email-enterKey" value="확인"/></td>
 			</tr>
 			<tr>
 				<th>주소</th>
@@ -249,9 +252,16 @@ div#enroll-container table th{
 	</form>
 </div>
 <script>
+const ok = document.querySelector(".guide.ok");
+const error = document.querySelector(".guide.error");
+const invalidFeedBack = document.querySelector(".invalid-feedback");
+const idValid = document.querySelector("#idValid");
+const emailValid = document.querySelector("#emailValid");
+const emailKeyValid = document.querySelector("#emailKeyValid");
+
 document.memberEnrollFrm.addEventListener('submit', (e) => {
 	//아이디 체크
-	if(idValid.value === "0"){
+	if(idValid.value == "0"){
 		e.preventDefault();
 		alert("유효한 아이디를 입력해주세요.");
 		return;
@@ -261,20 +271,22 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	let cntChkd = 0;
 	agreeRequired.forEach((checkbox)=>{
 		if(!checkbox.checked){
+			e.preventDefault();
 			cntChkd++;
 		}		
 	});
 	if(cntChkd > 0){
 		e.preventDefault();
 		alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
+		return;
+	}
+	//이메일 인증 체크
+	if(emailKeyValid === "0"){
+		e.preventDefault();
+		alert("이메일 인증코드를 확인해주세요.");
+		return;
 	}
 });
-
-const ok = document.querySelector(".guide.ok");
-const error = document.querySelector(".guide.error");
-const invalidFeedBack = document.querySelector(".invalid-feedback");
-const idValid = document.querySelector("#idValid");
-const emailValid = document.querySelector("#emailValid");
 
 /*
  * 아이디 중복 체크
@@ -326,6 +338,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 
 //email 중복 체크
 document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
+	
 	const {value : email} = e.target;
 	console.log(email);	
 
@@ -387,7 +400,9 @@ document.querySelector("#bnt-srch").addEventListener('click', function(){
 });
 */
 
-document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
+
+//이메일 인증코드 전송
+document.querySelector("#btn-email-sendKey").addEventListener('click', (e)=>{
 	if(emailValid.value == "0"){
 		alert("유효한 이메일을 입력해주세요.");
 		return;
@@ -400,7 +415,7 @@ document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
 	const email = document.querySelector("#memberEmail").value;
 	console.log(email);
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/sendEmailCode.do",
+		url : "${pageContext.request.contextPath}/member/sendEmailKey.do",
 		method : "POST",
 		headers, 
 		data : {email},
@@ -414,6 +429,33 @@ document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
 		}
 	});
 	
+});
+
+//인증코드 확인
+document.querySelector("#btn-email-enterKey").addEventListener("click", (e)=>{
+	const emailKey = document.querySelector("#emailKey");
+	const email = document.querySelector("#memberEmail");
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	$.ajax({
+		url : "${pageContext.request.contextPath}/member/checkEmailKey.do",
+		method : "POST",
+		headers,
+		data : {"email" : email.value, "emailKey" : emailKey.value},
+		success(response){
+			const {isIdentified, msg} = response;
+			if(isIdentified){
+				emailKeyValid.value = "1";
+				e.disabled = true;
+				email.readOnly = true;
+				emailKey.readOnly = true;	
+			}
+			alert(msg);
+		},
+		error(jqxhr, statusText, err){
+			console.log(jqxhr, statusText, err);
+		}		
+	});
 });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

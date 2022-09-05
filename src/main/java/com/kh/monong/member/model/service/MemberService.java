@@ -17,6 +17,8 @@ public interface MemberService {
 	int insertMemberAuth(Map<String, Object> memberAuthMap);
 	
 	int insertEmailIdentify(Map<String, Object> map);
+	
+	String getEmailKey(String email);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
