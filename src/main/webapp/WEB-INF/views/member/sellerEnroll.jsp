@@ -88,6 +88,10 @@ div#enroll-container table th{
 				</td>
 			</tr> 
 			<tr>
+				<th>업체명</th>
+				<td>사업자등록번호</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
 [시행 2008. 7. 30.] [문화체육관광부훈령 제2008-0호, 2008. 7. 30., 제정]

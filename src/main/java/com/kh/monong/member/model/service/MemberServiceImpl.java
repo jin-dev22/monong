@@ -30,7 +30,18 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public int insertMember(Member member) {
-		return memberDao.insertMember(member);
+		int result = memberDao.insertMember(member);
+		log.debug("result insertMember = {}", result);
+		
+		//insert member auth
+		result = insertMemberAuth(member);
+		
+		return result;
+	}
+
+	@Override
+	public int insertMemberAuth(Member member) {
+		return memberDao.insertMemberAuth(member);
 	}
 	//------------------수진 끝
 	

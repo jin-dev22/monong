@@ -12,6 +12,8 @@ public interface MemberService {
 	Member selectMemberByEmail(String email);
 	
 	int insertMember(Member member);
+	
+	int insertMemberAuth(Member member);
 //-----------수진 끝
 //-----------수아 시작
 //-----------수아 끝

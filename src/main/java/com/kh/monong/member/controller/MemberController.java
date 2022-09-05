@@ -1,6 +1,8 @@
 package com.kh.monong.member.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
@@ -22,7 +25,6 @@ import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.Post;
 
 
 @Controller
@@ -83,6 +85,10 @@ public class MemberController {
 			member.setMemberPassword(encodedPassword);
 			log.debug("encodedPassword = {}", encodedPassword);
 			
+			//회원권한설정
+			List<SimpleGrantedAuthority> auths = new ArrayList<>();
+			auths.add(new SimpleGrantedAuthority("Member"));
+			member.setAuthorities(auths);
 			int result = memberService.insertMember(member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
 			return "redirect:/";
