@@ -255,6 +255,8 @@ CREATE TABLE direct_product (
 	constraint fk_member_id_01 foreign key(member_id) references member(member_id)
 );
 
+ALTER TABLE direct_product ADD d_default_price number;
+
 CREATE TABLE direct_product_attachment (
 	d_product_attach_no	number		NOT NULL,
 	d_product_no	varchar2(100)		NOT NULL,
