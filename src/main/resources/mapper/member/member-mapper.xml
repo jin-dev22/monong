@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.monong.member.model.dao.MemberDao">
+  <update id="insertEmailIdentify">
+  	merge into member_email_identify
+  		using dual 
+  		on (member_email = #{memberEmail})
+  		when matched then
+  			update set
+  				identify_key = #{identifyKey}
+  		when not matched then
+  			insert (member_email, identify_key)
+  			values (#{memberEmail}, #{identifyKey})	
+  </update>
+</mapper>

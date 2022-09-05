@@ -25,6 +25,8 @@ public interface MemberDao {
 	@Insert("insert into member_authority values(#{memberAuth}, #{memberId})")
 	int insertMemberAuth(Map<String, Object> memberAuthMap);
 
+	
+	int insertEmailIdentify(Map<String, Object> map);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

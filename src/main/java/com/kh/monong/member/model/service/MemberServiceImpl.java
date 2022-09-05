@@ -46,6 +46,11 @@ public class MemberServiceImpl implements MemberService {
 	public int insertMemberAuth(Map<String, Object> memberAuthMap) {
 		return memberDao.insertMemberAuth(memberAuthMap);
 	}
+	
+	@Override
+	public int insertEmailIdentify(Map<String, Object> map) {
+		return memberDao.insertEmailIdentify(map);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

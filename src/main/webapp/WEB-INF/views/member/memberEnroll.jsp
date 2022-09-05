@@ -397,7 +397,7 @@ document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	console.log(headers);
 	
-	const email = document.querySelector("#memberEmail");
+	const email = document.querySelector("#memberEmail").value;
 	console.log(email);
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/sendEmailCode.do",
@@ -405,15 +405,8 @@ document.querySelector("#btn-email-sendCode").addEventListener('click', (e)=>{
 		headers, 
 		data : {email},
 		success(response){
-			const {sendResult} = response;
-			console.log(sendResult);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
-			
-			if(sendResult){
-				alert("입력하신 이메일로 인증코드가 전송되었습니다.");
-			}
-			else {
-				alert("인증코드 전송에 실패했습니다. 다시 한 번 시도해 주세요.");
-			}
+			const {msg} = response;
+			alert(msg);
 			
 		},
 		error(jqxhr, statusText, err){

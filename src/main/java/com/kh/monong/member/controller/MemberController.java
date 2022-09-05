@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -101,6 +100,36 @@ public class MemberController {
 		} catch(Exception e) {
 			log.error("회원등록 오류 : " + e.getMessage(), e);
 			throw e;
+		}
+	}
+	
+	@PostMapping("/sendEmailCode.do")
+	public ResponseEntity<?> sendEmailCode(@RequestParam String email){
+		try {
+			MailUtils sendMail = new MailUtils(mailSender);
+			String identifyKey = new TempKey().getKey(4,false);
+			Map<String, Object> map = new HashMap<>();
+			map.put("identifyKey", identifyKey);
+			map.put("memberEmail", email);
+			
+			sendMail.setSubject("모농모농 회원가입 이메일 인증코드입니다.");
+			sendMail.setText("<h1>이메일 인증코드</h1>"
+					+ "<br />"+ "인증코드는"
+							+ "<br /><strong>"+identifyKey+"</strong>입니다."
+							+ "<br />감사합니다!"
+								);
+			sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
+			sendMail.setTo(email);
+			sendMail.send();
+			//db저장
+			int result = memberService.insertEmailIdentify(map);
+			log.debug("after db ={}", map.remove("identifyKey"));
+			map.put("msg", "입력하신 이메일로 인증코드가 전송되었습니다.");
+			
+			return ResponseEntity.status(HttpStatus.OK).body(map);
+		} catch(Exception e) {
+			log.error("이메일 인증코드 전송오류 : " + e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 	//----------------------수진 끝
