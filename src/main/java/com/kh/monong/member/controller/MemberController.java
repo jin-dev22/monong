@@ -5,21 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
@@ -120,8 +125,49 @@ public class MemberController {
 	}
 
 	@GetMapping("/memberIdSearchForm.do")
-	public void memberIdSearch() {
+	public void memberIdSearchForm() {
 		
 	}
+	@Inject
+	private JavaMailSender mailSender;
+	
+	@PostMapping("/memberIdSearchForm.do")
+	public String memberIdSearchForm(@RequestParam String email, 
+								 @RequestParam String name,
+								 RedirectAttributes redirectAttr) throws Exception {
+		MailUtils sendMail = new MailUtils(mailSender);
+		Map<String, Object> map = new HashMap<>();
+		map.put("email", email);
+		map.put("name", name);
+		Member member = memberService.findMemberId(map);
+		
+		if(member == null) {
+			redirectAttr.addFlashAttribute("msg", "일치하는 회원정보가 없습니다.");
+			return "redirect:/member/memberIdSearchForm.do";
+		}
+		
+		try {
+		
+			sendMail.setSubject("모농모농 회원 아이디 조회");
+			sendMail.setText("<h1>아이디 조회 결과</h1>"
+					+ "<br />"+ member.getMemberName()+"님"
+							+ "<br />조회하신 아이디는"
+							+ "<br /><strong>"+member.getMemberId()+"</strong>입니다."
+							+ "<br />감사합니다!"
+								);
+			sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
+			sendMail.setTo(member.getMemberEmail());
+			sendMail.send();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		redirectAttr.addFlashAttribute("msg", email+"로 아이디를 보냈습니다. 이메일을 확인해주세요");
+		
+		return "redirect:/member/memberIdSearchForm.do";
+	} 
+	
+
+	
 	//----------------------수아 끝
 }
