@@ -1,3 +1,169 @@
 @CHARSET "UTF-8";
 
-/**********  **********/
+/****** 구역 나누기 ******/
+.main-container {
+  display: inline-flex;
+  align-items: flex-start;
+}
+.slider-container {
+  display: inline-block;
+  width: 400px;
+  height: 500px;
+  margin-right: 30px;
+}
+.pInfo-container {
+  display: inline-block;
+  width: 400px;
+  height: 700px;
+  vertical-align: text-top;
+}
+
+/****** 이미지 슬라이드 ******/
+/* 슬라이더 1 시작 */
+.slider-1 {
+    width: 400px;
+    height: 400px;
+    position:relative;
+}
+
+/* 슬라이더 1 - 페이지 버튼 */
+.slider-1 > .page-btns {
+    text-align:left;
+    position:absolute;
+    bottom:-81px;
+    display: inline-flex;
+    justify-content: flex-start;
+    left:0;
+    width:100%;
+}
+
+.slider-1 > .page-btns > div {
+    width:75px;
+    height:75px;
+    background-color:black;
+    border-radius:4px;
+    display:inline-block;
+    cursor:pointer;
+    margin-right: 6px;
+    filter: brightness(70%);
+}
+
+.slider-1 > .page-btns > div:last-child {
+    width:75px;
+    height:75px;
+    background-color:black;
+    border-radius:4px;
+    display:inline-block;
+    cursor:pointer;
+    margin-right: 0px;
+}
+
+.slider-1 > .page-btns > div.active {
+    border: 2px solid black;
+    box-sizing: border-box; 
+    filter: brightness(100%);
+    background-origin: border-box;
+}
+
+/* 슬라이더 1 - 슬라이드 */
+
+.slider-1 > .slides > div {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity:0;
+    transition: opacity 0.3s;
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
+}
+
+.slider-1 > .slides > div.active {
+    opacity:1;
+}
+
+/* 슬라이더 좌우 버튼 */
+.slider-1 > .side-btns > div {
+    position:inherit;
+    top:0;
+    left:0;
+    width:100%;
+    cursor:pointer;
+}
+.slider-1 > .side-btns > div:last-child {
+    left:auto;
+    right:0;
+}
+.slider-1 >.side-btns > div > span {
+    position:absolute;
+    top:50%;
+    left:0;
+    transform:translatey(-50%);
+    opacity:0.8;
+    color: white;
+    padding:10px 20px;
+    border-radius:50px;
+    font-size:35px;
+}
+.slider-1 >.side-btns > div:last-child > span {
+    left:auto;
+    right:0;
+}
+
+/****** 다운드롭 ******/
+
+.dropdown{
+  position : relative;
+  display : inline-block;
+}
+
+.dropbtn{
+  display : block;
+  border : 2px solid rgb(94, 94, 94);
+  border-radius : 4px;
+  background-color: #fcfcfc;
+  font-weight: 400;
+  color : rgb(124, 124, 124);
+  padding : 2px;
+  width :240px;
+  text-align: left;
+  cursor : pointer;
+  font-size : 12px;
+  z-index :1;
+  position : relative;
+}
+.dropdown-content{
+  display : none;
+  font-weight: 400;
+  background-color: #fcfcfc;
+  min-width : 240px;
+  border-radius: 8px;
+  max-height : 160px;
+  overflow : scroll;
+  box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
+}
+.dropdown-content::-webkit-scrollbar{
+  width : 5px;
+  height : 10px;
+}
+.dropdown-content::-webkit-scrollbar-thumb{
+  border-radius : 2px;
+  background-color :rgb(194, 194, 194)
+}
+
+.dropdown-content div{
+  display : block;
+  text-decoration : none;
+  color : rgb(37, 37, 37);
+  font-size: 12px;
+  padding : 12px 20px;
+}
+.dropdown-content div:hover{
+  background-color: rgb(226, 226, 226);
+}
+
+.dropdown-content.show{
+  display : block;
+}
