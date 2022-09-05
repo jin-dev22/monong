@@ -2,6 +2,7 @@ package com.kh.monong.member.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -14,7 +15,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -159,6 +159,82 @@ public class MemberController {
 		
 		return "redirect:/member/memberIdSearchForm.do";
 	} 
+	
+	@GetMapping("/memberPwSearchForm.do")
+	public void memberPwSearchForm() {
+		
+	}
+	
+	@PostMapping("/memberPwSearchForm.do")
+	public String memberPwSearchForm(@RequestParam String email, 
+								     @RequestParam String name,
+									 RedirectAttributes redirectAttr) throws Exception {
+		MailUtils sendMail = new MailUtils(mailSender);
+		Map<String, Object> map = new HashMap<>();
+		map.put("email", email);
+		map.put("name", name);
+		Member member = memberService.findMemberId(map);
+		if(member == null) {
+			redirectAttr.addFlashAttribute("msg", "일치하는 회원정보가 없습니다.");
+			return "redirect:/member/memberPwSearchForm.do";
+		}
+		
+		try {
+		//임시 비밀번호
+		String memberKey = new TempKey().getKey(6,false);
+		String memberTempPw = bcryptPasswordEncoder.encode(memberKey);	
+		map.put("memberTempPw", memberTempPw);
+		int result = memberService.updateTempPw(map);
+		
+		sendMail.setSubject("모농모농 임시 비밀번호 발급");
+		sendMail.setText("<h1>임시 비밀번호</h1>"
+		+ "<br />"+ member.getMemberName()+"님"
+				+ "<br />임시 비밀번호는"
+				+ "<br /><strong>"+memberKey+"</strong>입니다."
+				+ "<br />반드시 비밀번호 변경을 해주세요"
+				+ "<br />감사합니다!"
+					);
+		sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
+		sendMail.setTo(member.getMemberEmail());
+		sendMail.send();
+		} catch (MessagingException e) {
+		e.printStackTrace();
+		}
+		
+		redirectAttr.addFlashAttribute("msg", email+"로 임시 비밀번호가 발급됐습니다. 이메일을 확인해주세요");
+		
+		return "redirect:/member/memberLogin.do";
+		} 
+	
+	//임시 비밀번호 발급 - 일단 6자리로 해놨습니다
+	public class TempKey{
+			private boolean lowerCheck;
+			private int size;
+			
+			public String getKey(int size, boolean lowerCheck) {
+				this.size = size;
+				this.lowerCheck = lowerCheck;
+				return init();
+			}
+			
+			private String init() {
+				Random ran = new Random();
+				StringBuffer sb = new StringBuffer();
+				int num  = 0;
+				do {
+					num = ran.nextInt(75) + 48;
+					if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+						sb.append((char) num);
+					} else {
+						continue;
+					}
+				} while (sb.length() < size);
+				if (lowerCheck) {
+					return sb.toString().toLowerCase();
+				}
+				return sb.toString();
+			}
+		}
 	
 
 	
