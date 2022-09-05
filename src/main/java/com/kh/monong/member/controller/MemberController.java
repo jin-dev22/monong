@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -143,6 +145,13 @@ public class MemberController {
 		map.put("isIdentified", isIdentified);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(map);
+	}
+	
+	@GetMapping("/selectSeller/{memberId}")
+	public ResponseEntity<?> selectSeller(@PathVariable String memberId){
+		Seller seller = memberService.selectSeller(memberId);
+		log.debug("seller = {}",seller);
+		return ResponseEntity.status(HttpStatus.OK).body(seller);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작

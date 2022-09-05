@@ -66,15 +66,18 @@ div#enroll-container table th{
 			        </div>
 				</td>
 				<td>
-			        <input type="button" id="btn-email-sendKey" value="이메일 인증"/>
+			        <input type="button" id="btn-email-sendKey" value="이메일 인증"
+			        		disabled/><!-- 완성후 기능 살려놓기 -->
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required/>
-					<input type="hidden" id="emailKeyValid" value="0"/><!-- 불일치 0, 일치 1 -->
+					<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
+							readonly/>
+					<input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
 				</td>
-				<td><input type="button" id="btn-email-enterKey" value="확인"/></td>
+				<td><input type="button" id="btn-email-enterKey" value="확인"
+						disabled/></td>
 			</tr>
 			<tr>
 				<th>주소</th>
@@ -291,11 +294,13 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		return;
 	}
 	//이메일 인증 체크
+	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
 	if(emailKeyValid === "0"){
 		e.preventDefault();
 		alert("이메일 인증코드를 확인해주세요.");
 		return;
 	}
+	*/
 });
 
 /*

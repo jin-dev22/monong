@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +56,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String getEmailKey(String email) {
 		return memberDao.getEmailKey(email);
+	}
+	
+	@Override
+	public Seller selectSeller(String memberId) {
+		return memberDao.selectSeller(memberId);
 	}
 	//------------------수진 끝
 	

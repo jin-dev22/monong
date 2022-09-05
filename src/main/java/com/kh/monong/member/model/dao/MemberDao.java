@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 
 @Mapper
 public interface MemberDao {
@@ -30,6 +31,9 @@ public interface MemberDao {
 	
 	@Select("select identify_key from member_email_identify where member_email = #{email}")
 	String getEmailKey(String email);
+	
+	Seller selectSeller(String memberId);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

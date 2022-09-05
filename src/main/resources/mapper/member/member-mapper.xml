@@ -14,4 +14,9 @@
   			insert (member_email, identify_key)
   			values (#{memberEmail}, #{identifyKey})	
   </update>
+  
+  <select id="selectSeller" resultType="com.kh.monong.member.model.dto.Seller">
+  	select seller_reg_no, seller_name, seller_status
+  	from seller_info where member_id = #{memberId}
+  </select>
 </mapper>
