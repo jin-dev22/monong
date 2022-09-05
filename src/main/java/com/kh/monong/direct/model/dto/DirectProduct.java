@@ -1,28 +1,26 @@
 package com.kh.monong.direct.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.lang.NonNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class DirectProduct {
-	@NonNull
-	private String dProductNo;
-	@NonNull
-	private String memberId;
-	@NonNull
-	private String dProductName;
-	@NonNull
-	private String dProductContent;
-	private LocalDateTime dProductCreatedAt;
-	private LocalDateTime dProductUpdatedAt;
-	private int dDefaultPrice;
+@ToString(callSuper = true)
+public class DirectProduct extends DirectProductEntity {
+	private int attachCount;
+	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
+	private List<DirectProductOption> directProductOptions = new ArrayList<>();
+	
+	public DirectProduct(String dProductNo, String memberId, String dProductName, String dProductContent,
+			LocalDateTime dProductCreatedAt, LocalDateTime dProductUpdatedAt, int dDefaultPrice, int attachCount) {
+		super(dProductNo, memberId, dProductName, dProductContent, dProductCreatedAt, dProductUpdatedAt, dDefaultPrice);
+		this.attachCount = attachCount;
+	}
+	
+	
 }

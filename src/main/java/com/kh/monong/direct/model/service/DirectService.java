@@ -7,9 +7,10 @@ import com.kh.monong.direct.model.dto.DirectProduct;
 
 public interface DirectService {
 
-	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
+	List<DirectProduct> selectDirectProductList();
 
-	int getDirectProductTotalContent();
+	DirectProduct selectOneDirectProduct(String dProductNo);
+
 	}
 
 
