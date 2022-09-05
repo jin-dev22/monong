@@ -1,14 +1,13 @@
 package com.kh.monong.member.model.dao;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.member.model.dto.Member;
-import com.kh.monong.member.model.dto.MemberEntity;
 
 @Mapper
 public interface MemberDao {
@@ -32,6 +31,11 @@ public interface MemberDao {
 
 	@Select("select * from member where member_name = #{name} and member_email = #{email}")
 	Member findMemberId(Map<String, Object> map);
+
+	@Update("update member set member_password = #{memberTempPw} where member_email = #{email}")
+	int updateTempPw(Map<String, Object> map);
+
+	
 	
 	
 	//------------------------수아 끝
