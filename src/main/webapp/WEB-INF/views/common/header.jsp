@@ -19,28 +19,33 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 <!-- 모농모농css/js -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css" />
 
 <!-- sockjs cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- stompjs cdn -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<%--
+
 <sec:authorize access="isAuthenticated()">
 	<script>
 	const memberId = "<sec:authentication property='principal.username'/>";
 	</script>
 <script src="${pageContext.request.contextPath}/resources/js/ws.js"></script>
 </sec:authorize>
---%>
+<c:if test="${not empty msg}">
+<script>
+	alert("${msg}");
+</script>
+</c:if>
+
 </head>
 <body>
 
 <body>
 	<header id="header">
 		<a href="#" class="logo">
-			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지">
+			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</a>
 		<nav class="nav mainmenu">
 			<a class="nav-link" href="#">&#128204;사이트소개</a>
@@ -48,20 +53,20 @@
 			<a class="nav-link" href="#">직거래&#127805;</a>
 			<a class="nav-link" href="#">관리자페이지</a>
 		</nav>
-		<!-- security 완료되면 주석 삭제 -->
-		<%-- <sec:authorize access="isAnonymous()"> --%>
+		
+		  <sec:authorize access="isAnonymous()"> 
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="#">&#128722;</a>
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
-					<a class="nav-link" href="#">회원가입</a>
+					<a class="nav-link" href="${pageContext.request.contextPath}/member/selectEnrollType.do">회원가입</a>
 				</nav>
 			</nav>
-		<%-- </sec:authorize> --%>
-		<%--
-		<sec:authorize accsee="isAuthenticated()">
+		 </sec:authorize>
+		
+		<sec:authorize access="isAuthenticated()">
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="#">&#128276;</a>
@@ -69,10 +74,13 @@
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="#">마이페이지</a>
-					<a class="nav-link" href="#">로그아웃</a>
+					<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="POST" class="my-auto">
+					  <button class="nav-link btn" type="submit">로그아웃</button>
+					</form:form>
+					
 				</nav>
 	  		</nav>
 	  	</sec:authorize>
-	  	--%>
+	  	
 	</header>
 	<section id="content">

@@ -204,6 +204,8 @@ CREATE TABLE subscription_review_attachment (
 ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no);
 
 create sequence seq_s_attach_no;
+-- 시퀀스 증가 오류 방지(9/2)
+alter sequence seq_s_attach_no nocache;
 
 CREATE TABLE vegetables (
 	veg_code	varchar2(30)		NOT NULL,
@@ -232,6 +234,9 @@ CREATE TABLE card_info (
 	card_password	varchar2(2)		NOT NULL,
 	customer_uid	varchar2(100)		NOT NULL
 );
+-- 카드 info 시퀀스 추가 및 증가 오류 방지(9/2)
+create sequence seq_card_info_no;
+alter sequence seq_card_info_no nocache;
 
 ALTER TABLE subscription ADD CONSTRAINT PK_SUBSCRIPTION PRIMARY KEY (s_no);
 ALTER TABLE subscription_review ADD CONSTRAINT PK_SUBSCRIPTION_REVIEW PRIMARY KEY (s_review_no);
@@ -360,3 +365,11 @@ CREATE TABLE direct_review_attachment (
 
 commit;
 -- 직거래 끝
+
+--security remember-me 테이블
+create table persistent_logins (
+        username varchar(64) not null, 
+        series varchar(64) primary key, 
+        token varchar(64) not null,
+        last_used timestamp not null);
+        

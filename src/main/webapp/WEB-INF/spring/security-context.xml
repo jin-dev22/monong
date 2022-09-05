@@ -20,9 +20,10 @@
 		<intercept-url pattern="/index.jsp" access="permitAll"/>
 		<intercept-url pattern="/member/memberEnroll.do" access="permitAll"/>
 		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/memberIdSearchForm.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberLogout.do" access="permitAll"/>
-		<intercept-url pattern ="/**" access="permitAll"/>
+		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		
 		
 		<form-login 

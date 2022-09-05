@@ -28,9 +28,9 @@ public class MemberEntity {
 	protected String memberAddress;
 	protected String memberAddressEx;
 	@NonNull
-	protected String phone;
+	protected String memberPhone;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	protected LocalDate birthday;
+	protected LocalDate memberBirthday;
 	protected YN memberDel;
 	protected LocalDate memberEnrollDate;
 	protected LocalDate memberQuitDate;
