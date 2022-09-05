@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 
 @Mapper
 public interface MemberDao {
@@ -16,13 +17,24 @@ public interface MemberDao {
 	@Select("select * from member where member_id = #{memberId}")
 	Member selectMemberById(String memberId);
 	
-	@Select("select * from member where member_email = #{email}")
+	@Select("select * from member where member_email = #{email} and member_quit_date is null")
 	Member selectmemberByEmail(String email);
 
-	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null)")
+	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null, 'Y')")
 	int insertMember(Member member);
 
-	//------------------------수진 시작
+	@Insert("insert into member_authority values(#{memberAuth}, #{memberId})")
+	int insertMemberAuth(Map<String, Object> memberAuthMap);
+
+	
+	int insertEmailIdentify(Map<String, Object> map);
+	
+	@Select("select identify_key from member_email_identify where member_email = #{email}")
+	String getEmailKey(String email);
+	
+	Seller selectSeller(String memberId);
+
+	//------------------------수진 끝 
 	
 	//------------------------수아 시작
 

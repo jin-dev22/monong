@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.MemberEntity;
+import com.kh.monong.member.model.dto.Seller;
 
 public interface MemberService {
 //-----------수진시작
@@ -12,7 +13,15 @@ public interface MemberService {
 	
 	Member selectMemberByEmail(String email);
 	
-	int insertMember(Member member);
+	int insertMember(Map<String, Object> memberAuthMap, Member member);
+	
+	int insertMemberAuth(Map<String, Object> memberAuthMap);
+	
+	int insertEmailIdentify(Map<String, Object> map);
+	
+	String getEmailKey(String email);
+	
+	Seller selectSeller(String memberId);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);

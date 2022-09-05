@@ -1,6 +1,8 @@
 package com.kh.monong.member.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -42,7 +46,8 @@ public class MemberController {
 
 	//-------------수진 시작
 	@GetMapping("/selectEnrollType.do")
-	public void selectEnrollType() {}
+	public void selectEnrollType() {		
+	}
 	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {
@@ -72,7 +77,7 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberEmail", email);
 		map.put("available", available);
-		
+		log.debug("result map = {}", map);
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
@@ -87,13 +92,66 @@ public class MemberController {
 			member.setMemberPassword(encodedPassword);
 			log.debug("encodedPassword = {}", encodedPassword);
 			
-			int result = memberService.insertMember(member);
+			//회원권한 db입력용 설정.
+			Map<String, Object> memberAuthMap = new HashMap<>();
+			memberAuthMap.put("memberId", member.getMemberId());
+			memberAuthMap.put("memberAuth", "ROLE_MEMBER");
+			int result = memberService.insertMember(memberAuthMap, member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
 			return "redirect:/";
 		} catch(Exception e) {
 			log.error("회원등록 오류 : " + e.getMessage(), e);
 			throw e;
 		}
+	}
+	
+	@PostMapping("/sendEmailKey.do")
+	public ResponseEntity<?> sendEmailKey(@RequestParam String email){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			MailUtils sendMail = new MailUtils(mailSender);
+			String identifyKey = new TempKey().getKey(4,false);
+			map.put("identifyKey", identifyKey);
+			map.put("memberEmail", email);
+			
+			sendMail.setSubject("모농모농 회원가입 이메일 인증코드입니다.");
+			sendMail.setText("<h1>이메일 인증코드</h1>"
+					+ "<br />"+ "인증코드는"
+							+ "<br /><strong>"+identifyKey+"</strong>입니다."
+							+ "<br />감사합니다!"
+								);
+			sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
+			sendMail.setTo(email);
+			sendMail.send();
+			//db저장
+			int result = memberService.insertEmailIdentify(map);
+			log.debug("after db ={}", map.remove("identifyKey"));
+			map.put("msg", "입력하신 이메일로 인증코드가 전송되었습니다.");
+			
+		} catch(Exception e) {
+			log.error("이메일 인증코드 전송오류 : " + e.getMessage(), e);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(map);
+	}
+	
+	@PostMapping("/checkEmailKey.do")
+	public ResponseEntity<?> checkEmailKey(@RequestParam String email, @RequestParam String emailKey){
+		Map<String, Object> map = new HashMap<>();
+		String key = memberService.getEmailKey(email);
+		log.debug("db key ={}", key);
+		boolean isIdentified = emailKey.equals(key);
+		String msg = isIdentified? "이메일 인증 완료!" : "인증코드가 일치하지 않아요. 다시 확인해주세요.";
+		map.put("msg", msg);
+		map.put("isIdentified", isIdentified);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(map);
+	}
+	
+	@GetMapping("/selectSeller/{memberId}")
+	public ResponseEntity<?> selectSeller(@PathVariable String memberId){
+		Seller seller = memberService.selectSeller(memberId);
+		log.debug("seller = {}",seller);
+		return ResponseEntity.status(HttpStatus.OK).body(seller);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작
