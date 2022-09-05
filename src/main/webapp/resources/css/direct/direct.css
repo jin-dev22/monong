@@ -166,4 +166,5 @@
 
 .dropdown-content.show{
   display : block;
+  position: absolute;
 }
