@@ -56,7 +56,7 @@ public class DirectController {
 	}
 	//----------------- 재경 끝
 	//----------------- 민지 시작
-	@GetMapping("/directProductDetail")
+	@GetMapping("/directProductDetail.do")
 	public String directProductDetail() {
 		return "direct/directProductDetail.do";
 	}
