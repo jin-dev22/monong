@@ -25,7 +25,12 @@ public class DirectServiceImpl implements DirectService {
 	public List<DirectProduct> selectDirectProductList() {
 		return directDao.selectDirectProductList();
 	}
+	
+	@Override
+	public DirectProduct selectOneDirectProduct(String dProductNo) {
+		return directDao.selectOneDirectProductCollection(dProductNo);
 	}
+}
 	
 	
 

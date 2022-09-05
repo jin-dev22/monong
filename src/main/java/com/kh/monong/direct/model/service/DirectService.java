@@ -9,6 +9,8 @@ public interface DirectService {
 
 	List<DirectProduct> selectDirectProductList();
 
+	DirectProduct selectOneDirectProduct(String dProductNo);
+
 	}
 
 

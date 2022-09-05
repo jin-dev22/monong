@@ -44,21 +44,23 @@
     <span>배송비</span><span></span><br>
     <span>판매자</span><span></span>
     <div style="border: 0.5px solid black; background-color: black;"></div>
+    <div class="dropdown">
+	    <button class="dropbtn">
+	      <span class="dropbtn_content">Select a menu...</span>
+	      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
+	    </button>
+	    <div class="dropdown-content">
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Burgerking</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Mcdonals</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Lotteria</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Mom's touch</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">In n out</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Subway</div>
+	      <div class="fastfood" onclick="showMenu(this.innerText)">Shake shack</div>
+	    </div>
+	</div>
   </div>
-  <hr>
-  <div class="dropdown">
-    <button class="dropbtn" onclick="dropdown()">
-      <span class="dropbtn_content" onclick="dropdown()">옵션 선택</span>
-      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
-    </button>
-    <div class="dropdown-content">
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 1</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 2</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 3</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 4</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 5</div>
-    </div>
-  </div>
+  
 </main>
 <script>
 //기존 버튼형 슬라이더
@@ -115,39 +117,60 @@ $('.slider-1 > .side-btns > div').click(function(){
 
 </script>
 <script>
-  window.onload=()=>{
-	  
-      document.getElementsByClassName('fastfood').onclick = ()=>{
-        showMenu(value);
-      };
-      dropdown = () => {
-        var v = document.querySelector('.dropdown-content');
-        var dropbtn = document.querySelector('.dropbtn')
-        v.classList.toggle('show');
-        dropbtn.style.borderColor = 'rgb(94, 94, 94)';
-      }
+document.querySelector('.dropbtn').addEventListener('click', () => {
+    dropdown();
+  });
+  // document.querySelector('.dropbtn_click').addEventListener('click', () => {
+  //   dropdown();
+  // });
+  // document.querySelector('.dropbtn_content').addEventListener('click', () => {
+  //   dropdown();
+  // });
+  
+  document.getElementsByClassName('fastfood').onclick = (value)=>{
+    showMenu(value);
+  };
+  dropdown = () => {
+    var v = document.querySelector('.dropdown-content');
+    var dropbtn = document.querySelector('.dropbtn')
+    v.classList.toggle('show');
+    dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+  }
 
-      showMenu=(value)=>{
-        var dropbtn_content = document.querySelector('.dropbtn_content');
-        var dropbtn = document.querySelector('.dropbtn');
+  showMenu=(value)=>{
+    console.log(value);
+    var dropbtn_icon = document.querySelector('.dropbtn_icon');
+    var dropbtn_content = document.querySelector('.dropbtn_content');
+    var dropbtn_click = document.querySelector('.dropbtn_click');
+    var dropbtn = document.querySelector('.dropbtn');
 
-        /* dropbtn_content.innerText = value; */
-        dropbtn_content.style.color = '#252525';
-        dropbtn.style.borderColor = 'black';
+    // dropbtn_content.innerText = value;
+    dropbtn_content.style.color = '#252525';
+    dropbtn.style.borderColor = '#3992a8';
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
       }
     }
-    window.onclick= (e)=>{
-      if((!e.target.matches('.dropbtn')) && (!e.target.matches('.dropbtn_content'))){
-        var dropdowns = document.getElementsByClassName("dropdown-content");
+  }
 
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+  document.querySelector('.dropbtn').addEventListener('click', (e) => {
+    if(!e.target.matches('.dropbtn') && !e.target.matches('.dropbtn_click') && !e.target.matches('.dropbtn_content')){
+      console.log(e.target);
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+
+      var i;
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
         }
       }
     }
+  });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

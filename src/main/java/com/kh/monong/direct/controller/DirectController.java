@@ -45,8 +45,10 @@ public class DirectController {
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@GetMapping("/directProductDetail.do")
-	public String directProductDetail() {
-		return "direct/directProductDetail.do";
+	public void directProductDetail(@RequestParam String dProductNo, Model model) {
+		DirectProduct directProduct = directService.selectOneDirectProduct(dProductNo);
+		log.debug("directProduct = {}", directProduct);
+		model.addAttribute("directProduct", directProduct);
 	}
 	//----------------- 민지 끝
 }
