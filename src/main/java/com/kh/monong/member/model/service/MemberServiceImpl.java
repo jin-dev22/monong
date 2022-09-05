@@ -5,12 +5,15 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
@@ -29,19 +32,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int insertMember(Member member) {
+	public int insertMember(Map<String, Object> memberAuthMap, Member member) {
 		int result = memberDao.insertMember(member);
 		log.debug("result insertMember = {}", result);
 		
 		//insert member auth
-		result = insertMemberAuth(member);
+		result = insertMemberAuth(memberAuthMap);
 		
 		return result;
 	}
 
 	@Override
-	public int insertMemberAuth(Member member) {
-		return memberDao.insertMemberAuth(member);
+	public int insertMemberAuth(Map<String, Object> memberAuthMap) {
+		return memberDao.insertMemberAuth(memberAuthMap);
 	}
 	//------------------수진 끝
 	

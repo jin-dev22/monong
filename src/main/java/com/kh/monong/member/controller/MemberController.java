@@ -45,7 +45,8 @@ public class MemberController {
 
 	//-------------수진 시작
 	@GetMapping("/selectEnrollType.do")
-	public void selectEnrollType() {}
+	public void selectEnrollType() {		
+	}
 	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {
@@ -90,11 +91,14 @@ public class MemberController {
 			member.setMemberPassword(encodedPassword);
 			log.debug("encodedPassword = {}", encodedPassword);
 			
-			//회원권한설정
-			List<SimpleGrantedAuthority> auths = new ArrayList<>();
-			auths.add(new SimpleGrantedAuthority("Member"));
-			member.setAuthorities(auths);
-			int result = memberService.insertMember(member);
+			//회원권한 db입력용 설정.
+//			List<SimpleGrantedAuthority> auths = new ArrayList<>();
+//			auths.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
+//			member.setAuthorities(auths);
+			Map<String, Object> memberAuthMap = new HashMap<>();
+			memberAuthMap.put("memberId", member.getMemberId());
+			memberAuthMap.put("memberAuth", "ROLE_MEMBER");
+			int result = memberService.insertMember(memberAuthMap, member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
 			return "redirect:/";
 		} catch(Exception e) {

@@ -23,8 +23,8 @@ public interface MemberDao {
 	@Insert("insert into member values(#{memberId}, #{memberName}, #{memberPassword}, #{memberEmail}, #{memberAddress}, #{memberAddressEx}, #{memberPhone}, #{memberBirthday}, default, default, null)")
 	int insertMember(Member member);
 
-	@Insert("insert into member_authority values(#{memberId}, #{authorities})")
-	int insertMemberAuth(Member member);
+	@Insert("insert into member_authority values(#{memberAuth}, #{memberId})")
+	int insertMemberAuth(Map<String, Object> memberAuthMap);
 
 	//------------------------수진 시작
 	

@@ -12,9 +12,9 @@ public interface MemberService {
 	
 	Member selectMemberByEmail(String email);
 	
-	int insertMember(Member member);
+	int insertMember(Map<String, Object> memberAuthMap, Member member);
 	
-	int insertMemberAuth(Member member);
+	int insertMemberAuth(Map<String, Object> memberAuthMap);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
