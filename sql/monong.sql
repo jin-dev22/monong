@@ -363,6 +363,13 @@ CREATE TABLE direct_review_attachment (
 	constraint fk_direct_review_no foreign key(d_review_no) references direct_review(d_review_no)
 );
 
+create sequence seq_d_product_no;
+create sequence seq_d_product_attach_no;
+create sequence seq_d_option_no;
+create sequence seq_cart_no;
+create sequence seq_d_inquire_no;
+create sequence seq_d_review_no;
+create sequence seq_d_review_attach_no;
 commit;
 -- 직거래 끝
 
