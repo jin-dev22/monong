@@ -234,6 +234,8 @@ CREATE TABLE subscription_product (
 );
 -- 고정배송비 컬럼 추가
 alter table subscription_product add s_delivery_fee number default 3000;
+-- 상품설명 컬럼 추가
+alter table subscription_product add s_product_info varchar2(300);
 
 CREATE TABLE card_info (
 	card_info_no	number		NOT NULL,
