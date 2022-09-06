@@ -1,5 +1,6 @@
 package com.kh.monong.member.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
+import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -45,6 +50,9 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
+	@Autowired
+	ServletContext application;
+	
 	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {		
 	}
@@ -100,7 +108,44 @@ public class MemberController {
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
 			return "redirect:/";
 		} catch(Exception e) {
-			log.error("회원등록 오류 : " + e.getMessage(), e);
+			log.error("회원가입 오류 : " + e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	@PostMapping("/sellerEnroll.do")
+	public String sellerEnroll(Member member, String regNo, 
+			MultipartFile sellerRegFile,
+			RedirectAttributes redirectAttr) {
+		try {
+			log.debug("member = {}", member);
+			log.debug("regNo = {}", regNo);
+			
+			// 비밀번호 암호화
+//			String rawPassword = seller.getPassword();
+//			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+//			seller.setMemberPassword(encodedPassword);
+//			log.debug("encodedPassword = {}", encodedPassword);
+//			
+//			//회원권한 db입력용 설정.
+//			Map<String, Object> memberAuthMap = new HashMap<>();
+//			memberAuthMap.put("memberId", seller.getMemberId());
+//			memberAuthMap.put("memberAuth", "ROLE_SELLER");
+//			int result = memberService.insertSeller(memberAuthMap, seller);
+//			
+//			//사업자등록증 저장
+//			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+//			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
+//			File destFile = new File(saveDirectory, renamedFilename);
+//			sellerRegFile.transferTo(destFile);
+			
+			//판매자정보 저장
+			
+			
+			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
+			return "redirect:/";
+		} catch(Exception e) {
+			log.error("회원가입 오류 : " + e.getMessage(), e);
 			throw e;
 		}
 	}
