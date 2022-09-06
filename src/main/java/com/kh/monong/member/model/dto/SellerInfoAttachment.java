@@ -3,11 +3,13 @@ package com.kh.monong.member.model.dto;
 import org.springframework.lang.NonNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor

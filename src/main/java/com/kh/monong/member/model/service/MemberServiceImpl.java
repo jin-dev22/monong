@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
+import com.kh.monong.member.model.dto.SellerInfo;
+import com.kh.monong.member.model.dto.SellerInfoAttachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +43,24 @@ public class MemberServiceImpl implements MemberService {
 		result = insertMemberAuth(memberAuthMap);
 		
 		return result;
+	}
+	
+	@Override
+	public int insertSeller(Map<String, Object> memberAuthMap, Seller seller) {
+		int result = insertMember(memberAuthMap, seller);
+		result = insertSellerInfo(seller.getSellerInfo());
+		result = insertSellerInfoAttachment(seller.getAttachment());
+		return result;
+	}
+	
+	@Override
+	public int insertSellerInfoAttachment(SellerInfoAttachment attachment) {
+		return memberDao.insertSellerInfoAttachment(attachment);
+	}
+	
+	@Override
+	public int insertSellerInfo(SellerInfo sellerInfo) {
+		return memberDao.insertSellerInfo(sellerInfo);
 	}
 
 	@Override
