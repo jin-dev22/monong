@@ -1,9 +1,6 @@
 package com.kh.monong.member.controller;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,10 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
-import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -338,6 +339,55 @@ public class MemberController {
 				return sb.toString();
 			}
 		}
+	@GetMapping("/memberMyPage.do")
+	public void memberMyPage() {
+		 
+	}
+	
+	@GetMapping("/memberCheckForm.do")
+	public void memberCheck() {
+		
+	}
+	@PostMapping("/memberCheckForm.do")
+	public String memberCheck(Authentication authentication,
+							  @RequestParam String memberId,
+			  				  @RequestParam String memberPassword,
+			  				  RedirectAttributes redirectAttr) {
+		Member member = memberService.selectMemberById(memberId);
+		String pwd = member.getPassword();
+		if(bcryptPasswordEncoder.matches(memberPassword, pwd)) {
+			return "redirect:/member/memberUpdate.do";
+		}
+		log.debug("memberPassword={}",memberPassword);
+		log.debug("pwd={}", pwd);
+		redirectAttr.addFlashAttribute("msg", "비밀번호를 확인해주세요");
+		return "redirect:/member/memberCheckForm.do";
+		
+	}
+	
+	
+	@GetMapping("/memberUpdate.do")
+	public void memberUpdate() {
+		
+	}
+	@PostMapping("/memberUpdate.do")
+	public String memberUpdate(@ModelAttribute Member member, 
+							 RedirectAttributes redirectAttr,
+							 Model model) {
+		int result = memberService.updateMember(member);
+		UserDetails updatedMember = memberSecurityService.loadUserByUsername(member.getMemberId());
+		
+		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
+				updatedMember,
+				updatedMember.getPassword(),
+				updatedMember.getAuthorities()
+				);
+		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
+		log.debug("member={}", updatedMember);
+		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
+		return "redirect:/member/memberUpdate.do";
+		
+	}
 	
 
 	

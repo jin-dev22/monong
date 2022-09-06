@@ -21,9 +21,6 @@
 			 <c:if test="${param.error != null}">
 				<div class="alert alert-danger alert-dismissible fade show" role="alert">
 				아이디 또는 비밀번호가 일치하지 않습니다.
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">×</span>
-				</button>
 				</div>
 			</c:if>
 			<div class="row mb-3 mt-5">
