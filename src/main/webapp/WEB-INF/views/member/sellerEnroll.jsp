@@ -19,7 +19,7 @@ div#enroll-container table th{
 </style>
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="" method="POST">
+	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" enctype="multipart/form-data">
 		<table class="mx-auto">
 			<tr>
 				<th>아이디</th>
@@ -104,8 +104,11 @@ div#enroll-container table th{
 				</td>
 			</tr>
 			<tr>
-				<th>사업자등록증</th>
-				<td><input type="file" name="sellerRegFile" id="" /></td>
+				<th><label for="sellerRegFile">사업자등록증</label></th>
+				<td>
+					<input type="file" name="sellerRegFile" id="sellerRegFile" />
+					
+				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
