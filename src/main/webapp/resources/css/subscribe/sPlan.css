@@ -1,0 +1,99 @@
+.s-plan{   
+	padding-bottom: 10px;
+	border-bottom: 1px solid #EA5C2B;
+	color: #EA5C2B;
+}
+.s-form-container{
+    width: 1100px;
+    padding: 20px 0;
+}
+
+.s-form-part-container{
+	margin: 30px 0 80px 0;
+}
+
+.s-form-part-title{
+    color: #EA5C2B;
+}
+
+.s-product-container{
+    cursor: pointer;
+}
+
+.selected{
+    border: solid;
+    border-color: green;
+    border-width: 4px;
+    box-shadow: 5px 5px 10px 3px lightgray;
+    padding: 1px;    
+}
+
+.s-product-name{
+    text-align: left;
+    width: 90px;
+    display: inline-block;
+    font-size: 24px;
+    padding: 10px 0 0 10px;
+}
+
+.s-product-price{
+	text-align: right;
+    width: 200px;
+    display: inline-block;
+    font-size: 24px;
+    padding-right: 5px;
+}
+
+.s-product-info{
+    text-align: left;
+    font-size: 14px;
+    display: block;
+    padding: 0 0 7px 12px;
+}
+
+.exclude-vegs-cnt-info{
+	margin-left: 10px;
+	border: solid 2px grey;
+	border-radius: 5px;
+	padding: 5px 10px 3px 10px;
+}
+
+.s-no-exclude-check.form-check{
+	font-size: 19px;
+	margin-top: 15px;
+}
+
+.s-no-exclude-check .form-check-label{
+    width: 200px;
+}
+
+.form-check-input:checked {
+	background-color: #116530;
+	border-color: #116530;
+}
+
+.s-form-part-container label {
+    cursor: pointer;
+    line-height: 1.7;
+}
+
+.form-check{
+    margin-top:10px;
+    width: 120px;
+}
+
+.s-vegs-category-wrapper{
+    margin: 35px 0;
+}
+
+.s-vegs-category-title{
+    font-weight: bold;
+    margin: 0;
+}
+
+.btn-subscribe-apply{
+	display: block;
+	width: 220px;
+	padding: 15px;
+	margin: 40px auto;
+}
