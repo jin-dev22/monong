@@ -9,10 +9,13 @@ import org.springframework.lang.NonNull;
 import com.kh.monong.common.enums.YN;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberEntity {
@@ -34,4 +37,5 @@ public class MemberEntity {
 	protected YN memberDel;
 	protected LocalDate memberEnrollDate;
 	protected LocalDate memberQuitDate;
+	protected YN memberIdentified;
 }

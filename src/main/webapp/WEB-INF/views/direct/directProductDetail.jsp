@@ -9,7 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농-상품 상세 페이지" />
 </jsp:include>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <main class="main-container">
@@ -38,26 +38,33 @@
     </div>
   </div>
   <div class="pInfo-container">
-    <span>유기농 블루베리</span><br>
-    <span>29,900원</span><span>여기에 별</span><span>별점</span>
+    <span>${directProduct.DProductName}</span><br>
+    <span><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><span>여기에 별</span><span>별점</span>
     <div style="border: 0.5px solid black; background-color: black;"></div>
-    <span>배송비</span><span></span><br>
+    <span>배송비</span><span>3,000원</span><br>
     <span>판매자</span><span></span>
+    <br />
+    <div class="dropdown">
+	    <button class="dropbtn">
+	      <span class="dropbtn_content">옵션 선택</span>
+	      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
+	    </button>
+	    <div class="dropdown-content">
+	      <c:forEach items="${directProduct.directProductOptions}" var="option">
+		      <div class="select_option" onclick="showMenu(this.innerText)">
+		      	${directProduct.DProductName}${option.DOptionName}${option.DPrice}
+		      </div>
+	      </c:forEach>
+	    </div>
+	</div>
     <div style="border: 0.5px solid black; background-color: black;"></div>
-  </div>
-  <hr>
-  <div class="dropdown">
-    <button class="dropbtn" onclick="dropdown()">
-      <span class="dropbtn_content" onclick="dropdown()">옵션 선택</span>
-      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
-    </button>
-    <div class="dropdown-content">
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 1</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 2</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 3</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 4</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">옵션 5</div>
-    </div>
+	<div class="pOption-container">
+	</div>
+	<div class="pPrice-container">
+		<span class="total-price">총 상품 금액</span>
+		<span class="total-price-num">13,000원</span>
+	</div>
+    <button type="button" class="btn-add-cart">장바구니</button>
   </div>
 </main>
 <script>
@@ -115,39 +122,61 @@ $('.slider-1 > .side-btns > div').click(function(){
 
 </script>
 <script>
-  window.onload=()=>{
-	  
-      document.getElementsByClassName('fastfood').onclick = ()=>{
-        showMenu(value);
-      };
-      dropdown = () => {
-        var v = document.querySelector('.dropdown-content');
-        var dropbtn = document.querySelector('.dropbtn')
-        v.classList.toggle('show');
-        dropbtn.style.borderColor = 'rgb(94, 94, 94)';
-      }
+document.querySelector('.dropbtn').addEventListener('click', () => {
+    dropdown();
+  });
+  // document.querySelector('.dropbtn_click').addEventListener('click', () => {
+  //   dropdown();
+  // });
+  // document.querySelector('.dropbtn_content').addEventListener('click', () => {
+  //   dropdown();
+  // });
+  
+  document.getElementsByClassName('select_option').onclick = (value)=>{
+    showMenu(value);
+  };
+  dropdown = () => {
+    var v = document.querySelector('.dropdown-content');
+    var dropbtn = document.querySelector('.dropbtn')
+    v.classList.toggle('show');
+    dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+  }
 
-      showMenu=(value)=>{
-        var dropbtn_content = document.querySelector('.dropbtn_content');
-        var dropbtn = document.querySelector('.dropbtn');
+  showMenu=(value)=>{
+    console.log(value);
+    var dropbtn_icon = document.querySelector('.dropbtn_icon');
+    var dropbtn_content = document.querySelector('.dropbtn_content');
+    var dropbtn_click = document.querySelector('.dropbtn_click');
+    var dropbtn = document.querySelector('.dropbtn');
 
-        /* dropbtn_content.innerText = value; */
-        dropbtn_content.style.color = '#252525';
-        dropbtn.style.borderColor = 'black';
+    // dropbtn_content.innerText = value;
+    dropbtn_content.style.color = '#252525';
+    dropbtn.style.borderColor = '#3992a8';
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
       }
     }
-    window.onclick= (e)=>{
-      if((!e.target.matches('.dropbtn')) && (!e.target.matches('.dropbtn_content'))){
-        var dropdowns = document.getElementsByClassName("dropdown-content");
+  }
 
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
+  document.querySelector('.dropbtn').addEventListener('click', (e) => {
+    if(!e.target.matches('.dropbtn') && !e.target.matches('.dropbtn_click') && !e.target.matches('.dropbtn_content')){
+      console.log(e.target);
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+
+      var i;
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
         }
       }
     }
+  });
 </script>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

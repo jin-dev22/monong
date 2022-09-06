@@ -5,12 +5,16 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional(rollbackFor = Exception.class)
 @Service
 @Slf4j
 public class MemberServiceImpl implements MemberService {
@@ -29,8 +33,34 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int insertMember(Member member) {
-		return memberDao.insertMember(member);
+	public int insertMember(Map<String, Object> memberAuthMap, Member member) {
+		int result = memberDao.insertMember(member);
+		log.debug("result insertMember = {}", result);
+		
+		//insert member auth
+		result = insertMemberAuth(memberAuthMap);
+		
+		return result;
+	}
+
+	@Override
+	public int insertMemberAuth(Map<String, Object> memberAuthMap) {
+		return memberDao.insertMemberAuth(memberAuthMap);
+	}
+	
+	@Override
+	public int insertEmailIdentify(Map<String, Object> map) {
+		return memberDao.insertEmailIdentify(map);
+	}
+	
+	@Override
+	public String getEmailKey(String email) {
+		return memberDao.getEmailKey(email);
+	}
+	
+	@Override
+	public Seller selectSeller(String memberId) {
+		return memberDao.selectSeller(memberId);
 	}
 	//------------------수진 끝
 	

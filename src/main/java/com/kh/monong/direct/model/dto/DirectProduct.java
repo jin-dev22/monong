@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class DirectProduct extends DirectProductEntity {
 	private int attachCount;
-//	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
-//	private List<DirectProductOption> directProductOptions = new ArrayList<>();
+	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
+	private List<DirectProductOption> directProductOptions = new ArrayList<>();
 	
 	public DirectProduct(String dProductNo, String memberId, String dProductName, String dProductContent,
 			LocalDateTime dProductCreatedAt, LocalDateTime dProductUpdatedAt, int dDefaultPrice, int attachCount) {
