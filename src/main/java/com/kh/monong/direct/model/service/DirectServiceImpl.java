@@ -20,17 +20,28 @@ public class DirectServiceImpl implements DirectService {
 
 	@Autowired
 	private DirectDao directDao;
-	
+	//----------------- 재경 시작
 	@Override
-	public List<DirectProduct> selectDirectProductList() {
-		return directDao.selectDirectProductList();
+	public List<DirectProduct> selectDirectProductList(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return directDao.selectDirectProductList(rowBounds);
 	}
 	
+	@Override
+	public int getTotalContent() {
+		return directDao.getTotalContent();
+	}
+	//----------------- 재경 끝
+		//----------------- 민지 시작
 	@Override
 	public DirectProduct selectOneDirectProduct(String dProductNo) {
 		return directDao.selectOneDirectProductCollection(dProductNo);
 	}
+	//----------------- 민지 끝
 }
 	
 	
-
