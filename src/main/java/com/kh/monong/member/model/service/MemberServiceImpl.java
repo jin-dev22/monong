@@ -75,5 +75,12 @@ public class MemberServiceImpl implements MemberService {
 	public int updateTempPw(Map<String, Object> map) {
 		return memberDao.updateTempPw(map);
 	}
+	
+	
+	@Override
+	public int updateMember(Member member) {
+		return memberDao.updateMember(member);
+	}
+
 	//------------------수아 끝
 }

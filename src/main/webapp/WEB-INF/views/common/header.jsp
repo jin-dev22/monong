@@ -73,7 +73,7 @@
 					<a class="nav-link" href="#">&#128722;</a>
 				</nav>
 				<nav class="nav justify-content-end">
-					<a class="nav-link" href="#">마이페이지</a>
+					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberMyPage.do">마이페이지</a>
 					<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="POST" class="my-auto">
 					  <button class="nav-link btn" type="submit">로그아웃</button>
 					</form:form>
