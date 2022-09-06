@@ -1,5 +1,7 @@
 package com.kh.monong.member.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -30,9 +32,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
+import com.kh.monong.member.model.dto.SellerInfo;
+import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.security.model.service.MemberSecurityService;
 
@@ -110,45 +115,57 @@ public class MemberController {
 			return "redirect:/";
 		} catch(Exception e) {
 			log.error("회원가입 오류 : " + e.getMessage(), e);
+			e.printStackTrace();
 			throw e;
 		}
 	}
 	
 	@PostMapping("/sellerEnroll.do")
-	public String sellerEnroll(Member member, String regNo, 
-			MultipartFile sellerRegFile,
-			RedirectAttributes redirectAttr) {
-		try {
-			log.debug("member = {}", member);
-			log.debug("regNo = {}", regNo);
-			
-			// 비밀번호 암호화
-//			String rawPassword = seller.getPassword();
-//			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-//			seller.setMemberPassword(encodedPassword);
-//			log.debug("encodedPassword = {}", encodedPassword);
-//			
-//			//회원권한 db입력용 설정.
-//			Map<String, Object> memberAuthMap = new HashMap<>();
-//			memberAuthMap.put("memberId", seller.getMemberId());
-//			memberAuthMap.put("memberAuth", "ROLE_SELLER");
-//			int result = memberService.insertSeller(memberAuthMap, seller);
-//			
-//			//사업자등록증 저장
-//			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
-//			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
-//			File destFile = new File(saveDirectory, renamedFilename);
-//			sellerRegFile.transferTo(destFile);
-			
-			//판매자정보 저장
-			
-			
-			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-			return "redirect:/";
-		} catch(Exception e) {
-			log.error("회원가입 오류 : " + e.getMessage(), e);
-			throw e;
-		}
+	public String sellerEnroll(
+			Seller seller,
+			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
+			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
+			RedirectAttributes redirectAttr) throws IllegalStateException, IOException {
+	
+		log.debug("member = {}", seller);
+		log.debug("regNo = {}", sellerRegNo);
+		log.debug("sellerRegFile = {}", sellerRegFile);
+		
+		seller.setSellerInfo(SellerInfo.builder()
+									.memberId(seller.getMemberId())
+									.sellerRegNo(sellerRegNo)
+									.sellerName(seller.getMemberName())
+									.build());
+		
+		// 비밀번호 암호화
+		String rawPassword = seller.getPassword();
+		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+		seller.setMemberPassword(encodedPassword);
+		log.debug("encodedPassword = {}", encodedPassword);
+		
+		//회원권한 db입력용
+		Map<String, Object> memberAuthMap = new HashMap<>();
+		memberAuthMap.put("memberId", seller.getMemberId());
+		memberAuthMap.put("memberAuth", "ROLE_SELLER");
+		
+		//사업자등록증 서버컴퓨터 저장
+		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
+		File destFile = new File(saveDirectory, renamedFilename);
+		sellerRegFile.transferTo(destFile);
+		
+		seller.setAttachment(SellerInfoAttachment.builder()
+				.memberId(seller.getMemberId())
+				.originalFilename(sellerRegFile.getOriginalFilename())
+				.renamedFilename(renamedFilename)
+				.build());	
+		
+		//판매자정보 저장
+		log.debug("seller = {}", seller);
+		int result = memberService.insertSeller(memberAuthMap, seller);
+		
+		redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
+		return "redirect:/";
 	}
 	
 	@PostMapping("/sendEmailKey.do")

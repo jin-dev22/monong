@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
+import com.kh.monong.member.model.dto.SellerInfo;
+import com.kh.monong.member.model.dto.SellerInfoAttachment;
 
 @Mapper
 public interface MemberDao {
@@ -32,8 +34,13 @@ public interface MemberDao {
 	@Select("select identify_key from member_email_identify where member_email = #{email}")
 	String getEmailKey(String email);
 	
+	@Insert("insert into seller_info values(#{memberId}, #{sellerRegNo}, #{sellerName}, 'REG_W', null, null, default)")
+	int insertSellerInfo(SellerInfo sellerInfo);
+	
+	@Insert("insert into seller_info_attachment values(seq_seller_attach_no.nextval, #{memberId}, #{originalFilename}, #{renamedFileName})")
+	int insertSellerInfoAttachment(SellerInfoAttachment attachment);
+	
 	Seller selectSeller(String memberId);
-
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
