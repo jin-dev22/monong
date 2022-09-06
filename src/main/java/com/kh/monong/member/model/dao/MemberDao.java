@@ -37,7 +37,7 @@ public interface MemberDao {
 	@Insert("insert into seller_info values(#{memberId}, #{sellerRegNo}, #{sellerName}, 'REG_W', null, null, default)")
 	int insertSellerInfo(SellerInfo sellerInfo);
 	
-	@Insert("insert into seller_info_attachment values(seq_seller_attach_no.nextval, #{memberId}, #{originalFilename}, #{renamedFileName})")
+	@Insert("insert into seller_info_attachment values(seq_seller_attach_no.nextval, #{memberId}, #{originalFilename}, #{renamedFilename})")
 	int insertSellerInfoAttachment(SellerInfoAttachment attachment);
 	
 	Seller selectSeller(String memberId);

@@ -19,7 +19,7 @@ div#enroll-container table th{
 </style>
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" enctype="multipart/form-data">
+	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
 		<table class="mx-auto">
 			<tr>
 				<th>아이디</th>
