@@ -109,17 +109,22 @@ public class MemberController {
 			return "redirect:/";
 		} catch(Exception e) {
 			log.error("회원가입 오류 : " + e.getMessage(), e);
+			e.printStackTrace();
 			throw e;
 		}
 	}
 	
 	@PostMapping("/sellerEnroll.do")
-	public String sellerEnroll(Member member, String regNo, 
-			MultipartFile sellerRegFile,
+	public String sellerEnroll(
+			Member member,
+			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
+			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
 			RedirectAttributes redirectAttr) {
 		try {
 			log.debug("member = {}", member);
-			log.debug("regNo = {}", regNo);
+			log.debug("regNo = {}", sellerRegNo);
+			log.debug("sellerRegFile = {}", sellerRegFile);
+			
 			
 			// 비밀번호 암호화
 //			String rawPassword = seller.getPassword();
