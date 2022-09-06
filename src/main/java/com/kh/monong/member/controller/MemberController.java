@@ -1,10 +1,7 @@
 package com.kh.monong.member.controller;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
-=======
->>>>>>> branch 'master' of https://github.com/jin-dev22/final_monong.git
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -35,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
