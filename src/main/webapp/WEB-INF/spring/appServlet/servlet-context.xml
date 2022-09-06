@@ -46,6 +46,7 @@
 		<beans:property name="maxUploadSize" value="52428800"></beans:property><!--  50mb 한건의 파일요청시 첨부할 파일등의 총용량 -->
 		<beans:property name="maxUploadSizePerFile" value="10245760"></beans:property><!-- 10mb 한건의 파일당 용량 -->
 		<beans:property name="maxInMemorySize" value="10240"></beans:property><!--  10kb이상이면 임시파일을 생성해서 관리 -->
+		<beans:property name="defaultEncoding" value="utf-8"/>
 	</beans:bean>
 
 	<!-- #12.1. jsonView 빈등록 -->
