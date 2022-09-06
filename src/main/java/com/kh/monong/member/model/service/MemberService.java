@@ -36,6 +36,7 @@ public interface MemberService {
 
 	int updateTempPw(Map<String, Object> map);
 	
+	int updateMember(Member member);
 	
 //-----------수아 끝
 

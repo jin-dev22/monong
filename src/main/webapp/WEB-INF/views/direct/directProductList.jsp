@@ -15,7 +15,7 @@
 			<li class="list-group-item">조회된 게시글이 없습니다.</li>
 		</ul>
 		</c:if>
-		<c:if test="${not empty list}">
+		<c:if test="${not empty list}"></c:if>
 <div class="card" style="width: 18rem;">
   <img src="..." class="card-img-top" alt="...">
   <ul class="list-group list-group-flush">
