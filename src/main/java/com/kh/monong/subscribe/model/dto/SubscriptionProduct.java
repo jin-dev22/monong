@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubscriptionProduct {
-	private String sProductCode;
-	private String sProductName;
-	private String sProductInfo;
-	private int sProductPrice;
-	private static int SDELIVERYFEE = 3000;
-
+	private String sProductCode; // 상품코드 SP1, SP2, SP3
+	private String sProductName; // 상품명
+	private String sProductInfo; // 상품설명
+	private int sProductPrice; // 상품가격
+	private static int SDELIVERYFEE = 3000; // 배송비 고정
 }

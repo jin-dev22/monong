@@ -21,7 +21,4 @@ public class SubscriptionOrder extends Subscription {
 	private int sPrice; // 결제금액
 	private LocalDateTime sOrderDate; // 결제일
 	private String sOrderStatus; // 주문상태
-	
-	private Member member;
-	private CardInfo cardInfo;
 }
