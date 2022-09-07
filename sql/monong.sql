@@ -66,6 +66,13 @@ CREATE TABLE seller_info_attachment (
 	renamed_filename	varchar2(256)		NOT NULL
 );
 
+--회원 이메일 인증키 저장 테이블 추가: member 테이블과 연결X
+create table member_email_identify(
+    member_email varchar2(100), 
+    identify_key varchar2(50) not null,
+    constraint pk_member_email primary key(member_email)
+);
+
 COMMENT ON COLUMN seller_info.seller_reg_no IS '000-00-00000';
 
 COMMENT ON COLUMN seller_info.seller_status IS '가입대기, 가입승인';
@@ -141,6 +148,8 @@ REFERENCES member
 (
 	member_id
 );
+--회원 이메일인증 관련 컬럼 추가
+alter table member add member_identified varchar2(1);
 --회원관련 시퀀스
 create sequence seq_noti_no;
 create sequence seq_seller_attach_no;
@@ -225,6 +234,8 @@ CREATE TABLE subscription_product (
 );
 -- 고정배송비 컬럼 추가
 alter table subscription_product add s_delivery_fee number default 3000;
+-- 상품설명 컬럼 추가
+alter table subscription_product add s_product_info varchar2(300);
 
 CREATE TABLE card_info (
 	card_info_no	number		NOT NULL,
@@ -266,6 +277,8 @@ CREATE TABLE direct_product (
 	constraint pk_direct_product primary key(d_product_no),
 	constraint fk_member_id_01 foreign key(member_id) references member(member_id)
 );
+
+ALTER TABLE direct_product ADD d_default_price number;
 
 CREATE TABLE direct_product_attachment (
 	d_product_attach_no	number		NOT NULL,
@@ -368,6 +381,13 @@ CREATE TABLE direct_review_attachment (
 	constraint fk_direct_review_no foreign key(d_review_no) references direct_review(d_review_no)
 );
 
+create sequence seq_d_product_no;
+create sequence seq_d_product_attach_no;
+create sequence seq_d_option_no;
+create sequence seq_cart_no;
+create sequence seq_d_inquire_no;
+create sequence seq_d_review_no;
+create sequence seq_d_review_attach_no;
 commit;
 -- 직거래 끝
 

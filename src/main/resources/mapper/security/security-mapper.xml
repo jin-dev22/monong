@@ -17,7 +17,7 @@
 		<collection property="authorities" javaType="arraylist" column="member_id" ofType="simpleGrantedAuthority" select="selectAuthorities"/>
 	</resultMap>
 	
-	<select id="selectAuthorities" resultMap="simpleGrantedAuthorityMap"> select * from authority where member_id = #{memberId} </select>
+	<select id="selectAuthorities" resultMap="simpleGrantedAuthorityMap"> select * from member_authority where member_id = #{memberId} </select>
 	<resultMap type="simpleGrantedAuthority" id="simpleGrantedAuthorityMap">
 		<constructor>
 			<arg column="auth" javaType="string"/>

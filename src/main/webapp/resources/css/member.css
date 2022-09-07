@@ -15,3 +15,48 @@ div#memberId-container { position:relative; padding:0px; }
 div#memberId-container span.guide { display:none; font-size:12px;}
 div#memberId-container span.ok { color:green; }
 div#memberId-container span.error { color:red; }
+
+/*회원정보 수정*/
+div#member-update-container{
+	width: 500px;
+}
+div#member-update-container h1{
+	color: EA5C2B;
+}
+form[name="memberUpdateFrm"]{
+	height: 600px;
+	border: 3px solid #116530;
+	border-radius: 25px;
+	padding: 30px 10px;
+}
+form[name="memberUpdateFrm"] input:not(.btn){
+	border: 2px solid #116530;  
+	border-radius: 7px;
+	height:43px;
+	padding: 3px;
+}
+
+form[name="memberUpdateFrm"] input:focus{
+	background-color : #116530; 
+	color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 로그인 */
+div#login-container{
+	width: 500px;
+
+}

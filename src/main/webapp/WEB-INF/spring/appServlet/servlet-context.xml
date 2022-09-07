@@ -46,6 +46,7 @@
 		<beans:property name="maxUploadSize" value="52428800"></beans:property><!--  50mb 한건의 파일요청시 첨부할 파일등의 총용량 -->
 		<beans:property name="maxUploadSizePerFile" value="10245760"></beans:property><!-- 10mb 한건의 파일당 용량 -->
 		<beans:property name="maxInMemorySize" value="10240"></beans:property><!--  10kb이상이면 임시파일을 생성해서 관리 -->
+		<beans:property name="defaultEncoding" value="utf-8"/>
 	</beans:bean>
 
 	<!-- #12.1. jsonView 빈등록 -->
@@ -61,6 +62,25 @@
 	<!-- #13.1 jackson message converter bean 등록 -->
 	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 
+	<!-- 메일 관련 bean 등록-->
+	<beans:bean id="mailSender"	class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="smtp.gmail.com" />
+		<beans:property name="port" value="587" /><!-- 465 or 25 -->
+		<beans:property name="username" value="sooappeal31@gmail.com" />
+		<beans:property name="password" value="ehwwgexemvidomcs" />
+		<beans:property name="defaultEncoding" value="utf-8" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.transport.protocol">smtp</beans:prop>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+				<beans:prop key="mail.debug">true</beans:prop>
+				<beans:prop key="mail.smtp.ssl.trust">smtp.gmail.com</beans:prop>
+				<beans:prop key="mail.smtp.ssl.protocols">TLSv1.2</beans:prop>
+		
+			</beans:props>
+		</beans:property>
+	</beans:bean>
 	
 	<!-- #14.1. echoHandler 등록 -->
 	<!-- <websocket:handlers>

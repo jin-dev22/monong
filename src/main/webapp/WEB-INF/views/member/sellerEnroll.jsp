@@ -62,7 +62,7 @@
    }
 </style>
 <div id="enroll-container" class="mx-auto text-center">
-     <form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/memberEnroll.do" method="POST" accept-charset="UTF-8" >
+     <form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
         <div class="mx-auto">
             <div class="enroll-info-container">
                 <span class="enroll-info-label">아이디<span class="enroll-form-required">*</span></span>
@@ -94,7 +94,7 @@
                 </span>
             </div>  
             <div class="enroll-info-container">
-                <span class="enroll-info-label">이름<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info-label">업체명<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
                     <input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
                 </span>
@@ -144,11 +144,26 @@
                 </span>
             </div>
             <div class="enroll-info-container">
-                <span class="enroll-info-label">생년월일<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info-label">개업일<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
                     <input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
                 </span>
             </div> 
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">사업자등록번호<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">
+                	<span class="sellerRegNo-container">
+	                    <input type="text" name="sellerRegNo" id="sellerRegNo" placeholder="000-00-00000" required/>
+	                    <span class="invalid-feedback feedback-regNo">-를 포함하여 작성해주세요.</span>
+                	</span>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label"><label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label></span>
+                <span class="enroll-info">
+                    <input type="file" name="sellerRegFile" id="sellerRegFile" required/>
+                </span>
+            </div>
             <div class="enroll-info-container">
                 <span>
                     <textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
@@ -344,6 +359,7 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		alert("유효한 이메일을 입력해주세요.");
 		return;
 	}
+	
 	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
 	if(emailKeyValid === "0"){
@@ -372,7 +388,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	//console.log(headers);
+	console.log(headers);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
@@ -410,8 +426,8 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 const invalidPwdFeedbacks = document.querySelectorAll(".invalid-feedback.feedback-password");
 document.querySelector("#password").addEventListener('blur', (e)=>{
 	const password = e.target;
+	console.log(password);
 	const regExp = /^[a-zA-z0-9]{6,}$/;
-	
 	if(!regExp.test(password.value)){
 		invalidPwdFeedbacks[0].style.display = "inline";
 		password.value = "";
@@ -436,7 +452,7 @@ document.querySelector("#passwordCheck").addEventListener("blur", (e)=>{
 /**
  * 전화번호 자릿수
  */
- const invalidPhoneFeedback = document.querySelector(".invalid-feedback.feedback-phone");
+const invalidPhoneFeedback = document.querySelector(".invalid-feedback.feedback-phone");
 document.querySelector("#memberPhone").addEventListener("blur", (e)=>{
 	const phone = e.target;
 	const regExp = /^[0-9]{9,12}$/;
@@ -466,12 +482,12 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 		validEmailFeedBack.style.display = "none";
 		return;
 	}
- 
+
 	const regExp = /^[\w\d]{4,}@[\w]+(\.[\w]+){1,3}$/;	
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	//console.log(headers);
+	console.log(headers);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkEmailDuplicate.do",
@@ -482,7 +498,7 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 			const {available} = response;
 			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
-			if(available){
+			if(available && regExp.test(email)){
 				invalidEmailFeedBack.style.display = "none";
 				validEmailFeedBack.style.display = "inline";
 				emailValid.value = "1";
