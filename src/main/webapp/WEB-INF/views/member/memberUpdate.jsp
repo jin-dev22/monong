@@ -12,39 +12,71 @@
 	<jsp:param name="title" value="모농모농-회원정보수정"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
-
-<div id="member-update-container" class="mx-auto mt-10 text-center">
-<h1>회원정보 수정</h1>
+<div id="member-update-container" class="mx-auto mt-10">
+	<div class="mb-3 text-center">
+		<h1>회원정보수정</h1>
+	</div>	
+	<nav class="nav justify-content-end">
+		<a class="nav-link" href="${pageContext.request.contextPath}/member/memberPwUpdate.do"><h5>비밀번호 변경</h5></a>
+	</nav>
 	<form:form name="memberUpdateFrm" 
 			   action="${pageContext.request.contextPath}/member/memberUpdate.do" 
 			   method="post"
 			   id="memberUpdateFrm">
 
-		
-		<label for="memberId">아이디</label>
-		<input type="text" class="w3-input my-3" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='<sec:authentication property="principal.username"/>'readonly required/>
-		<br />
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="memberId">아이디</label>
+				<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='<sec:authentication property="principal.username"/>'readonly required/>
+				<br />
+			</div>
+		</div>
 
-		<label for="name">이름</label>
-		<input type="text" class="w3-input my-3" placeholder="이름" name="memberName" id="name" value='<sec:authentication property="principal.memberName"/>'required/>
-		<br />
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="name">이름</label>
+				<input type="text" class="form-control" placeholder="이름" name="memberName" id="name" value='<sec:authentication property="principal.memberName"/>'required/>
+				<br />
+			</div>
+		</div>
 		
-		<label for="birthday">생일</label>
-		<input type="date" class="w3-input my-3" placeholder="생일" name="memberBirthday" id="birthday" value='<sec:authentication property="principal.memberBirthday"/>'/>
-		<br />
-		<label for="email">이메일</label>
-		<input type="email" class="w3-input my-3" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'/>
-		<br />
-		<label for="phone">연락처</label>
-		<input type="tel" class="w3-input my-3" placeholder="전화번호 (예:01012345678)" name="memberPhone" id="phone" maxlength="11" value='<sec:authentication property="principal.memberPhone"/>'required/>
-		<br />
-		<label for="address">주소</label>
-		<input type="text" class="w3-input my-3" placeholder="주소" name="memberAddress" id="address" value='<sec:authentication property="principal.memberAddress"/>'/>
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="email">이메일</label>
+				<input type="email" class="form-control" placeholder="이메일" name="memberEmail" id="email" value='<sec:authentication property="principal.memberEmail"/>'/>
+				<br />
+			</div>
+		</div>
 		
-		<br /><br /><br />
-		<input type="submit" class="btn btn-EA5C2B-reverse" value="수정" >&nbsp;
-		<input type="reset" class="btn btn-outline-success" value="취소">
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="phone">연락처</label>
+				<input type="tel" class="form-control" placeholder="전화번호 (예:01012345678)" name="memberPhone" id="phone" maxlength="11" value='<sec:authentication property="principal.memberPhone"/>'required/>
+				<br />
+			</div>
+		</div>
 		
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="address">주소</label>
+				<input type="text" class="form-control" placeholder="주소" name="memberAddress" id="address" value='<sec:authentication property="principal.memberAddress"/>'/>
+				<br />
+			</div>
+		</div>
+		
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">	
+				<label for="birthday">생일</label>
+				<input type="date" class="form-control" placeholder="생일" name="memberBirthday" id="birthday" value='<sec:authentication property="principal.memberBirthday"/>'/>
+				<br />
+			</div>
+		</div>
+		
+		<br />
+		<div class="mb-3 text-center">
+			<input type="submit" class="btn btn-EA5C2B-reverse" value="수정" >&nbsp;
+			<input type="reset" class="btn btn-outline-success" value="취소">
+		</div>
 	</form:form>
 	
 </div>

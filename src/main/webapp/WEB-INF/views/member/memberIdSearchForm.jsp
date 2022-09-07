@@ -10,18 +10,32 @@
 	<jsp:param name="title" value="모농모농-아이디찾기"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
-	<div id="login-searchform-container" class="mx-auto mt-10 text-center">
-	<h1>아이디 찾기</h1>
-
+<div id="login-searchform-container" class="mx-auto mt-10">
+	<div class="mb-5 text-center">
+		<h1>아이디 찾기</h1>
+		<span>가입하신 이메일로 아이디를 발송해드립니다.</span>
+	</div>
 
 		<form:form name="findIdFrm" 
 			  action="${pageContext.request.contextPath}/member/memberIdSearchForm.do" 
 			  method="post">
-			<label for="name">이름</label>
-			<input type="text" class="w3-input my-2" id="name" name="name" placeholder="이름을 입력해주세요" required />	
-			<label for="email">이메일</label>
-			<input type="text" class="w3-input" id="email" name="email" placeholder="ex) monong@gmail.com" required/>
-			<button type="submit" id="findId-btn">확인</button>
+			<div class="row mb-2 col-md-13 justify-content-center">
+				<div class="mb-2 col-sm-9">
+				<label for="name">이름</label>
+				<input type="text" class="w3-input my-2" id="name" name="name" placeholder="이름을 입력해주세요" required />	
+				</div>
+			</div>
+			
+			<div class="row mb-5 col-md-13 justify-content-center">
+				<div class="mb-2 col-sm-9">
+				<label for="email">이메일</label>
+				<input type="text" class="w3-input" id="email" name="email" placeholder="ex) monong@gmail.com" required/>
+				</div>
+			</div>
+			
+			<div class="row mb-3 col-md-13 justify-content-center">
+				<button type="submit" id="findId-btn" class="btn btn-EA5C2B">확인</button>
+			</div>
 		</form:form>
 		
 	</div>
