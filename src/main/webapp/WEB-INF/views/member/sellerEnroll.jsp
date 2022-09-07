@@ -469,7 +469,7 @@ document.querySelector("#memberPhone").addEventListener("blur", (e)=>{
 /**
  * email 유효성, 중복
  */
-document.querySelector("#memberEmail").addEventListener('blur', (e) => {
+document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
 const validEmailFeedBack = document.querySelector(".valid-feedback.feedback-email");
 const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-email");
 	
