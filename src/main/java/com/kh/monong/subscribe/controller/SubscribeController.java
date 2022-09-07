@@ -1,10 +1,10 @@
 package com.kh.monong.subscribe.controller;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
@@ -27,14 +29,23 @@ public class SubscribeController {
 	
 	@Autowired
 	SubscribeService subscribeService;
-
-	// 선아코드 시작
-	@GetMapping("/subscribeOrder.do")
-	public void order() {}
 	
+	@Autowired
+	MemberService memberService;
+	
+	// 선아코드 시작	
 	@PostMapping("/subscribeOrder.do")
-	public void order(Subscription subscription) {
-		// log.debug("subscription = {}", subscription);
+	public String subscribePlan(
+			@RequestParam String sProduct, 
+			@RequestParam String[] sExcludeVegs,
+			@RequestParam int sDeliveryCycle,
+			Model model) {
+		SubscriptionProduct orderProduct = subscribeService.selectProductInfoByCode(sProduct);
+		
+		model.addAttribute("orderProduct", orderProduct);
+		model.addAttribute("sExcludeVegs", sExcludeVegs);
+		model.addAttribute("sDeliveryCycle", sDeliveryCycle);
+		return "/subscribe/subscribeOrder";
 	}
 	
 	@PostMapping("/insertCardInfo.do")
@@ -72,23 +83,24 @@ public class SubscribeController {
 	@GetMapping("/subscribePlan.do")
 	public void subscriptionPlan(Model model) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
-		log.debug("subscriptionProduct = {}", subscriptionProduct);
+//		log.debug("subscriptionProduct = {}", subscriptionProduct);
 
 		List<Vegetables> vegetables = subscribeService.getVegetables();
-		log.debug("vegetables = {}", vegetables);
+//		log.debug("vegetables = {}", vegetables);
 
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("vegetables", vegetables);
 	}
 	
-	@PostMapping("/subscribePlan.do")
-	public String subscribePlan(
-			@RequestParam String sProduct, 
-			@RequestParam String[] sExcludeVegs,
-			@RequestParam int sDeliveryCycle) {
-
-		return "subscribe/subscribeOrder";
-	}
+	// 전달 받은 값 위에서 작성했고, 경로도 subscribeOrder.do로 변경했습니다.
+//	@PostMapping("/subscribePlan.do")
+//	public String subscribePlan(
+//			@RequestParam String sProduct, 
+//			@RequestParam String[] sExcludeVegs,
+//			@RequestParam int sDeliveryCycle) {
+//
+//		return "subscribe/subscribeOrder";
+//	}
 	// 미송코드 끝
 
 }

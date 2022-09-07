@@ -1,3 +1,5 @@
+<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@page import="com.kh.monong.member.model.dto.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -10,13 +12,11 @@
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sPlan.css">
-
 <h1 class="s-plan">구독 플랜</h1>
 
 <div class="s-form-container mx-auto">
-
-	<form:form name="subscribePlanFrm" method="post" action="${pageContext.request.contextPath}/subscribe/subscribePlan.do">
-	
+	<!-- 9/7 선아 액션주소 변경 -->
+	<form:form name="subscribePlanFrm" method="post" action="${pageContext.request.contextPath}/subscribe/subscribeOrder.do">
     <div class="s-form-part-container">
         <h2 class="s-form-part-title">상품 선택</h2>  
         <div class="s-products-container d-flex justify-content-between">
