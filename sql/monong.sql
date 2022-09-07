@@ -202,6 +202,8 @@ CREATE TABLE subscription_review (
 	s_review_updated_at	date		NULL
 );
 ALTER TABLE subscription_review ADD CONSTRAINT fk_s_r_s_order_no FOREIGN KEY (s_order_no)REFERENCES subscription_order (s_order_no);
+-- 정기구독 리뷰 시퀀스 생성(9/6)
+create sequence seq_s_review_no nocache;
 
 CREATE TABLE subscription_review_attachment (
 	s_attach_no	number	NOT NULL,
@@ -211,6 +213,8 @@ CREATE TABLE subscription_review_attachment (
 	s_review_created_at	date	DEFAULT current_date	NULL
 );
 ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no);
+-- 컬럼명 변경(s_review_origin_filename -> s_review_original_filename)(9/7)
+ALTER TABLE subscription_review_attachment RENAME COLUMN s_review_origin_filename TO s_review_original_filename;
 
 create sequence seq_s_attach_no;
 -- 시퀀스 증가 오류 방지(9/2)
