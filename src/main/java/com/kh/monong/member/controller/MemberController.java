@@ -307,6 +307,13 @@ public class MemberController {
 		map.put("memberTempPw", memberTempPw);
 		int result = memberService.updateTempPw(map);
 		
+		UserDetails updatedMember = memberSecurityService.loadUserByUsername(member.getMemberId());
+		Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+				updatedMember, 
+				updatedMember.getPassword(),
+				updatedMember.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+		
 		sendMail.setSubject("모농모농 임시 비밀번호 발급");
 		sendMail.setText("<h1>임시 비밀번호</h1>"
 		+ "<br />"+ member.getMemberName()+"님"
@@ -405,7 +412,42 @@ public class MemberController {
 		return "redirect:/member/memberUpdate.do";
 		
 	}
-	
+	@GetMapping("/memberPwUpdate.do")
+	public void memberPwUpdate() {
+		
+	}
+	@PostMapping("/memberPwUpdate.do")
+	public String memberPwUpdate(@RequestParam String memberId,
+								 @RequestParam String oldPassword,
+								 @RequestParam String newPassword,
+								 RedirectAttributes redirectAttr) {
+		try {
+				Member member = memberService.selectMemberById(memberId);
+				String pwd = member.getPassword();
+				if(bcryptPasswordEncoder.matches(oldPassword, pwd)) {
+					String encodedPassword = bcryptPasswordEncoder.encode(newPassword);
+					Map<String, Object> map = new HashMap<>();
+					map.put("memberId", memberId);
+					map.put("encodedPassword", encodedPassword);
+					int result = memberService.updatePw(map);
+					
+					UserDetails updatedMember = memberSecurityService.loadUserByUsername(member.getMemberId());
+					Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+							updatedMember, 
+							updatedMember.getPassword(),
+							updatedMember.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+					redirectAttr.addFlashAttribute("msg", "비밀번호가 변경되었습니다.");
+				}
+				else {
+					redirectAttr.addFlashAttribute("msg", "현재 비밀번호를 확인해주세요");
+				}
+				return "redirect:/member/memberUpdate.do";
+		} catch(Exception e) {
+			log.error("비밀번호 변경 오류 : " + e.getMessage(), e);
+			throw e;
+		}
+	}
 
 	
 	//----------------------수아 끝
