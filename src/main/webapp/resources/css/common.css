@@ -147,12 +147,19 @@ header, footer {
 }
 
 .login {
-	width: 250px;
+	width: 350px;
 }
 
 .login .nav-link:hover {
 	color: #EA5C2B;
 	transform: scale(1.1);
+}
+
+.nav.justify-content-end > p {
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 /*
