@@ -6,8 +6,53 @@ div#enroll-container { width:500px; }
 div#enroll-container input, div#enroll-container select { margin-bottom:10px; }
 div#enroll-container table td { text-align:left; }
  */
-div#enroll-container table th { width: 50px; }
+ div#enroll-container{
+    margin: 50px auto;
+    width: fit-content;
+ }
+
+ #enroll-container .enroll-info-btn{
+    margin-left: 15px;
+ } 
+ .enroll-info-container{
+    width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+ }
  
+ .enroll-info-container textarea{
+ 	width: 500px;
+ 	margin-top: 30px;
+ }
+ 
+ .enroll-info-label{
+    display: inline-block;
+    text-align: left;
+    width: 150px;
+    font-weight: bold;
+ }
+
+ .enroll-info{
+    display: flex;
+    align-items: center;
+    width: 300px;
+ }
+
+ .enroll-info input{
+    width: 300px;
+ }
+.enroll-eamilKey-container{
+    margin-left: 150px;/*.enroll-info-label width만큼*/
+}
+#btn-email-enterKey{
+    width: 60px;
+}
+
+.enroll-form-required{
+	color: red;
+}
 /* 중복아이디체크관련 */
 /*
 div#memberId-container { position:relative; padding:0px; }

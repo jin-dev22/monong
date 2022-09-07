@@ -11,56 +11,8 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/member.css" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/member.css" />
 
-<style>
-     #enroll-container{
-        margin: 50px auto;
-        width: fit-content;
-    }
-
-    #enroll-container .enroll-info-btn{
-        margin-left: 15px;
-    } 
-    .enroll-info-container{
-        width: 600px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 15px 0;
-    }
-    
-    .enroll-info-container textarea{
-    	width: 500px;
-    	margin-top: 30px;
-    }
-    
-    .enroll-info-label{
-        display: inline-block;
-        text-align: left;
-        width: 150px;
-        font-weight: bold;
-    }
-
-    .enroll-info{
-        display: flex;
-        align-items: center;
-        width: 300px;
-    }
-   
-    .enroll-info input{
-        width: 300px;
-    }
-   .enroll-eamilKey-container{
-        margin-left: 150px;/*.enroll-info-label width만큼*/
-   }
-   #btn-email-enterKey{
-       width: 60px;
-   }
-   
-   .enroll-form-required{
-   		color: red;
-   }
-</style>
 <div id="enroll-container" class="mx-auto text-center">
      <form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
         <div class="mx-auto">
@@ -613,6 +565,6 @@ document.querySelector("#sellerRegNo").addEventListener("blur", (e)=>{
 		invalidRegNoFeedback.style.display = "none";
 	}	
 });
-
 </script>
+<%-- <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/member/enroll.js"></script> --%>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
