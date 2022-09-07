@@ -13,130 +13,184 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <style>
-div#enroll-container table th{
-	width: 150px;
-}
-</style>
+     #enroll-container{
+        margin: 50px auto;
+        width: fit-content;
+    }
 
+    #enroll-container .enroll-info-btn{
+        margin-left: 15px;
+    } 
+    .enroll-info-container{
+        width: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 15px 0;
+    }
+    
+    .enroll-info-container textarea{
+    	width: 500px;
+    	margin-top: 30px;
+    }
+    
+    .enroll-info-label{
+        display: inline-block;
+        text-align: left;
+        width: 150px;
+        font-weight: bold;
+    }
+
+    .enroll-info{
+        display: flex;
+        align-items: center;
+        width: 300px;
+    }
+   
+    .enroll-info input{
+        width: 300px;
+    }
+   .enroll-eamilKey-container{
+        margin-left: 150px;/*.enroll-info-label width만큼*/
+   }
+   #btn-email-enterKey{
+       width: 60px;
+   }
+   
+   .enroll-form-required{
+   		color: red;
+   }
+</style>
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
-		<table class="mx-auto">
-			<tr>
-				<th>아이디</th>
-				<td>
-					<div id="memberId-container">
-			            <input type="text" class="form-control" placeholder="아이디(영문,숫자4글자이상)" name="memberId" id="memberId" required>
-			            <span class="guide ok">이 아이디는 사용가능합니다.</span>
-			            <span class="guide error">이 아이디는 사용할 수 없습니다.</span>
-			            <input type="hidden" id="idValid" value="0"/><!-- 사용불가한 아이디 0, 사용가능한 아이디 1 -->
-			        </div>
-				</td>
-			</tr>
-			<tr>
-				<th>패스워드</th>
-				<td>
-					<input type="password" class="form-control" name="memberPassword" id="password" value="1234" required>
-				</td>
-			</tr>
-			<tr>
-				<th>패스워드확인</th>
-				<td>	
-					<input type="password" class="form-control" id="passwordCheck" value="1234" required>
-				</td>
-			</tr>  
-			<tr>
-				<th>업체명</th>
-				<td>	
-					<input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
-				</td>
-			</tr>
-			<tr>
-				<th>전화번호</th>
-				<td>	
-					<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" value="01098989898" required>
-				</td>
-			</tr>
-			<tr>
-				<th>이메일</th>
-				<td>
-					<div id="memberEmail-container">
-			            <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" value="" required>
-			            <span class="invalid-feedback">이미 가입된 이메일입니다.</span>
-			            <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
-			        </div>
-				</td>
-				<td>
-			        <input type="button" id="btn-email-sendKey" value="이메일 인증"
-			        		disabled/><!-- 완성후 기능 살려놓기 -->
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
-							readonly/>
-					<input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
-				</td>
-				<td><input type="button" id="btn-email-enterKey" value="확인"
-						disabled/></td>
-			</tr>
-			<tr>
-				<th>주소</th>
-				<td>	
-					<input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
-				</td>
-			</tr>
-			<tr>
-				<th>상세주소</th>
-				<td>	
-					<input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex" value="">
-				</td>
-			</tr>
-			<tr>
-				<th>개업일</th>
-				<td>	
-					<input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
-				</td>
-			</tr> 
-			<tr>
-				<th>사업자등록번호</th>
-				<td>
-					<input type="text" name="sellerRegNo" placeholder="000-00-00000"/>
-				</td>
-			</tr>
-			<tr>
-				<th><label for="sellerRegFile">사업자등록증</label></th>
-				<td>
-					<input type="file" name="sellerRegFile" id="sellerRegFile" />
-					
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
+     <form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/sellerEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+        <div class="mx-auto">
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">아이디<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">
+                    <span id="memberId-container">
+                        <input type="text" class="form-control" placeholder="영문/숫자 4~12자" name="memberId" id="memberId" required>
+                        <span class="valid-feedback feedback-id">사용가능한 아이디입니다.</span>
+                        <span class="invalid-feedback feedback-id">이미 사용중이거나 유효하지 않은 아이디입니다.</span>
+                        <input type="hidden" id="idValid" value="0"/><!-- 사용불가한 아이디 0, 사용가능한 아이디 1 -->
+                    </span>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">패스워드<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">
+                	<span id="memberPassword-container">
+                     <input type="password" class="form-control" name="memberPassword" id="password" value="1234" required>
+                     <span class="invalid-feedback feedback-password">6자리 이상 작성해주시기 바랍니다.</span>
+                	</span>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">패스워드확인<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                	<span id="passwordCheck-container">
+                     <input type="password" class="form-control" id="passwordCheck" value="1234" required>
+                     <span class="invalid-feedback feedback-password">비밀번호가 일치하지 않습니다.</span>
+                	</span>
+                </span>
+            </div>  
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">업체명<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                    <input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">전화번호<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                	<span class="phone-container">
+                     <input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" value="01098989898" required>
+                     <span class="invalid-feedback feedback-phone">띄어쓰기없이 번호만 입력해주세요.</span>
+                	</span>
+                    
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">이메일<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">
+                    <span id="memberEmail-container">
+                        <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" value="" required>
+                        <span class="valid-feedback feedback-email">사용가능한 이메일입니다.</span>
+                        <span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span>
+                        <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
+                    </span>
+                    <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"
+                            disabled/><!-- 완성후 기능 살려놓기 -->
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info enroll-eamilKey-container">
+                    <input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
+                            readonly/>
+                    <input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
+                    <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"
+                        disabled/>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">주소<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                    <input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">상세주소</span>
+                <span class="enroll-info">	
+                    <input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex" value="">
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">개업일<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                    <input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
+                </span>
+            </div> 
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">사업자등록번호<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">
+                	<span class="sellerRegNo-container">
+	                    <input type="text" name="sellerRegNo" id="sellerRegNo" placeholder="000-00-00000" required/>
+	                    <span class="invalid-feedback feedback-regNo">-를 포함하여 작성해주세요.</span>
+                	</span>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label"><label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label></span>
+                <span class="enroll-info">
+                    <input type="file" name="sellerRegFile" id="sellerRegFile" required/>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span>
+                    <textarea class="enroll-agreement-content" cols="73" rows="5">서비스 이용 표준약관
 [시행 2008. 7. 30.] [문화체육관광부훈령 제2008-0호, 2008. 7. 30., 제정]
 과학기술정보통신부(디지털콘텐츠과), 044-202-6352
 
 제1장 총칙
-      
+    
 제1조(목적) 
 이 약관은 회사가 온라인으로 제공하는 디지털콘텐츠(이하 "콘텐츠"라고 한다) 및 제반서비스의 이용과 관련하여 회사와 이용자와의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.
 
 제2조(정의) 
 이 약관에서 사용하는 용어의 정의는 다음과 같습니다.
 
-	1. "회사"라 함은 "콘텐츠" 산업과 관련된 경제활동을 영위하는 자로서 콘텐츠 및 제반서비스를 제공하는 자를 말합니다. 
-	
-	2. "이용자"라 함은 "회사"의 사이트에 접속하여 이 약관에 따라 "회사"가 제공하는 "콘텐츠" 및 제반서비스를 이용하는 회원 및 비회원을 말합니다. 
-	
-	3. "회원"이라 함은 "회사"와 이용계약을 체결하고 "이용자" 아이디(ID)를 부여받은 "이용자"로서 "회사"의 정보를 지속적으로 제공받으며 "회사"가 제공하는 서비스를 지속적으로 이용할 수 있는 자를 말합니다. 
-	
-	4. "비회원"이라 함은 "회원"이 아니면서 "회사"가 제공하는 서비스를 이용하는 자를 말합니다. 
-	
-	5. "콘텐츠"라 함은 정보통신망이용촉진 및 정보보호 등에 관한 법률 제2조 제1항 제1호의 규정에 의한 정보통신망에서 사용되는 부호·문자·음성·음향·이미지 또는 영상 등으로 표현된 자료 또는 정보로서, 그 보존 및 이용에 있어서 효용을 높일 수 있도록 전자적 형태로 제작 또는 처리된 것을 말합니다. 
-	
-	6. "아이디(ID)"라 함은 "회원"의 식별과 서비스이용을 위하여 "회원"이 정하고 "회사"가 승인하는 문자 또는 숫자의 조합을 말합니다. 
-	
-	7. "비밀번호(PASSWORD)"라 함은 "회원"이 부여받은 "아이디"와 일치되는 "회원"임을 확인하고 비밀보호를 위해 "회원" 자신이 정한 문자 또는 숫자의 조합을 말합니다. 
+    1. "회사"라 함은 "콘텐츠" 산업과 관련된 경제활동을 영위하는 자로서 콘텐츠 및 제반서비스를 제공하는 자를 말합니다. 
+    
+    2. "이용자"라 함은 "회사"의 사이트에 접속하여 이 약관에 따라 "회사"가 제공하는 "콘텐츠" 및 제반서비스를 이용하는 회원 및 비회원을 말합니다. 
+    
+    3. "회원"이라 함은 "회사"와 이용계약을 체결하고 "이용자" 아이디(ID)를 부여받은 "이용자"로서 "회사"의 정보를 지속적으로 제공받으며 "회사"가 제공하는 서비스를 지속적으로 이용할 수 있는 자를 말합니다. 
+    
+    4. "비회원"이라 함은 "회원"이 아니면서 "회사"가 제공하는 서비스를 이용하는 자를 말합니다. 
+    
+    5. "콘텐츠"라 함은 정보통신망이용촉진 및 정보보호 등에 관한 법률 제2조 제1항 제1호의 규정에 의한 정보통신망에서 사용되는 부호·문자·음성·음향·이미지 또는 영상 등으로 표현된 자료 또는 정보로서, 그 보존 및 이용에 있어서 효용을 높일 수 있도록 전자적 형태로 제작 또는 처리된 것을 말합니다. 
+    
+    6. "아이디(ID)"라 함은 "회원"의 식별과 서비스이용을 위하여 "회원"이 정하고 "회사"가 승인하는 문자 또는 숫자의 조합을 말합니다. 
+    
+    7. "비밀번호(PASSWORD)"라 함은 "회원"이 부여받은 "아이디"와 일치되는 "회원"임을 확인하고 비밀보호를 위해 "회원" 자신이 정한 문자 또는 숫자의 조합을 말합니다. 
 
 제3조(신원정보 등의 제공) "회사"는 이 약관의 내용, 상호, 대표자 성명, 영업소 소재지 주소(소비자의 불만을 처리할 수 있는 곳의 주소를 포함), 전화번호, 모사전송번호, 전자우편주소, 사업자등록번호, 통신판매업 신고번호 및 개인정보관리책임자 등을 이용자가 쉽게 알 수 있도록 온라인 서비스초기화면에 게시합니다. 다만, 약관은 이용자가 연결화면을 통하여 볼 수 있도록 할 수 있습니다. 
 
@@ -156,23 +210,23 @@ div#enroll-container table th{
 
 제6조(약관의 해석) 
 이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 온라인 디지털콘텐츠산업 발전법, 전자상거래 등에서의 소비자보호에 관한 법률, 약관의 규제에 관한 법률, 문화체육관광부장관이 정하는 디지털콘텐츠이용자보호지침, 기타 관계법령 또는 상관례에 따릅니다. 
-      </textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-			        <input type="checkbox" id="agree-terms" name="agreement-required" class="agree-check-box"/>
-				    <label for="agree-terms">(필수) 서비스 이용약관에 동의합니다.</label>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<textarea class="enroll-agreement-content" cols="73" rows="5">monong-monong 개인정보처리방침
+    </textarea>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span>
+                    <input type="checkbox" id="agree-terms" name="agreement-required" class="agree-check-box"/>
+                    <label for="agree-terms">(필수) 서비스 이용약관에 동의합니다.<span class="enroll-form-required">*</span></label>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span>
+                    <textarea class="enroll-agreement-content" cols="73" rows="5">monong-monong 개인정보처리방침
 
 [monong-monong]('monong.com', 이하 모농모농)이(가) 취급하는 모든 개인정보는 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하여 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.
 
 1 개인정보의 처리 목적
-  
+
 ① [monong-monong]은(는) 다음의 목적을 위하여 개인정보를 처리하고 있으며, 다음의 목적 이외의 용도로는 이용하지 않습니다.
 
 고객 가입의사 확인, 고객에 대한 서비스 제공에 따른 본인 식별·인증, 회원자격 유지·관리, 물품 또는 서비스 공급에 따른 금액 결제, 물품 또는 서비스의 공급·배송, 마케팅 및 광고에의 활용
@@ -191,13 +245,13 @@ div#enroll-container table th{
 
 정보주체는 [monong-monong]에 대해 언제든지 다음 각 호의 개인정보 보호 관련 권리를 행사할 수 있습니다.
 
-	1. 개인정보 열람요구
-	
-	2. 오류 등이 있을 경우 정정 요구
-	
-	3. 삭제요구
-	
-	4. 처리정지 요구
+    1. 개인정보 열람요구
+    
+    2. 오류 등이 있을 경우 정정 요구
+    
+    3. 삭제요구
+    
+    4. 처리정지 요구
 
 4 처리하는 개인정보 항목
 
@@ -252,37 +306,40 @@ div#enroll-container table th{
 공고일자 : 2022년 07월 13일
 
 시행일자 : 2022년 07월 13일
-     				 </textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<input type="checkbox" id="agree-privacy" name="agreement-required" class="agree-check-box"/>
-       				<label for="agree-privacy">(필수) 개인정보 수집 및 이용약관에 동의합니다.</label>
-				</td>
-			</tr>
-		</table>
-		<sec:csrfInput />
-		<input type="submit" value="가입" >
-		<input type="reset" value="취소">
-	</form>
-</div>
+                    </textarea>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span>
+                    <input type="checkbox" id="agree-privacy" name="agreement-required" class="agree-check-box"/>
+                    <label for="agree-privacy">(필수) 개인정보 수집 및 이용약관에 동의합니다.<span class="enroll-form-required">*</span></label>
+                </span>
+            </div>
+        </div>
+        <sec:csrfInput />
+        <input type="submit" value="가입" >
+        <input type="reset" value="취소">
+    </form>
+</div>  
 <script>
-const ok = document.querySelector(".guide.ok");
-const error = document.querySelector(".guide.error");
-const invalidFeedBack = document.querySelector(".invalid-feedback");
 const idValid = document.querySelector("#idValid");
 const emailValid = document.querySelector("#emailValid");
 const emailKeyValid = document.querySelector("#emailKeyValid");
 
+
+const validIdFeedBack = document.querySelector(".valid-feedback.feedback-id");
+const invalidIdFeedBack = document.querySelector(".invalid-feedback.feedback-id");
+/**
+ * 제출 전 입력값 valid확인
+ */
 document.memberEnrollFrm.addEventListener('submit', (e) => {
-	//아이디 체크
+	//아이디
 	if(idValid.value == "0"){
 		e.preventDefault();
 		alert("유효한 아이디를 입력해주세요.");
 		return;
 	}
-	//동의여부 체크
+	//동의여부
 	const agreeRequired = document.querySelectorAll('input[name="agreement-required"]');
 	let cntChkd = 0;
 	agreeRequired.forEach((checkbox)=>{
@@ -296,7 +353,7 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
 		return;
 	}
-	//이메일 인증 체크
+	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
 	if(emailKeyValid === "0"){
 		e.preventDefault();
@@ -306,8 +363,8 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	*/
 });
 
-/*
- * 아이디 중복 체크
+/**
+ * 아이디 유효성, 중복
  */
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	const {value : memberId} = e.target;
@@ -315,10 +372,12 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	if(memberId.length < 4){
 		idValid.value = "0";
-		error.style.display = "none";
-		ok.style.display = "none";
+		invalidIdFeedBack.style.display = "none";
+		validIdFeedBack.style.display = "none";
 		return;
 	}
+	
+	const regExp = /^(?=.*[a-zA-Z])([a-zA-Z0-9]{3,11})$/;
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
@@ -335,14 +394,14 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 			const {available} = response;
 			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
-			if(available){
-				error.style.display = "none";
-				ok.style.display = "inline";
+			if(available && regExp.test(memberId)){
+				invalidIdFeedBack.style.display = "none";
+				validIdFeedBack.style.display = "inline";
 				idValid.value = "1";
 			}
 			else {
-				error.style.display = "inline";
-				ok.style.display = "none";
+				invalidIdFeedBack.style.display = "inline";
+				validIdFeedBack.style.display = "none";
 				idValid.value = "0";
 			}
 			
@@ -354,17 +413,70 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 });
 
-//email 중복 체크
-document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
+/**
+ * 비밀번호 유효성
+ */
+const invalidPwdFeedback = document.querySelectorAll(".invalid-feedback.feedback-password");
+document.querySelector("#password").addEventListener('blur', (e)=>{
+	const password = e.target;
+	const regExp = /^[a-zA-z0-9]{6,}$/;
+	if(!regExp.test(password)){
+		invalidPwdfeedback[0].style.display = "inline";
+		password.value = "";
+		password.select();
+	}
+	else{
+		invalidPwdfeedback[0].style.display = "none";
+	}	
+});
+
+document.querySelector("#passwordCheck").addEventListener("blur", (e)=>{
+	const passwordChk = e.target;
+	const password = document.querySelector("#password");
+	if(passwordChk.value !== password.value){
+		invalidPwdfeedback[1].style.display = "inline";
+		passwordChk.value = "";
+		passwordChk.select();
+	}
+	else{
+		invalidPwdfeedback[1].style.display = "none";
+	}
+});
+
+/**
+ * 전화번호 자릿수
+ */
+ const invalidPhoneFeedback = document.querySelector("#memberPhone");
+document.querySelector("#memberPhone").addEventListener("blur", (e)=>{
+	const phone = e.target;
+	if(phone.value.length < 10 || phone.lengh > 11){
+		invalidPhoneFeedback.style.display = "inline";
+		phone.value = "";
+		phone.select();
+	}
+	else{
+		invalidPhoneFeedback.style.display = "none";
+	}
+});
+
+/**
+ * email 유효성, 중복
+ */
+document.querySelector("#memberEmail").addEventListener('blur', (e) => {
+const validEmailFeedBack = document.querySelector(".valid-feedback.feedback-email");
+const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-email");
 	
 	const {value : email} = e.target;
 	console.log(email);	
 
 	if(email.length < 7){
-		idValid.value = "0";
-		invalidFeedBack.style.display = "none";
+		emailValid.value = "0";
+		invalidEmailFeedBack.style.display = "none";
+		validEmailFeedBack.style.display = "none";
 		return;
 	}
+
+	const regExp = /^[\w\d]{4,}@[\w]+(\.[\w]+){1,3}$/;	
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
@@ -379,12 +491,14 @@ document.querySelector("#memberEmail").addEventListener('keyup', (e) => {
 			const {available} = response;
 			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
-			if(available){
-				invalidFeedBack.style.display = "none";
+			if(available && regExp.test(email)){
+				invalidEmailFeedBack.style.display = "none";
+				validEmailFeedBack.style.display = "inline";
 				emailValid.value = "1";
 			}
 			else {
-				invalidFeedBack.style.display = "inline";
+				invalidEmailFeedBack.style.display = "inline";
+				validEmailFeedBack.style.display = "none";
 				emailValid.value = "0";
 			}
 			
@@ -475,5 +589,23 @@ document.querySelector("#btn-email-enterKey").addEventListener("click", (e)=>{
 		}		
 	});
 });
+
+
+//사업자등록번호 유효성
+const invalidRegNoFeedback = document.querySelector(".invalid-feedback.feedback-regNo");
+document.querySelector("#sellerRegNo").addEventListener("blur", (e)=>{
+	const regNo = e.target;
+	const regExp = /([0-9]{3})-?([0-9]{2})-?([0-9]{5})/;
+	
+	if(!regExp.test(regNo.value)){
+		invalidRegNoFeedback.style.display = "inline";
+		regNo.value = "";
+		regNo.select();
+	}
+	else{
+		invalidRegNoFeedback.style.display = "none";
+	}	
+});
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
