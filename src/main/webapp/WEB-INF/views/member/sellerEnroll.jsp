@@ -353,6 +353,13 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
 		return;
 	}
+	
+	if(emailValid.value === "0"){
+		e.preventDefault();
+		alert("유효한 이메일을 입력해주세요.");
+		return;
+	}
+	
 	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
 	if(emailKeyValid === "0"){

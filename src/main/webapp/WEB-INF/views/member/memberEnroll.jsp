@@ -338,6 +338,12 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		alert("필수항목에 동의하지 않으면 회원가입이 불가능해요.");
 		return;
 	}
+	
+	if(emailValid.value === "0"){
+		e.preventDefault();
+		alert("유효한 이메일을 입력해주세요.");
+		return;
+	}
 	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
 	if(emailKeyValid === "0"){
@@ -366,7 +372,7 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);
+	//console.log(headers);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
@@ -453,19 +459,19 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 	
 	const {value : email} = e.target;
 	console.log(email);	
-/* 
+
 	if(email.length < 7){
 		emailValid.value = "0";
 		invalidEmailFeedBack.style.display = "none";
 		validEmailFeedBack.style.display = "none";
 		return;
 	}
- */
+ 
 	const regExp = /^[\w\d]{4,}@[\w]+(\.[\w]+){1,3}$/;	
 	
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	console.log(headers);
+	//console.log(headers);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/member/checkEmailDuplicate.do",
@@ -476,7 +482,7 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 			const {available} = response;
 			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
-			if(available && regExp.test(email)){
+			if(available){
 				invalidEmailFeedBack.style.display = "none";
 				validEmailFeedBack.style.display = "inline";
 				emailValid.value = "1";
