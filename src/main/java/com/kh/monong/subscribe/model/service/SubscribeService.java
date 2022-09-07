@@ -19,6 +19,7 @@ public interface SubscribeService {
 
 	int findCardInfoNoByUid(String customerUid);
 	
+	SubscriptionProduct selectProductInfoByCode(String sProduct);
 	
 	
 	// 선아코드 끝
@@ -28,5 +29,6 @@ public interface SubscribeService {
 	
 	List<Vegetables> getVegetables();
 	// 미송코드 끝
+
 
 }

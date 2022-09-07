@@ -27,7 +27,9 @@ public interface SubscribeDao {
 	
 	@Insert("insert into Subscription values(#{sNo}, #{memberId}, #{sProductCode}, #{sExcludeVegs}, #{sDeliveryCycle}, #{sNextDeliveryDate}, default, #{sRecipient}, #{sPhone}, #{sAddress}, #{sAddressEx}, #{sDeliveryRequest}, #{cardInfoNo})")
 	int insertSubscription(Subscription subscription, int cardInfoNo);
-
+	
+	@Select("select * from subscription_product where s_product_code = #{sProductCode}")
+	SubscriptionProduct selectProductInfoByCode(String sProductCode);
 		
 	// 미송코드 시작
 	@Select("select * from subscription_product")
@@ -36,5 +38,6 @@ public interface SubscribeDao {
 	@Select("select * from vegetables")
 	List<Vegetables> getVegetables();
 	// 미송코드 끝
+	
 
 }
