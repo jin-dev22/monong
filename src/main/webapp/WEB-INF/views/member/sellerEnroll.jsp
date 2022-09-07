@@ -416,17 +416,17 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 /**
  * 비밀번호 유효성
  */
-const invalidPwdFeedback = document.querySelectorAll(".invalid-feedback.feedback-password");
+const invalidPwdFeedbacks = document.querySelectorAll(".invalid-feedback.feedback-password");
 document.querySelector("#password").addEventListener('blur', (e)=>{
 	const password = e.target;
+	console.log(password);
 	const regExp = /^[a-zA-z0-9]{6,}$/;
-	if(!regExp.test(password)){
-		invalidPwdfeedback[0].style.display = "inline";
+	if(!regExp.test(password.value)){
+		invalidPwdFeedbacks[0].style.display = "inline";
 		password.value = "";
-		password.select();
 	}
 	else{
-		invalidPwdfeedback[0].style.display = "none";
+		invalidPwdFeedbacks[0].style.display = "none";
 	}	
 });
 
@@ -434,25 +434,25 @@ document.querySelector("#passwordCheck").addEventListener("blur", (e)=>{
 	const passwordChk = e.target;
 	const password = document.querySelector("#password");
 	if(passwordChk.value !== password.value){
-		invalidPwdfeedback[1].style.display = "inline";
+		invalidPwdFeedbacks[1].style.display = "inline";
 		passwordChk.value = "";
-		passwordChk.select();
 	}
 	else{
-		invalidPwdfeedback[1].style.display = "none";
+		invalidPwdFeedbacks[1].style.display = "none";
 	}
 });
 
 /**
  * 전화번호 자릿수
  */
- const invalidPhoneFeedback = document.querySelector("#memberPhone");
+const invalidPhoneFeedback = document.querySelector(".invalid-feedback.feedback-phone");
 document.querySelector("#memberPhone").addEventListener("blur", (e)=>{
 	const phone = e.target;
-	if(phone.value.length < 10 || phone.lengh > 11){
+	const regExp = /^[0-9]{9,12}$/;
+	
+	if(!regExp.test(phone.value)){
 		invalidPhoneFeedback.style.display = "inline";
 		phone.value = "";
-		phone.select();
 	}
 	else{
 		invalidPhoneFeedback.style.display = "none";
