@@ -228,15 +228,22 @@ alter table subscription_product add s_delivery_fee number default 3000;
 
 CREATE TABLE card_info (
 	card_info_no	number		NOT NULL,
-	card_no	varchar2(16)		NOT NULL,
-	card_expire_date	varchar2(12)		NOT NULL,
-	card_birth_date	varchar2(12)		NOT NULL,
-	card_password	varchar2(2)		NOT NULL,
+	card_no	varchar2(16)		NOT NULL, -- null
+	card_expire_date	varchar2(12)		NOT NULL, -- null
+	card_birth_date	varchar2(12)		NOT NULL, -- null
+	card_password	varchar2(2)		NOT NULL, -- null
 	customer_uid	varchar2(100)		NOT NULL
 );
 -- 카드 info 시퀀스 추가 및 증가 오류 방지(9/2)
 create sequence seq_card_info_no;
 alter sequence seq_card_info_no nocache;
+-- 유니크제약조건 추가(9/2)
+alter table card_info add unique(customer_uid);
+-- 제약조건 변경 추가(9/5)
+alter table card_info modify card_expire_date null;
+alter table card_info modify card_birth_date null;
+alter table card_info modify card_password null;
+alter table card_info modify card_no null;
 
 ALTER TABLE subscription ADD CONSTRAINT PK_SUBSCRIPTION PRIMARY KEY (s_no);
 ALTER TABLE subscription_review ADD CONSTRAINT PK_SUBSCRIPTION_REVIEW PRIMARY KEY (s_review_no);
