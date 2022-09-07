@@ -11,7 +11,7 @@
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 <div id="login-container" class="mx-auto mt-10 text-center">
-	<div>
+	<div class="mb-5">
 		<h1>로그인</h1>
 	</div>
 
@@ -19,33 +19,37 @@
 			  action="${pageContext.request.contextPath}/member/memberLogin.do" 
 			  method="POST">
 			 <c:if test="${param.error != null}">
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				아이디 또는 비밀번호가 일치하지 않습니다.
+			 	<div class="row col-md-13 justify-content-center">
+					<div class="alert alert-danger fade show col-sm-9" role="alert">
+					아이디 또는 비밀번호를 확인해주세요.
+					</div>
 				</div>
 			</c:if>
-			<div class="row mb-3 mt-5">
-				<label for="loginMemberIdInput" class="col-sm-2 col-form-label">아이디</label>
-				<div class="col-sm-10">
-				<input type="text" name="memberId" class="form-control" id="loginMemberIdInput" placeholder="아이디를 입력해주세요"/>
+			<div class="row mb-3 col-md-13 justify-content-center">
+				<div class="col-sm-9">
+					<input type="text" name="memberId" class="form-control" id="loginMemberIdInput" placeholder="아이디를 입력해주세요"/>
 				</div>
 			</div>
-			<div class="row mb-3">
-				<label for="loginMemberPwInput" class="col-sm-2 col-form-label">비밀번호</label>
-				<div class="col-sm-10">
-				<input type="password" name="memberPassword" class="form-control" id="loginMemberPwInput" placeholder="비밀번호를 입력해주세요"/>
+			<div class="row mb-3 col-md-13 justify-content-center">
+				<div class="col-sm-9">
+					<input type="password" name="memberPassword" class="form-control" id="loginMemberPwInput" placeholder="비밀번호를 입력해주세요"/>
 				</div>
 			</div>
-			<div>
+			<div class="col-md-6">
 				<input type="checkbox" name="remember-me" id="remember-me" class="form-check-input" />
 				<label for="remember-me" class="form-check-label">로그인 유지</label>
 			</div>
 			<div class="mt-5 mb-3">
-				<button type="submit" class="btn btn-EA5C2B">로그인</button>
+				<button type="submit" class="btn btn-EA5C2B">&nbsp;로그인&nbsp;</button>
+				<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
 			</div>
 		</form:form>
-		<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
-		<button type="button" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/member/memberIdSearchForm.do';">아이디찾기</button>
-		<button type="button" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/member/memberPwSearchForm.do';">비밀번호찾기</button>
+		
+		<div id="login-search-container">
+			<a href="${pageContext.request.contextPath}/member/memberIdSearchForm.do">아이디</a>&nbsp;|
+			<a href="${pageContext.request.contextPath}/member/memberPwSearchForm.do">비밀번호찾기</a>
+			
 		</div>
+	</div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
