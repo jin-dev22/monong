@@ -10,20 +10,34 @@
 	<jsp:param name="title" value="모농모농-비밀번호찾기"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
-	<div id="login-searchform-container" class="mx-auto mt-10 text-center">
-	<h1>비밀번호 찾기</h1>
-
-
-		<form:form name="findPwFrm" 
-			  action="${pageContext.request.contextPath}/member/memberPwSearchForm.do" 
-			  method="post">
+<div id="login-searchform-container" class="mx-auto mt-10">
+	<div class="mb-5 text-center">
+		<h1>비밀번호 찾기</h1>
+		<span>가입하신 이메일로 임시 비밀번호를 발송해드립니다.</span>
+	</div>
+	
+	<form:form name="findPwFrm" 
+		  action="${pageContext.request.contextPath}/member/memberPwSearchForm.do" 
+		  method="post">
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="mb-2 col-sm-9">
 			<label for="name">이름</label>
 			<input type="text" class="w3-input my-2" id="name" name="name" placeholder="이름을 입력해주세요" required />	
+			</div>
+		</div>
+		
+		<div class="row mb-5 col-md-13 justify-content-center">
+			<div class="mb-2 col-sm-9">
 			<label for="email">이메일</label>
 			<input type="text" class="w3-input" id="email" name="email" placeholder="ex) monong@gmail.com" required/>
-			<button type="submit" id="findId-btn">확인</button>
-		</form:form>
+			</div>
+		</div>
 		
+		<div class="row mb-3 col-md-13 justify-content-center">
+			<button type="submit" id="findId-btn" class="btn btn-EA5C2B">확인</button>
+		</div>
+	</form:form>
+	
 	</div>
 <script>
 const targetBtn = document.querySelector('#findId-btn');
