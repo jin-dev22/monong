@@ -1,10 +1,10 @@
 package com.kh.monong.subscribe.controller;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
@@ -88,6 +89,16 @@ public class SubscribeController {
 			@RequestParam int sDeliveryCycle) {
 
 		return "subscribe/subscribeOrder";
+	}
+	
+	@GetMapping("/subscribeMain.do")
+	public void subscribeReviewList(Model model) {
+		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList();
+				
+		log.debug("sReviewList = {}", sReviewList);
+		
+		model.addAttribute("sReviewList", sReviewList);
+		
 	}
 	// 미송코드 끝
 
