@@ -14,5 +14,5 @@ public class SubscriptionProduct {
 	private String sProductName; // 상품명
 	private String sProductInfo; // 상품설명
 	private int sProductPrice; // 상품가격
-	private static int SDELIVERYFEE = 3000; // 배송비 고정
+	private int sDeliveryFee = 3000; // 배송비 고정
 }

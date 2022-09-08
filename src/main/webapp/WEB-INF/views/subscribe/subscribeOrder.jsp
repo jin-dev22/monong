@@ -1,3 +1,6 @@
+<%@page import="com.kh.monong.subscribe.model.dto.Vegetables"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -22,41 +25,55 @@
 	<form name="subscribeOrderFrm" method="POST" action="${pageContext.request.contextPath}/subscribe/insertSubOrder.do">
 		<h4>선택상품</h4>
 		<div class="s-product-info">
-			<!-- 이미지 수정해야함 -->
-			<img src="${pageContext.request.contextPath}/resources/images/subscribe/single.jpg" alt="선택한 구독상품 이미지">
+			<c:if test="${orderProduct.SProductCode eq 'SP1'}">
+				<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg" alt="싱글 이미지">
+			</c:if>
+			<c:if test="${orderProduct.SProductCode eq 'SP2'}">
+				<img src="${pageContext.request.contextPath}/resources/images/subscribe/레귤러.jpg" alt="레귤러 이미지">
+			</c:if>
+			<c:if test="${orderProduct.SProductCode eq 'SP3'}">
+				<img src="${pageContext.request.contextPath}/resources/images/subscribe/라지.jpg" alt="라지 이미지">
+			</c:if>
 			<div class="s-product-info-content">
 				<input type="hidden" name="sNo" value=""/>
-				<input type="hidden" name="sProductCode" value="${subscription.sProductCode}"/>
+				<input type="hidden" name="sProductCode" value="${orderProduct.SProductCode}"/>
 				<p class="bold">상품정보</p>
 				<p>상품명</p>
-				<input type="text" name="sProductName" value="상품명명 ${subscription.sProductName}" readonly/>
+				<input type="text" name="sProductName" value="${orderProduct.SProductName}" readonly/>
 				<p>상품가격</p>
-				<input type="text" value="상품가격격 ${subscription.sProductPrice}" readonly/>
+				<c:set var="sProductPrice" value="${orderProduct.SProductPrice}" />
+				<input type="text" value="<fmt:formatNumber value="${sProductPrice}" type="number" pattern="#,###원" />" readonly/>
 				<p>제외 채소</p>
-				<input type="text" name="sExcludeVegs" value="제외 채소과일 ${subscription.sExcludeVegs}" readonly/>
+				<c:set var="excludeVegs" value="" />
+				<c:forEach items="${sExcludeVegs}" var="veg" varStatus="vs">
+					<c:if test="${veg ne '없음'}">
+						<c:set var="excludeVegs" value="${excludeVegs}${veg}${not vs.last ? ', ' : ''}" />
+					</c:if>
+				</c:forEach>
+				<input type="text" name="sExcludeVegs" value="${excludeVegs}" readonly/>
 				<p>배송 주기</p>
-				<input type="text" name="sDeliveryCycle" value="배송 주기기기 ${subscription.sDeliveryCycle}" readonly/>
+				<input type="text" name="sDeliveryCycle" value="${sDeliveryCycle}주" readonly/>
 				<p>배송일</p>
-				<input type="text" name="sNextDeliveryDate" value="배송일일 토일월화인경우-이번주금요일" readonly/>
+				<input type="text" name="sNextDeliveryDate" value="" readonly/>
 			</div>
 		</div>
 		<div class="s-order-wrapper">
 			<div class="s-order-addr-info">
 				<h4>배송지 정보</h4>
-				<input type="hidden" name="memberId" value="${memberId}" />
+				<input type="hidden" name="memberId" value="<sec:authentication property="principal.memberId"/>" />
 				<div class="s-order-addr-info-content">
 					<label for="sRecipient">수령인</label><br/>
-					<input type="text" id="sRecipient" name="sRecipient" value="회원아이디 ${subscription.memberId}" required /><br/>
+					<input type="text" id="sRecipient" name="sRecipient" value="<sec:authentication property="principal.memberName"/>" required /><br/>
 					<span class="sRecipientCheck error">수령인을 입력해주세요.</span><br />
 					<label for="sPhone">연락처</label><br/>
-					<input type="text" id="sPhone" name="sPhone" value="핸드포온${subscription.sPhone}" required /><br/>
+					<input type="text" id="sPhone" name="sPhone" value="<sec:authentication property="principal.memberPhone"/>" required /><br/>
 					<span class="sPhoneCheck error">연락처는 '-'없이 숫자만 입력해주세요.</span><br />
 					<label for="sAddress">주소</label><br/>
-					<input type="text" id="sAddress" name="sAddress" value="주소오오 ${subscription.sAddress}" required readonly />
+					<input type="text" id="sAddress" name="sAddress" value="<sec:authentication property="principal.memberAddress"/>" required readonly />
 					<input type="button" id="researchButton" value="검색" class="btn btn-EA5C2B"><br/>
 					<span class="sAddressCheck error">받으실 주소를 입력해주세요.</span><br />
 					<label for="sAddressEx">상세주소</label><br/>
-					<input type="text" id="sAddressEx" name="sAddressEx" value="상세주소오오 ${subscription.sAddressEx}" required /><br/>
+					<input type="text" id="sAddressEx" name="sAddressEx" value="<sec:authentication property="principal.memberAddressEx"/>" required /><br/>
 					<label for="sDeliveryRequest">배송 요청사항(선택)</label><br/>
 					<input type="text" id="sDeliveryRequest" name="sDeliveryRequest" value="">
 				</div>
@@ -65,12 +82,16 @@
 				<h4>결제 정보</h4>
 				<div class="s-pay-info-content">
 					<p>상품금액</p>
-					<input type="text" name="sProductPrice" value="상품가격격 ${subscription.sProductPrice}" readonly/>
+					<input type="text" name="sProductPrice" value="<fmt:formatNumber value="${sProductPrice}" type="number" pattern="#,###원" />" readonly/>
 					<p>배송비</p>
-					<input type="text" name="SDELIVERYFEE" value="3천원 ${subscription.SDELIVERYFEE}" readonly/>
+					<c:set var="sDeliveryFee" value="${orderProduct.SDeliveryFee}" />
+					<input type="text" name="sDeliveryFee" value="<fmt:formatNumber value="${sDeliveryFee}" type="number" pattern="#,###원" />" readonly/>
 					<hr>
 					<p>합계</p>
-					<input type="text" name="sPrice" value="${subscription.sProductPrice} + ${subscription.SDELIVERYFEE}" readonly/>
+					<fmt:parseNumber value="${sDeliveryFee}" var="deliveryFee"/>
+					<fmt:parseNumber value="${sProductPrice}" var="productPrice"/>
+					<c:set var="sPrice" value="${productPrice +  sDeliveryFee}"/>
+					<input type="text" name="sPrice" value="<fmt:formatNumber value="${sPrice}" type="number" pattern="#,###원" />" readonly/>
 				</div>
 				<div id="s-order-card">
 					<input type="hidden" name="customerUid" value="" />
@@ -85,40 +106,74 @@
 				<div class="s-order-totle-price">
 					<span>총 결제 금액</span>
 					<!-- 전달받은 ${subscription.sDeliveryCycle} -->
-					<span class="s-cycle">0주</span>
-					<span class="s-price">위에 합계 값</span><span>원</span>
+					<span class="s-cycle">${sDeliveryCycle}주</span>
+					<span class="s-price"><fmt:formatNumber value="${sPrice}" type="number" pattern="#,###" /></span><span>원</span>
 				</div>
-				<button type="button" class="btn btn-EA5C2B btn-s-pay" onclick="requestPay()">구독 완료하기</button>
+				<button type="button" class="btn btn-EA5C2B btn-s-pay" id="requestPay">구독 완료하기</button>
 			</div>
 		</div>
 	</form>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-// 주문번호 및 고객고유번호 insert
-function requestPay(){
-	const frm = document.subscribeOrderFrm;
-	let random = '';
-	const len = 5; // 랜덤 5자리
-	for(i = 0; i < len; i++){
-		random += Math.floor(Math.random() * 10);
-	}
-	const today = todayFormat();
-	console.log(today);
-	console.log(random);
+window.addEventListener("load", () => {
+	console.log(memberId);
+	const today = new Date();
+	deliveryDate(today);
+});
+
+// 다음배송일
+const deliveryDate = function(today){
+	const deliveryDate = document.querySelector("[name=sNextDeliveryDate]");
+	const THURSDAY_NUM = 4; // 수요일 결제이므로, 목요일부터는 다음주 금요일날 발송
+	const todayDay = today.getDay();
 	
-	let merchantUid = "S" + today + random; // 상점에서 관리하는 주문 번호(변경되야함) // 구독번호 S + 220905 + 12345 12자리
-	/* let productName = frm.sProductName.value;
-	let amount = frm.sPrice.value;
-	let customerUid = ${memberId} + 'sub' + random;
-	let memberName = ${memberSName};
-	let memberTel = ${memberSPhone}; */
+	let yy = today.getFullYear().toString().substring(2);
+	let month = today.getMonth() + 1;
+	month = month < 10 && '0' + month;
+	let date = today.getDate();
+	if(todayDay < THURSDAY_NUM){ // 0 1 2 3 일 월 화 수 -> 금주 금요일
+		switch(todayDay){
+		case 0 : date = today.getDate() + 5; break;
+		case 1 : date = today.getDate() + 4; break;
+		case 2 : date = today.getDate() + 3; break;
+		case 3 : date = today.getDate() + 2; break;
+		}
+	}
+	if(todayDay >= THURSDAY_NUM){ // 4 5 6 목 금 토 -> 다음주 금요일
+		switch(todayDay){
+		case 4 : date = today.getDate() + 8; break;
+		case 5 : date = today.getDate() + 7; break;
+		case 6 : date = today.getDate() + 6; break;
+		}
+	}
+	date = date < 10 ? '0' + date : date;
+	deliveryDate.value = yy + month + date + '(금)';
+};
+
+// 주문번호 및 고객고유번호 insert
+document.querySelector("#requestPay").addEventListener('click', function requestPay(){
+	const frm = document.subscribeOrderFrm;
+	console.log('아아');
+	
+	let merchantUid = sNoMaker(); // 상점에서 관리하는 주문 번호 // 정기결제 사용
+	let sOrderNo = sOrderNoMaker(); // 주마다 변경되는 주문번호
+	// 나중에 삭제
+	console.log(merchantUid);
+	console.log(sOrderNo);
+	
 	// test 용
-	let productName = '정기구독 스몰';
-	let amount = 1000;
-	let customerUid = 'sunsub' + random;
-	let memberName = '모농';
-	let memberTel = '01011112222';
+	let productName = '정기구독 ' + frm.sProductName.value;
+	let amount = frm.sPrice.value.slice(0, -1).replaceAll(",", "");
+	let customerUid = frm.memberId.value + randomMaker(5);
+	let memberName = frm.sRecipient.value;
+	let memberTel = frm.sPhone.value;
+	// 나중에 삭제
+	console.log(productName);
+	console.log(amount);
+	console.log(customerUid);
+	console.log(memberName);
+	console.log(memberTel);
 	
     var IMP = window.IMP; // 생략 가능
     IMP.init("imp46723363");
@@ -155,8 +210,7 @@ function requestPay(){
 							imp_key: "1480425783421144", // REST API 키
 							imp_secret: "s40CDRqPexBS6w9QbZd62CTK6yILrMWq5ro7WNiNq606CWMvwPev6W9Xe2YnzWre9FQtVMZQrh0LBEep" // REST API Secret
 						}
-					});
-					
+					});	
 					
 					// 결제(재결제) 요청
 					const paymentResult11 = async(res) => {
@@ -202,7 +256,8 @@ function requestPay(){
 			console.log("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
 		}
 	});
-};
+});
+
 
 /* // 결제 예약
 axios({
@@ -226,17 +281,42 @@ axios({
 }); */
 
 
-
-//220901 6자리 날짜포맷
 function todayFormat(){
-	const date = new Date();
-	let yy = date.getFullYear().toString().substring(2);
-	let month = date.getMonth() + 1;
+	const today = new Date();
+	let yy = today.getFullYear().toString().substring(2);
+	let month = today.getMonth() + 1;
 	month = month < 10 && '0' + month;
-	let day = date.getDate();
-	day = day < 10 && '0' + day;
-	let time = date.getTime();
-	return yy + month + day + time;
+	let date = today.getDate();
+	date = date < 10 && '0' + date;
+	return yy + month + date;
+};
+
+//주문번호 220901120101 + 랜덤1자리 = 총 13자리
+function sOrderNoMaker(){
+	let merchantUid = '';
+	let random = Math.floor(Math.random() * 10);
+	
+	let today = todayFormat();
+	let time = new Date().toTimeString().split(" ")[0].replaceAll(":", "");
+	
+	sOrderNo = today + time + random;
+	return sOrderNo;
+};
+
+// 구독번호 S + 220902 + 12345 12자리 // 정기결제 사용
+function sNoMaker(){
+	let today = todayFormat();
+	merchantUid = "S" + today + randomMaker(5);
+	
+	return merchantUid;
+};
+
+function randomMaker(len){
+	let random = '';
+	for(i = 0; i < len; i++){
+		random += Math.floor(Math.random() * 10);
+	}
+	return random;
 };
 
 //주소 유효성 검사

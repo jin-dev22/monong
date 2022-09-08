@@ -20,6 +20,7 @@ public interface SubscribeService {
 
 	int findCardInfoNoByUid(String customerUid);
 	
+	SubscriptionProduct selectProductInfoByCode(String sProduct);
 	
 	
 	// 선아코드 끝

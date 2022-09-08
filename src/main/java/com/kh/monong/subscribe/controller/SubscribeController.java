@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
@@ -28,14 +30,23 @@ public class SubscribeController {
 	
 	@Autowired
 	SubscribeService subscribeService;
-
-	// 선아코드 시작
-	@GetMapping("/subscribeOrder.do")
-	public void order() {}
 	
+	@Autowired
+	MemberService memberService;
+	
+	// 선아코드 시작	
 	@PostMapping("/subscribeOrder.do")
-	public void order(Subscription subscription) {
-		// log.debug("subscription = {}", subscription);
+	public String subscribePlan(
+			@RequestParam String sProduct, 
+			@RequestParam String[] sExcludeVegs,
+			@RequestParam int sDeliveryCycle,
+			Model model) {
+		SubscriptionProduct orderProduct = subscribeService.selectProductInfoByCode(sProduct);
+		
+		model.addAttribute("orderProduct", orderProduct);
+		model.addAttribute("sExcludeVegs", sExcludeVegs);
+		model.addAttribute("sDeliveryCycle", sDeliveryCycle);
+		return "/subscribe/subscribeOrder";
 	}
 	
 	@PostMapping("/insertCardInfo.do")
@@ -82,23 +93,12 @@ public class SubscribeController {
 		model.addAttribute("vegetables", vegetables);
 	}
 	
-	@PostMapping("/subscribePlan.do")
-	public String subscribePlan(
-			@RequestParam String sProduct, 
-			@RequestParam String[] sExcludeVegs,
-			@RequestParam int sDeliveryCycle) {
-
-		return "subscribe/subscribeOrder";
-	}
-	
 	@GetMapping("/subscribeMain.do")
 	public void subscribeReviewList(Model model) {
 		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList();
-				
 		log.debug("sReviewList = {}", sReviewList);
 		
 		model.addAttribute("sReviewList", sReviewList);
-		
 	}
 	// 미송코드 끝
 

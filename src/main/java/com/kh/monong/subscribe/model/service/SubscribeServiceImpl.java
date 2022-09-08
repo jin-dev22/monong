@@ -38,6 +38,11 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.findCardInfoNoByUid(customerUid);
 	}
 	
+	@Override
+	public SubscriptionProduct selectProductInfoByCode(String sProductCode) {
+		return subscribeDao.selectProductInfoByCode(sProductCode);
+	}
+	
 	// 선아코드 끝
 		
 	// 미송코드 시작
