@@ -4,24 +4,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class SubscriptionReview {
-	private String sReviewNo;
-	private String sOrderNo;
-	private String sReviewTitle;
-	private String sReviewContent;
-	private int sReviewStar;
-	private int sReviewRecommendNum;
-	private LocalDateTime sReviewCreatedAt;
-	private LocalDateTime sReviewUpdatedAt;
-	
+@ToString(callSuper = true)
+public class SubscriptionReview extends SubscriptionReviewEntity {
+	private String memberId;
+	private int sTimes;
 	private List<SubscriptionReviewAttachment> sAttachments = new ArrayList<>();
+	
+	public SubscriptionReview(String sReviewNo, String sOrderNo, String sReviewContent, int sReviewStar,
+			int sReviewRecommendNum, LocalDateTime sReviewCreatedAt, LocalDateTime sReviewUpdatedAt, String memberId,
+			int sTimes, List<SubscriptionReviewAttachment> sAttachments) {
+		super(sReviewNo, sOrderNo, sReviewContent, sReviewStar, sReviewRecommendNum, sReviewCreatedAt,
+				sReviewUpdatedAt);
+		this.memberId = memberId;
+		this.sTimes = sTimes;
+		this.sAttachments = sAttachments;
+	}	
+	
 }

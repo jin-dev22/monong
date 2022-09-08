@@ -8,6 +8,7 @@ import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import lombok.NonNull;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
 
@@ -39,5 +40,7 @@ public interface SubscribeDao {
 	List<Vegetables> getVegetables();
 	// 미송코드 끝
 	
+
+	List<SubscriptionReview> selectSubscriptionReviewListCollection();
 
 }

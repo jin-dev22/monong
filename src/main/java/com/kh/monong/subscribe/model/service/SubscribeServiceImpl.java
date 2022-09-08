@@ -8,6 +8,7 @@ import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import lombok.NonNull;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
 @Service
@@ -53,6 +54,11 @@ public class SubscribeServiceImpl implements SubscribeService {
 	@Override
 	public List<Vegetables> getVegetables() {
 		return subscribeDao.getVegetables();
+	}
+	
+	@Override
+	public List<SubscriptionReview> selectSubscriptionReviewList() {
+		return subscribeDao.selectSubscriptionReviewListCollection();
 	}
 	// 미송코드 끝
 }
