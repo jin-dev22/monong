@@ -11,10 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubscriptionReviewAttachment {
-	private int s_attach_no;
-	private String s_review_no;
-	private String sReviewOriginalFilename;
-	private String sReviewRenamedFilename;
+public class SubscriptionReviewEntity {
+	private String sReviewNo;
+	private String sOrderNo;
+	private String sReviewContent;
+	private int sReviewStar;
+	private int sReviewRecommendNum;
 	private LocalDateTime sReviewCreatedAt;
+	private LocalDateTime sReviewUpdatedAt;
+	
 }

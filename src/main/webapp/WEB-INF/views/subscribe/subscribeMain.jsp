@@ -12,4 +12,8 @@
 
 <h1>정기구독</h1>
 
+<c:forEach items="${sReviewList}" var="review">
+	<p>${review}</p>
+</c:forEach>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

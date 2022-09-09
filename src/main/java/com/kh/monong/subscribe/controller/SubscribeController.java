@@ -17,6 +17,7 @@ import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
@@ -83,24 +84,22 @@ public class SubscribeController {
 	@GetMapping("/subscribePlan.do")
 	public void subscriptionPlan(Model model) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
-//		log.debug("subscriptionProduct = {}", subscriptionProduct);
+		log.debug("subscriptionProduct = {}", subscriptionProduct);
 
 		List<Vegetables> vegetables = subscribeService.getVegetables();
-//		log.debug("vegetables = {}", vegetables);
+		log.debug("vegetables = {}", vegetables);
 
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("vegetables", vegetables);
 	}
 	
-	// 전달 받은 값 위에서 작성했고, 경로도 subscribeOrder.do로 변경했습니다.
-//	@PostMapping("/subscribePlan.do")
-//	public String subscribePlan(
-//			@RequestParam String sProduct, 
-//			@RequestParam String[] sExcludeVegs,
-//			@RequestParam int sDeliveryCycle) {
-//
-//		return "subscribe/subscribeOrder";
-//	}
+	@GetMapping("/subscribeMain.do")
+	public void subscribeReviewList(Model model) {
+		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList();
+		log.debug("sReviewList = {}", sReviewList);
+		
+		model.addAttribute("sReviewList", sReviewList);
+	}
 	// 미송코드 끝
 
 }
