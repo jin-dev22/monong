@@ -79,9 +79,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public Seller selectSeller(String memberId) {
-		return memberDao.selectSeller(memberId);
+	public SellerInfo selectSellerInfo(String memberId) {
+		return memberDao.selectSellerInfo(memberId);
 	}
+	
 	//------------------수진 끝
 	
 	//------------------수아 시작

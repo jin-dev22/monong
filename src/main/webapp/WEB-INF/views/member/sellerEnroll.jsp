@@ -48,7 +48,13 @@
             <div class="enroll-info-container">
                 <span class="enroll-info-label">업체명<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
-                    <input type="text" class="form-control" name="memberName" id="name" value="홍길동" required>
+                    <input type="text" class="form-control" name="memberName" id="memberName" value="사과농장" required>
+                </span>
+            </div>
+            <div class="enroll-info-container">
+                <span class="enroll-info-label">대표자명<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info">	
+                    <input type="text" class="form-control" name="sellerName" id="sellerName" value="홍길동" required>
                 </span>
             </div>
             <div class="enroll-info-container">

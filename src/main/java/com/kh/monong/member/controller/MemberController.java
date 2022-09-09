@@ -2,6 +2,7 @@ package com.kh.monong.member.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,11 +27,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
@@ -123,6 +125,7 @@ public class MemberController {
 	@PostMapping("/sellerEnroll.do")
 	public String sellerEnroll(
 			Seller seller,
+			String sellerName,
 			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
 			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
 			RedirectAttributes redirectAttr) throws IllegalStateException, IOException {
@@ -134,7 +137,7 @@ public class MemberController {
 		seller.setSellerInfo(SellerInfo.builder()
 									.memberId(seller.getMemberId())
 									.sellerRegNo(sellerRegNo)
-									.sellerName(seller.getMemberName())
+									.sellerName(sellerName)
 									.build());
 		
 		// 비밀번호 암호화
@@ -150,8 +153,10 @@ public class MemberController {
 		
 		//사업자등록증 서버컴퓨터 저장
 		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		log.debug("saveDirectory = {}",saveDirectory);
 		String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
 		File destFile = new File(saveDirectory, renamedFilename);
+		log.debug("destFile = {}",destFile);
 		sellerRegFile.transferTo(destFile);
 		
 		seller.setAttachment(SellerInfoAttachment.builder()
@@ -210,11 +215,28 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
-	@GetMapping("/selectSeller/{memberId}")
-	public ResponseEntity<?> selectSeller(@PathVariable String memberId){
-		Seller seller = memberService.selectSeller(memberId);
+	@GetMapping("/sellerMyPage.do")
+	public ModelAndView sellerMypage(Authentication authentication, ModelAndView mav) {
+		Object principal = authentication.getPrincipal();
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		log.debug("principal = {}", principal);
+		log.debug("authorities = {}", authorities);
+		//판매자 정보 추가
+		Member member = (Member) principal;
+		Seller seller = Seller.builder()
+							.memberId(member.getMemberId())
+							.memberName(member.getMemberName())
+							.memberPassword(member.getMemberPassword())
+							.memberEmail(member.getMemberEmail())
+							.memberAddress(member.getMemberAddress())
+							.memberPhone(member.getMemberPhone())
+							.sellerInfo(memberService.selectSellerInfo(member.getMemberId()))
+							.build();
 		log.debug("seller = {}",seller);
-		return ResponseEntity.status(HttpStatus.OK).body(seller);
+		
+		mav.addObject("seller", seller);
+		mav.setViewName("member/sellerMyPage");
+		return mav;
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작
