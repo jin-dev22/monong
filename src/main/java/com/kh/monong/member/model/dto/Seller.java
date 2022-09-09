@@ -14,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper = true) 
 public class Seller extends Member{
-	@NonNull
 	private SellerInfo sellerInfo;
 	private SellerInfoAttachment attachment;
 }

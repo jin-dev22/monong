@@ -40,7 +40,9 @@ public interface MemberDao {
 	@Insert("insert into seller_info_attachment values(seq_seller_attach_no.nextval, #{memberId}, #{originalFilename}, #{renamedFilename})")
 	int insertSellerInfoAttachment(SellerInfoAttachment attachment);
 	
-	Seller selectSeller(String memberId);
+	@Select("select * from seller_info where member_id = #{memberId}")
+	SellerInfo selectSellerInfo(String memberId);
+	
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

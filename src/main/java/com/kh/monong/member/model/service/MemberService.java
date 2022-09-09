@@ -23,13 +23,14 @@ public interface MemberService {
 	
 	String getEmailKey(String email);
 	
-	Seller selectSeller(String memberId);
 	
 	int insertSeller(Map<String, Object> memberAuthMap, Seller seller);
 
 	int insertSellerInfo(SellerInfo sellerInfo);
 	
 	int insertSellerInfoAttachment(SellerInfoAttachment attachment);
+	
+	SellerInfo selectSellerInfo(String memberId);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
