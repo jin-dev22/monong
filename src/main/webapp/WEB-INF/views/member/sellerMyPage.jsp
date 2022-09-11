@@ -34,13 +34,9 @@
 	</script>
 </div>
 	<nav class="nav justify-content-around mt-5">
-		<a href="#">판매목록</a>
-		<a href="#">상품문의</a>
+		<a href="${pageContext.request.contextPath}/member/sellerProdList.do">판매목록</a>
+		<a href="${pageContext.request.contextPath}/member/sellerQnAList.do">상품문의</a>
 		<a href="#">관리자 문의</a>
 	</nav>
 
 <hr />
-<div id="seller-productList">
-	
-</div>
-<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -1,13 +1,16 @@
 package com.kh.monong.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
-
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -81,6 +84,29 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public SellerInfo selectSellerInfo(String memberId) {
 		return memberDao.selectSellerInfo(memberId);
+	}
+	
+	@Override
+	public List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);
+		for(DirectProduct prod : prodList) {
+			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
+		}
+		return prodList;
+	}
+	
+	private List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
+		return memberDao.selectDirectAttachments(dProductNo);
+	}
+
+	@Override
+	public int getTotalContent(String memberId) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	//------------------수진 끝

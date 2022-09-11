@@ -1,5 +1,6 @@
 package com.kh.monong.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
@@ -7,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -43,6 +46,10 @@ public interface MemberDao {
 	@Select("select * from seller_info where member_id = #{memberId}")
 	SellerInfo selectSellerInfo(String memberId);
 	
+	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param);
+	
+	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
+	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

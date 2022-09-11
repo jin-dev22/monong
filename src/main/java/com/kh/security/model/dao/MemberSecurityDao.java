@@ -5,5 +5,4 @@ import com.kh.monong.member.model.dto.Member;
 public interface MemberSecurityDao {
 
 	Member loadUserByUsername(String username);
-
 }

@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -58,6 +62,9 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
+	@Autowired
+	private DirectService directService;
+	
 	@Autowired
 	ServletContext application;
 	
@@ -238,6 +245,26 @@ public class MemberController {
 		mav.setViewName("member/sellerMyPage");
 		return mav;
 	}
+	
+	@GetMapping("/sellerProdList.do")
+	public void sellerProdList(Authentication authentication, @RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Member member = (Member) (authentication.getPrincipal());
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("sellerId", member.getMemberId());
+		log.debug("param = {}", param);
+		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
+		log.debug("prodList = {}", prodList);
+		model.addAttribute("prodList", prodList);
+		
+		int totalContent = memberService.getTotalContent(member.getMemberId());
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+	};
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")

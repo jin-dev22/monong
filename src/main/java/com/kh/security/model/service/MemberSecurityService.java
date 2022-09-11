@@ -1,6 +1,8 @@
 package com.kh.security.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,7 +26,11 @@ public class MemberSecurityService implements UserDetailsService {
 		Member member = memberSecurityDao.loadUserByUsername(username);
 		if(member == null)
 			throw new UsernameNotFoundException(username);
-		
+		for(GrantedAuthority sga : member.getAuthorities()) {
+			if("ROLE_SELLER".equals(sga)) {
+				
+			}
+		}
 		log.info("member = {}", member);
 		return member;
 	}

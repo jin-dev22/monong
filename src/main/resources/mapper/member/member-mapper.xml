@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.monong.member.model.dao.MemberDao">
+<!-- =============================================================수진 시작 -->
   <update id="insertEmailIdentify">
   	merge into member_email_identify
   		using dual 
@@ -15,4 +16,33 @@
   			values (#{memberEmail}, #{identifyKey})	
   </update>
   
+  <select id="selectDirectListBySellerId" resultMap="directProductListMap">
+  	select * 
+  	from 
+  		(select * 
+  			from direct_product 
+  				left join 
+  				direct_product_option 
+  					using(d_product_no)) 
+  	where member_id = 'manjoo'
+  </select>
+  <resultMap type="directProduct" id="directProductListMap">
+  	<id column="d_product_no" property="dProductNo"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="d_product_name" property="dProductName"/>
+	<!-- <result column="d_product_content" property=""/> -->
+  	<result column="d_product_created_at" property="dProductCreatedAt"/>
+  	<result column="d_product_updated_at" property="dProductUpdatedAt"/>
+  	<result column="d_default_price" property="dDefaultPrice"/>
+  	<collection property="directProductOptions" ofType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</collection>
+  </resultMap>
+ 
+<!-- ==================================================수진 끝 -->
 </mapper>
