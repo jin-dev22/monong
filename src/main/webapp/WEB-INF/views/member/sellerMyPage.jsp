@@ -18,19 +18,18 @@
 		<a class="nav-link" href="${pageContext.request.contextPath}/member/memberCheckForm.do">내 정보 관리</a>
 	</nav>
 	<div id="mypage-sellerInfo-container">
-		<div><span class="seller-info-label">사업자등록번호 : </span> ${seller.sellerInfo.sellerRegNo}</div>
-		<div><span class="seller-info-label">대표자명 : </span>${seller.sellerInfo.sellerName}</div>
+		<div><span class="seller-info-label">사업자등록번호 : </span><sec:authentication property="principal.sellerInfo.sellerRegNo"/></div>
+		<div><span class="seller-info-label">대표자명 : </span><sec:authentication property="principal.sellerInfo.sellerName"/></div>
 		<div><span class="seller-info-label">사업장 주소 : </span><sec:authentication property="principal.memberAddress"/><sec:authentication property="principal.memberAddressEx"/></div>
 		<div><span class="seller-info-label">이메일 : </span><sec:authentication property="principal.memberEmail"/></div>
-		<div><span class="seller-info-label">전화번호 : </span><span id="phoneNumber"></span></div>
+		<div><span class="seller-info-label">전화번호 : </span><span id="phoneNumber"><sec:authentication property="principal.memberPhone"/></span></div>
 	</div>
 	<script>
 	const phoneNumber = document.querySelector("#phoneNumber");
-	const memberPhone = `${seller.memberPhone}`;
 	const setPhoneNumber = (phone, elem) =>{
 		elem.innerHTML = phone.replace(/(^02.{0}|^01.{1}|^07.{}1|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
 	};
-	setPhoneNumber(memberPhone, phoneNumber)
+	setPhoneNumber(phoneNumber.innerHTML, phoneNumber)
 	</script>
 </div>
 	<nav class="nav justify-content-around mt-5">

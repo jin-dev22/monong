@@ -229,16 +229,7 @@ public class MemberController {
 		log.debug("principal = {}", principal);
 		log.debug("authorities = {}", authorities);
 		//판매자 정보 추가
-		Member member = (Member) principal;
-		Seller seller = Seller.builder()
-							.memberId(member.getMemberId())
-							.memberName(member.getMemberName())
-							.memberPassword(member.getMemberPassword())
-							.memberEmail(member.getMemberEmail())
-							.memberAddress(member.getMemberAddress())
-							.memberPhone(member.getMemberPhone())
-							.sellerInfo(memberService.selectSellerInfo(member.getMemberId()))
-							.build();
+		Seller seller = (Seller) principal;
 		log.debug("seller = {}",seller);
 		
 		mav.addObject("seller", seller);
