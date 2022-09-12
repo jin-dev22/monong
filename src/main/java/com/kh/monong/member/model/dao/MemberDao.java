@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -72,6 +73,29 @@ public interface MemberDao {
 
 	@Update("update member set member_password = #{encodedPassword} where member_id= #{memberId}")
 	int updatePw(Map<String, Object> map);
+	
+	List<Member> findAllMember(RowBounds rowBounds);
+	
+	@Select("select count(*) from member_authority where auth= 'ROLE_MEMBER'")
+	int getTotalMember();
+
+	@Select("select count(*)  from  seller_info  where  seller_status = 'REG_O'")
+	int getTotalSeller();
+
+	List<Seller> findAllSeller(RowBounds rowBounds);
+
+	@Select("select count(*)  from  seller_info  where  seller_status = 'REG_W'")
+	int getTotalWaitSeller();
+
+	List<Seller> findWaitSeller(RowBounds rowBounds);
+
+	@Select("select * from seller_info_attachment where seller_attach_no = #{no}")
+	SellerInfoAttachment selectSellerAttach(int no);
+
+	@Update("update seller_info set seller_enroll_date=sysdate, seller_status='REG_O' where member_id=#{id}")
+	int updateSellerStatus(String id);
+
+	int getTotalSellerEnrollByMonth();
 	
 	
 	//------------------------수아 끝

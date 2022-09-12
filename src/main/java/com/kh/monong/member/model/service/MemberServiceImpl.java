@@ -145,5 +145,59 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updatePw(map);
 	}
 
+	@Override
+	public int getTotalMember() {
+		return memberDao.getTotalMember();
+	}
+
+	@Override
+	public List<Member> findAllMember(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findAllMember(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSeller() {
+		return memberDao.getTotalSeller();
+	}
+	
+	@Override
+	public List<Seller> findAllSeller(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findAllSeller(rowBounds);
+	}
+	
+	@Override
+	public int getTotalWaitSeller() {
+		return memberDao.getTotalWaitSeller();
+	}
+	
+	@Override
+	public int getTotalSellerEnrollByMonth() {
+		return memberDao.getTotalSellerEnrollByMonth();
+	}
+	
+	@Override
+	public List<Seller> findWaitSeller(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findWaitSeller(rowBounds);
+	}
+	
+	@Override
+	public SellerInfoAttachment selectSellerAttach(int no) {
+		return memberDao.selectSellerAttach(no);
+	}
+	
+	@Override
+	public int updateSellerStatus(String id) {
+		return memberDao.updateSellerStatus(id);
+	}
+	
 	//------------------수아 끝
 }
