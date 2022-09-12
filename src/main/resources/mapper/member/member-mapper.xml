@@ -23,7 +23,7 @@
 	from direct_product 
 	        left join 
 	        direct_product_option using(d_product_no) 
-	where member_id = 'manjoo' and d_sale_status = #{dSaleStatus})
+	where member_id = #{memberId} and d_sale_status = #{dSaleStatus})
   </select>
   
   <select id="selectDirectListBySellerId" resultMap="directProductListMap">
@@ -42,7 +42,7 @@
 	                        direct_product_option 
 	                        using(d_product_no)
                         where 
-                        	member_id = 'manjoo' and d_sale_status = #{dSaleStatus})
+                        	member_id = #{memberId} and d_sale_status = #{dSaleStatus})
   </select>
   <resultMap type="directProduct" id="directProductListMap">
   	<id column="d_product_no" property="dProductNo"/>

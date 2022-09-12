@@ -59,7 +59,7 @@
 						<%-- <c:if test="${not empty prod.directProductOptions}"> --%>
 							<c:forEach items="${prod.directProductOptions}" var="option" varStatus="vs">
 								<div>옵션 
-									<c:if test="${not empty  option.DOptionName}">${vs.count} : ${option.DOptionName}</c:if>
+									<c:if test="${not empty  option.DOptionName}">${vs.count} : ${option.DOptionName} - ${option.DSaleStatus}</c:if>
 									<c:if test="${empty option.DOptionName}">정보 없음</c:if>
 								</div>
 							</c:forEach>
