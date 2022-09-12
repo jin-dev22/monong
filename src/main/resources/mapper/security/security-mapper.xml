@@ -23,4 +23,5 @@
 			<arg column="auth" javaType="string"/>
 		</constructor>
 	</resultMap>
+	
 </mapper>

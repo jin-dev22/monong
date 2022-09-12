@@ -2,14 +2,16 @@ package com.kh.monong.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,11 +32,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -58,6 +60,9 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작
+	@Autowired
+	private DirectService directService;
+	
 	@Autowired
 	ServletContext application;
 	
@@ -216,27 +221,59 @@ public class MemberController {
 	}
 	
 	@GetMapping("/sellerMyPage.do")
-	public ModelAndView sellerMypage(Authentication authentication, ModelAndView mav) {
-		Object principal = authentication.getPrincipal();
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		log.debug("principal = {}", principal);
-		log.debug("authorities = {}", authorities);
-		//판매자 정보 추가
-		Member member = (Member) principal;
-		Seller seller = Seller.builder()
-							.memberId(member.getMemberId())
-							.memberName(member.getMemberName())
-							.memberPassword(member.getMemberPassword())
-							.memberEmail(member.getMemberEmail())
-							.memberAddress(member.getMemberAddress())
-							.memberPhone(member.getMemberPhone())
-							.sellerInfo(memberService.selectSellerInfo(member.getMemberId()))
-							.build();
-		log.debug("seller = {}",seller);
+	public void sellerMypage() {
+	}
+	
+	@GetMapping("/sellerProdList.do")
+	public void sellerProdList(Authentication authentication, 
+								@RequestParam(defaultValue = "1") int cPage, 
+								@RequestParam(defaultValue = "판매중") String dSaleStatus,
+								Model model, HttpServletRequest request) {
+		Member member = (Member) (authentication.getPrincipal());
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", member.getMemberId());
+		param.put("dSaleStatus", dSaleStatus);
+		log.debug("param = {}", param);
+		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
+		log.debug("prodList = {}", prodList);
 		
-		mav.addObject("seller", seller);
-		mav.setViewName("member/sellerMyPage");
-		return mav;
+		model.addAttribute("prodList", prodList);
+		
+		int totalContent = memberService.getTotalProdCntBySeller(param);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		
+		log.debug("model = {}", model);
+	};
+	
+	@GetMapping("/sellerProdOrderList.do")
+	public void sellerProdOrderList(@RequestParam String prodNo, 
+									@RequestParam(required = false) LocalDateTime startDate, 
+									@RequestParam(required = false) LocalDateTime endDate,
+									@RequestParam(defaultValue = "1") int cPage,
+									Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("prodNo", prodNo);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
+		log.debug("param = {}",param);
+		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
+		
+		model.addAttribute("orderList", orderList);
+		
+		int totalContent = memberService.getTotalOrderCntByProdNo(param);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작
