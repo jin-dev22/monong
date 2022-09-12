@@ -190,6 +190,10 @@ CREATE TABLE subscription_order (
 	s_order_status	varchar2(20)		NOT NULL
 );
 ALTER TABLE subscription_order ADD CONSTRAINT fk_s_o_s_no FOREIGN KEY (s_no)REFERENCES subscription (s_no);
+-- 9/11 제약조건 default 추가
+alter table subscription_order modify s_order_status default '상품준비중';
+alter table subscription_order modify s_order_date default current_date;
+alter table subscription_order modify s_times default 1;
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,
