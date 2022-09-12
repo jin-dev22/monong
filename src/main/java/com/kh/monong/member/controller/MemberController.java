@@ -2,7 +2,7 @@ package com.kh.monong.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,13 +32,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
-import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -253,6 +250,31 @@ public class MemberController {
 		
 		log.debug("model = {}", model);
 	};
+	
+	@GetMapping("/sellerProdOrderList.do")
+	public void sellerProdOrderList(@RequestParam String prodNo, 
+									@RequestParam(required = false) LocalDateTime startDate, 
+									@RequestParam(required = false) LocalDateTime endDate,
+									@RequestParam(defaultValue = "1") int cPage,
+									Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("prodNo", prodNo);
+		param.put("startDate", startDate);
+		param.put("endDate", endDate);
+		log.debug("param = {}",param);
+		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
+		
+		model.addAttribute("orderList", orderList);
+		
+		int totalContent = memberService.getTotalOrderCntByProdNo(param);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")

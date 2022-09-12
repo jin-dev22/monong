@@ -108,6 +108,19 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.getTotalProdCntBySeller(param);
 	}
 	
+	@Override
+	public List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		return memberDao.selectOrderListByProdNo(param);
+	}
+	
+	@Override
+	public int getTotalOrderCntByProdNo(Map<String, Object> param) {
+		return memberDao.getTotalOrderCntByProdNo(param);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

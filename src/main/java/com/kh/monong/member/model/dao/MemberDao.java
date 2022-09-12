@@ -52,6 +52,11 @@ public interface MemberDao {
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	
 	int getTotalProdCntBySeller(Map<String, Object> param);
+	
+	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param);
+	
+	int getTotalOrderCntByProdNo(Map<String, Object> param);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

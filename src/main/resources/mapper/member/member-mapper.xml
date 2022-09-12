@@ -16,6 +16,12 @@
   			values (#{memberEmail}, #{identifyKey})	
   </update>
   
+  <select id="getTotalOrderCntByProdNo" resultType="_int">
+  	select count(*)
+	from 
+		(select distinct d_order_no from member_direct_order where d_product_no = #{prodNo})
+  </select>
+  
   <select id="getTotalProdCntBySeller" resultType="_int">
   	select count(*)
 	from
@@ -25,6 +31,20 @@
 	        direct_product_option using(d_product_no) 
 	where member_id = #{memberId} and d_sale_status = #{dSaleStatus})
   </select>
+  
+  <select id="selectOrderListByProdNo" resultMap="orderMap">
+  	select * 
+	from direct_order 
+	where d_order_no 
+	    in(select d_order_no
+	        from member_direct_order
+	        where d_product_no = #{prodNo})
+	    and
+	    d_order_date between #{startDate} and #{endDate}
+  </select>
+  <resultMap type="map" id="orderMap">
+  	
+  </resultMap>
   
   <select id="selectDirectListBySellerId" resultMap="directProductListMap">
   	select * 

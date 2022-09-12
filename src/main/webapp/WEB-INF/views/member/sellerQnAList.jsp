@@ -73,7 +73,7 @@
 					</div>
 					<div class="prod-no">상품번호 : ${prod.DProductNo}</div>
 					<div class="button-wrapper">
-						<button class="prod-orderList" oncilck="location.href='${pageContext.request.contextPath}/member/sellerProdOrderList.do?prodNo=${prod.DProductNo}';">주문관리</button>
+						<button class="prod-orderList">주문관리</button>
 						<button class="prod-update">판매글 수정</button>
 					</div>
 				</div>
