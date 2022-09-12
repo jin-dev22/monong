@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -227,19 +228,24 @@ public class MemberController {
 	}
 	
 	@GetMapping("/sellerProdList.do")
-	public void sellerProdList(Authentication authentication, @RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+	public void sellerProdList(Authentication authentication, 
+								@RequestParam(defaultValue = "1") int cPage, 
+								@RequestParam(defaultValue = "판매중") String dSaleStatus,
+								Model model, HttpServletRequest request) {
 		Member member = (Member) (authentication.getPrincipal());
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("memberId", member.getMemberId());
+		param.put("dSaleStatus", dSaleStatus);
 		log.debug("param = {}", param);
 		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
 		log.debug("prodList = {}", prodList);
+		
 		model.addAttribute("prodList", prodList);
 		
-		int totalContent = memberService.getTotalProdCntBySeller(member.getMemberId());
+		int totalContent = memberService.getTotalProdCntBySeller(param);
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);

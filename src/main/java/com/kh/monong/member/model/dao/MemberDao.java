@@ -51,8 +51,7 @@ public interface MemberDao {
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	
-	@Select("select count(*) from direct_product where member_id = #{memberId}")
-	int getTotalProdCntBySeller(String memberId);
+	int getTotalProdCntBySeller(Map<String, Object> param);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

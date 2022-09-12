@@ -38,7 +38,7 @@ public interface MemberService {
 	/**
 	 * 판매자 판매상품 개수
 	 */
-	int getTotalProdCntBySeller(String memberId);
+	int getTotalProdCntBySeller(Map<String, Object> param);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);

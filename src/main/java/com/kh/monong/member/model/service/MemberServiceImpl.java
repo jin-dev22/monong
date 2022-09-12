@@ -104,8 +104,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int getTotalProdCntBySeller(String memberId) {
-		return memberDao.getTotalProdCntBySeller(memberId);
+	public int getTotalProdCntBySeller(Map<String, Object> param) {
+		return memberDao.getTotalProdCntBySeller(param);
 	}
 	
 	//------------------수진 끝

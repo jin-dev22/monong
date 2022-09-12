@@ -16,15 +16,33 @@
   			values (#{memberEmail}, #{identifyKey})	
   </update>
   
+  <select id="getTotalProdCntBySeller" resultType="_int">
+  	select count(*)
+	from
+	(select distinct d_product_no
+	from direct_product 
+	        left join 
+	        direct_product_option using(d_product_no) 
+	where member_id = 'manjoo' and d_sale_status = #{dSaleStatus})
+  </select>
+  
   <select id="selectDirectListBySellerId" resultMap="directProductListMap">
   	select * 
-  	from 
-  		(select * 
-  			from direct_product 
-  				left join 
-  				direct_product_option 
-  					using(d_product_no)) 
-  	where member_id = #{memberId}
+	from 
+	    direct_product 
+	    left join 
+	    direct_product_option 
+	        using(d_product_no)
+	where 
+	    d_product_no in(select 
+	    					distinct d_product_no
+                        from 
+	                        direct_product 
+	                        left join 
+	                        direct_product_option 
+	                        using(d_product_no)
+                        where 
+                        	member_id = 'manjoo' and d_sale_status = #{dSaleStatus})
   </select>
   <resultMap type="directProduct" id="directProductListMap">
   	<id column="d_product_no" property="dProductNo"/>

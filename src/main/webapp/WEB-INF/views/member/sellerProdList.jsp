@@ -37,14 +37,13 @@
 	}
 </style>
 <div id="prodList-container">
-	<form name="directProdFilterFrm" method="GET">
-		<select name="saleStatus" id="direct-saleStatus">
-			<option value="판매중">판매중</option>
-			<option value="판매중단">판매중단</option>
-			<option value="판매마감">판매마감</option>
+	<form name="directProdFilterFrm" action="${pageContext.request.contextPath}/member/sellerProdList.do" method="GET">
+		<select name="dSaleStatus" id="direct-saleStatus" onchange="this.form.submit()">
+			<option value="판매중" ${param.dSaleStatus eq '판매중' ? 'selected' : ''}>판매중</option>
+			<option value="판매중단" ${param.dSaleStatus eq '판매중단' ? 'selected' : ''}>판매중단</option>
+			<option value="판매마감" ${param.dSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
 		</select>
 	</form>
-	
 	<c:if test="${empty prodList}">	
 		<div>등록하신 상품이 없습니다. 판매글을 작성해주세요.</div>
 	</c:if>
