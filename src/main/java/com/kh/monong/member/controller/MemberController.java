@@ -266,8 +266,11 @@ public class MemberController {
 		param.put("endDate", endDate);
 		log.debug("param = {}",param);
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
-		
 		model.addAttribute("orderList", orderList);
+		log.debug("orderList={}", orderList);
+		
+		String prodName = memberService.selectProdNameByNo(prodNo);
+		model.addAttribute("prodName",prodName);
 		
 		int totalContent = memberService.getTotalOrderCntByProdNo(param);
 		log.debug("totalContent = {}", totalContent);

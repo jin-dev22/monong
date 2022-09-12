@@ -72,6 +72,9 @@ public interface MemberDao {
 
 	@Update("update member set member_password = #{encodedPassword} where member_id= #{memberId}")
 	int updatePw(Map<String, Object> map);
+
+	@Select("select d_product_name from direct_product where d_product_no = #{prodNo}")
+	String selectProdNameByNo(String prodNo);
 	
 	
 	//------------------------수아 끝
