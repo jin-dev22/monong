@@ -327,6 +327,8 @@ CREATE TABLE member_direct_order (
 	d_option_count	number		NOT NULL,
 	constraint pk_member_direct_option_order_no primary key(d_option_no,d_order_no)
 );
+--수진: 회원 주문옵션 테이블에 상품번호컬럼 추가했습니다!
+alter table member_direct_order add d_product_no varchar2(100) not null;
 
 CREATE TABLE cart (
 	cart_no	varchar2(100)		NOT NULL,
