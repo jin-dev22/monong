@@ -76,7 +76,12 @@
 					<p>
 						<sec:authentication property="principal.username"/>님&#128149;
                 	</p>
-					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberMyPage.do">마이페이지</a>
+                	<sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/member/memberMyPage.do">마이페이지</a>
+                	</sec:authorize>
+                	<sec:authorize access="hasRole('ROLE_SELLER')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/member/sellerMyPage.do">마이페이지</a>
+                	</sec:authorize>
 					<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="POST" class="my-auto">
 					  <button class="nav-link btn" type="submit">로그아웃</button>
 					</form:form>

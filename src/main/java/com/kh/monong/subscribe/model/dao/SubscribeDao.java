@@ -12,6 +12,7 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 
 import lombok.NonNull;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
 
@@ -53,5 +54,7 @@ public interface SubscribeDao {
 
 
 	
+
+	List<SubscriptionReview> selectSubscriptionReviewListCollection();
 
 }

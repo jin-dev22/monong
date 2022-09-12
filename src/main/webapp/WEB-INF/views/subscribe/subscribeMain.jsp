@@ -7,12 +7,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
+	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
-<div class="seller-info-container">
-	
-</div>
 
-<div class="seller-poducts-container">
-</div>
+<h1>정기구독</h1>
+
+<c:forEach items="${sReviewList}" var="review">
+	<p>${review}</p>
+</c:forEach>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
