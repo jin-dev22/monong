@@ -223,18 +223,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/sellerMyPage.do")
-	public ModelAndView sellerMypage(Authentication authentication, ModelAndView mav) {
-		Object principal = authentication.getPrincipal();
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		log.debug("principal = {}", principal);
-		log.debug("authorities = {}", authorities);
-		//판매자 정보 추가
-		Seller seller = (Seller) principal;
-		log.debug("seller = {}",seller);
-		
-		mav.addObject("seller", seller);
-		mav.setViewName("member/sellerMyPage");
-		return mav;
+	public void sellerMypage() {
 	}
 	
 	@GetMapping("/sellerProdList.do")
@@ -244,17 +233,19 @@ public class MemberController {
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
-		param.put("sellerId", member.getMemberId());
+		param.put("memberId", member.getMemberId());
 		log.debug("param = {}", param);
 		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
 		log.debug("prodList = {}", prodList);
 		model.addAttribute("prodList", prodList);
 		
-		int totalContent = memberService.getTotalContent(member.getMemberId());
+		int totalContent = memberService.getTotalProdCntBySeller(member.getMemberId());
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
+		
+		log.debug("model = {}", model);
 	};
 	//----------------------수진 끝
 	//----------------------수아 시작

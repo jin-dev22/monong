@@ -24,7 +24,7 @@
   				left join 
   				direct_product_option 
   					using(d_product_no)) 
-  	where member_id = 'manjoo'
+  	where member_id = #{memberId}
   </select>
   <resultMap type="directProduct" id="directProductListMap">
   	<id column="d_product_no" property="dProductNo"/>

@@ -2,12 +2,9 @@
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<fmt:requestEncoding value="utf-8" />
+
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>
 </jsp:include>
@@ -31,11 +28,11 @@
 	};
 	setPhoneNumber(phoneNumber.innerHTML, phoneNumber)
 	</script>
-</div>
 	<nav class="nav justify-content-around mt-5">
 		<a href="${pageContext.request.contextPath}/member/sellerProdList.do">판매목록</a>
 		<a href="${pageContext.request.contextPath}/member/sellerQnAList.do">상품문의</a>
 		<a href="#">관리자 문의</a>
 	</nav>
+</div>
 
 <hr />

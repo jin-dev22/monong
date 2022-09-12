@@ -102,11 +102,10 @@ public class MemberServiceImpl implements MemberService {
 	private List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
 		return memberDao.selectDirectAttachments(dProductNo);
 	}
-
+	
 	@Override
-	public int getTotalContent(String memberId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getTotalProdCntBySeller(String memberId) {
+		return memberDao.getTotalProdCntBySeller(memberId);
 	}
 	
 	//------------------수진 끝
