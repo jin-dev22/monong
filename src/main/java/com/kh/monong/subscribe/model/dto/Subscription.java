@@ -2,23 +2,34 @@ package com.kh.monong.subscribe.model.dto;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.NonNull;
+
 import com.kh.monong.common.enums.YN;
+import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.member.model.dto.Seller;
+import com.kh.monong.member.model.dto.SellerInfo;
+import com.kh.monong.member.model.dto.SellerInfoAttachment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-// public class Subscription extends SubscriptionProduct { // 상품코드로 가져오려면...? 
+@ToString(callSuper = true) 
 public class Subscription {
 	private String sNo; // 구독번호 S + 220902 + 12345 12자리
 	private String memberId; // 회원아이디
 	private String sProductCode; // 상품코드
 	private String sExcludeVegs; // 제외채소
 	private int sDeliveryCycle; // 배송주기
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate sNextDeliveryDate; // 다음배송일
 	private YN sDelayYn; // 미루기여부
 	private String sRecipient; // 수령자명
