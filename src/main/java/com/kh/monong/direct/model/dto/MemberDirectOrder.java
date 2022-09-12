@@ -13,4 +13,5 @@ public class MemberDirectOrder {
 	private String dOptionNo;
 	private String dOrderNo;
 	private int dOptionCount;
+	private String dProductNo;
 }

@@ -253,8 +253,8 @@ public class MemberController {
 	
 	@GetMapping("/sellerProdOrderList.do")
 	public void sellerProdOrderList(@RequestParam String prodNo, 
-									@RequestParam(required = false) LocalDateTime startDate, 
-									@RequestParam(required = false) LocalDateTime endDate,
+									@RequestParam(required = false) String startDate, 
+									@RequestParam(required = false) String endDate,
 									@RequestParam(defaultValue = "1") int cPage,
 									Model model, HttpServletRequest request) {
 		Map<String, Object> param = new HashMap<>();
