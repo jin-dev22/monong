@@ -75,50 +75,7 @@
 	</c:if>
 	
 	<br />
-	############화면 테스트용
-			<div class="prod-order-container">
-        <div class="order-container-row ord-row-1">
-            <span>주문번호 qe21123123</span>
-            <span>주문일자 : 2022-09-01</span>
-        </div>
-        <div class="order-container-row ord-row-2">
-            <div class="order-prodName">상품명</div>
-            <div class="order-options">
-                <!-- 반복문forEach처리할것 -->
-                <span>선택옵션 : 선택1kg</span>
-                <span>수량 : 3</span>
-                <br>
-                <span>선택옵션 : 선택3kg</span>
-                <span>수량 : 1</span>
-                <!-- ~반복문end -->
-                <div>주문금액 : 100,000</div>
-            </div>
-            <div class="order-customer">주문자 아이디</div>
-            <div class="order-status">
-                <select class="orderStatusChange">
-                    <option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
-                    <option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
-                    <option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
-                    <option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
-                    <option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
-                </select>
-            </div>
-        </div>
-        <div class="order-container-row ord-row-3">
-            <div class="order-address">배송지주소, 배송지 주소상세</div>
-        </div>
-        <div class="order-container-row ord-row-4">
-            <span class="order-req">배송요청사항 : 부재시 문앞에 두세요.</span>		
-            <div>
-                <span class="order-receive">수령인 : 수진수진수진</span>&nbsp;&nbsp;
-                <span class="order-recPhone">01012341234</span>    
-            </div>
-            
-        </div>
 
-    </div>
-	
-	
 	<c:if test="${not empty orderList}">
 		<c:forEach items="${orderList}" var="order">
 			<div class="prod-order-container">
@@ -129,32 +86,74 @@
 				<div class="order-container-row ord-row-2">
 					<div class="order-prodName">${prodName}</div>
 					<div class="order-options">
-						<!-- 반복문forEach처리할것 -->
-						<span>선택옵션 : ${order.dOptionName}</span>
-						<span>수량 : ${order.dOptionCount}</span>
-						<!-- ~반복문end -->
+						<c:forEach items="${order.dProdOptions}" var="opt">
+							<span>선택옵션 : ${opt.dOptionName}</span>&nbsp;&nbsp;
+							<span>수량 : ${opt.dOptionCount}</span>
+							<br />
+						</c:forEach>
 						<div>주문금액 : ${order.dTotalPrice}</div>
 					</div>
 					<div class="order-customer">${order.customerId}</div>
 					<div class="order-status">
-						<select class="orderStatusChange">
-							<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
-							<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
-							<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
-							<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
-							<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
-						</select>
+						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
+							method="POST" accept-charset="UTF-8">
+							<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);">
+								<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
+								<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
+								<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
+								<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
+								<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
+							</select>
+							<input type="hidden" name="dOrderNo" value="${order.dOrderNo}"/>
+							<input type="hidden" name="dOrderMember" value="${order.customerId}"/>
+							<input type="hidden" name="dProdNo" value="${param.prodNo }" />
+							<input type="hidden" name="dProdName" value="${prodName}" />
+							<sec:csrfInput />
+						</form>
 					</div>
 				</div>
+
 				<div class="order-container-row ord-row-3">
 					<div class="order-address">${order.dDestAddress}, ${order.dDestAddressEx}</div>
-					<span>배송요청사항 : ${order.dDeliveryRequest}</span>		
-					<span>수령인 : ${order.dRecipient}</span>		
-					<span>${order.dOrderPhone}</span>
+				</div>
+				<div class="order-container-row ord-row-4">
+					<span class="order-req">배송요청사항 : ${order.dDeliveryRequest}</span>	
+					<div>
+						<span class="order-receive">수령인 : ${order.dRecipient}</span>&nbsp;&nbsp;		
+						<span class="order-recPhone">${order.dOrderPhone}</span>
+					</div>	
 				</div>
 			</div>
 		</c:forEach>
 	</c:if>
 </div>
-
+<script>
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	const chkSubmit = (frm) =>{
+		console.log(frm);
+		frm.preventDefault;
+		const {orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName} = frm;
+		console.log(orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName);
+		if(confirm("주문번호["+dOrderNo.value+"]의 진행상태를"+orderStatus.value+"로 변경하시겠습니까?")){
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/member/updateDOrderStatus.do",
+				headers,
+				method : "POST",
+				data : {orderStatus:orderStatus.value, dOrderNo:dOrderNo.value, 
+						dOrderMember:dOrderMember.value, dProdNo:dProdNo.value, 
+						dProdName:dProdName.value},
+				success(result){
+					console.log(result);
+				},
+				error(jqxhr, statusText, err){
+					console.log(jqxhr, statusText, err);
+				}
+			}); 
+		} 
+		
+		return;
+	};
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -42,7 +42,7 @@
   </select>
   
   <select id="selectOrderListByProdNo" resultMap="orderMap">
-  	select ord.*, (select d_option_name from direct_product_option) d_option_name
+  	select ord.*, (select d_option_name from direct_product_option where d_option_no = ord.d_option_no) d_option_name
 	from
 		(select * 
 		 from direct_order do 
@@ -68,7 +68,7 @@
   	<result column="d_order_date" property="dOrderDate"/>
   	<result column="d_payments" property="dPayments"/>
   	<result column="d_order_status" property="dOrderStatus"/>
-  	<collection property="dProdOptions" ofType="map">
+  	<collection property="dProdOptions" javaType="arraylist" ofType="hashmap">
   		<id column="d_option_no" property="dOptionNo"/>
   		<result column="d_option_count" property="dOptionCount"/>
   		<result column="d_option_name" property="dOptionName"/>

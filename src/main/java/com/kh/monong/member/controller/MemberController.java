@@ -278,6 +278,28 @@ public class MemberController {
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 	}
+	
+	@PostMapping("/updateDOrderStatus.do")
+	public ResponseEntity<?> updateDOrderStatus(@RequestParam String orderStatus, @RequestParam String dOrderNo,
+												@RequestParam String dOrderMember, @RequestParam String dProdNo,
+												@RequestParam String dProdName) {
+		log.debug("newStatus = {}",orderStatus);
+		log.debug("dOrderNo = {}", dOrderNo);
+		log.debug("dOrderMember = {}",dOrderMember);
+		log.debug("dProdNo = {}",dProdNo);
+		log.debug("dProdName = {}",dProdName);
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("newStatus", orderStatus);
+		param.put("dOrderNo", dOrderNo);	
+		//주문내역 상태변경
+		int result = memberService.updateDOrderStatus(param);
+		
+		//알림정보저장
+		
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
