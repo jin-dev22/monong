@@ -1,3 +1,4 @@
+<%@page import="com.kh.monong.subscribe.model.dto.SubscriptionOrderEx"%>
 <%@page import="com.kh.monong.member.model.dto.Member"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,6 +12,8 @@
 <jsp:include page="/WEB-INF/views/member/memberMyPage.jsp">
 	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>
 </jsp:include>
+
+
 <div id="member-reviewList-container">
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

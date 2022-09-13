@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MailUtils;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
@@ -125,6 +129,36 @@ public class AdminController {
 	public String updateSellerStatus(@RequestParam String id,RedirectAttributes redirectAttr) {
 		int result = memberService.updateSellerStatus(id);
 		redirectAttr.addFlashAttribute("msg", "승인 처리가 완료되었습니다.");
+		return "redirect:/admin/sellerWaitList.do";
+	}
+	
+	@Inject
+	private JavaMailSender mailSender;
+	
+	@PostMapping("deleteSellerStatus.do")
+	public String deleteSellerStatus(@RequestParam String name, @RequestParam String email,RedirectAttributes redirectAttr) {
+		try {
+			MailUtils sendMail = new MailUtils(mailSender);
+			Map<String, Object> map = new HashMap<>();
+			map.put("email", email);
+			map.put("name", name);
+			Member member = memberService.findMemberId(map);
+			sendMail.setSubject("모농모농 판매자 승인 거절");
+			sendMail.setText("<h1>안녕하세요 모농모농입니다.</h1>"
+					+ "<br /> 개인농산물판매자 자격 검토 결과, 적합하지 않은 가입조건으로 확인되어"
+					+ "<br />" + member.getMemberName()+"님의 판매자 승인이 거절되었습니다."
+							+ "<br />적합한 가입조건으로 다시 가입을 진행해주시기 바랍니다."
+							+ "<br />감사합니다!");
+			sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
+			sendMail.setTo(member.getMemberEmail());
+			sendMail.send();
+			
+			int deleteSeller = memberService.deleteSeller(member.getMemberId());
+			
+		} catch (Exception e) {
+			log.error("가입거절 이메일 전송오류 : " + e.getMessage(), e);
+		}
+		redirectAttr.addFlashAttribute("msg", "가입거절 처리가 완료되었습니다.");
 		return "redirect:/admin/sellerWaitList.do";
 	}
 }

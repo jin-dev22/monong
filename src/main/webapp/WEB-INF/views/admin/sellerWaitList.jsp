@@ -66,7 +66,11 @@
 		    <td>사업자등록번호</td>
 		    <td>${sel.sellerInfo.sellerRegNo}</td>
 		    <td rowspan="2" class="text-center">
-		    <button id="admin-sellerEnroll-del-btn" class="btn btn-danger">거절</button>
+			    <form:form name="adminSellerUpdateFrm" action="${pageContext.request.contextPath}/admin/deleteSellerStatus.do" method="post" onsubmit="return confirm('해당 판매자의 가입을 거절하시겠습니까?');">
+			    	<input type="hidden" name="email" value="${sel.memberEmail}"/>
+			    	<input type="hidden" name="name" value="${sel.memberName}"/>
+			    	<button type="submit" id="admin-sellerEnroll-del-btn" class="btn btn-danger">거절</button>
+			    </form:form>
 		    </td>
 		  </tr>
 		  <tr>
