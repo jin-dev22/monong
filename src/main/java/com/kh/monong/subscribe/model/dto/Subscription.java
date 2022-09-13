@@ -38,4 +38,5 @@ public class Subscription {
 	private String sAddressEx; // 수령자 상세배송지
 	private String sDeliveryRequest; //배송요청사항
 	private int cardInfoNo; // 카드정보번호
+	private YN sQuitYn; // 구독취소여부(9/13 추가)
 }

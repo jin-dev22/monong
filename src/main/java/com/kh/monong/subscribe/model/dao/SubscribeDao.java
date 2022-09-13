@@ -26,7 +26,7 @@ public interface SubscribeDao {
 	@Select("select card_info_no from card_info where customer_uid = #{customerUid}")
 	int findCardInfoNoByUid(String customerUid);
 	
-	@Insert("insert into subscription values(#{sNo}, #{cardInfoNo}, #{memberId}, #{sProductCode}, #{sExcludeVegs}, #{sDeliveryCycle}, #{sNextDeliveryDate}, default, #{sRecipient}, #{sPhone}, #{sAddress}, #{sAddressEx}, #{sDeliveryRequest})")
+	@Insert("insert into subscription values(#{sNo}, #{cardInfoNo}, #{memberId}, #{sProductCode}, #{sExcludeVegs}, #{sDeliveryCycle}, #{sNextDeliveryDate}, default, #{sRecipient}, #{sPhone}, #{sAddress}, #{sAddressEx}, #{sDeliveryRequest}, default)")
 	int insertSubscription(Subscription subscription);
 	
 	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, default, #{sPrice}, default, default)")
