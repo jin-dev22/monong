@@ -167,6 +167,10 @@ public class SubscribeController {
 		int totalContent = subscribeService.getTotalContent();
 		log.debug("totalContent = {}", totalContent);
 		
+		// 상품정보 불러오기
+		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
+		
+		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("sReviewStarAvg", sReviewStarAvg);
 		model.addAttribute("totalContent", totalContent);
 	}
