@@ -3,7 +3,11 @@ package com.kh.monong.subscribe.model.service;
 
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+
 import lombok.NonNull;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +20,16 @@ public interface SubscribeService {
 	// 선아코드 시작
 	int insertCardInfo(CardInfo cardInfo);
 
-	CardInfo findCardInfoByUid(@NonNull String customerUid);
-
-	int insertSubscription(Subscription subscription, int cardInfoNo);
+	int insertSubscription(SubscriptionOrder subscriptionOrder, Subscription subscription);
 
 	int findCardInfoNoByUid(String customerUid);
 	
+	SubscriptionOrder selectSubscriptionOrderRecent(String sNo);
+	
 	SubscriptionProduct selectProductInfoByCode(String sProduct);
+	
+	Subscription findNextDeliveryDateByUid(String customerUid);
+	
 	
 	
 	// 선아코드 끝
@@ -43,13 +50,6 @@ public interface SubscribeService {
 	int updateSubscribeReviewRecommend(String sReviewNo);
 	
 	// 미송코드 끝
-
-
-	
-
-
-
-	
 
 
 }

@@ -1,13 +1,16 @@
 package com.kh.monong.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
-
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -79,8 +82,44 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public Seller selectSeller(String memberId) {
-		return memberDao.selectSeller(memberId);
+	public SellerInfo selectSellerInfo(String memberId) {
+		return memberDao.selectSellerInfo(memberId);
+	}
+	
+	@Override
+	public List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);
+		for(DirectProduct prod : prodList) {
+			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
+		}
+		return prodList;
+	}
+	
+	private List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
+		return memberDao.selectDirectAttachments(dProductNo);
+	}
+	
+	@Override
+	public int getTotalProdCntBySeller(Map<String, Object> param) {
+		return memberDao.getTotalProdCntBySeller(param);
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		return memberDao.selectOrderListByProdNo(param);
+	}
+	
+	@Override
+	public int getTotalOrderCntByProdNo(Map<String, Object> param) {
+		return memberDao.getTotalOrderCntByProdNo(param);
 	}
 	//------------------수진 끝
 	
@@ -106,5 +145,59 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updatePw(map);
 	}
 
+	@Override
+	public int getTotalMember() {
+		return memberDao.getTotalMember();
+	}
+
+	@Override
+	public List<Member> findAllMember(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findAllMember(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSeller() {
+		return memberDao.getTotalSeller();
+	}
+	
+	@Override
+	public List<Seller> findAllSeller(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findAllSeller(rowBounds);
+	}
+	
+	@Override
+	public int getTotalWaitSeller() {
+		return memberDao.getTotalWaitSeller();
+	}
+	
+	@Override
+	public int getTotalSellerEnrollByMonth() {
+		return memberDao.getTotalSellerEnrollByMonth();
+	}
+	
+	@Override
+	public List<Seller> findWaitSeller(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.findWaitSeller(rowBounds);
+	}
+	
+	@Override
+	public SellerInfoAttachment selectSellerAttach(int no) {
+		return memberDao.selectSellerAttach(no);
+	}
+	
+	@Override
+	public int updateSellerStatus(String id) {
+		return memberDao.updateSellerStatus(id);
+	}
+	
 	//------------------수아 끝
 }

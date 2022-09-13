@@ -1,21 +1,29 @@
 package com.kh.monong.subscribe.model.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.kh.monong.subscribe.model.dao.SubscribeDao;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
-import lombok.NonNull;
-
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
+@Transactional(rollbackFor = Exception.class)
 @Service
+@Slf4j
 public class SubscribeServiceImpl implements SubscribeService {
 	
 	@Autowired
@@ -28,13 +36,15 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public CardInfo findCardInfoByUid(@NonNull String customerUid) {
-		return subscribeDao.findCardInfoByUid(customerUid);
+	public int insertSubscription(SubscriptionOrder subscriptionOrder, Subscription subscription) {
+		int result = subscribeDao.insertSubscription(subscription);
+		result = subscribeDao.insertSubscriptionOrder(subscriptionOrder);
+		return result;
 	}
 	
 	@Override
-	public int insertSubscription(Subscription subscription, int cardInfoNo) {
-		return subscribeDao.insertSubscription(subscription, cardInfoNo);
+	public SubscriptionOrder selectSubscriptionOrderRecent(String sNo) {
+		return subscribeDao.selectSubscriptionOrderRecent(sNo);
 	}
 	
 	@Override
@@ -46,6 +56,12 @@ public class SubscribeServiceImpl implements SubscribeService {
 	public SubscriptionProduct selectProductInfoByCode(String sProductCode) {
 		return subscribeDao.selectProductInfoByCode(sProductCode);
 	}
+	
+	@Override
+	public Subscription findNextDeliveryDateByUid(String customerUid) {
+		return subscribeDao.findNextDeliveryDateByUid(customerUid);
+	}
+	
 	
 	// 선아코드 끝
 		

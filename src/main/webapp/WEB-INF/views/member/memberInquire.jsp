@@ -1,3 +1,5 @@
+<%@page import="com.kh.monong.member.model.dto.Member"%>
+<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -6,13 +8,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농-회원가입"></jsp:param>
+<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp">
+	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>
 </jsp:include>
-<div class="seller-info-container">
-	
-</div>
-
-<div class="seller-poducts-container">
+<div id="member-inquire-container">
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

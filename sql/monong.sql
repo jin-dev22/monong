@@ -126,28 +126,29 @@ ALTER TABLE seller_info_attachment ADD CONSTRAINT FK_seller_info_TO_seller_info_
 )
 REFERENCES seller_info (
 	member_id
-);
+) on delete cascade;
 
 ALTER TABLE seller_info ADD CONSTRAINT FK_member_TO_seller_info_1 FOREIGN KEY (
 	member_id
 )
 REFERENCES member (
 	member_id
-);
+) on delete cascade;
 
 ALTER TABLE member_authority ADD CONSTRAINT FK_member_TO_member_authority_1 FOREIGN KEY (
 	member_id
 )
 REFERENCES member (
 	member_id
-);
+) on delete cascade;
+
 ALTER TABLE member_notification ADD CONSTRAINT FK_member_id_TO_motification FOREIGN KEY (
 	member_id
 ) 
 REFERENCES member
 (
 	member_id
-);
+) on delete cascade;
 --회원 이메일인증 관련 컬럼 추가
 alter table member add member_identified varchar2(1);
 --회원관련 시퀀스
@@ -180,6 +181,9 @@ ALTER TABLE subscription ADD CONSTRAINT fk_s_s_product_code FOREIGN KEY (s_produ
 ALTER TABLE subscription ADD CONSTRAINT fk_s_member_id FOREIGN KEY (member_id)REFERENCES member (member_id);
 -- check 조건 추가
 alter table subscription add constraint ck_s_s_delay_yn check(s_delay_yn in ('Y', 'N'));
+-- 정기구독 취소여부 컬럼 추가 9/13
+alter table subscription add s_quit_yn varchar2(1) default 'N';
+alter table subscription add constraint ck_s_s_quit_yn check(s_quit_yn in ('Y', 'N'));
 
 CREATE TABLE subscription_order (
 	s_order_no	varchar2(100)		NOT NULL,
@@ -190,6 +194,10 @@ CREATE TABLE subscription_order (
 	s_order_status	varchar2(20)		NOT NULL
 );
 ALTER TABLE subscription_order ADD CONSTRAINT fk_s_o_s_no FOREIGN KEY (s_no)REFERENCES subscription (s_no);
+-- 9/11 제약조건 default 추가
+alter table subscription_order modify s_order_status default '상품준비중';
+alter table subscription_order modify s_order_date default current_date;
+alter table subscription_order modify s_times default 1;
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,
@@ -268,6 +276,16 @@ ALTER TABLE subscription_product ADD CONSTRAINT PK_SUBSCRIPTION_PRODUCT PRIMARY 
 ALTER TABLE vegetables ADD CONSTRAINT PK_VEGETABLES PRIMARY KEY (veg_code);
 ALTER TABLE subscription_order ADD CONSTRAINT PK_SUBSCRIPTION_ORDER PRIMARY KEY (s_order_no);
 ALTER TABLE card_info ADD CONSTRAINT PK_CARD_INFO PRIMARY KEY (card_info_no);
+-- faq 생성(9/13)
+CREATE TABLE faq (
+	faq_no number NOT NULL,
+	faq_type varchar2(1) NOT NULL,
+	faq_title varchar2(100) NOT NULL,
+        faq_content varchar2(1000),
+        constraint pk_faq_no primary key(faq_no)
+);
+create sequence seq_faq_no;
+alter sequence seq_faq_no nocache;
 -- 정기구독 끝
 
 -- 직거래 시작
@@ -283,6 +301,8 @@ CREATE TABLE direct_product (
 );
 
 ALTER TABLE direct_product ADD d_default_price number;
+alter table direct_product add d_delivery_fee number default 3000 null;
+-- 민지: 상품 테이블 배송비 추가했습니다(9/13)
 
 CREATE TABLE direct_product_attachment (
 	d_product_attach_no	number		NOT NULL,
@@ -327,6 +347,8 @@ CREATE TABLE member_direct_order (
 	d_option_count	number		NOT NULL,
 	constraint pk_member_direct_option_order_no primary key(d_option_no,d_order_no)
 );
+--수진: 회원 주문옵션 테이블에 상품번호컬럼 추가했습니다!
+alter table member_direct_order add d_product_no varchar2(100) not null;
 
 CREATE TABLE cart (
 	cart_no	varchar2(100)		NOT NULL,

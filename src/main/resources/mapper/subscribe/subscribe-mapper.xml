@@ -4,6 +4,46 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.monong.subscribe.model.dao.SubscribeDao">
   <!-- 선아코드 시작 -->
+	<select id="selectSubscriptionOrderRecent" resultMap="subscriptionOrderMap">
+		select
+			so.s_order_no,
+			so.s_no subscription_no,
+			so.s_times,
+			so.s_price,
+			so.s_order_date,
+			so.s_order_status,
+			s.*
+		from
+			subscription_order so left join subscription s
+				on so.s_no = s.s_no
+		where
+			so.s_no = #{sNo}
+	</select>
+	
+	<resultMap type="SubscriptionOrderEx" id="subscriptionOrderMap">
+		<id column="s_order_no" property="sOrderNo"/>
+		<result column="subscription_no" property="sNo" />
+		<result column="s_times" property="sTimes" />
+		<result column="s_price" property="sPrice" />
+		<result column="s_order_date" property="sOrderDate" />
+		<result column="s_order_status" property="sOrderStatus" />	
+		<association property="subscription" javaType="Subscription" >
+			<id column="s_no" property="sNo"/>
+			<result column="card_info_no" property="cardInfoNo" />
+			<result column="member_id" property="memberId" />
+			<result column="s_product_code" property="sProductCode" />
+			<result column="s_exclude_vegs" property="sExcludeVegs" />
+			<result column="s_delivery_cycle" property="sDeliveryCycle" />
+			<result column="s_next_delivery_date" property="sNextDeliveryDate" />
+			<result column="s_delay_yn" property="sDelayYn" />
+			<result column="s_recipient" property="sRecipient" />
+			<result column="s_phone" property="sPhone" />
+			<result column="s_address" property="sAddress" />
+			<result column="s_address_ex" property="sAddressEx" />
+			<result column="s_delivery_request" property="sDeliveryRequest" />
+			<result column="s_quit_yn" property="sQuitYn" />
+		</association>
+	</resultMap>
   <!-- 선아코드 끝 -->
   
   <!-- 미송코드 시작 -->

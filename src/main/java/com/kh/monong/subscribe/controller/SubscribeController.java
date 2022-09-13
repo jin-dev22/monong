@@ -1,28 +1,39 @@
 package com.kh.monong.subscribe.controller;
 
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
+import com.kh.monong.subscribe.model.service.ImportPayService;
+import com.kh.monong.subscribe.model.service.RequestSubPayment;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +49,7 @@ public class SubscribeController {
 	@Autowired
 	MemberService memberService;
 	
-	// 선아코드 시작	
+	// 선아코드 시작
 	@PostMapping("/subscribeOrder.do")
 	public String subscribePlan(
 			@RequestParam String sProduct, 
@@ -53,35 +64,86 @@ public class SubscribeController {
 		return "/subscribe/subscribeOrder";
 	}
 	
+	@Autowired
+	ImportPayService importPayService;
+	@Autowired
+	RequestSubPayment requestSubPayment;
+	
 	@PostMapping("/insertCardInfo.do")
-	public ResponseEntity<?> insertCardInfo(@RequestParam String customerUid, CardInfo cardInfo, Model model) {
-		log.debug("customerUid = {}", customerUid);
-		log.debug("cardInfo = {}", cardInfo);
-		
+	public ResponseEntity<?> insertCardInfo(
+			@RequestParam String customerUid,
+			String merchantUid, int amount, String memberName,
+			Model model, CardInfo cardInfo
+			) {
 		int result = subscribeService.insertCardInfo(cardInfo);
-		log.debug("cardInfo.getCustomerUid = {}", cardInfo.getCustomerUid());
-		// 방금 등록된 카드정보 가져오기
-		CardInfo recentCard = subscribeService.findCardInfoByUid(cardInfo.getCustomerUid());
-		return ResponseEntity.status(HttpStatus.OK).body(recentCard);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("customer_uid", customerUid);
+		map.put("merchant_uid", merchantUid);
+		map.put("amount", amount);
+		map.put("name", memberName);
+		
+		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
 	}
 	
-	@PostMapping("/insertSubOrder.do")
-	public ResponseEntity<?> insertSubOrder(@RequestParam String sNo, @RequestParam String customerUid, Subscription subscription, Model model) {		
-		log.debug("sNo = {}", sNo);
-		log.debug("subscription = {}", subscription);
-		log.debug("model = {}", model);
+	@PostMapping("/subComplete.do")
+	public String insertSubOrder(
+			@RequestParam String sNo, @RequestParam String customerUid,
+			@RequestParam String sOrderNo,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate sNextDeliveryDate,
+			SubscriptionOrder subscriptionOrder, Subscription subscription, RedirectAttributes redirectAttr
+		) {
 		int cardInfoNo = subscribeService.findCardInfoNoByUid(customerUid);
 		
-		int result = subscribeService.insertSubscription(subscription, cardInfoNo);
-		if(result == 1) {
-			return ResponseEntity.status(HttpStatus.OK).body(null); // redirect로 바꾸기 addAttribute 해서 complete 페이지로			
+		// 구독정보 insert
+		int result = 0;
+		if(cardInfoNo != 0) {
+			subscription.setCardInfoNo(cardInfoNo);
+			result = subscribeService.insertSubscription(subscriptionOrder, subscription);
 		}
-		return null;
+		SubscriptionOrder orderList = null;
+		if(result == 1) {
+			orderList = subscribeService.selectSubscriptionOrderRecent(subscriptionOrder.getSNo());
+		}
+		redirectAttr.addFlashAttribute("orderList", orderList);
+		redirectAttr.addFlashAttribute("msg", "구독이 완료되었습니다. :)");
+		return "redirect:/subscribe/subComplate.do";
 	}
 	
-	@GetMapping("/complete.do")
-	public void complete() {}
-
+	@GetMapping("/subComplate.do")
+	public void subComplete(Authentication authentication, Model model) {
+		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
+		model.addAttribute("subscriptionProduct", subscriptionProduct);
+	}
+	
+	// 스케줄 미완성
+	@Autowired
+	ReqPayScheduler scheduler;
+	
+	@PostMapping("/payschedule.do")
+	public void payschedule(String customerUid, int amount){
+		// 매번 변경되어야 하는 주문번호 - ex) SO + 220901(년월일) + 1201(시분) + 랜덤3자리 = 총 15자리		
+		// 1. 다음배송일의 년월일 가져오기
+		Subscription subscription = subscribeService.findNextDeliveryDateByUid(customerUid);
+		LocalDate nextDeliveryDate = subscription.getSNextDeliveryDate();
+		
+		// 2. 기존에는 시분 + 랜덤3자리였으나 예약결제는 시분은 없기때문에 랜덤 7자리로 변경
+		Random random = new Random();
+		StringBuilder sb = new StringBuilder();
+		
+		final int len = 7;
+		for(int i = 0; i < len; i++) {
+			sb.append(random.nextInt(10));
+		}
+		String ran = sb.toString();
+		log.debug("ran = {}", ran);
+		
+		String merchantUid = "SO" + nextDeliveryDate + ran;
+		log.debug("새로생성 merchantUid = {}", merchantUid);
+		
+		scheduler.startScheduler(customerUid, amount, merchantUid);
+	}
+	
 	// 선아코드 끝
 
 	// 미송코드 시작
