@@ -13,7 +13,7 @@
 		</div>
 		<div>
 			<input type="button" class="btn btn-EA5C2B" value="문의하기">
-			<input type="button" class="btn btn-EA5C2B-reverse" onclick="faq.html" value="자주 묻는 질문">
+			<input type="button" class="btn btn-EA5C2B-reverse" onclick="faq()" value="자주 묻는 질문">
 		</div>
 	</nav>
 	<nav class="footer2">
@@ -36,6 +36,11 @@
 		</div>
 	</nav>
 </footer>
+<script>
+const faq = () => {
+	location.href = `${pageContext.request.contextPath}/common/faqList.do`;
+};
+</script>
 <!-- footer 끝 -->
 </body>
 </html>
