@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -44,6 +43,10 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.Vegetables;
+import com.kh.monong.subscribe.model.service.SubscribeService;
 import com.kh.security.model.service.MemberSecurityService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -355,20 +358,19 @@ public class MemberController {
 	@PostMapping("/memberIdSearchForm.do")
 	public String memberIdSearchForm(@RequestParam String email, 
 								 @RequestParam String name,
-								 RedirectAttributes redirectAttr) throws Exception {
-		MailUtils sendMail = new MailUtils(mailSender);
-		Map<String, Object> map = new HashMap<>();
-		map.put("email", email);
-		map.put("name", name);
-		Member member = memberService.findMemberId(map);
-		
-		if(member == null) {
-			redirectAttr.addFlashAttribute("msg", "일치하는 회원정보가 없습니다.");
-			return "redirect:/member/memberIdSearchForm.do";
-		}
-		
+								 RedirectAttributes redirectAttr){
 		try {
-		
+			MailUtils sendMail = new MailUtils(mailSender);
+			Map<String, Object> map = new HashMap<>();
+			map.put("email", email);
+			map.put("name", name);
+			Member member = memberService.findMemberId(map);
+			
+			if(member == null) {
+				redirectAttr.addFlashAttribute("msg", "일치하는 회원정보가 없습니다.");
+				return "redirect:/member/memberIdSearchForm.do";
+			}
+			
 			sendMail.setSubject("모농모농 회원 아이디 조회");
 			sendMail.setText("<h1>아이디 조회 결과</h1>"
 					+ "<br />"+ member.getMemberName()+"님"
@@ -379,8 +381,9 @@ public class MemberController {
 			sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
 			sendMail.setTo(member.getMemberEmail());
 			sendMail.send();
-		} catch (MessagingException e) {
-			e.printStackTrace();
+			
+		} catch (Exception e) {
+			log.error("아이디 조회 이메일 전송오류 : " + e.getMessage(), e);
 		}
 		
 		redirectAttr.addFlashAttribute("msg", email+"로 아이디를 보냈습니다. 이메일을 확인해주세요");
@@ -432,8 +435,8 @@ public class MemberController {
 		sendMail.setFrom("sooappeal31@gmail.com", "모농모농");
 		sendMail.setTo(member.getMemberEmail());
 		sendMail.send();
-		} catch (MessagingException e) {
-		e.printStackTrace();
+		} catch (Exception e) {
+			log.error("아이디 조회 이메일 전송오류 : " + e.getMessage(), e);
 		}
 		
 		redirectAttr.addFlashAttribute("msg", email+"로 임시 비밀번호가 발급됐습니다. 이메일을 확인해주세요");
@@ -470,10 +473,6 @@ public class MemberController {
 				return sb.toString();
 			}
 		}
-	@GetMapping("/memberMyPage.do")
-	public void memberMyPage() {
-		 
-	}
 	
 	@GetMapping("/memberCheckForm.do")
 	public void memberCheck() {
@@ -495,8 +494,7 @@ public class MemberController {
 		return "redirect:/member/memberCheckForm.do";
 		
 	}
-	
-	
+		
 	@GetMapping("/memberUpdate.do")
 	public void memberUpdate() {
 		
@@ -557,22 +555,74 @@ public class MemberController {
 	}
 
 	@GetMapping("/memberOrderList.do")
-	public void memberOrderList() {
-		
+	public void memberOrderList(Authentication authentication, Model model) {
+		String memberId = authentication.getName();
+		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubOrder={}",recentSubOrder);
+		if(recentSubOrder != null) {
+			String pCode = recentSubOrder.getSubscription().getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}	
 	}
 	
 	@GetMapping("/memberReviewList.do")
-	public void memberReviewList() {
-		
+	public void memberReviewList(Authentication authentication, Model model) {
+		String memberId = authentication.getName();
+		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
+		if(recentSubOrder != null) {
+			String pCode = recentSubOrder.getSubscription().getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}	
 	}
 	
 	@GetMapping("/memberDirectInquire.do")
-	public void memberDirectInquire(){
-		
+	public void memberDirectInquire(Authentication authentication, Model model){
+		String memberId = authentication.getName();
+		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
+		if(recentSubOrder != null) {
+			String pCode = recentSubOrder.getSubscription().getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}	
 	}
 	
 	@GetMapping("/memberInquireList.do")
-	public void memberInquireList() {
+	public void memberInquireList(Authentication authentication, Model model) {
+		String memberId = authentication.getName();
+		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
+		if(recentSubOrder != null) {
+			String pCode = recentSubOrder.getSubscription().getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}	
+	}
+	
+	@Autowired
+	private SubscribeService subscribeService;
+	
+	@GetMapping("/memberSubscribeOrder.do")
+	public void memberSubscribeOrder(Authentication authentication, Model model) {
+		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
+		log.debug("subscriptionProduct = {}", subscriptionProduct);
+
+		List<Vegetables> vegetables = subscribeService.getVegetables();
+		log.debug("vegetables = {}", vegetables);
+
+		model.addAttribute("subscriptionProduct", subscriptionProduct);
+		model.addAttribute("vegetables", vegetables);
+		
+		String memberId = authentication.getName();
+		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
+		String pCode = recentSubOrder.getSubscription().getSProductCode();
+		SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+		model.addAttribute("recentSubOrder", recentSubOrder);
+		model.addAttribute("recentSubProduct", recentSubProduct);
 		
 	}
 	

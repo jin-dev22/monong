@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
@@ -16,6 +15,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -209,5 +210,24 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateSellerStatus(id);
 	}
 	
+	@Override
+	public SubscriptionOrderEx selectSubById(String memberId) {
+		return memberDao.selectSubById(memberId);
+	}
+	
+	@Override
+	public SubscriptionOrderEx selectRecentSubById(String memberId) {
+		return memberDao.selectRecentSubById(memberId);
+	}
+	
+	@Override
+	public SubscriptionProduct selectRecentSubProduct(String pCode) {
+		return memberDao.selectRecentSubProduct(pCode);
+	}
+	
+	@Override
+	public int deleteSeller(String memberId) {
+		return memberDao.deleteSeller(memberId);
+	}
 	//------------------수아 끝
 }
