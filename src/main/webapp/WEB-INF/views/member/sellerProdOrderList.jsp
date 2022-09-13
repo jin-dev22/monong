@@ -36,6 +36,7 @@
             display: inline-block;
             min-width: 100px;
             margin: 10px 15px;
+            padding: 0 10px;
         }
         div.order-prodNam{
             display: inline-block;
@@ -81,7 +82,7 @@
 			<div class="prod-order-container">
 				<div class="order-container-row ord-row-1">
 					<span>주문번호 ${order.dOrderNo}</span>
-					<span>주문일자 : ${order.dOrderDate}</span>
+					<span>주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
 				</div>
 				<div class="order-container-row ord-row-2">
 					<div class="order-prodName">${prodName}</div>
@@ -91,9 +92,9 @@
 							<span>수량 : ${opt.dOptionCount}</span>
 							<br />
 						</c:forEach>
-						<div>주문금액 : ${order.dTotalPrice}</div>
+						<div>주문금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
 					</div>
-					<div class="order-customer">${order.customerId}</div>
+					<div class="order-customer">주문자 아이디 : <br />${order.customerId}</div>
 					<div class="order-status">
 						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
 							method="POST" accept-charset="UTF-8">
@@ -155,5 +156,7 @@
 		
 		return;
 	};
+	
 </script>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

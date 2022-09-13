@@ -26,7 +26,7 @@
 	const setPhoneNumber = (phone, elem) =>{
 		elem.innerHTML = phone.replace(/(^02.{0}|^01.{1}|^07.{}1|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
 	};
-	setPhoneNumber(phoneNumber.innerHTML, phoneNumber)
+	setPhoneNumber(phoneNumber.innerHTML, phoneNumber);
 	</script>
 	<nav class="nav justify-content-around mt-5">
 		<a href="${pageContext.request.contextPath}/member/sellerProdList.do">판매목록</a>
