@@ -1,0 +1,103 @@
+.s-reviews-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.s-review-wrapper{
+    border: 2px solid #EA5C2B;
+    /* background-color: #f7f7f7; */
+    width: 303px;
+    margin: 20px 0;
+    height: fit-content;
+}
+
+.s-review-wrapper img {
+  width: 298px;
+    object-fit: cover;
+}
+
+.s-review-container.no-img{
+    height: 380px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    line-height: 2;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.s-review-container.with-img{
+    /*width: 300px;*/
+    height: 80px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.s-review-star-times{
+    display: flex;
+    width: 300px;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.s-review-star{
+	color: #aaa9a9; 
+	position: relative;
+	width: max-content;
+}
+
+.s-review-star-filled{
+    color: #F6D860;
+    /* padding: 0; */
+    position: absolute;
+    /* z-index: 1; */
+    /* display: flex; */
+    overflow: hidden;
+}
+
+.s-times{
+    padding-right: 5px;
+    font-size: 12px;
+}
+
+.s-review-member-id{
+    border-top: 1px solid grey; 
+    height: fit-content;
+    padding: 5px 0;
+}
+
+/* ----------모달창----------- */
+.modal-body{
+	display: flex;
+}
+
+.modal-dialog {
+    position: relative;
+    width: 800px;
+    margin: 0 auto;
+    pointer-events: none;
+}
+
+.modal.show {
+	padding-right: 0px !important;
+}
+
+.modal-s-review-star{
+	color: #aaa9a9; 
+	position: relative;
+	width: max-content;
+}
+
+.modal-s-review-star-filled{
+    color: #F6D860;
+    /* padding: 0; */
+    position: absolute;
+    /* z-index: 1; */
+    /* display: flex; */
+    overflow: hidden;
+}
