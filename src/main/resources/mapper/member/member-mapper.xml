@@ -19,31 +19,60 @@
   <select id="getTotalOrderCntByProdNo" resultType="_int">
   	select count(*)
 	from 
-		(select distinct d_order_no from member_direct_order where d_product_no = #{prodNo})
+		(select distinct d_order_no 
+		 from member_direct_order 
+		 where d_product_no = #{prodNo}
+		 <if test="startDate != null and endDate != null">	
+		 	and d_order_no in(
+    		select d_order_no 
+    		from direct_order 
+    		where d_order_date between #{startDate} and #{endDate})
+   		 </if>
+		 )
   </select>
   
   <select id="getTotalProdCntBySeller" resultType="_int">
   	select count(*)
 	from
 	(select distinct d_product_no
-	from direct_product 
+	 from direct_product 
 	        left join 
 	        direct_product_option using(d_product_no) 
 	where member_id = #{memberId} and d_sale_status = #{dSaleStatus})
   </select>
   
   <select id="selectOrderListByProdNo" resultMap="orderMap">
-  	select * 
-	from direct_order 
-	where d_order_no 
-	    in(select d_order_no
-	        from member_direct_order
-	        where d_product_no = #{prodNo})
-	    and
-	    d_order_date between #{startDate} and #{endDate}
+  	select ord.*, (select d_option_name from direct_product_option where d_option_no = ord.d_option_no) d_option_name
+	from
+		(select * 
+		 from direct_order do 
+		 left join 
+		 member_direct_order mdo using(d_order_no)
+		 ) ord
+	where d_product_no = #{prodNo}
+        <if test="startDate != null and endDate != null">				
+			and
+	   		d_order_date between #{startDate} and #{endDate}
+		</if>
+	    
   </select>
   <resultMap type="map" id="orderMap">
-  	
+  	<id column="d_order_no" property="dOrderNo"/>
+  	<result column="member_id" property="customerId"/>
+  	<result column="d_total_price" property="dTotalPrice"/>
+  	<result column="d_dest_address" property="dDestAddress"/>
+  	<result column="d_dest_address_ex" property="dDestAddressEx"/>
+  	<result column="d_delivery_request" property="dDeliveryRequest"/>
+  	<result column="d_recipient" property="dRecipient"/>
+  	<result column="d_order_phone" property="dOrderPhone"/>
+  	<result column="d_order_date" property="dOrderDate"/>
+  	<result column="d_payments" property="dPayments"/>
+  	<result column="d_order_status" property="dOrderStatus"/>
+  	<collection property="dProdOptions" javaType="arraylist" ofType="hashmap">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_option_count" property="dOptionCount"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  	</collection>
   </resultMap>
   
   <select id="selectDirectListBySellerId" resultMap="directProductListMap">

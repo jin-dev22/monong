@@ -44,6 +44,9 @@ public interface MemberService {
 	
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 
+	String selectProdNameByNo(String prodNo);
+
+	int updateDOrderStatus(Map<String, Object> param);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);

@@ -2,7 +2,8 @@ package com.kh.monong.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,8 +254,8 @@ public class MemberController {
 	
 	@GetMapping("/sellerProdOrderList.do")
 	public void sellerProdOrderList(@RequestParam String prodNo, 
-									@RequestParam(required = false) LocalDateTime startDate, 
-									@RequestParam(required = false) LocalDateTime endDate,
+									@RequestParam(required = false) String startDate, 
+									@RequestParam(required = false) String endDate,
 									@RequestParam(defaultValue = "1") int cPage,
 									Model model, HttpServletRequest request) {
 		Map<String, Object> param = new HashMap<>();
@@ -262,18 +263,65 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("prodNo", prodNo);
+		//검색기간 설정시 빈 문자열 전달 방지
+		if(startDate == "" || endDate == "") {
+			startDate = null;
+			endDate = null;
+		}
+		//endDate +1 해서 db조회
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(1);
+			endDate =  _endDate.toString();
+			log.debug("endDate={}",endDate);
+		}
 		param.put("startDate", startDate);
-		param.put("endDate", endDate);
+		param.put("endDate",endDate);
 		log.debug("param = {}",param);
-		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
+		model.addAttribute("startDate",startDate);
+		//endDate 다시 -1해서 view에 전달
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(-1);
+			endDate =  _endDate.toString();
+		}
+		model.addAttribute("endDate",endDate);
 		
+		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
 		model.addAttribute("orderList", orderList);
+		log.debug("orderList={}", orderList);
+		
+		String prodName = memberService.selectProdNameByNo(prodNo);
+		model.addAttribute("prodName",prodName);
 		
 		int totalContent = memberService.getTotalOrderCntByProdNo(param);
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
+	}
+	
+	@PostMapping("/updateDOrderStatus.do")
+	public ResponseEntity<?> updateDOrderStatus(@RequestParam String orderStatus, @RequestParam String dOrderNo,
+												@RequestParam String dOrderMember, @RequestParam String dProdNo,
+												@RequestParam String dProdName) {
+		log.debug("newStatus = {}",orderStatus);
+		log.debug("dOrderNo = {}", dOrderNo);
+		log.debug("dOrderMember = {}",dOrderMember);
+		log.debug("dProdNo = {}",dProdNo);
+		log.debug("dProdName = {}",dProdName);
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("newStatus", orderStatus);
+		param.put("dOrderNo", dOrderNo);	
+		//주문내역 상태변경
+		int result = memberService.updateDOrderStatus(param);
+		
+		//알림정보저장
+		
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작

@@ -58,6 +58,8 @@ public interface MemberDao {
 	
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 
+	@Update("update direct_order set d_order_status = #{newStatus} where d_order_no = #{dOrderNo}")
+	int updateDOrderStatus(Map<String, Object> param);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
@@ -73,6 +75,9 @@ public interface MemberDao {
 
 	@Update("update member set member_password = #{encodedPassword} where member_id= #{memberId}")
 	int updatePw(Map<String, Object> map);
+
+	@Select("select d_product_name from direct_product where d_product_no = #{prodNo}")
+	String selectProdNameByNo(String prodNo);
 	
 	List<Member> findAllMember(RowBounds rowBounds);
 	

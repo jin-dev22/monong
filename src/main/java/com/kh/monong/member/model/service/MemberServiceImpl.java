@@ -121,6 +121,16 @@ public class MemberServiceImpl implements MemberService {
 	public int getTotalOrderCntByProdNo(Map<String, Object> param) {
 		return memberDao.getTotalOrderCntByProdNo(param);
 	}
+	
+	@Override
+	public String selectProdNameByNo(String prodNo) {
+		return memberDao.selectProdNameByNo(prodNo);
+	}
+	
+	@Override
+	public int updateDOrderStatus(Map<String, Object> param) {
+		return memberDao.updateDOrderStatus(param);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작
