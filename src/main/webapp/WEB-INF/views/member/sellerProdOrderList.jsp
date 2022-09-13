@@ -72,6 +72,18 @@
 	</form>
 	<script>
 		const frm = document.directProdOrdFilterFrm;
+		//console.log(frm);
+		frm.addEventListener('submit', (e)=>{
+			e.preventDefault();
+			const startDate = frm.startDate;
+			const endDate = frm.endDate;
+			console.log(startDate.value,"~",endDate.value);
+			if(endDate.value < startDate.value){
+				alert("종료일은 시작일보다 이전일 수 없어요.");
+				return;
+			};
+			frm.submit();
+		});
 	</script>
 	<span>해당 기간의 총 주문 건수는 ${orderList.size()}건 입니다.</span>
 	<c:if test="${empty orderList}">	

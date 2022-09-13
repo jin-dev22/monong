@@ -263,7 +263,10 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("prodNo", prodNo);
-		param.put("startDate", startDate);
+		if(startDate == "" || endDate == "") {
+			startDate = null;
+			endDate = null;
+		}
 		//endDate +1 해서 db조회
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
 		if(endDate != null && endDate != "") {
@@ -272,6 +275,7 @@ public class MemberController {
 			endDate =  _endDate.toString();
 			log.debug("endDate={}",endDate);
 		}
+		param.put("startDate", startDate);
 		param.put("endDate",endDate);
 		log.debug("param = {}",param);
 		model.addAttribute("startDate",startDate);
