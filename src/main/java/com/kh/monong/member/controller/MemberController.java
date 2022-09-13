@@ -252,7 +252,7 @@ public class MemberController {
 		log.debug("model = {}", model);
 	};
 	
-	@GetMapping("/sellerProdOrderList.do")//-------------------------------------------------------
+	@GetMapping("/sellerProdOrderList.do")
 	public void sellerProdOrderList(@RequestParam String prodNo, 
 									@RequestParam(required = false) String startDate, 
 									@RequestParam(required = false) String endDate,
@@ -263,6 +263,7 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("prodNo", prodNo);
+		//검색기간 설정시 빈 문자열 전달 방지
 		if(startDate == "" || endDate == "") {
 			startDate = null;
 			endDate = null;

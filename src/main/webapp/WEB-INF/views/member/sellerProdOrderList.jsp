@@ -78,7 +78,11 @@
 			const startDate = frm.startDate;
 			const endDate = frm.endDate;
 			console.log(startDate.value,"~",endDate.value);
-			if(endDate.value < startDate.value){
+			if((startDate.value == "" && endDate.value != "")||(startDate.value != ""&& endDate.value == "")){
+				alert("검색 시작일과 종료일을 모두 입력해주세요.");
+				return;
+			}
+			if(startDate.value > endDate.value){
 				alert("종료일은 시작일보다 이전일 수 없어요.");
 				return;
 			};
