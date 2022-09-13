@@ -126,28 +126,29 @@ ALTER TABLE seller_info_attachment ADD CONSTRAINT FK_seller_info_TO_seller_info_
 )
 REFERENCES seller_info (
 	member_id
-);
+) on delete cascade;
 
 ALTER TABLE seller_info ADD CONSTRAINT FK_member_TO_seller_info_1 FOREIGN KEY (
 	member_id
 )
 REFERENCES member (
 	member_id
-);
+) on delete cascade;
 
 ALTER TABLE member_authority ADD CONSTRAINT FK_member_TO_member_authority_1 FOREIGN KEY (
 	member_id
 )
 REFERENCES member (
 	member_id
-);
+) on delete cascade;
+
 ALTER TABLE member_notification ADD CONSTRAINT FK_member_id_TO_motification FOREIGN KEY (
 	member_id
 ) 
 REFERENCES member
 (
 	member_id
-);
+) on delete cascade;
 --회원 이메일인증 관련 컬럼 추가
 alter table member add member_identified varchar2(1);
 --회원관련 시퀀스
