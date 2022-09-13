@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubscriptionReviewAttachment {
-	private int s_attach_no;
-	private String s_review_no;
+	private int sAttachNo;
+	private String sReviewNo;
 	private String sReviewOriginalFilename;
 	private String sReviewRenamedFilename;
 	private LocalDateTime sReviewCreatedAt;

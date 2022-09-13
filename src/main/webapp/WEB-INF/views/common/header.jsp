@@ -49,7 +49,7 @@
 		</a>
 		<nav class="nav mainmenu">
 			<a class="nav-link" href="#">&#128204;사이트소개</a>
-			<a class="nav-link"	href="#">정기구독&#127822;</a>
+			<a class="nav-link"	href="${pageContext.request.contextPath}/subscribe/subscribeMain.do">정기구독&#127822;</a>
 			<a class="nav-link" href="#">직거래&#127805;</a>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 				<a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">관리자페이지</a>

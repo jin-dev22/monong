@@ -18,7 +18,10 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <!-- iamport.payment.js -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
-
+<!-- 다음 주소 api -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<!-- 해당 페이지 js 연결 -->
+<script defer src="${pageContext.request.contextPath}/resources/js/subscribeOrder.js"></script>
 <c:if test="${not empty msg}">
 <script>
 	alert("${msg}");
@@ -155,17 +158,15 @@
 			</div>
 			<div class="modal-body">
 			구독 진행 시 선택하신 주기에 맞춰 [수요일]에 자동으로 결제가 됩니다.<br />
-			구독 취소 및 배송미루기는 마이페이지에서 가능하며, 수요일 결제 이후 구독 취소 및 배송미루기 시에는 그 다음주부터 적용이 됩니다. 
+			구독 취소 및 배송미루기는 마이페이지에서 가능하며,<br />수요일 결제 이후 구독 취소 및 배송미루기 시에는 그 다음주부터 적용이 됩니다. 
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary closeModalBtn" data-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary" id="requestPay" >구독하기</button>
+				<button type="button" class="btn btn-EA5C2B" id="requestPay" >구독하기</button>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 window.addEventListener('load', () => {
 	const today = new Date();
@@ -209,7 +210,8 @@ privacyChk.addEventListener('click', () => {
 		privacyChk.nextElementSibling.style.color = 'inherit';
 	}
 });
-// modal
+
+//modal
 document.querySelector("#showkModal").addEventListener('click', () => {
 	// 제공 동의 여부 확인
 	if(!privacyChk.checked){
@@ -285,6 +287,7 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 		});
 	});
 });
+
 function todayFormat(){
 	const today = new Date();
 	let month = today.getMonth() + 1;
@@ -325,69 +328,5 @@ function randomMaker(len){
 	}
 	return random;
 };
-
-//주소 유효성 검사
-document.querySelector("#sAddress").addEventListener('input', (e) => {
-	const sAddress = e.target;
-	const error = document.querySelector(".sAddressCheck.error");
-	if(!/^[\S].+$/.test(sAddress.value)){
-		error.style.display = "block";
-		sAddress.style.borderBottom = "1px solid red";
-		return;
-	}
-	else {
-		error.style.display = "none";
-		sAddress.style.borderBottom = "1px solid #116530";
-	}
-});
-// 핸드폰번호 유효성 검사
-document.querySelector("#sPhone").addEventListener('input', (e) => {
-	const sPhone = e.target;
-	const error = document.querySelector(".sPhoneCheck.error");
-	if(!/^[0-9]{11}$/.test(sPhone.value)){
-		error.style.display = "block";
-		sPhone.style.borderBottom = "1px solid red";
-		return;
-	}
-	else {
-		error.style.display = "none";
-		sPhone.style.borderBottom = "1px solid #116530";
-	}
-});
-// 수령인 유효성 검사
-document.querySelector("#sRecipient").addEventListener('input', (e) => {
-	const sRecipient = e.target;
-	const error = document.querySelector(".sRecipientCheck.error");
-	if(!/^[a-zA-z가-힣]+$/.test(sRecipient.value)){
-		error.style.display = "block";
-		sRecipient.style.borderBottom = "1px solid red";
-		return;
-	}
-	else {
-		error.style.display = "none";
-		sRecipient.style.borderBottom = "1px solid #116530";
-	}
-});
-// 주소 API
-document.querySelector("#researchButton").addEventListener('click', function(){
-	new daum.Postcode({
-		oncomplete: function(data) {
-			// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-			// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-			var addr = ''; // 주소 변수
-
-			//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-			if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-				addr = data.roadAddress;
-			} else { // 사용자가 지번 주소를 선택했을 경우(J)
-				addr = data.jibunAddress;
-			}
-			// 주소 정보를 해당 필드에 넣는다.
-			document.getElementById("sAddress").value = addr;
-			// 커서를 상세주소 필드로 이동한다.
-			document.getElementById("sAddressEx").focus();
-		}
-	}).open();
-});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
