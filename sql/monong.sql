@@ -301,6 +301,8 @@ CREATE TABLE direct_product (
 );
 
 ALTER TABLE direct_product ADD d_default_price number;
+alter table direct_product add d_delivery_fee number default 3000 null;
+-- 민지: 상품 테이블 배송비 추가했습니다(9/13)
 
 CREATE TABLE direct_product_attachment (
 	d_product_attach_no	number		NOT NULL,
