@@ -51,7 +51,9 @@
 			<a class="nav-link" href="#">&#128204;사이트소개</a>
 			<a class="nav-link"	href="#">정기구독&#127822;</a>
 			<a class="nav-link" href="#">직거래&#127805;</a>
-			<a class="nav-link" href="#">관리자페이지</a>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">관리자페이지</a>
+            </sec:authorize>
 		</nav>
 		
 		  <sec:authorize access="isAnonymous()"> 
@@ -77,7 +79,7 @@
 						<sec:authentication property="principal.username"/>님&#128149;
                 	</p>
                 	<sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
-						<a class="nav-link" href="${pageContext.request.contextPath}/member/memberMyPage.do">마이페이지</a>
+											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberOrderList.do">마이페이지</a>
                 	</sec:authorize>
                 	<sec:authorize access="hasRole('ROLE_SELLER')">
 						<a class="nav-link" href="${pageContext.request.contextPath}/member/sellerProdList.do">마이페이지</a>

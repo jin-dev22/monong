@@ -112,4 +112,112 @@
   </resultMap>
  
 <!-- ==================================================수진 끝 -->
+
+ <!-- ==================================================수아 시작 -->
+ <select id="findAllMember" resultMap="memberMap">
+  	select
+		m.member_id,
+		m.member_name,
+		m.member_password,
+		m.member_email,
+		m.member_address,
+		m.member_address_ex,
+		m.member_phone,
+		m.member_birthday,
+		m.member_del,
+		m.member_enroll_date,
+		m.member_quit_date
+  	from
+  		member m
+  		left join member_authority a
+  			on m.member_id = a.member_id
+  	where
+  		a.auth= 'ROLE_MEMBER'
+  	order by
+  		m.member_enroll_date desc
+  </select>
+  
+  <resultMap type="member" id="memberMap">
+		<id column="member_id" property="memberId"/>
+		<result column="member_name" property="memberName"/>
+		<result column="member_password" property="memberPassword"/>
+		<result column="member_email" property="memberEmail"/>
+		<result column="member_address" property="memberAddress"/>
+		<result column="member_address_ex" property="memberAddressEx"/>
+		<result column="member_phone" property="memberPhone"/>
+		<result column="member_birthday" property="memberBirthday"/>
+		<result column="member_del" property="memberDel"/>
+		<result column="member_enroll_date" property="memberEnrollDate"/>
+		<result column="member_quit_date" property="memberQuitDate"/>
+  </resultMap>
+  
+  <select id="findAllSeller" resultMap="sellerMap">
+  select
+		*
+  	from
+  		member m
+  		left join seller_info s
+        on m.member_id = s.member_id
+        left join seller_info_attachment sa
+        on m.member_id = sa.member_id
+	where
+	    s.seller_reg_no is not null and s.seller_status = 'REG_O'
+	order by
+   		m.member_enroll_date desc
+  </select>
+  
+  <select id="findWaitSeller" resultMap="sellerMap">
+  select
+		*
+  	from
+  		member m
+  		left join seller_info s
+        on m.member_id = s.member_id
+        left join seller_info_attachment sa
+        on m.member_id = sa.member_id
+	where
+	    s.seller_reg_no is not null and s.seller_status = 'REG_W' and s.seller_del='N'
+	order by
+    	m.member_enroll_date desc
+  </select>
+  
+  <resultMap type="seller" id="sellerMap">
+  	<id column="member_id" property="memberId"/>
+  		<result column="member_name" property="memberName"/>
+		<result column="member_password" property="memberPassword"/>
+		<result column="member_email" property="memberEmail"/>
+		<result column="member_address" property="memberAddress"/>
+		<result column="member_address_ex" property="memberAddressEx"/>
+		<result column="member_phone" property="memberPhone"/>
+		<result column="member_birthday" property="memberBirthday"/>
+		<result column="member_del" property="memberDel"/>
+		<result column="member_enroll_date" property="memberEnrollDate"/>
+		<result column="member_quit_date" property="memberQuitDate"/>
+		
+  	<association property="sellerInfo" javaType="sellerInfo">
+  		<id column="member_id" property="memberId"/>
+  		<result column="seller_reg_no" property="sellerRegNo"/>
+  		<result column="seller_name" property="sellerName"/>
+  		<result column="seller_status" property="sellerStatus"/>
+  		<result column="seller_quit_date" property="sellerQuitDate"/>
+  		<result column="seller_enroll_date" property="sellerEnrollDate"/>
+  		<result column="seller_del" property="sellerDel"/>
+  	</association>
+  	<association property="attachment" javaType="sellerInfoAttachment">
+  		<id column="member_id" property="memberId"/>
+  		<id column="seller_attach_no" property="sellerAttachNo"/>
+  		<result column="orginal_filename" property="originalFilename"/>
+  		<result column="renamed_filename" property="renamedFilename"/>
+  	</association>
+  </resultMap>
+  
+  <select id="getTotalSellerEnrollByMonth" resultType="_int">
+    select
+    	count(*)
+	from
+	    seller_info
+	where
+	    substr(seller_enroll_date,0,8) between(to_char(trunc(sysdate,'mm'), 'yy/mm/dd')) and (last_day(sysdate))
+  </select>
+ <!-- ==================================================수아 끝 -->
 </mapper>

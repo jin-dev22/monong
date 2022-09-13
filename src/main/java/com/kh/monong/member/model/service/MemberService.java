@@ -56,6 +56,24 @@ public interface MemberService {
 
 	int updatePw(Map<String, Object> map);
 	
+	List<Member> findAllMember(Map<String, Integer> param);
+
+	int getTotalMember();
+
+	List<Seller> findAllSeller(Map<String, Integer> param);
+
+	int getTotalSeller();
+
+	int getTotalWaitSeller();
+
+	List<Seller> findWaitSeller(Map<String, Integer> param);
+
+	SellerInfoAttachment selectSellerAttach(int no);
+
+	int updateSellerStatus(String id);
+
+	int getTotalSellerEnrollByMonth();
+	
 //-----------수아 끝
 
 

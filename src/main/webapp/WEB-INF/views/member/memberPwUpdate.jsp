@@ -32,6 +32,7 @@
 				<label for="newPassword">새 비밀번호</label>
 				<input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="" required/>
 				<span class="invalid-feedback feedback-password">6자리 이상 작성해주시기 바랍니다.</span>
+				<span class="invalid-feedback feedback-password">현재 비밀번호와 다른 비밀번호를 작성해주세요.</span>
 			</div>
 		</div>
 		
@@ -52,26 +53,33 @@
 const invalidPwdFeedbacks = document.querySelectorAll(".invalid-feedback.feedback-password");
 document.querySelector("#newPassword").addEventListener('blur', (e)=>{
 	const password = e.target;
+	const oldPassword = document.querySelector("#oldPassword");
 	const regExp = /^[a-zA-z0-9]{6,}$/;
 	
 	if(!regExp.test(password.value)){
 		invalidPwdFeedbacks[0].style.display = "inline";
 		password.value = "";
 	}
+	else if(password.value == oldPassword.value){
+		invalidPwdFeedbacks[1].style.display = "inline";
+		password.value = "";
+	}
 	else{
 		invalidPwdFeedbacks[0].style.display = "none";
+		invalidPwdFeedbacks[1].style.display = "none";
 	}	
 });
+
 
 document.querySelector("#newPasswordChk").addEventListener("blur", (e)=>{
 	const passwordChk = e.target;
 	const password = document.querySelector("#newPassword");
 	if(passwordChk.value !== password.value){
-		invalidPwdFeedbacks[1].style.display = "inline";
+		invalidPwdFeedbacks[2].style.display = "inline";
 		passwordChk.value = "";
 	}
 	else{
-		invalidPwdFeedbacks[1].style.display = "none";
+		invalidPwdFeedbacks[2].style.display = "none";
 	}
 });
 

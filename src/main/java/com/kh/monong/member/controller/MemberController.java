@@ -511,6 +511,25 @@ public class MemberController {
 		}
 	}
 
+	@GetMapping("/memberOrderList.do")
+	public void memberOrderList() {
+		
+	}
+	
+	@GetMapping("/memberReviewList.do")
+	public void memberReviewList() {
+		
+	}
+	
+	@GetMapping("/memberDirectInquire.do")
+	public void memberDirectInquire(){
+		
+	}
+	
+	@GetMapping("/memberInquireList.do")
+	public void memberInquireList() {
+		
+	}
 	
 	//----------------------수아 끝
 }
