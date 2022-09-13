@@ -118,8 +118,8 @@
 						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
 							method="POST" accept-charset="UTF-8">
 							<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);">
-								<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
-								<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
+								<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : 'disabled'}>결제완료</option>
+								<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : not(order.dOrderStatus eq 'P')? 'disabled' : ''}>상품준비중</option>
 								<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
 								<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
 								<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
@@ -152,11 +152,18 @@
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	const chkSubmit = (frm) =>{
 		console.log(frm);
-		frm.preventDefault;
 		const {orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName} = frm;
-		console.log(orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName);
-		if(confirm("주문번호["+dOrderNo.value+"]의 진행상태를"+orderStatus.value+"로 변경하시겠습니까?")){
-			
+		//console.log(orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName);
+		let SttsforAlert = "";
+		switch(orderStatus.value){
+		case 'P': SttsforAlert = "결제완료"; break;
+		case 'R': SttsforAlert = "상품준비중"; break;
+		case 'C': SttsforAlert = "주문취소"; break;
+		case 'D': SttsforAlert = "배송중"; break;
+		case 'F': SttsforAlert = "배송완료"; break;
+		}
+		console.log(SttsforAlert);
+		if(confirm("진행상태는 변경 후 이전단계로 돌릴 수 없어요.\n주문번호["+dOrderNo.value+"]의 진행상태를 ["+SttsforAlert+"](으)로 변경하시겠어요?")){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/member/updateDOrderStatus.do",
 				headers,
@@ -172,8 +179,8 @@
 				}
 			}); 
 		} 
-		
 		return;
+		
 	};
 	
 </script>
