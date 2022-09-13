@@ -3,6 +3,7 @@ package com.kh.monong.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.MemberEntity;
 import com.kh.monong.member.model.dto.Seller;
@@ -31,6 +32,18 @@ public interface MemberService {
 	int insertSellerInfoAttachment(SellerInfoAttachment attachment);
 	
 	SellerInfo selectSellerInfo(String memberId);
+	
+	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param);
+	
+	/**
+	 * 판매자 판매상품 개수
+	 */
+	int getTotalProdCntBySeller(Map<String, Object> param);
+	
+	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param);
+	
+	int getTotalOrderCntByProdNo(Map<String, Object> param);
+
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
@@ -40,6 +53,24 @@ public interface MemberService {
 	int updateMember(Member member);
 
 	int updatePw(Map<String, Object> map);
+	
+	List<Member> findAllMember(Map<String, Integer> param);
+
+	int getTotalMember();
+
+	List<Seller> findAllSeller(Map<String, Integer> param);
+
+	int getTotalSeller();
+
+	int getTotalWaitSeller();
+
+	List<Seller> findWaitSeller(Map<String, Integer> param);
+
+	SellerInfoAttachment selectSellerAttach(int no);
+
+	int updateSellerStatus(String id);
+
+	int getTotalSellerEnrollByMonth();
 	
 //-----------수아 끝
 
