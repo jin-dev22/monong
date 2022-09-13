@@ -41,6 +41,7 @@
 			<result column="s_address" property="sAddress" />
 			<result column="s_address_ex" property="sAddressEx" />
 			<result column="s_delivery_request" property="sDeliveryRequest" />
+			<result column="s_quit_yn" property="sQuitYn" />
 		</association>
 	</resultMap>
   <!-- 선아코드 끝 -->

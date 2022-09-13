@@ -180,6 +180,9 @@ ALTER TABLE subscription ADD CONSTRAINT fk_s_s_product_code FOREIGN KEY (s_produ
 ALTER TABLE subscription ADD CONSTRAINT fk_s_member_id FOREIGN KEY (member_id)REFERENCES member (member_id);
 -- check 조건 추가
 alter table subscription add constraint ck_s_s_delay_yn check(s_delay_yn in ('Y', 'N'));
+-- 정기구독 취소여부 컬럼 추가 9/13
+alter table subscription add s_quit_yn varchar2(1) default 'N';
+alter table subscription add constraint ck_s_s_quit_yn check(s_quit_yn in ('Y', 'N'));
 
 CREATE TABLE subscription_order (
 	s_order_no	varchar2(100)		NOT NULL,
@@ -272,6 +275,16 @@ ALTER TABLE subscription_product ADD CONSTRAINT PK_SUBSCRIPTION_PRODUCT PRIMARY 
 ALTER TABLE vegetables ADD CONSTRAINT PK_VEGETABLES PRIMARY KEY (veg_code);
 ALTER TABLE subscription_order ADD CONSTRAINT PK_SUBSCRIPTION_ORDER PRIMARY KEY (s_order_no);
 ALTER TABLE card_info ADD CONSTRAINT PK_CARD_INFO PRIMARY KEY (card_info_no);
+-- faq 생성(9/13)
+CREATE TABLE faq (
+	faq_no number NOT NULL,
+	faq_type varchar2(1) NOT NULL,
+	faq_title varchar2(100) NOT NULL,
+        faq_content varchar2(1000),
+        constraint pk_faq_no primary key(faq_no)
+);
+create sequence seq_faq_no;
+alter sequence seq_faq_no nocache;
 -- 정기구독 끝
 
 -- 직거래 시작
