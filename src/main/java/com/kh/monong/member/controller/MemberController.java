@@ -2,7 +2,8 @@ package com.kh.monong.member.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,7 +252,7 @@ public class MemberController {
 		log.debug("model = {}", model);
 	};
 	
-	@GetMapping("/sellerProdOrderList.do")
+	@GetMapping("/sellerProdOrderList.do")//-------------------------------------------------------
 	public void sellerProdOrderList(@RequestParam String prodNo, 
 									@RequestParam(required = false) String startDate, 
 									@RequestParam(required = false) String endDate,
@@ -263,8 +264,25 @@ public class MemberController {
 		param.put("limit", limit);
 		param.put("prodNo", prodNo);
 		param.put("startDate", startDate);
-		param.put("endDate", endDate);
+		//endDate +1 해서 db조회
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(1);
+			endDate =  _endDate.toString();
+			log.debug("endDate={}",endDate);
+		}
+		param.put("endDate",endDate);
 		log.debug("param = {}",param);
+		model.addAttribute("startDate",startDate);
+		//endDate 다시 -1해서 view에 전달
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(-1);
+			endDate =  _endDate.toString();
+		}
+		model.addAttribute("endDate",endDate);
+		
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
 		model.addAttribute("orderList", orderList);
 		log.debug("orderList={}", orderList);

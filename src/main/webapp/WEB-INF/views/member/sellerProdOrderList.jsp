@@ -62,14 +62,17 @@
         
     </style>
 <div id="prodList-container">
-	<form name="directProdFilterFrm" action="${pageContext.request.contextPath}/member/sellerProdOrderList.do" method="GET">
+	<form name="directProdOrdFilterFrm" action="${pageContext.request.contextPath}/member/sellerProdOrderList.do" method="GET">
 		<input type="hidden" name="prodNo" value="${param.prodNo}"/>
 		<label for="startDate" class="date-label" >시작일</label>
-		<input type="date" name="startDate" id="startDate" />
+		<input type="date" name="startDate" id="startDate" value="${startDate}"/>
 		<label for="endDate" class="date-label" >종료일</label>
-		<input type="date" name="endDate" id="endDate" />
-		<button>검색</button>
+		<input type="date" name="endDate" id="endDate" value="${endDate}" />
+		<input type="submit" value="검색" />
 	</form>
+	<script>
+		const frm = document.directProdOrdFilterFrm;
+	</script>
 	<span>해당 기간의 총 주문 건수는 ${orderList.size()}건 입니다.</span>
 	<c:if test="${empty orderList}">	
 		<div>해당상품의 주문내역이 없습니다.</div>
