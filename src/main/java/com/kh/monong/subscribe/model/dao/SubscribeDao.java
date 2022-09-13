@@ -4,6 +4,9 @@ import org.apache.ibatis.annotations.Insert;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.session.RowBounds;
+
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import lombok.NonNull;
@@ -38,9 +41,20 @@ public interface SubscribeDao {
 	
 	@Select("select * from vegetables")
 	List<Vegetables> getVegetables();
-	// 미송코드 끝
 	
+	@Select("select avg(s_review_star) from subscription_review")
+	int getSubscriptionReviewStarAvg();
+	
+	@Select("select count(*) from subscription_review")
+	int getTotalContent();
+	
+	List<SubscriptionReview> selectSubscriptionReviewListCollection(RowBounds rowBounds);
 
-	List<SubscriptionReview> selectSubscriptionReviewListCollection();
+	SubscriptionReview selectOneSubscriptionReviewCollection(String sReviewNo);
+
+	@Update("update subscription_review set s_review_recommend_num  = s_review_recommend_num + 1 where s_review_no = #{sReviewNo}")
+	int updateSubscribeReviewRecommend(String sReviewNo);
+	
+	// 미송코드 끝
 
 }

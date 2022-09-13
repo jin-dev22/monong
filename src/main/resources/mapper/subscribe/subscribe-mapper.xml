@@ -7,13 +7,34 @@
   <!-- 선아코드 끝 -->
   
   <!-- 미송코드 시작 -->
-  <select id="selectSubscriptionReviewListCollection" resultMap="subscriptionListMap">
+  <select id="selectSubscriptionReviewListCollection" resultMap="subscriptionReviewMap">
 	select
 	    s.member_id,
 	    so.s_times,
 	    sr.*,
-	    sra.s_attach_no attach_no,
-	    sra.s_review_no,
+	    sra.s_attach_no,
+	    sra.s_review_no review_no,
+	    sra.s_review_original_filename,
+	    sra.s_review_renamed_filename,
+	    sra.s_review_created_at attach_created_at
+	from
+	     subscription_review sr
+	        left join subscription_review_attachment sra
+	            on sr.s_review_no = sra.s_review_no
+	        join subscription_order so
+	            on sr.s_order_no = so.s_order_no
+	        join subscription s
+	            on so.s_no = s.s_no
+	order by sr.s_review_created_at desc
+  </select>
+  
+  <select id="selectOneSubscriptionReviewCollection" resultMap="subscriptionReviewMap">
+	select
+	    s.member_id,
+	    so.s_times,
+	    sr.*,
+	    sra.s_attach_no,
+	    sra.s_review_no review_no,
 	    sra.s_review_original_filename,
 	    sra.s_review_renamed_filename,
 	    sra.s_review_created_at attach_created_at
@@ -25,10 +46,10 @@
 	            on sr.s_order_no = so.s_order_no
 	        join subscription s 
 	            on so.s_no = s.s_no
-	order by sr.s_review_created_at desc
+	where sr.s_review_no = #{sReviewNo}
   </select>
   
-  <resultMap type="subscriptionReview" id="subscriptionListMap">
+  <resultMap type="subscriptionReview" id="subscriptionReviewMap">
 		<id column="s_review_no" property="sReviewNo"/>
 		<result column="s_order_no" property="sOrderNo"/>
 		<result column="s_review_content" property="sReviewContent"/>
@@ -43,8 +64,8 @@
 			<result column="s_times" property="sTimes"/>
 		</association>
 		<collection property="sAttachments" ofType="SubscriptionReviewAttachment">
-			<id column="attach_no" property="s_attach_no"/>
-			<result column="s_review_no" property="s_review_no"/>
+			<id column="s_attach_no" property="sAttachNo"/>
+			<result column="review_no" property="sReviewNo"/>
 			<result column="s_review_original_filename" property="sReviewOriginalFilename"/>
 			<result column="s_review_renamed_filename" property="sReviewRenamedFilename"/>
 			<result column="attach_created_at" property="sReviewCreatedAt"/>

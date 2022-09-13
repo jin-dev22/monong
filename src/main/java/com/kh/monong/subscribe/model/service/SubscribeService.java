@@ -5,6 +5,8 @@ import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import lombok.NonNull;
 import java.util.List;
+import java.util.Map;
+
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
@@ -29,9 +31,25 @@ public interface SubscribeService {
 	List<SubscriptionProduct> getSubscriptionProduct();
 	
 	List<Vegetables> getVegetables();
+
+	int getSubscriptionReviewStarAvg();
 	
-	List<SubscriptionReview> selectSubscriptionReviewList();
+	int getTotalContent();
+	
+	List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param);
+	
+	SubscriptionReview selectOneSubscriptionReview(String reviewNo);
+	
+	int updateSubscribeReviewRecommend(String sReviewNo);
+	
 	// 미송코드 끝
+
+
+	
+
+
+
+	
 
 
 }

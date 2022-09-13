@@ -1,6 +1,10 @@
 package com.kh.monong.subscribe.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kh.monong.member.model.dto.Member;
+import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
@@ -94,11 +98,55 @@ public class SubscribeController {
 	}
 	
 	@GetMapping("/subscribeMain.do")
-	public void subscribeReviewList(Model model) {
-		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList();
+	public void subscribeMain(Model model) {
+		int sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
+		log.debug("sReviewStarAvg = {}", sReviewStarAvg);
+		
+		int totalContent = subscribeService.getTotalContent();
+		log.debug("totalContent = {}", totalContent);
+		
+		model.addAttribute("sReviewStarAvg", sReviewStarAvg);
+		model.addAttribute("totalContent", totalContent);
+	}
+
+	@GetMapping("/subscribeReviewList.do")
+	public ResponseEntity<?> subscribeReviewList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList(param);
 		log.debug("sReviewList = {}", sReviewList);
 		
-		model.addAttribute("sReviewList", sReviewList);
+		int totalContent = subscribeService.getTotalContent();
+		
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		Map<String, Object> returnVal = new HashMap<>();
+		returnVal.put("sReviewList", sReviewList);
+		returnVal.put("pagebar", pagebar);
+		
+		return ResponseEntity.ok(returnVal);
+	}
+	
+	@GetMapping("/subscribeReviewDetail.do")
+	public ResponseEntity<?> subscribeReviewDetail(@RequestParam String sReviewNo) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		SubscriptionReview sReview = subscribeService.selectOneSubscriptionReview(sReviewNo);
+		log.debug("sReview = {}", sReview);
+		
+		return ResponseEntity.ok(sReview);
+	}
+	
+	@PostMapping("/subscribeReviewRecommend.do")
+	public ResponseEntity<?> subscribeReviewRecommend(@RequestParam(required = false) String sReviewNo) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		int result = subscribeService.updateSubscribeReviewRecommend(sReviewNo);
+		
+		return ResponseEntity.ok(result);
 	}
 	// 미송코드 끝
 
