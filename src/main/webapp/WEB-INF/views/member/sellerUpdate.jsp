@@ -12,115 +12,160 @@
 	<jsp:param name="title" value="모농모농-회원정보수정"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
-
+<style>
+	.sellerUpdate-fitInput{
+		width: 100%;
+	}
+	 #sellerUpdate-attachUpdate-container{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	} 
+	
+	#sellerUpdate-btn-download{
+		min-width: 200;
+		overflow: hidden;
+	}
+	#btn-email-sendKey{
+		margin-top: 10px;
+		float: right;
+	}
+	
+</style>
 <div id="member-update-container" class="mx-auto mt-10">
-     <div class="mb-3 text-center">
+	<div class="mb-3 text-center">
 		<h1>회원정보수정</h1>
-	</div>	
+	</div>
 	<nav class="nav justify-content-end">
-		<a class="nav-link" href="${pageContext.request.contextPath}/member/memberPwUpdate.do"><h5>비밀번호 변경</h5></a>
+		<a class="nav-link" href="${pageContext.request.contextPath}/member/memberPwUpdate.do">
+			<h5>비밀번호 변경</h5>
+		</a>
 	</nav>
-     <form name="memberUpdateFrm" id="memberUpdateFrm" 
-			action="${pageContext.request.contextPath}/member/sellerUpdate.do" 
-  			method="POST" 
-  			accept-charset="UTF-8" enctype="multipart/form-data">
-           <div class="row mb-2 col-md-13 justify-content-center">
-               <div class="col-sm-9">
-               	<label for="memberId">아이디</label>
-                   <input type="text" class="form-control" value="<sec:authentication property="principal.username"/>" name="memberId" id="memberId" readonly required>
-               	<br />
-               </div>
-           </div>
-           <div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">
-				<label for="name">업체명<span class="enroll-form-required">*</span></label>
-				<input type="text" class="form-control" name="memberName" id="memberName" value="<sec:authentication property="principal.memberName"/>" required>
-				<br />
-			</div>
-		</div>
-           <div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">
-				<label for="name">대표자명<span class="enroll-form-required">*</span></label>
-				<input type="text" class="form-control" name="sellerName" id="sellerName" value="<sec:authentication property="principal.sellerInfo.sellerName"/>" required>
-				<br />
-			</div>
-		</div>
-		<div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">
-				<label for="memberPhone">전화번호<span class="enroll-form-required">*</span></label>
-				<input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" value='<sec:authentication property="principal.memberPhone"/>'required/>
-                   <span class="invalid-feedback feedback-phone">띄어쓰기없이 번호만 입력해주세요.</span>
-				<br />
-			</div>
-		</div>
+	<form name="memberUpdateFrm" id="memberUpdateFrm"
+		action="${pageContext.request.contextPath}/member/sellerUpdate.do"
+		method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
 		
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<label for="memberEmail">이메일<span class="enroll-form-required">*</span></label>
-				<span id="memberEmail-container">
-                       <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" value='<sec:authentication property="principal.memberEmail"/>' required>
-                       <span class="valid-feedback feedback-email">사용가능한 이메일입니다.</span>
-                       <span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span>
-                       <input type="hidden" id="emailValid" value="1"/><!-- 사용불가 0, 사용가능 1 -->
-                   </span>
-                   <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"
-                        disabled/><!-- 완성후 기능 살려놓기 -->
-				<br />
+				<label for="memberId">아이디</label> 
+				<input type="text" name="memberId" class="form-control" id="memberId"
+					value="<sec:authentication property="principal.username"/>" readonly required>
 			</div>
 		</div>
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
-		                         readonly/><!-- 프로젝트 완성 후 readolny해제 -->
-	            <input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
-	            <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"
-	                disabled/><!-- 프로젝트 완성 후 disabled해제 -->
-				<br />
+				<label for="name">업체명<span class="enroll-form-required">*</span></label>
+				<input type="text" name="memberName" class="form-control" id="memberName"
+					value="<sec:authentication property="principal.memberName"/>" required>
 			</div>
 		</div>
+
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<label for="memberAddress">주소<span class="enroll-form-required">*</span></label>
-				<input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="<sec:authentication property='principal.memberAddress'/>" readonly required>
+				<label for="name">대표자명<span class="enroll-form-required">*</span></label>
+				<input type="text" name="sellerName" class="form-control" id="sellerName"
+					value="<sec:authentication property="principal.sellerInfo.sellerName"/>" required>
 			</div>
 		</div>
+
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<label for="address-ex">상세주소</label>
-				<input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex" value='<sec:authentication property="principal.memberAddressEx"/>'>
-				<br />
+				<label for="memberPhone">전화번호<span class="enroll-form-required">*</span></label> 
+				<input type="tel" name="memberPhone" class="form-control" id="memberPhone" 
+					placeholder="(-없이)01012345678" maxlength="11"
+					value='<sec:authentication property="principal.memberPhone"/>' required />
+					<span class="invalid-feedback feedback-phone">띄어쓰기없이	번호만 입력해주세요.</span>
 			</div>
 		</div>
+
 		<div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">	
-				<label for="birthday">사업개시일<span class="enroll-form-required">*</span></label>
-				<input type="date" class="form-control" placeholder="사업개시일" name="memberBirthday" id="birthday" value='<sec:authentication property="principal.memberBirthday"/>'/>
-				<br />
+			<div class="col-sm-9">
+				<label for="memberEmail">이메일<span class="enroll-form-required">*</span></label> 
+				<span id="memberEmail-container"> 
+					<input type="email" name="memberEmail" class="form-control" id="memberEmail"
+					placeholder="abc@xyz.com"
+					value='<sec:authentication property="principal.memberEmail"/>' required> 
+					<span class="valid-feedback feedback-email">사용가능한 이메일입니다.</span> 
+					<span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span> 
+					<input type="hidden" id="emailValid" value="1" /><!-- 사용불가 0, 사용가능 1 -->
+				</span> 
+				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-sendKey" value="이메일 인증" 
+							disabled /><!-- 완성후 기능 살려놓기 -->
 			</div>
 		</div>
+
 		<div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">	
-				<label for="sellerRegNo">사업자등록번호<span class="enroll-form-required">*</span></label>
-				<input type="text" name="sellerRegNo" id="sellerRegNo" style="width: 289.5px;" placeholder="000-00-00000"  value='<sec:authentication property="principal.sellerInfo.sellerRegNo"/>' required/>
-                <span class="invalid-feedback feedback-regNo">-를 포함하여 작성해주세요.</span>
-				<br />
+			<div class="col-sm-9">
+				<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required
+							readonly /><!-- 프로젝트 완성 후 readolny해제 -->
+				<input type="hidden" id="emailKeyValid" value="1" /><!-- 불일치 0, 일치 1 -->
+				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-enterKey" value="확인" 
+							disabled /><!-- 프로젝트 완성 후 disabled해제 -->
 			</div>
 		</div>
-        <div class="row mb-2 col-md-13 justify-content-center">
-			<div class="col-sm-9">	
-				<label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label>
-				<input type="file" name="sellerRegFile" id="sellerRegFile" style="width: 289.5px;" required/>
-				<br />
+
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="memberAddress">주소<span class="enroll-form-required">*</span></label> 
+				<input type="text" name="memberAddress" class="form-control" id="address"
+					value="<sec:authentication property='principal.memberAddress'/>" readonly required>
 			</div>
 		</div>
-           
-       
-        <sec:csrfInput />
-        <div class="mb-3 text-center">
-	        <input type="submit" class="btn btn-EA5C2B-reverse" value="수정" >&nbsp;
-	        <input type="reset" class="btn btn-outline-success" value="취소">
-        </div>
-    </form>
+
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="address-ex">상세주소</label> 
+				<input type="text" name="memberAddressEx" class="form-control" id="address-ex"
+					value='<sec:authentication property="principal.memberAddressEx"/>'>
+			</div>
+		</div>
+
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="birthday">사업개시일<span class="enroll-form-required">*</span></label> 
+				<input type="date" name="memberBirthday" class="form-control" id="birthday" 
+					placeholder="사업개시일" 
+					value='<sec:authentication property="principal.memberBirthday"/>' />
+			</div>
+		</div>
+
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="sellerRegNo">사업자등록번호<span class="enroll-form-required">*</span></label> 
+				<input type="text" name="sellerRegNo" class="sellerUpdate-fitInput" id="sellerRegNo"
+					placeholder="000-00-00000"
+					value='<sec:authentication property="principal.sellerInfo.sellerRegNo"/>' required /> 
+					<span class="invalid-feedback feedback-regNo">-를 포함하여 작성해주세요.</span>
+			</div>
+		</div>
+
+		<div class="row mb-2 col-md-13 justify-content-center">
+			<div class="col-sm-9">
+				<label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label> 
+				<input type="file" name="sellerRegFile" class="sellerUpdate-fitInput" id="sellerRegFile" required /> 
+				<label for="sellerUpdate-btn-download">기존파일</label>
+				<div id="sellerUpdate-attachUpdate-container">
+					<input type="button" class="btn btn-outline-success" id="sellerUpdate-btn-download"
+						onclick="location.href='${pageContext.request.contextPath}/board/fileDownload.do?no=<sec:authentication property='principal.attachment.sellerAttachNo'/>';"
+						value="<sec:authentication property='principal.attachment.originalFilename'/>" />
+					&nbsp;&nbsp; 
+					<label class="btn btn-outline-danger" title="삭제"> 
+						<input type="checkbox" name="delFile" class="btn btn-outline-danger" id="delFile"
+							value="<sec:authentication property='principal.attachment.sellerAttachNo'/>">
+						삭제
+					</label>
+				</div>
+			</div>
+		</div>
+
+
+		<sec:csrfInput />
+		<br />
+		<div class="mb-3 text-center sellerUpdate-submitBtn-container">
+			<input type="submit" class="btn btn-EA5C2B-reverse" value="수정">&nbsp;
+			<input type="reset" class="btn btn-outline-success" value="취소">
+		</div>
+	</form>
 </div>
 <script>
 const emailValid = document.querySelector("#emailValid");
