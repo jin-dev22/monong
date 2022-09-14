@@ -7,60 +7,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
-<style>
-        div#prodList-container{
-            max-width: 900px;
-            margin: 0 auto;
-        }
-    
-        .prod-order-container{
-            border: 1px solid grey;
-            margin: 20px 0;
-            min-height: 200px;
-        };
-        
-        div.order-container-row.ord-row-1 >*{
-            display: inline-block;
-        }
-        div.order-container-row.ord-row-1{
-            background-color: lightgrey;
-            display: flex;
-            justify-content: space-between;
-        }
-        div.order-container-row.ord-row-2{
-            display: flex;
-            align-items: center; 
-            justify-content: space-between;
-        }
-        div.order-container-row.ord-row-2 > *{
-            display: inline-block;
-            min-width: 100px;
-            margin: 10px 15px;
-            padding: 0 10px;
-        }
-        div.order-prodNam{
-            display: inline-block;
-            width: 150px;
-        }
-        div.order-options{
-            display: inline-block;
-        }
-
-        div.order-container-row.ord-row-4 >*{
-            display: inline-block;
-            min-width: 100px;
-            margin: 10px 15px;
-        }
-        div.order-container-row.ord-row-4{
-            display: flex;
-            justify-content: space-between;
-        }
-        div.order-address{
-            margin: 10px 15px;
-        }
-
-        
-    </style>
 <div id="prodList-container">
 	<form name="directProdOrdFilterFrm" action="${pageContext.request.contextPath}/member/sellerProdOrderList.do" method="GET">
 		<input type="hidden" name="prodNo" value="${param.prodNo}"/>

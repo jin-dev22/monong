@@ -102,7 +102,7 @@
                 </span>
             </div>
             <div class="enroll-info-container">
-                <span class="enroll-info-label">개업일<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info-label">사업개시일<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
                     <input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
                 </span>
