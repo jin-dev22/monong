@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -327,6 +328,30 @@ public class MemberController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
+	
+	@GetMapping("/sellerUpdate.do")
+	public void sellerUpdate() {
+		
+	}
+	@PostMapping("/sellerUpdate.do")
+	public String sellrUpdate(@ModelAttribute Seller seller, 
+							 RedirectAttributes redirectAttr,
+							 Model model) {
+		log.debug("seller = {}", seller);
+//		int result = memberService.updateSeller(seller);
+//		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
+//		
+//		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
+//				updatedMember,
+//				updatedMember.getPassword(),
+//				updatedMember.getAuthorities()
+//				);
+//		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
+//		log.debug("member={}", updatedMember);
+		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
+		return "redirect:/member/sellerUpdate.do";
+		
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
@@ -484,9 +509,12 @@ public class MemberController {
 							  @RequestParam String memberId,
 			  				  @RequestParam String memberPassword,
 			  				  RedirectAttributes redirectAttr) {
-		Member member = memberService.selectMemberById(memberId);
+		Member member = (Member) (authentication.getPrincipal());
 		String pwd = member.getPassword();
 		if(bcryptPasswordEncoder.matches(memberPassword, pwd)) {
+			if(member.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SELLER"))) {
+				return"redirect:/member/sellerUpdate.do";
+			}
 			return "redirect:/member/memberUpdate.do";
 		}
 		log.debug("memberPassword={}",memberPassword);
