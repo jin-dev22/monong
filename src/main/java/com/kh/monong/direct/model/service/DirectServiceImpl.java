@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,9 +33,25 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
+	public List<DirectProductAttachment> selectDirectProductAttachmentList() {
+		return directDao.selectDirectProductAttachmentList(0);
+	}
+	@Override
 	public int getTotalContent() {
 		return directDao.getTotalContent();
 	}
+	
+	// 상품 등록
+	@Override
+	public void directProductEnroll(DirectProduct directProduct) {
+		log.debug("(service)directProductEnroll......");
+		
+		directDao.directProductEnroll(directProduct);
+		
+	}
+	
+	
+	
 	//----------------- 재경 끝
 		//----------------- 민지 시작
 	@Override

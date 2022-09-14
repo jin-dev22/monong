@@ -7,16 +7,22 @@
   <select id="selectOneDirectProductCollection" resultMap="directProductMap">
   	select
 	    dp.*,
+	    m.member_name,
 	    dpo.*,
-	    dpa.*
+	    dpa.*,
+	    to_number(substr(d_option_no, 3)) no
 	from
 	    direct_product dp
+	    	left join member m
+                on dp.member_id = m.member_id
 	        left join direct_product_option dpo
 	            on dp.d_product_no = dpo.d_product_no
 	        left join direct_product_attachment dpa
 	            on dp.d_product_no = dpa.d_product_no
 	where
 	    dp.d_product_no = #{dProductNo}
+	order by
+		d_option_name, d_price, no
   </select>
   
   <resultMap type="directProduct" id="directProductMap">
@@ -27,6 +33,11 @@
   	<result column="d_product_created_at" property="dProductCreatedAt"/>
   	<result column="d_product_updated_at" property="dProductUpdatedAt"/>
   	<result column="d_default_price" property="dDefaultPrice"/>
+  	<result column="d_delivery_fee" property="dDeliveryFee"/>
+  	<association property="member" javaType="member">
+  		<id column="member_id" property="memberId"/>
+  		<result column="member_name" property="memberName"/>
+  	</association>
   	<collection property="directProductOptions" ofType="DirectProductOption">
   		<id column="d_option_no" property="dOptionNo"/>
   		<result column="d_product_no" property="dProductNo"/>
