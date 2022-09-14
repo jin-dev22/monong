@@ -14,6 +14,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.service.DirectService;
@@ -66,8 +68,32 @@ public class DirectController {
 	@GetMapping("/directProductDetail.do")
 	public void directProductDetail(@RequestParam String dProductNo, Model model) {
 		DirectProduct directProduct = directService.selectOneDirectProduct(dProductNo);
+		
 		log.debug("directProduct = {}", directProduct);
 		model.addAttribute("directProduct", directProduct);
+	}
+	
+	@GetMapping("/cart.do")
+	public void cart() {
+		
+	}
+	
+	@GetMapping("/findCart.do")
+	public void findCart(@RequestParam(value="dOptionNo", required=false) List<String> dOptionNo) {
+		log.debug("dOptionNo = {}", dOptionNo);
+	}
+	
+	@GetMapping("/directOrder.do")
+	public void directOrder(@RequestParam(value="dOptionNo", required=false) List<String> dOptionNo, @RequestParam(value="dOptionCount", required=false) List<Integer> dOptionCount) {
+		log.debug("dOptionNo = {}", dOptionNo);
+		log.debug("dOptionCount = {}", dOptionCount);
+	}
+	
+	@PostMapping("/directOrder.do")
+	public String directOrder(@RequestParam String dOptionNo, @RequestParam String dOptionCount, @ModelAttribute DirectOrder directOrder, RedirectAttributes redirectAttr, Model model) {
+		
+		
+		return "redirect:/member/directOrderList.do";
 	}
 	//----------------- 민지 끝
 }
