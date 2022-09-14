@@ -282,13 +282,14 @@ public class MemberController {
 		param.put("startDate", startDate);
 		param.put("endDate",endDate);
 		log.debug("param = {}",param);
-		model.addAttribute("startDate",startDate);
+		
 		//endDate 다시 -1해서 view에 전달
 		if(endDate != null && endDate != "") {
 			LocalDate _endDate = LocalDate.parse(endDate, dtf);
 			_endDate = _endDate.plusDays(-1);
 			endDate =  _endDate.toString();
 		}
+		model.addAttribute("startDate",startDate);
 		model.addAttribute("endDate",endDate);
 		
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
