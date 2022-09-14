@@ -38,33 +38,69 @@
     </div>
   </div>
   <div class="pInfo-container">
-    <span>${directProduct.DProductName}</span><br>
-    <span><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><span>여기에 별</span><span>별점</span>
-    <div style="border: 0.5px solid black; background-color: black;"></div>
-    <span>배송비</span><span>3,000원</span><br>
-    <span>판매자</span><span></span>
-    <br />
+  	<div class="dProductName-container">
+    	<span class="dProductName">${directProduct.DProductName}</span><br>
+  	</div>
+  	<div class="dPrice-review-container">
+    	<span class="dDefaultPrice"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><div class="review-wrap"><span class="review">여기에 별</span><span class="review">별점</span></div>
+  	</div>
+    <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
+    <div class="dDeliveryFee-container">
+    	<span class="dDeliveryFee-title">배송비</span><span class="dDeliveryFee"><fmt:formatNumber value="${directProduct.DDeliveryFee}" pattern="#,###" />원</span><br>
+    </div>
+    <div class="seller-container">
+    	<span class="seller-title">판매자</span><span class="seller">${directProduct.member.memberName}</span>
+    </div>
     <div class="dropdown">
 	    <button class="dropbtn">
 	      <span class="dropbtn_content">옵션 선택</span>
-	      <span class="dropbtn_click" style="font-size : 16px; color : #3b3b3b; float:right;">▼</span>
+	      <span class="dropbtn_click">▼</span>
 	    </button>
 	    <div class="dropdown-content">
-	      <c:forEach items="${directProduct.directProductOptions}" var="option">
-		      <div class="select_option" onclick="showMenu(this.innerText)">
-		      	${directProduct.DProductName}${option.DOptionName}${option.DPrice}
-		      </div>
-	      </c:forEach>
+		    <table class="tbl-dropdown">
+		      <c:forEach items="${directProduct.directProductOptions}" var="option">
+			    <tr class="select_option" data-option-no="${option.DOptionNo}" onclick="showMenu(this.innerText)">
+			      	<td class="dPOName">${option.DOptionName}</td>
+			      	<td class="dPrice"><fmt:formatNumber value="${option.DPrice}" pattern="#,###" />원</td>
+			    </tr>
+			    <input type="hidden" name="dStock" value="${option.DStock}" />
+			    <input type="hidden" name="dSaleStatus" value="${option.DSaleStatus}" />
+		      </c:forEach>
+		    </table>
 	    </div>
 	</div>
-    <div style="border: 0.5px solid black; background-color: black;"></div>
-	<div class="pOption-container">
-	</div>
+	<form action="" method="POST" name="totalProductFrm">
+		<div class="pOption-container">
+		</div>
+	</form>
+    <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
 	<div class="pPrice-container">
 		<span class="total-price">총 상품 금액</span>
-		<span class="total-price-num">13,000원</span>
+		<div class="total-price-container">
+			<span class="total-price-num">0</span><span>원</span>
+		</div>
 	</div>
-    <button type="button" class="btn-add-cart">장바구니</button>
+	<div class="btn-container">
+	    <button type="button" class="btn-add-cart btn-116530" id="cart">장바구니</button>
+	    <sec:authorize access="isAnonymous()">
+	    	<button type="button" class="btn-add-order btn-EA5C2B" onclick="alert('로그인 후 이용해 주세요.')">주문하기</button>
+	    </sec:authorize>
+	    <sec:authorize access="isAuthenticated()">
+	    	<button type="button" class="btn-add-order" id="order" onclick="location.href='${pageContext.request.contextPath}/direct/directOrder.do';">주문하기</button>
+	    </sec:authorize>
+	</div>
+  </div>
+  <div class="direct-footer-container">
+  	  <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
+  	  <nav class="direct-detail-nav">
+		  <div class="direct-detail-nav-item is-active">상품 정보</div>
+		  <a href="#" class="direct-detail-nav-item">상품 문의</a>
+		  <a href="#" class="direct-detail-nav-item">이용 후기</a>
+	  </nav>
+	  <div style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
+	  <div class="dProductContent">
+	  	${directProduct.DProductContent}
+	  </div>
   </div>
 </main>
 <script>
@@ -120,38 +156,37 @@ $('.slider-1 > .side-btns > div').click(function(){
 //    $('.slider-1 > .side-btns > div').eq(1).click();
 //}, 3000);
 
-</script>
-<script>
-document.querySelector('.dropbtn').addEventListener('click', () => {
+// 드롭다운
+document.querySelector('.dropbtn').addEventListener('click', (e) => {
+	// console.log(e.target);
     dropdown();
+    
+	
   });
-  // document.querySelector('.dropbtn_click').addEventListener('click', () => {
-  //   dropdown();
-  // });
-  // document.querySelector('.dropbtn_content').addEventListener('click', () => {
-  //   dropdown();
-  // });
   
   document.getElementsByClassName('select_option').onclick = (value)=>{
-    showMenu(value);
+    showMenu();
   };
+  
   dropdown = () => {
+	  
     var v = document.querySelector('.dropdown-content');
-    var dropbtn = document.querySelector('.dropbtn')
+    var dropbtn = document.querySelector('.dropbtn');
     v.classList.toggle('show');
     dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+    
   }
 
   showMenu=(value)=>{
-    console.log(value);
+    // console.log(value);
     var dropbtn_icon = document.querySelector('.dropbtn_icon');
     var dropbtn_content = document.querySelector('.dropbtn_content');
     var dropbtn_click = document.querySelector('.dropbtn_click');
     var dropbtn = document.querySelector('.dropbtn');
 
-    // dropbtn_content.innerText = value;
-    dropbtn_content.style.color = '#252525';
-    dropbtn.style.borderColor = '#3992a8';
+    dropbtn_content.style.color = 'rgba(107,114,128)';
+    dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+    
     var dropdowns = document.getElementsByClassName("dropdown-content");
 
     var i;
@@ -161,22 +196,289 @@ document.querySelector('.dropbtn').addEventListener('click', () => {
         openDropdown.classList.remove('show');
       }
     }
+    
   }
 
-  document.querySelector('.dropbtn').addEventListener('click', (e) => {
-    if(!e.target.matches('.dropbtn') && !e.target.matches('.dropbtn_click') && !e.target.matches('.dropbtn_content')){
-      console.log(e.target);
-      var dropdowns = document.getElementsByClassName("dropdown-content");
+  window.onclick = (e) => {
+	  if(!e.target.matches('.dropbtn') && !e.target.matches('.dropbtn_click') && !e.target.matches('.dropbtn_content')){
+	      // console.log(e.target);
+	      var dropdowns = document.getElementsByClassName("dropdown-content");
 
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
+	      var i;
+	      for (i = 0; i < dropdowns.length; i++) {
+	        var openDropdown = dropdowns[i];
+	        if (openDropdown.classList.contains('show')) {
+	          openDropdown.classList.remove('show');
+	        }
+	      }
+	    }
+  };
+    
+// 재고 확인
+const dStock = document.querySelectorAll('[name="dStock"]');
+dStock.forEach((stock) => {
+	// console.dir(stock);
+	const target = stock.previousElementSibling;
+	// console.log(stock.value);
+	if(Number(stock.value) === 0) {
+		target.children[0].style.color = 'rgb(153, 153, 153)';
+		target.children[0].style.textDecorationLine = 'line-through';
+		target.children[0].style.textDecorationColor = 'rgb(153, 153, 153)';
+		target.children[1].innerText = '품절';
+		return;
+	}
+});
+
+// 판매상태 확인
+const dSaleStatus = document.querySelectorAll('[name="dSaleStatus"]');
+const soldout = document.querySelector('.dropdown');
+
+dSaleStatus.forEach((status) => {
+	// console.dir(status);
+	const target = status.previousElementSibling.previousElementSibling;
+	// console.log(status.value);
+	if(status.value !== "판매중") {
+		target.children[0].style.color = 'rgb(153, 153, 153)';
+		target.children[0].style.textDecorationLine = 'line-through';
+		target.children[0].style.textDecorationColor = 'rgb(153, 153, 153)';
+		target.children[1].innerText = '품절';
+		return;
+	}
+	if(status.value === "판매마감") {
+		soldout.style.display = 'none';
+	}
+});
+
+
+// 사용자가 선택한 옵션 박스 생성
+document.querySelectorAll(".select_option").forEach((select) => {
+	select.addEventListener('click', (e) => {
+		const parent = e.target.parentElement;
+		const optionNo = parent.dataset.optionNo;
+		// console.log(optionNo);
+		// console.log(select.children[0].innerHTML);
+		const place = document.querySelector(".pOption-container");
+		const dPOName = select.children[0].innerHTML;
+		const dPrice = select.children[1].innerHTML;
+		// console.log(dPOName);
+		const box = `
+		<div id="option-box" class="option-box" data-option-no="\${optionNo}">
+			<div class="option-info-wrap">
+				<span class="selected-option">\${dPOName}</span>
+			</div>
+			<div class="option-count-wrap">
+				<span class="selected-price">\${dPrice}</span>
+				<input type="hidden" name="dPrice" value="\${dPrice}" />
+				<div class="option-count-box">
+					<button type="button" class="minus" onclick="minusBtn(event)">-</button>
+					<div class="dOptionCount" id="dOptionCount">1</div>
+					<button type="button" class="plus" onclick="plusBtn(event)">+</button>
+				</div>
+				<button type="button" id="delete" onclick="deleteBtn(event)">x</button>
+			</div>
+			<input type="hidden" name="memberId" />
+			<input type="hidden" name="dOptionNo" value="\${optionNo}" />
+			<input type="hidden" name="productCount" value="1" />
+		</div>`;
+
+		const optionBox = document.querySelector(`div[data-option-no="\${optionNo}"]`);
+		const targetStock = Number(e.target.parentElement.nextElementSibling.value);
+		const targetStatus = e.target.parentElement.nextElementSibling.nextElementSibling.value;
+		if(!optionBox && targetStock > 0 && targetStatus === "판매중"){				
+			place.insertAdjacentHTML('beforeend', box);	
+		}
+		else if(!optionBox && targetStatus !== "판매중"){
+			alert('해당 상품은 품절되었습니다.');
+		}
+		else if(optionBox){
+			alert('이미 추가된 옵션입니다.');
+		}
+		
+		// 총 합계 금액
+		const totalPrice = [...document.querySelectorAll('.selected-price')].map((price) => {
+			return Number(price.innerHTML.replace(",","").replace("원", ""));
+		}).reduce((total, price) => {
+			return total + price;
+		}, 0);
+		document.querySelector(".total-price-num").innerHTML = totalPrice.toLocaleString('ko-KR');
+	});
+	
+});
+
+// 삭제 핸들러
+const deleteBtn = (e) => {
+	const btn = document.getElementById('option-box');
+	btn.remove();
+
+	let totalPrice = totalCalc();
+	totalCalc();
+	// console.log(totalPrice);
+	document.querySelector('.total-price-num').innerText = totalPrice.toLocaleString('ko-KR');
+	
+};
+
+// 감량 핸들러
+const minusBtn = (e) => {
+	// console.dir(e.target);
+	let countVal = Number(e.target.nextElementSibling.innerHTML);
+	const count = e.target.nextElementSibling;
+	countVal--;
+	if(countVal > 0) {
+		count.innerHTML = countVal;
+	}
+	else if(countVal = 1) {
+		count.innerHTML = countVal;
+	}
+	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.value.replace(",",""));
+	// console.log(defaultPriceVal);
+	const sumVal = countVal * defaultPriceVal;
+	// console.log(sumVal);	
+	e.target.parentElement.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
+	
+	let totalPrice = totalCalc();
+	totalCalc();
+	// console.log(totalPrice);
+	document.querySelector('.total-price-num').innerText = totalPrice.toLocaleString('ko-KR');
+};
+
+// 증량 핸들러
+const plusBtn = (e) => {
+	
+	// console.dir(e.target);
+	let countVal = Number(e.target.previousElementSibling.innerHTML);
+	const count = e.target.previousElementSibling;
+	countVal++;
+	// console.log(countVal);
+	if(countVal < 5) {
+		count.innerHTML = countVal;	
+	}
+	else if(countVal = 5) {
+		count.innerHTML = countVal;	
+	}
+	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.value.replace(",",""));
+	// console.log(defaultPriceVal);
+	const sumVal = countVal * defaultPriceVal;
+	// console.log(sumVal);	
+	e.target.parentElement.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
+	
+	let totalPrice = totalCalc();
+	totalCalc();
+	// console.log(totalPrice);
+	document.querySelector('.total-price-num').innerText = totalPrice.toLocaleString('ko-KR');
+};
+
+// 총금액 다시 계산하기
+const totalCalc = () => {
+	let totalCount = 0;
+	let totalPrice = 0;
+	document.querySelectorAll('#dOptionCount').forEach((e) => {
+		// console.dir(e);
+		const count = parseInt(e.innerText);
+		// console.log(count);
+		totalCount += count;
+		// console.log(totalCount, typeof totalCount);
+		// console.log(e.parentElement.previousElementSibling);
+		const price = parseInt(e.parentElement.previousElementSibling.value.replace(",",""));
+		// console.log(price, typeof price);
+		totalPrice += count * price;
+	});
+		return totalPrice;
+};
+
+
+// 장바구니 추가 및 주문하기
+document.querySelectorAll("button").forEach((button) => {
+	button.addEventListener('click', (e) => {
+		const frm = document.totalProductFrm;
+		const container = document.querySelector(".pOption-container");
+		const optionNo = document.querySelectorAll("[name=dOptionNo]");
+		
+		let cartList = [];
+		[...optionNo].forEach((no) => {
+			console.log(no);
+			const productCount = no.nextElementSibling.value;
+			cartList.push({"dOptionNo" : no.value, "productCount" : productCount});
+		});
+		
+		if(e.target.id === 'cart' || e.target.id === 'order') {
+			if(container.children.length === 0) {
+				alert("옵션을 선택해 주세요.");
+				return;
+			}
+		}
+		
+		// 장바구니
+		if(e.target.id === 'cart') {
+			$.ajax({
+				url : "${pageContext.request.contextPath}/direct/findCart.do",
+				type : "GET",
+				success(response) {
+					// 장바구니 중복 체크
+// 					if(response[0]) {
+// 						if(confirm('장바구니에 이미 존재하는 상품입니다. 그래도 추가하시겠습니까?')) {
+// 							addCart(cartList);
+// 						} else return;
+// 					} else {
+// 						addCart(cartList);
+// 					}
+				},
+				error : console.log
+			});
+		}
+		
+		// 주문하기
+		
+	})
+})
+
+const addCart = (cartList) => {
+	$.ajax({
+		url : "${pageContext.request.contextPath}/direct/addCart.do",
+		type : "POST",
+		data : {data : cartList},
+		success(response) {
+			const modal = `
+				<div class="modal" tabindex="-1">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title">Modal title</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <p>Modal body text goes here.</p>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary">Save changes</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>`;
+		},
+		error : console.log
+	})
+}
+
+// 네비게이션
+const items = document.querySelectorAll('.direct-detail-nav-item');
+
+function handleIndicator(el) {
+  items.forEach(item => {
+    item.classList.remove('is-active');
+    item.removeAttribute('style');
   });
-</script>
+ 
+  el.classList.add('is-active');
+  el.style.color = '#FF7F3F';
+  el.style.backgroundColor = '#fff';
+  el.style.fontWeight = 'bold';
+};
 
+
+items.forEach((item, index) => {
+  item.addEventListener('click', (e) => { handleIndicator(e.target)});
+  item.classList.contains('is-active') && handleIndicator(item);
+});
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
