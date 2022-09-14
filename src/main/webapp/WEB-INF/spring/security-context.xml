@@ -30,6 +30,8 @@
 		<intercept-url pattern="/member/**" access="permitAll"/><!-- 회원가입 페이지 설정 후 수정할것 -->
 		<intercept-url pattern="/direct/directProductDetail.do" access="permitAll"/>
 		<intercept-url pattern="/subscribe/subscribeMain.do" access="permitAll"/>
+		<intercept-url pattern="/subscribe/subscribeReviewList.do" access="permitAll"/>
+		<intercept-url pattern="/subscribe/subscribeReviewDetail.do" access="permitAll"/>
 		<intercept-url pattern="/faq/**" access="permitAll"/>
 		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>

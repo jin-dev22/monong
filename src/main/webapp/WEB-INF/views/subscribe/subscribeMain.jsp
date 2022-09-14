@@ -120,11 +120,13 @@
 	    		<span class="modal-s-review-recommend-num"></span>
 	    		<span class="modal-s-review-recommend-content">명의 회원이 추천한 리뷰입니다.</span>
 	    	</div>
-	    	<c:if test="${loginMember.memberId ne null}">
-				<div class="modal-s-review-recommend" onclick="sReviewRecommend();">
-		    		<input type="button" class="btn-s-review-recommend" value="👍추천하기" />
-		    	</div>
-		    </c:if>
+	    	<sec:authorize access="isAuthenticated()">
+		    	<c:if test="${loginMember.memberId ne null}">
+					<div class="modal-s-review-recommend" onclick="sReviewRecommend();">
+			    		<input type="button" class="btn-s-review-recommend" value="👍추천하기" />
+			    	</div>
+			    </c:if>
+	    	</sec:authorize>
 		    </div>
 	    </div>
       </div>
