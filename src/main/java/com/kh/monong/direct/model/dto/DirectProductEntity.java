@@ -25,4 +25,5 @@ public class DirectProductEntity {
 	private LocalDateTime dProductCreatedAt;
 	private LocalDateTime dProductUpdatedAt;
 	private int dDefaultPrice;
+	private int dDeliveryFee;
 }
