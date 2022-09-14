@@ -3,6 +3,7 @@ package com.kh.monong.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -15,6 +16,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 @Mapper
 public interface MemberDao {
@@ -102,7 +105,15 @@ public interface MemberDao {
 
 	int getTotalSellerEnrollByMonth();
 	
-	
+	SubscriptionOrderEx selectSubById(String memberId);
+
+	SubscriptionOrderEx selectRecentSubById(String memberId);
+
+	@Select("select * from subscription_product where s_product_code = #{pCode}")
+	SubscriptionProduct selectRecentSubProduct(String pCode);
+
+	@Delete("delete from member where member_id = #{memberId}")
+	int deleteSeller(String memberId);
 	//------------------------수아 끝
 
 	

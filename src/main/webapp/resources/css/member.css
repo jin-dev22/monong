@@ -122,7 +122,26 @@ form[name="memberUpdateFrm"] input:focus{
 }
 
 
-
+/*회원 마이페이지*/
+div#mypage-subcribe-container{
+	padding: 50px 70px;
+	border: 3px solid #116530;
+	border-radius: 25px;
+	margin: 30px 130px;
+}
+div#mypage-subcribe-container img{
+	width: 300px;
+	height: 260px;
+}
+nav#member-mypage-nav h5>a{
+	color: EA5C2B;
+}
+nav#member-mypage-nav h5>a:hover{
+	color: 116530;
+}
+nav#member-mypage-nav h2{
+	margin-right: 380px;
+}
 
 
 

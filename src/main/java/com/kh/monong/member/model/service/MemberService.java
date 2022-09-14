@@ -5,10 +5,11 @@ import java.util.Map;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.member.model.dto.Member;
-import com.kh.monong.member.model.dto.MemberEntity;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 public interface MemberService {
 //-----------수진시작
@@ -75,6 +76,13 @@ public interface MemberService {
 
 	int getTotalSellerEnrollByMonth();
 	
+	SubscriptionOrderEx selectSubById(String memberId);
+
+	SubscriptionOrderEx selectRecentSubById(String memberId);
+
+	SubscriptionProduct selectRecentSubProduct(String pCode);
+
+	int deleteSeller(String memberId);
 //-----------수아 끝
 
 
