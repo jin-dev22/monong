@@ -27,12 +27,12 @@
 			</c:if>
 			<div class="row mb-3 col-md-13 justify-content-center">
 				<div class="col-sm-9">
-					<input type="text" name="memberId" class="form-control" id="loginMemberIdInput" placeholder="아이디를 입력해주세요"/>
+					<input type="text" name="memberId" class="form-control" id="loginMemberIdInput" placeholder="아이디를 입력해주세요" required/>
 				</div>
 			</div>
 			<div class="row mb-3 col-md-13 justify-content-center">
 				<div class="col-sm-9">
-					<input type="password" name="memberPassword" class="form-control" id="loginMemberPwInput" placeholder="비밀번호를 입력해주세요"/>
+					<input type="password" name="memberPassword" class="form-control" id="loginMemberPwInput" placeholder="비밀번호를 입력해주세요" required/>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -51,5 +51,4 @@
 			
 		</div>
 	</div>
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

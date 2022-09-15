@@ -3,7 +3,23 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.monong.direct.model.dao.DirectDao">
-  
+<!-- 재경 시작 -->
+<!-- 상품 등록 -->
+<insert id = "directProductEnroll">
+insert into
+	direct_product
+values
+	('DP' || seq_d_product_no.nextval,
+  	#{memberId},
+  	#{dProductName},
+  	#{dProductContent},
+  	default,
+  	default,
+  	#{dPrice},
+  	#{dDeliveryFee})
+</insert>
+<!-- 재경 끝 -->
+<!-- 민지 시작 -->
   <select id="selectOneDirectProductCollection" resultMap="directProductMap">
   	select
 	    dp.*,
@@ -53,5 +69,5 @@
   		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
   	</collection>
   </resultMap>
-  
+<!-- 민지 끝 -->
 </mapper>

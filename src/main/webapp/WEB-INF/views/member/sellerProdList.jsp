@@ -7,35 +7,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
-<style>
-	div#prodList-container{
-		max-width: 900px;
-		margin: 0 auto;
-	}
-
-	.prod-container{
-		display: flex;
-		align-items: center;
-		border: 1px solid black;
-		border-radius: 15px; 
-		margin: 20px 0;
-		height: 150px;
-	};
-	div.prod-container-column{
-		display: inline-block;
-		width: 150px; 
-	}
-	
-	div.prod-col-1{
-		margin-left: 30px;
-	}
-	
-	div.prod-col-2{
-		margin: 0 50px;
-		width: 50%;
-		padding-left: 30px; 
-	}
-</style>
 <div id="prodList-container">
 	<form name="directProdFilterFrm" action="${pageContext.request.contextPath}/member/sellerProdList.do" method="GET">
 		<select name="dSaleStatus" id="direct-saleStatus" onchange="this.form.submit()">

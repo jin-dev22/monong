@@ -48,6 +48,7 @@ public class MemberSecurityService implements UserDetailsService {
 					.memberIdentified(member.getMemberIdentified())
 					.authorities(selectSellerAuthorities(member.getMemberId()))
 					.sellerInfo(memberSecurityDao.selectSellerInfo(member.getMemberId()))
+					.attachment(memberSecurityDao.selectSellerInfoAttachments(member.getMemberId()))
 					.build();
 			log.debug("seller = {}", seller);
 			return seller;
