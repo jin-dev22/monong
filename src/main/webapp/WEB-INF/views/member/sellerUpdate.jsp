@@ -12,6 +12,7 @@
 	<jsp:param name="title" value="모농모농-회원정보수정"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
 	.sellerUpdate-fitInput{
 		width: 100%;
@@ -142,7 +143,8 @@
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
 				<label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label> 
-				<input type="file" name="sellerRegFile" class="sellerUpdate-fitInput" id="sellerRegFile" required /> 
+				<input type="file" name="sellerRegFile" class="sellerUpdate-fitInput" id="sellerRegFile" /> 
+				<span class="invalid-feedback" style="display: block;">파일 업로드시 기존 파일은 자동으로 삭제돼요!</span>
 				<label for="sellerUpdate-btn-download">기존파일</label>
 				<div id="sellerUpdate-attachUpdate-container">
 					<input type="button" class="btn btn-outline-success" id="sellerUpdate-btn-download"
@@ -157,7 +159,19 @@
 				</div>
 			</div>
 		</div>
-
+	<script>
+	//삭제 체크시 파일업로드 required처리
+	document.querySelector("#delFile").addEventListener('change',(e)=>{
+		const upload = document.querySelector("#sellerRegFile");
+		if(e.target.checked){
+			upload.required = true;
+		}
+		else{
+			upload.required = false;
+		}
+		
+	});
+	</script>
 
 		<sec:csrfInput />
 		<br />
