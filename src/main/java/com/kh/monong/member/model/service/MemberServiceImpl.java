@@ -132,6 +132,32 @@ public class MemberServiceImpl implements MemberService {
 	public int updateDOrderStatus(Map<String, Object> param) {
 		return memberDao.updateDOrderStatus(param);
 	}
+	
+	@Override
+	public SellerInfoAttachment selectSellerInfoAttachment(long no) {
+		return memberDao.selectSellerInfoAttachment(no);
+	}
+	
+	@Override
+	public int updateSeller(Seller seller) {
+		int result = updateMember(seller);
+		result = updateSellerInfo(seller.getSellerInfo());
+		if(seller.getAttachment() != null) {
+			result = insertSellerInfoAttachment(seller.getAttachment());
+		}
+		return result;
+	}
+	
+
+	private int updateSellerInfo(SellerInfo sellerInfo) {
+		return memberDao.updateSellerInfo(sellerInfo);
+	}
+	
+	
+	@Override
+	public int deleteSellerAttachment(long delFileNo) {
+		return memberDao.deleteSellerAttachment(delFileNo);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

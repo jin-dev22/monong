@@ -12,10 +12,16 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +38,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -70,6 +77,9 @@ public class MemberController {
 	
 	@Autowired
 	ServletContext application;
+	
+	@Autowired
+	ResourceLoader resourceLoader;
 	
 	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {		
@@ -135,10 +145,10 @@ public class MemberController {
 	@PostMapping("/sellerEnroll.do")
 	public String sellerEnroll(
 			Seller seller,
-			String sellerName,
-			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
+			@RequestParam String sellerName,
+			@RequestParam String sellerRegNo, 
 			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-			RedirectAttributes redirectAttr) throws IllegalStateException, IOException {
+			RedirectAttributes redirectAttr) throws Exception {
 	
 		log.debug("member = {}", seller);
 		log.debug("regNo = {}", sellerRegNo);
@@ -162,20 +172,15 @@ public class MemberController {
 			memberAuthMap.put("memberAuth", "ROLE_SELLER");
 			
 			//사업자등록증 서버컴퓨터 저장
-			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
-			log.debug("saveDirectory = {}",saveDirectory);
-			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
-			File destFile = new File(saveDirectory, renamedFilename);
-			log.debug("destFile = {}",destFile);
-			sellerRegFile.transferTo(destFile);
+			String renamedFilename = fileSaver("/resources/upload/sellerRegFiles", sellerRegFile.getOriginalFilename(), sellerRegFile);
 			
+			
+			//판매자정보 저장
 			seller.setAttachment(SellerInfoAttachment.builder()
 					.memberId(seller.getMemberId())
 					.originalFilename(sellerRegFile.getOriginalFilename())
 					.renamedFilename(renamedFilename)
 					.build());	
-			
-			//판매자정보 저장
 			log.debug("seller = {}", seller);
 			int result = memberService.insertSeller(memberAuthMap, seller);
 			
@@ -186,6 +191,27 @@ public class MemberController {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	/**
+	 * @param directoryPath 저장경로 문자열
+	 * @param originalFilename 파일원래이름
+	 * @param sellerRegFile 파일
+	 * @return renamedFilename 파일저장이름
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	public String fileSaver(String directoryPath, String originalFilename, 
+			MultipartFile sellerRegFile) throws IllegalStateException, IOException {
+		
+		String saveDirectory = application.getRealPath(directoryPath);
+		log.debug("saveDirectory = {}",saveDirectory);
+		String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+		File destFile = new File(saveDirectory, renamedFilename);
+		log.debug("destFile = {}",destFile);
+		sellerRegFile.transferTo(destFile);
+		
+		return renamedFilename;
 	}
 	
 	@PostMapping("/sendEmailKey.do")
@@ -340,44 +366,88 @@ public class MemberController {
 	}
 	@PostMapping("/sellerUpdate.do")
 	public String sellrUpdate(@ModelAttribute Seller seller, 
+							 @RequestParam String sellerName,
+							 @RequestParam String sellerRegNo, 
 							 RedirectAttributes redirectAttr,
-							 Model model) {
+							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
+							// @RequestParam(required = false) long delFileNo,
+							 Model model) throws Exception {
+		seller.setSellerInfo(SellerInfo.builder()
+									.memberId(seller.getMemberId())
+									.sellerRegNo(sellerRegNo)
+									.sellerName(sellerName)
+									.build());
 		log.debug("seller = {}", seller);
-//		int result = memberService.updateSeller(seller);
-//		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
-//		
-//		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
-//				updatedMember,
-//				updatedMember.getPassword(),
-//				updatedMember.getAuthorities()
-//				);
-//		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
-//		log.debug("member={}", updatedMember);
+		
+		int result = 0;
+		if(!sellerRegFile.isEmpty()) {// && delFileNo != 0) {
+			try {
+			String directory = "/resources/upload/sellerRegFiles";
+			String saveDirectory = application.getRealPath(directory);
+			log.debug("sellerRegFile = {}",sellerRegFile);
+			//첨부파일 삭제
+//			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+//			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+//			boolean isDeleted = delFile.delete();
+//			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+			
+			//업로드파일 저장, db행 삭제
+			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
+			log.debug("renamedFilename!!!!!!!!!!!! = {}",renamedFilename);
+//			if(isDeleted) {
+//				result = memberService.deleteSellerAttachment(delFileNo);//
+//				log.debug("isDel in DB? = {}", result>0);	
+//			}
+			
+			//seller에 attachment설정
+			seller.setAttachment(SellerInfoAttachment.builder()
+					.memberId(seller.getMemberId())
+					.originalFilename(sellerRegFile.getOriginalFilename())
+					.renamedFilename(renamedFilename)
+					.build());
+			log.debug("seller = {}", seller);
+			} catch (Exception e) {
+				log.error("판매자 정보수정 첨부파일오류 : " + e.getMessage(), e);
+				throw e;
+			}
+		}
+		
+		//판매자 정보 변경		
+		result = memberService.updateSeller(seller);
+		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
+		
+		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
+				updatedMember,
+				updatedMember.getPassword(),
+				updatedMember.getAuthorities()
+				);
+		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
+		log.debug("member={}", updatedMember);
 		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
 		return "redirect:/member/sellerUpdate.do";
 		
 	}
 	
-//	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-//	@ResponseBody
-//	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
-//		SellerInfoAttachment attach = memberService.selectOneSellerInfoAttachment(no);
-//		log.debug("attach = {}", attach);
-//		
-//		String saveDirectory = application.getRealPath("/resources/upload/board");
-//		File downFile = new File(saveDirectory, attach.getRenamedFilename());
-//		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
-//		Resource resource = resourceLoader.getResource(location);
-//		log.debug("resource = {}", resource);
-//		log.debug("resource#file = {}", resource.getFile());
-//		
-//		// 응답헤더 작성
-//		response.setContentType("application/octet-stream; charset=utf-8");
-//		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
-//		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
-//		
-//		return resource;
-//	}
+	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
+		SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(no);
+		log.debug("attach = {}", attach);
+		
+		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		File downFile = new File(saveDirectory, attach.getRenamedFilename());
+		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
+		Resource resource = resourceLoader.getResource(location);
+		log.debug("resource = {}", resource);
+		log.debug("resource#file = {}", resource.getFile());
+		
+		// 응답헤더 작성
+		response.setContentType("application/octet-stream; charset=utf-8");
+		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+		
+		return resource;
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")

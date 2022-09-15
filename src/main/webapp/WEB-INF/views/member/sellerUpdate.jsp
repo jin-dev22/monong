@@ -1,4 +1,4 @@
-<%@page import="com.kh.monong.member.model.dto.Member"%>
+<%@page import="com.kh.monong.member.model.dto.Seller"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -42,10 +42,7 @@
 			<h5>비밀번호 변경</h5>
 		</a>
 	</nav>
-	<form name="memberUpdateFrm" id="memberUpdateFrm"
-		action="${pageContext.request.contextPath}/member/sellerUpdate.do"
-		method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
-		
+	<form name="memberUpdateFrm" id="memberUpdateFrm" action="${pageContext.request.contextPath}/member/sellerUpdate.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
 				<label for="memberId">아이디</label> 
@@ -57,7 +54,7 @@
 			<div class="col-sm-9">
 				<label for="name">업체명<span class="enroll-form-required">*</span></label>
 				<input type="text" name="memberName" class="form-control" id="memberName"
-					value="<sec:authentication property="principal.memberName"/>" required>
+					value="<sec:authentication property='principal.memberName'/>" required>
 			</div>
 		</div>
 
@@ -65,7 +62,7 @@
 			<div class="col-sm-9">
 				<label for="name">대표자명<span class="enroll-form-required">*</span></label>
 				<input type="text" name="sellerName" class="form-control" id="sellerName"
-					value="<sec:authentication property="principal.sellerInfo.sellerName"/>" required>
+					value="<sec:authentication property='principal.sellerInfo.sellerName'/>" required>
 			</div>
 		</div>
 
@@ -126,7 +123,7 @@
 				<label for="birthday">사업개시일<span class="enroll-form-required">*</span></label> 
 				<input type="date" name="memberBirthday" class="form-control" id="birthday" 
 					placeholder="사업개시일" 
-					value='<sec:authentication property="principal.memberBirthday"/>' />
+					value='<sec:authentication property="principal.memberBirthday"/>' required/>
 			</div>
 		</div>
 
@@ -145,6 +142,7 @@
 				<label for="sellerRegFile">사업자등록증<span class="enroll-form-required">*</span></label> 
 				<input type="file" name="sellerRegFile" class="sellerUpdate-fitInput" id="sellerRegFile" /> 
 				<span class="invalid-feedback" style="display: block;">파일 업로드시 기존 파일은 자동으로 삭제돼요!</span>
+				
 				<label for="sellerUpdate-btn-download">기존파일</label>
 				<div id="sellerUpdate-attachUpdate-container">
 					<input type="button" class="btn btn-outline-success" id="sellerUpdate-btn-download"
@@ -152,27 +150,13 @@
 						value="<sec:authentication property='principal.attachment.originalFilename'/>" />
 					&nbsp;&nbsp; 
 					<label class="btn btn-outline-danger" title="삭제"> 
-						<input type="checkbox" name="delFile" class="btn btn-outline-danger" id="delFile"
+						<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
 							value="<sec:authentication property='principal.attachment.sellerAttachNo'/>">
 						삭제
 					</label>
 				</div>
 			</div>
 		</div>
-	<script>
-	//삭제 체크시 파일업로드 required처리
-	document.querySelector("#delFile").addEventListener('change',(e)=>{
-		const upload = document.querySelector("#sellerRegFile");
-		if(e.target.checked){
-			upload.required = true;
-		}
-		else{
-			upload.required = false;
-		}
-		
-	});
-	</script>
-
 		<sec:csrfInput />
 		<br />
 		<div class="mb-3 text-center sellerUpdate-submitBtn-container">
@@ -182,6 +166,30 @@
 	</form>
 </div>
 <script>
+//삭제 체크시 파일업로드 required처리
+document.querySelector("#delFileNo").addEventListener('change',(e)=>{
+	const upload = document.querySelector("#sellerRegFile");
+	if(e.target.checked){
+		upload.required = true;
+	}
+	else{
+		upload.required = false;
+	}
+	
+});
+//파일 업로드 & 삭제 체크 안한 경우 자동 체크처리 후 submit
+document.memberUpdateFrm.addEventListener('submit', (e)=>{
+	e.preventDefault();
+	const delFileNo = document.querySelector("#delFileNo");
+	const newFile = document.querySelector("#sellerRegFile");
+	console.log(delFileNo, newFile.value);
+	if(newFile){
+		delFileNo.checked = true;
+		console.log('checked!!');
+	}
+	e.target.submit();
+});
+
 const emailValid = document.querySelector("#emailValid");
 const emailKeyValid = document.querySelector("#emailKeyValid");
 
