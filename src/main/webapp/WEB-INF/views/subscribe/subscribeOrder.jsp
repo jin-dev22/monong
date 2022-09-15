@@ -90,7 +90,8 @@
 				<input type="button" id="researchButton" value="검색" class="btn btn-EA5C2B"><br/>
 				<span class="sAddressCheck error">받으실 주소를 입력해주세요.</span><br />
 				<label for="sAddressEx">상세주소</label><br/>
-				<input type="text" id="sAddressEx" name="sAddressEx" value="<sec:authentication property="principal.memberAddressEx"/>" required /><br/>
+				<input type="text" id="sAddressEx" name="sAddressEx"
+					value="<c:if test=""></c:if>" required /><br/>
 				<label for="sDeliveryRequest">배송 요청사항(선택)</label><br/>
 				<input type="text" id="sDeliveryRequest" name="sDeliveryRequest" value="">
 			</div>
@@ -116,16 +117,29 @@
 				<input type="hidden" name="customerUid" value="" />
 				<p>결제 수단</p>
 				<div class="s-card">
-					<input type="radio" name="s-card" id="s-card" checked>
-					<label for="s-card">
-						<img src="${pageContext.request.contextPath}/resources/images/card.png" alt="카드 이미지" id="card"><span>카드</span>
-					</label>
+					<div class="payCheck">
+						<label for="s-card-kg">
+							<img src="${pageContext.request.contextPath}/resources/images/card.png" alt="일반결제 이미지" id="card"><span>일반결제</span>
+						</label>
+						<input type="radio" name="s-card" id="s-card-kg" value="kg" checked>
+					</div>
+					<div>
+						<label for="s-card-kakao">
+							<img src="${pageContext.request.contextPath}/resources/images/kakaopay.png" alt="카카오페이 이미지" id="card"><span>카카오페이</span>
+						</label>
+						<input type="radio" name="s-card" id="s-card-kakao" value="kakaoPay">
+					</div>
 				</div>
 			</div>
 			<div class="s-order-totle-price">
 				<span>총 결제 금액</span>
 				<span class="s-cycle">${sDeliveryCycle}주</span>
 				<span class="s-price"><fmt:formatNumber value="${sPrice}" type="number" pattern="#,###" /></span><span>원</span>
+			</div>
+			<div class="sPaymentDate">
+				<span>※결제 예정일: </span>
+				<input type="text" name="sPaymentDate" value=""/>
+				<span>(수)</span>
 			</div>
 			<div class="privacyAgree">
 				<p>주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</p>
@@ -170,18 +184,49 @@
 <script>
 window.addEventListener('load', () => {
 	const today = new Date();
-	deliveryDate(today);
+	deliveryDateFri(today);
+	paymentDateWed(today);
 });
-// 다음배송일
-const deliveryDate = function(today){
+// 결제예정일 - 수요일 고정
+const paymentDateWed = function(today){
+	const paymentDate = document.querySelector("[name=sPaymentDate]");
+	const WEDNESDAY_NUM = 3; // 수요일 결제이므로, 목요일부터는 다음주 수요일 결제
+	const todayDay = today.getDay();
+	
+	let yy = today.getFullYear().toString();
+	let month = today.getMonth() + 1;
+	let date = today.getDate();
+	
+	if(todayDay <= WEDNESDAY_NUM){ // 0 1 2 3 일 월 화 수 -> 금주 수요일
+		switch(todayDay){
+		case 0 : date = today.getDate() + 3; break;
+		case 1 : date = today.getDate() + 2; break;
+		case 2 : date = today.getDate() + 1; break;
+		case 3 : date = today.getDate(); break;
+		}
+	}
+	if(todayDay >= WEDNESDAY_NUM){ // 4 5 6 목 금 토 -> 다음주 수요일
+		switch(todayDay){
+		case 4 : date = today.getDate() + 6; break;
+		case 5 : date = today.getDate() + 5; break;
+		case 6 : date = today.getDate() + 4; break;
+		}
+	}
+	
+	const pDay = findLastDay(yy, month, date); // 이번달 말일 28, 29, 30, 31
+	paymentDate.value = pDay;
+};
+
+// 다음배송일 - 금요일 고정
+const deliveryDateFri = function(today){
 	const deliveryDate = document.querySelector("[name=sNextDeliveryDate]");
 	const THURSDAY_NUM = 4; // 수요일 결제이므로, 목요일부터는 다음주 금요일날 발송
 	const todayDay = today.getDay();
 	
 	let yy = today.getFullYear().toString();
 	let month = today.getMonth() + 1;
-	month = month < 10 && '0' + month;
 	let date = today.getDate();
+	
 	if(todayDay < THURSDAY_NUM){ // 0 1 2 3 일 월 화 수 -> 금주 금요일
 		switch(todayDay){
 		case 0 : date = today.getDate() + 5; break;
@@ -197,8 +242,29 @@ const deliveryDate = function(today){
 		case 6 : date = today.getDate() + 6; break;
 		}
 	}
+	
+	const dDate = findLastDay(yy, month, date); // 이번달 말일 28, 29, 30, 31
+	deliveryDate.value = dDate;
+};
+
+// 말일 계산
+function findLastDay(yy, month, date){
+	const lastDay = new Date(yy, month, 0).getDate();
+	if(lastDay >= 28){ // 이번달 말일이 28, 29(윤달), 30, 31일인데
+		if(date > lastDay){ // 예정일이 lastDay보다 클 경우
+			month += 1; // 다음달로 수정 후
+			date = date - lastDay; // 일자도 수정
+		}
+	}
+	if(month > 12){ // 12월이었다면 13월이 되기때문에 내년으로 변경 
+		yy = Number(yy) + 1;
+		month -= 12;
+	}
+	
+	month = month < 10 ? '0' + month : month;
 	date = date < 10 ? '0' + date : date;
-	deliveryDate.value = yy + "-" + month + "-" + date;
+	
+	return yy + "-" + month + "-" + date;
 };
 
 // 제공 동의 여부 확인
@@ -224,11 +290,14 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 	// 주문번호 및 고객고유번호 insert
 	document.querySelector("#requestPay").addEventListener('click', function requestPay(){
 		const frm = document.subscribeOrderFrm;
-		let merchantUid = sOrderNoMaker(); // 상점에서 관리하는 주문 번호로 정기결제 사용(중복x)
+		// 미사용?
+//		let merchantUid = sOrderNoMaker(); // 상점에서 관리하는 주문 번호로 정기결제 사용(중복x)
 		let sNo = sNoMaker(); // 구독번호, 고유번호로 변경x
+		let pg = document.querySelector("[name=s-card]:checked").value;
 		
 		let productName = '정기구독 ' + frm.sProductName.value;
-		let amount = frm.sPrice.value.replace(/[^0-9]/g, "");
+		// 미사용?
+//		let amount = frm.sPrice.value.replace(/[^0-9]/g, "");
 		let customerUid = frm.memberId.value + randomMaker(5);
 		let memberName = frm.sRecipient.value;
 		let memberTel = frm.sPhone.value;
@@ -240,8 +309,16 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 	    var IMP = window.IMP; // 생략 가능
 	    IMP.init("imp46723363");
 	    
+	    // 일반 결제 선택 시 kg, 카카오페이 선택 시 kakao
+	    if(pg == 'kg'){
+	    	pg = 'html5_inicis.INIBillTst'; // kg이니시스
+	    }
+	    if(pg == 'kakaoPay'){
+	    	pg = 'kakaopay.TCSUBSCRIP'; // 카카오페이
+	    }
+	    console.log(pg);
 		IMP.request_pay({
-			pg: 'html5_inicis.INIBillTst', // KG이니시스
+			pg: pg,
 			pay_method: "card",
 			name : productName, // 상품명
 			amount : 0, // 빌링키 발급을 위한 0
@@ -256,25 +333,26 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 				customerUid = rsp.customer_uid;
 				console.log('cardNo = ', cardNo); // 화인용
 				console.log('customerUid = ', customerUid); // 화인용
+				// 1. 카드 정보 저장
 	 			$.ajax({
 					url: `${pageContext.request.contextPath}/subscribe/insertCardInfo.do`,
 					method: "POST",
 					data: {
 						cardNo,
 						customerUid,
-						amount,
-						memberName,
-						merchantUid,
 						[csrfName]: csrfHash // csrf값 전달
 					},
 					success(response){
-	//					console.log('response : ', response);
+						// 2. 구독 테이블에 저장
+						console.log('response : ', response);
+						return;
 						frm.sNo.value = sNo;
 						frm.sOrderNo.value = merchantUid;
 						frm.customerUid.value = customerUid;
 						frm.sPrice.value = sPrice;
 						frm.sDeliveryRequest.value = frm.sDeliveryRequest.value;
 						frm.submit();
+						alert('첫 구독 성공!');
 					},
 					error(){
 						console.log();	
@@ -283,6 +361,7 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 			} else {
 				alert('결제에 실패했습니다. 다시 시도해주세요');
 				console.log("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+				$('#checkModal').modal('hide');
 			}
 		});
 	});
