@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,6 +76,9 @@ public class MemberController {
 	
 	@Autowired
 	ServletContext application;
+	
+	@Autowired
+	ResourceLoader resourceLoader;
 	
 	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {		
@@ -167,12 +171,12 @@ public class MemberController {
 			memberAuthMap.put("memberAuth", "ROLE_SELLER");
 			
 			//사업자등록증 서버컴퓨터 저장
-			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
-			log.debug("saveDirectory = {}",saveDirectory);
-			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
-			File destFile = new File(saveDirectory, renamedFilename);
-			log.debug("destFile = {}",destFile);
-			sellerRegFile.transferTo(destFile);
+//			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+//			log.debug("saveDirectory = {}",saveDirectory);
+			String renamedFilename = fileSaver("/resources/upload/sellerRegFiles", sellerRegFile.getOriginalFilename(), sellerRegFile);
+//			File destFile = new File(saveDirectory, renamedFilename);
+//			log.debug("destFile = {}",destFile);
+//			sellerRegFile.transferTo(destFile);
 			
 			seller.setAttachment(SellerInfoAttachment.builder()
 					.memberId(seller.getMemberId())
@@ -191,6 +195,27 @@ public class MemberController {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	/**
+	 * @param directoryPath 저장경로 문자열
+	 * @param originalFilename 파일원래이름
+	 * @param sellerRegFile 파일
+	 * @return renamedFilename 파일저장이름
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	public String fileSaver(String directoryPath, String originalFilename, 
+			MultipartFile sellerRegFile) throws IllegalStateException, IOException {
+		
+		String saveDirectory = application.getRealPath(directoryPath);
+		log.debug("saveDirectory = {}",saveDirectory);
+		String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+		File destFile = new File(saveDirectory, renamedFilename);
+		log.debug("destFile = {}",destFile);
+		sellerRegFile.transferTo(destFile);
+		
+		return renamedFilename;
 	}
 	
 	@PostMapping("/sendEmailKey.do")
@@ -363,26 +388,26 @@ public class MemberController {
 		
 	}
 	
-//	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-//	@ResponseBody
-//	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
-//		SellerInfoAttachment attach = memberService.selectOneSellerInfoAttachment(no);
-//		log.debug("attach = {}", attach);
-//		
-//		String saveDirectory = application.getRealPath("/resources/upload/board");
-//		File downFile = new File(saveDirectory, attach.getRenamedFilename());
-//		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
-//		Resource resource = resourceLoader.getResource(location);
-//		log.debug("resource = {}", resource);
-//		log.debug("resource#file = {}", resource.getFile());
-//		
-//		// 응답헤더 작성
-//		response.setContentType("application/octet-stream; charset=utf-8");
-//		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
-//		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
-//		
-//		return resource;
-//	}
+	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
+		SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(no);
+		log.debug("attach = {}", attach);
+		
+		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		File downFile = new File(saveDirectory, attach.getRenamedFilename());
+		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
+		Resource resource = resourceLoader.getResource(location);
+		log.debug("resource = {}", resource);
+		log.debug("resource#file = {}", resource.getFile());
+		
+		// 응답헤더 작성
+		response.setContentType("application/octet-stream; charset=utf-8");
+		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+		
+		return resource;
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")

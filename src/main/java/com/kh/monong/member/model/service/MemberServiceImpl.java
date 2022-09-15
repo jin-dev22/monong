@@ -132,6 +132,11 @@ public class MemberServiceImpl implements MemberService {
 	public int updateDOrderStatus(Map<String, Object> param) {
 		return memberDao.updateDOrderStatus(param);
 	}
+	
+	@Override
+	public SellerInfoAttachment selectSellerInfoAttachment(int no) {
+		return memberDao.selectSellerInfoAttachment(no);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

@@ -48,6 +48,8 @@ public interface MemberService {
 	String selectProdNameByNo(String prodNo);
 
 	int updateDOrderStatus(Map<String, Object> param);
+	
+	SellerInfoAttachment selectSellerInfoAttachment(int no);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
