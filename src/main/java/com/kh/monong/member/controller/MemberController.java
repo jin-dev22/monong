@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
@@ -689,12 +690,12 @@ public class MemberController {
 	@GetMapping("/memberOrderList.do")
 	public void memberOrderList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubOrder={}",recentSubOrder);
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -702,11 +703,12 @@ public class MemberController {
 	@GetMapping("/memberReviewList.do")
 	public void memberReviewList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -714,11 +716,12 @@ public class MemberController {
 	@GetMapping("/memberDirectInquire.do")
 	public void memberDirectInquire(Authentication authentication, Model model){
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -726,11 +729,12 @@ public class MemberController {
 	@GetMapping("/memberInquireList.do")
 	public void memberInquireList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -750,10 +754,10 @@ public class MemberController {
 		model.addAttribute("vegetables", vegetables);
 		
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		String pCode = recentSubscription.getSProductCode();
 		SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-		model.addAttribute("recentSubOrder", recentSubOrder);
+		model.addAttribute("recentSubscription", recentSubscription);
 		model.addAttribute("recentSubProduct", recentSubProduct);
 		
 	}

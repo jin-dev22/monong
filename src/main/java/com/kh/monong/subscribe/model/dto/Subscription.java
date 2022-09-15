@@ -39,4 +39,6 @@ public class Subscription {
 	private String sDeliveryRequest; //배송요청사항
 	private int cardInfoNo; // 카드정보번호
 	private YN sQuitYn; // 구독취소여부(9/13 추가)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate sPaymentDate; // 결제예정일-수요일(9/15 추가)
 }

@@ -1,3 +1,20 @@
+// 결제방법 선택
+const selectPay = document.querySelectorAll("[name=s-card]");
+
+selectPay.forEach((pay) => {
+    pay.addEventListener('change', (e) => {
+ 		const payType = pay.value;
+ 		pay.parentElement.classList.add('payCheck');
+ 		
+        selectPay.forEach((nopPay) => {
+            if(payType != nopPay.value){
+            	nopPay.parentElement.classList.remove('payCheck');
+            }
+        });
+    });
+});
+
+
 //주소 유효성 검사
 document.querySelector("#sAddress").addEventListener('input', (e) => {
 	const sAddress = e.target;

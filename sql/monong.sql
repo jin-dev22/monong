@@ -184,6 +184,8 @@ alter table subscription add constraint ck_s_s_delay_yn check(s_delay_yn in ('Y'
 -- 정기구독 취소여부 컬럼 추가 9/13
 alter table subscription add s_quit_yn varchar2(1) default 'N';
 alter table subscription add constraint ck_s_s_quit_yn check(s_quit_yn in ('Y', 'N'));
+-- 결제예정일 컬럼 추가 9/15
+alter table subscription add s_payment_date date;
 
 CREATE TABLE subscription_order (
 	s_order_no	varchar2(100)		NOT NULL,
@@ -194,10 +196,25 @@ CREATE TABLE subscription_order (
 	s_order_status	varchar2(20)		NOT NULL
 );
 ALTER TABLE subscription_order ADD CONSTRAINT fk_s_o_s_no FOREIGN KEY (s_no)REFERENCES subscription (s_no);
--- 9/11 제약조건 default 추가
+-- 제약조건 default 추가 9/11
 alter table subscription_order modify s_order_status default '상품준비중';
 alter table subscription_order modify s_order_date default current_date;
 alter table subscription_order modify s_times default 1;
+-- 컬럼추가(기존 정보를 insert하기때문에 null로 진행) 9/15
+alter table subscription_order add so_card_info_no number;
+alter table subscription_order add so_product_code varchar2(6);
+alter table subscription_order add so_exclude_vegs varchar2(500);
+alter table subscription_order add so_delivery_cycle number;
+alter table subscription_order add so_delay_yn varchar2(1);
+alter table subscription_order add so_recipient varchar2(100);
+alter table subscription_order add so_phone varchar2(11);
+alter table subscription_order add so_address varchar2(100);
+alter table subscription_order add so_address_ex varchar2(100);
+alter table subscription_order add so_delivery_request varchar2(150);
+-- 컬럼명 변경 9/15
+alter table subscription_order add so_next_delivery_date date;
+alter table subscription_order rename column so_next_delivery_date TO so_delivery_date;
+
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,

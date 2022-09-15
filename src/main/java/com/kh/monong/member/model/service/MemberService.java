@@ -8,7 +8,7 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 public interface MemberService {
@@ -82,10 +82,8 @@ public interface MemberService {
 	int updateSellerStatus(String id);
 
 	int getTotalSellerEnrollByMonth();
-	
-	SubscriptionOrderEx selectSubById(String memberId);
 
-	SubscriptionOrderEx selectRecentSubById(String memberId);
+	Subscription selectRecentSubById(String memberId);
 
 	SubscriptionProduct selectRecentSubProduct(String pCode);
 
