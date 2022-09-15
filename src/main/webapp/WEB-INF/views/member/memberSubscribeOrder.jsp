@@ -1,3 +1,5 @@
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="com.kh.monong.subscribe.model.dto.Vegetables"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.List"%>
@@ -12,9 +14,14 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script defer src="${pageContext.request.contextPath}/resources/js/subscribeOrder.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sPlan.css">
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 <div class="s-form-container mx-auto">
-	<form:form name="subscribePlanUpdateFrm" method="post" action="${pageContext.request.contextPath}/member/memberSubscribeOrder.do">
+	<form:form name="subscribePlanUpdateFrm" method="post" action="${pageContext.request.contextPath}/member/memberSubscribeOrderUpdate.do">
+    <!-- 주문번호, 구독번호 -->
+    <input type="hidden" name="sNo" value="${recentSubOrder.subscription.SNo}" />
     <div class="s-form-part-container">
         <h2 class="s-form-part-title">상품 선택</h2>  
         <div class="s-products-container d-flex justify-content-between">
@@ -141,17 +148,106 @@
 	        </div>
         </div>
     </div>
-
-    <p>※ 구독 플랜은 결제예정일 전까지 언제든 변경하실 수 있습니다 :)</p>
     
-    <input type="submit" class="btn btn-EA5C2B btn-subscribe-apply" value="신청하기">
+    <div class="s-order-addr-info">
+			<h2 class="s-form-part-title">배송지 정보</h2>
+			<input type="hidden" name="memberId" value="<sec:authentication property="principal.memberId"/>" />
+			<div class="mypage-order-addr-info-content">
+				<label for="sRecipient">수령인</label><br />
+				<input type="text" id="sRecipient" name="sRecipient" value="${recentSubOrder.subscription.SRecipient}" required /><br/>
+				<span class="sRecipientCheck error">수령인을 입력해주세요.</span><br /><br />
+				<label for="sPhone">연락처</label><br />
+				<input type="text" id="sPhone" name="sPhone" value="${recentSubOrder.subscription.SPhone}" required /><br/>
+				<span class="sPhoneCheck error">연락처는 '-'없이 숫자만 입력해주세요.</span><br /><br />
+				<label for="sAddress">주소</label><br />
+				<input type="text" id="sAddress" name="sAddress" value="${recentSubOrder.subscription.SAddress}" required readonly />
+				<input type="button" id="researchButton" value="검색" class="btn btn-EA5C2B"><br />
+				<span class="sAddressCheck error">받으실 주소를 입력해주세요.</span><br /><br />
+				<label for="sAddressEx">상세주소</label><br />
+				<input type="text" id="sAddressEx" name="sAddressEx" value="${recentSubOrder.subscription.SAddressEx}" required /><br/><br />
+				<label for="sDeliveryRequest">배송 요청사항(선택)</label><br />
+				<input type="text" id="sDeliveryRequest" name="sDeliveryRequest" value="${recentSubOrder.subscription.SDeliveryRequest eq null ? '' : 'recentSubProduct.subscription.SDeliveryRequest'}">
+			</div>
+		</div>
+		
+	<div class="mypage-s-delay-container">
+		<h2 class="s-form-part-title">배송미루기</h2>
+		<span>배송 미루기는 일주일 단위로만 가능합니다.</span>
+		<div class="s-delay-check-container">
+			<h4>다음 배송일</h4><br />
+			<h3 id="nextDeliveryDate" class="pb-3">${recentSubOrder.subscription.SNextDeliveryDate}</h3>
+			<input type="hidden" name="sNextDeliveryDate" id="sNextDeliveryDate" value="${recentSubOrder.subscription.SNextDeliveryDate}" />
+			<input type="checkbox" name="sDelayYn" id="sDelayYn" value="" ${recentSubOrder.subscription.SDelayYn eq 'Y' ? checked : ''}/>
+			<label for="sDelayYn">배송미루기</label>
+		</div>
+	</div>
+    <p class="pt-5">※ 수요일 이후에 수정하시는 경우, 다음 배송부터 해당 플랜이 적용됩니다 :)</p>
+    
+    <input type="submit" class="btn btn-EA5C2B btn-subscribe-apply" value="수정하기">
     
 	</form:form>
 
 </div>
 
 
-<script>   
+<script> 
+const recentDate = "<c:out value='${recentSubOrder.subscription.SNextDeliveryDate}'/>";
+const recentCycle = "<c:out value='${recentSubOrder.subscription.SDeliveryCycle}'/>";
+const delayYn = document.querySelector("#sDelayYn");
+const deliveryDate = document.querySelector("#sNextDeliveryDate");
+
+const todayDate = Date.now();
+const cycles = document.querySelectorAll('input[type=radio][name="sDeliveryCycle"]');
+
+cycles.forEach(cycle => cycle.addEventListener('change', ()=> {
+	const recentFormatDate = new Date(recentDate);
+	let deliveryFormatDate = new Date(deliveryDate.value);
+	let year = deliveryFormatDate.getFullYear();
+	let month = deliveryFormatDate.getMonth() + 1;
+	month = month < 10 && '0' + month;
+	let date = deliveryFormatDate.getDate();
+	//변동없을 시(기존과 같은 것을 클릭), 다음배송일 그대로
+	if(recentCycle == cycle.value){
+		date = recentFormatDate.getDate();
+	}
+	
+	//변동했을 시, 수정 한 주기로 다음배송일 변경 
+	if(recentCycle != cycle.value){
+		switch(cycle.value){
+		case "1" : date = deliveryFormatDate.getDate() + 7; break;
+		case "2" : date = deliveryFormatDate.getDate() + 14; break;
+		case "3" : date = deliveryFormatDate.getDate() + 21; break;
+		}
+	}
+	
+	date = date < 10 ? '0' + date : date;
+	deliveryDate.value = year + "-" + month + "-" + date;
+}));
+
+
+delayYn.addEventListener('click', (e)=>{
+	if(delayYn.checked == true){
+		alert('다음 배송을 일주일 미루셨습니다.');
+		delayYn.value = 'Y';
+		const deliveryDate = document.querySelector("#sNextDeliveryDate").value;
+		recentFormatDate = new Date(+new Date(recentFormatDate) + 3240 * 10000).toISOString().split("T")[0];
+		deliveryDate.value = recentFormatDate;
+		$("#nextDeliveryDate").text(deliveryDate.value);
+	}
+	if(delayYn.checked == false){
+		alert('미루기를 취소하였습니다.');
+		recentFormatDate = year+"-"+month+"-"+date;
+		delayYn.value = 'N';
+		console.log(delayYn.value);
+		console.log(delayFormatDate);
+		recentFormatDate = new Date(+new Date(recentFormatDate) + 3240 * 10000).toISOString().split("T")[0];
+		deliveryDate.value = recentFormatDate;
+		$("#nextDeliveryDate").text(deliveryDate.value);
+	}
+	
+	
+});
+
 
 const products = document.querySelectorAll(".s-product-container");
 
@@ -221,7 +317,7 @@ vegs.forEach((veg)=>{
 });
 
 
-subscribePlanFrm.addEventListener('submit', (e) => {
+subscribePlanUpdateFrm.addEventListener('submit', (e) => {
 	const sExcludeVegsYn = document.querySelector("[name=sExcludeVegs]");
 	console.log(sExcludeVegsYn.checked);
 	console.log(excludeVegsCnt);
@@ -247,5 +343,7 @@ subscribePlanFrm.addEventListener('submit', (e) => {
 	}
 	
 });
+
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
