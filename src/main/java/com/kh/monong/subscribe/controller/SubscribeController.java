@@ -28,7 +28,6 @@ import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
@@ -83,7 +82,8 @@ public class SubscribeController {
 		map.put("amount", amount);
 		map.put("name", memberName);
 		
-		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
+		return null; // 수정중
+//		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
 	}
 	
 	@PostMapping("/subComplete.do")
