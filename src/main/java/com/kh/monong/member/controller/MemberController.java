@@ -172,20 +172,15 @@ public class MemberController {
 			memberAuthMap.put("memberAuth", "ROLE_SELLER");
 			
 			//사업자등록증 서버컴퓨터 저장
-//			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
-//			log.debug("saveDirectory = {}",saveDirectory);
 			String renamedFilename = fileSaver("/resources/upload/sellerRegFiles", sellerRegFile.getOriginalFilename(), sellerRegFile);
-//			File destFile = new File(saveDirectory, renamedFilename);
-//			log.debug("destFile = {}",destFile);
-//			sellerRegFile.transferTo(destFile);
 			
+			
+			//판매자정보 저장
 			seller.setAttachment(SellerInfoAttachment.builder()
 					.memberId(seller.getMemberId())
 					.originalFilename(sellerRegFile.getOriginalFilename())
 					.renamedFilename(renamedFilename)
 					.build());	
-			
-			//판매자정보 저장
 			log.debug("seller = {}", seller);
 			int result = memberService.insertSeller(memberAuthMap, seller);
 			
@@ -375,9 +370,8 @@ public class MemberController {
 							 @RequestParam String sellerRegNo, 
 							 RedirectAttributes redirectAttr,
 							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-							 @RequestParam(required = false) long delFileNo,
+							// @RequestParam(required = false) long delFileNo,
 							 Model model) throws Exception {
-		log.debug("seller = {}", seller);
 		seller.setSellerInfo(SellerInfo.builder()
 									.memberId(seller.getMemberId())
 									.sellerRegNo(sellerRegNo)
@@ -386,26 +380,24 @@ public class MemberController {
 		log.debug("seller = {}", seller);
 		
 		int result = 0;
-		if(!sellerRegFile.isEmpty() && delFileNo != 0) {
+		if(!sellerRegFile.isEmpty()) {// && delFileNo != 0) {
 			try {
-			String directory = "/resource/upload/sellerRegFiles";
+			String directory = "/resources/upload/sellerRegFiles";
 			String saveDirectory = application.getRealPath(directory);
-			
+			log.debug("sellerRegFile = {}",sellerRegFile);
 			//첨부파일 삭제
-			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
-			File delFile = new File(saveDirectory, attach.getRenamedFilename());
-			boolean isDeleted = delFile.delete();
-			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+//			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+//			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+//			boolean isDeleted = delFile.delete();
+//			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
 			
 			//업로드파일 저장, db행 삭제
 			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
-			
-//			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
-//			File destFile = new File(saveDirectory, renamedFilename);
-//			sellerRegFile.transferTo(destFile);
-			
-			result = memberService.deleteSellerAttachment(delFileNo);
-			log.debug("isDel in DB? = {}", result>0);	
+			log.debug("renamedFilename!!!!!!!!!!!! = {}",renamedFilename);
+//			if(isDeleted) {
+//				result = memberService.deleteSellerAttachment(delFileNo);//
+//				log.debug("isDel in DB? = {}", result>0);	
+//			}
 			
 			//seller에 attachment설정
 			seller.setAttachment(SellerInfoAttachment.builder()
@@ -415,7 +407,7 @@ public class MemberController {
 					.build());
 			log.debug("seller = {}", seller);
 			} catch (Exception e) {
-				log.error("판매자 정보수정 오류 : " + e.getMessage(), e);
+				log.error("판매자 정보수정 첨부파일오류 : " + e.getMessage(), e);
 				throw e;
 			}
 		}

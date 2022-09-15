@@ -142,7 +142,9 @@ public class MemberServiceImpl implements MemberService {
 	public int updateSeller(Seller seller) {
 		int result = updateMember(seller);
 		result = updateSellerInfo(seller.getSellerInfo());
-		result = updateSellerAttachment(seller.getAttachment());
+		if(seller.getAttachment() != null) {
+			result = insertSellerInfoAttachment(seller.getAttachment());
+		}
 		return result;
 	}
 	
@@ -151,9 +153,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateSellerInfo(sellerInfo);
 	}
 	
-	private int updateSellerAttachment(SellerInfoAttachment attach) {
-		return memberDao.updateSellerAttachment(attach);
-	}
 	
 	@Override
 	public int deleteSellerAttachment(long delFileNo) {
