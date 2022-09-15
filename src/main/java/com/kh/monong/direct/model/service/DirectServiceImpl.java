@@ -34,7 +34,7 @@ public class DirectServiceImpl implements DirectService {
 	
 	@Override
 	public List<DirectProductAttachment> selectDirectProductAttachmentList() {
-		return directDao.selectDirectProductAttachmentList(0);
+		return directDao.selectDirectProductAttachmentList();
 	}
 	@Override
 	public int getTotalContent() {

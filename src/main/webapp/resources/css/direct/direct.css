@@ -800,50 +800,8 @@
 /* 민지 끝 */
 
 /* 재경 시작 */
-/* 상품 등록 */
- div#enroll-container{
-    margin: 50px auto;
-    width: fit-content;
- }
-
- #enroll-container .enroll-info-btn{
-    margin-left: 15px;
- } 
- .enroll-info-container{
-    width: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 15px 0;
- }
- 
- .enroll-info-container textarea{
- 	width: 500px;
- 	margin-top: 30px;
- }
- 
- .enroll-info-label{
-    display: inline-block;
-    text-align: left;
-    width: 150px;
-    font-weight: bold;
- }
-
- .enroll-info{
-    display: flex;
-    align-items: center;
-    width: 300px;
- }
-
- .enroll-info input{
-    width: 200px;
- }
-
-.enroll-form-required{
-	color: red;
-}
-
 /* 상품 목록 */
+
 #moveToPage {
 	text-decoration: none;
 	color : black;

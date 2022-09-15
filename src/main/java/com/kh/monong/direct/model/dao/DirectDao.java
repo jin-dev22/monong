@@ -16,8 +16,8 @@ public interface DirectDao {
 	@Select("select d.*, (select count(*) from direct_product_attachment where d_product_no = d.d_product_no) attach_count from direct_product d order by d_product_no desc")
 	List<DirectProduct> selectDirectProductList(RowBounds rowBounds);
 	
-	@Select("select ")
-	List<DirectProductAttachment> selectDirectProductAttachmentList(int dProductAttachNo);
+	@Select("select * from direct_product_attachment")
+	List<DirectProductAttachment> selectDirectProductAttachmentList();
 
 	@Select("select count(*) from direct_product")
 	int getTotalContent();
@@ -29,6 +29,7 @@ public interface DirectDao {
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProductCollection(String dProductNo);
 	//----------------- 민지 끝
+
 
 
 	
