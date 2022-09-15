@@ -34,7 +34,7 @@
 	<div class="row justify-content-center row-cols-3 row-cols-lg-3 align-items-stretch g-5 py-5">
 		<div class="col">
 			<div class="card card-cover h-100 overflow-hidden bg-warning mb-3 border-success mb-3 rounded-5 shadow-lg">
-				<img src="${pageContext.request.contextPath}/resources/upload/product/${directProductAttachment.DProductRenamedFilename}" class="card-img-top" alt="...">
+				<img src="${pageContext.request.contextPath}/resources/upload/product/${directProductAttachment.DProductRenamedFilename}" class="card-img-top">
 						<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none">
 			  				<h6>${directProduct.DProductName}</h6>
 			  			</a>
