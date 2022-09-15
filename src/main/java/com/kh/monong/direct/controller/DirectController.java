@@ -54,8 +54,11 @@ public class DirectController {
 			param.put("cPage", cPage);
 			param.put("limit", limit);
 			List<DirectProduct> list = directService.selectDirectProductList(param);
+			List<DirectProductAttachment> attachList = directService.selectDirectProductAttachmentList();
 			log.debug("list = {}", list);
 			model.addAttribute("list", list);
+			log.debug("attachList = {}", attachList);
+			model.addAttribute("attachList", attachList);
 				
 			// 2. pagebar영역
 			int totalContent = directService.getTotalContent();
