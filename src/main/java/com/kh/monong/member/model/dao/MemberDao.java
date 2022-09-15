@@ -62,7 +62,17 @@ public interface MemberDao {
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 
 	@Update("update direct_order set d_order_status = #{newStatus} where d_order_no = #{dOrderNo}")
-	int updateDOrderStatus(Map<String, Object> param);
+	int updateDOrderStatus(Map<String, Object> param);	
+	
+	@Select("select * from seller_info_attachment where seller_attach_no = #{no}")
+	SellerInfoAttachment selectSellerInfoAttachment(long no);
+	
+	@Update("update seller_info set seller_reg_no = #{sellerRegNo}, seller_name = #{sellerName} where member_id = #{memberId}")
+	int updateSellerInfo(SellerInfo sellerInfo);
+	
+	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
+	int deleteSellerAttachment(long delFileNo);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
