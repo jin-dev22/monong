@@ -220,7 +220,7 @@
 	    substr(seller_enroll_date,0,8) between(to_char(trunc(sysdate,'mm'), 'yy/mm/dd')) and (last_day(sysdate))
   </select>
   
-  <select id="selectRecentSubById" resultMap="subscriptionOrderMap">
+  <!-- <select id="selectRecentSubById" resultMap="subscriptionOrderMap">
     select
 	    *
 	 from   
@@ -244,7 +244,7 @@
 	   subscription_order so 
 	    left join subscription s on so.s_no = s.s_no 
 	where
-	    s.member_id = #{memberId} and s.s_quit_yn='N';
+	    s.member_id = #{memberId} and s.ㅐ_quit_yn='N';
   
   </select>
   
@@ -271,6 +271,6 @@
 			<result column="s_delivery_request" property="sDeliveryRequest" />
 			<result column="s_quit_yn" property="sQuitYn" />
 		</association>
-	</resultMap>
+	</resultMap> -->
  <!-- ==================================================수아 끝 -->
 </mapper>

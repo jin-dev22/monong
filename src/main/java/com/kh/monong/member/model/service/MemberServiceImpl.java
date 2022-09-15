@@ -15,7 +15,7 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 import lombok.extern.slf4j.Slf4j;
@@ -211,12 +211,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public SubscriptionOrderEx selectSubById(String memberId) {
+	public SubscriptionOrder selectSubById(String memberId) {
 		return memberDao.selectSubById(memberId);
 	}
 	
 	@Override
-	public SubscriptionOrderEx selectRecentSubById(String memberId) {
+	public SubscriptionOrder selectRecentSubById(String memberId) {
 		return memberDao.selectRecentSubById(memberId);
 	}
 	
