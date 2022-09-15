@@ -44,9 +44,12 @@ public class SubscribeController {
 	
 	@Autowired
 	SubscribeService subscribeService;
-	
 	@Autowired
 	MemberService memberService;
+	@Autowired
+	ImportPayService importPayService;
+	@Autowired
+	RequestSubPayment requestSubPayment;
 	
 	// 선아코드 시작
 	@PostMapping("/subscribeOrder.do")
@@ -63,27 +66,11 @@ public class SubscribeController {
 		return "/subscribe/subscribeOrder";
 	}
 	
-	@Autowired
-	ImportPayService importPayService;
-	@Autowired
-	RequestSubPayment requestSubPayment;
-	
 	@PostMapping("/insertCardInfo.do")
-	public ResponseEntity<?> insertCardInfo(
-			@RequestParam String customerUid,
-			String merchantUid, int amount, String memberName,
-			Model model, CardInfo cardInfo
+	public int insertCardInfo(
+			@RequestParam String customerUid, CardInfo cardInfo
 			) {
-		int result = subscribeService.insertCardInfo(cardInfo);
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("customer_uid", customerUid);
-		map.put("merchant_uid", merchantUid);
-		map.put("amount", amount);
-		map.put("name", memberName);
-		
-		return null; // 수정중
-//		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
+		return subscribeService.insertCardInfo(cardInfo);
 	}
 	
 	@PostMapping("/subComplete.do")
@@ -122,6 +109,14 @@ public class SubscribeController {
 	
 	@PostMapping("/payschedule.do")
 	public void payschedule(String customerUid, int amount){
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("customer_uid", customerUid);
+//		map.put("merchant_uid", merchantUid);
+//		map.put("amount", amount);
+//		map.put("name", memberName);
+		
+//		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
+		
 		// 매번 변경되어야 하는 주문번호 - ex) SO + 220901(년월일) + 1201(시분) + 랜덤3자리 = 총 15자리		
 		// 1. 다음배송일의 년월일 가져오기
 		Subscription subscription = subscribeService.findNextDeliveryDateByUid(customerUid);
