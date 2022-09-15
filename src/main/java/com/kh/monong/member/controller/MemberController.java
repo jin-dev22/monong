@@ -12,10 +12,14 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -124,7 +129,7 @@ public class MemberController {
 			memberAuthMap.put("memberAuth", "ROLE_MEMBER");
 			int result = memberService.insertMember(memberAuthMap, member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-			return "redirect:/";
+			return "redirect:/member/memberLogin.do";
 		} catch(Exception e) {
 			log.error("회원가입 오류 : " + e.getMessage(), e);
 			e.printStackTrace();
@@ -149,38 +154,43 @@ public class MemberController {
 									.sellerRegNo(sellerRegNo)
 									.sellerName(sellerName)
 									.build());
-		
-		// 비밀번호 암호화
-		String rawPassword = seller.getPassword();
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		seller.setMemberPassword(encodedPassword);
-		log.debug("encodedPassword = {}", encodedPassword);
-		
-		//회원권한 db입력용
-		Map<String, Object> memberAuthMap = new HashMap<>();
-		memberAuthMap.put("memberId", seller.getMemberId());
-		memberAuthMap.put("memberAuth", "ROLE_SELLER");
-		
-		//사업자등록증 서버컴퓨터 저장
-		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
-		log.debug("saveDirectory = {}",saveDirectory);
-		String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
-		File destFile = new File(saveDirectory, renamedFilename);
-		log.debug("destFile = {}",destFile);
-		sellerRegFile.transferTo(destFile);
-		
-		seller.setAttachment(SellerInfoAttachment.builder()
-				.memberId(seller.getMemberId())
-				.originalFilename(sellerRegFile.getOriginalFilename())
-				.renamedFilename(renamedFilename)
-				.build());	
-		
-		//판매자정보 저장
-		log.debug("seller = {}", seller);
-		int result = memberService.insertSeller(memberAuthMap, seller);
-		
-		redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-		return "redirect:/";
+		try {
+			// 비밀번호 암호화
+			String rawPassword = seller.getPassword();
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			seller.setMemberPassword(encodedPassword);
+			log.debug("encodedPassword = {}", encodedPassword);
+			
+			//회원권한 db입력용
+			Map<String, Object> memberAuthMap = new HashMap<>();
+			memberAuthMap.put("memberId", seller.getMemberId());
+			memberAuthMap.put("memberAuth", "ROLE_SELLER");
+			
+			//사업자등록증 서버컴퓨터 저장
+			String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+			log.debug("saveDirectory = {}",saveDirectory);
+			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
+			File destFile = new File(saveDirectory, renamedFilename);
+			log.debug("destFile = {}",destFile);
+			sellerRegFile.transferTo(destFile);
+			
+			seller.setAttachment(SellerInfoAttachment.builder()
+					.memberId(seller.getMemberId())
+					.originalFilename(sellerRegFile.getOriginalFilename())
+					.renamedFilename(renamedFilename)
+					.build());	
+			
+			//판매자정보 저장
+			log.debug("seller = {}", seller);
+			int result = memberService.insertSeller(memberAuthMap, seller);
+			
+			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
+			return "redirect:/member/memberLogin.do";
+		} catch(Exception e) {
+			log.error("회원가입 오류 : " + e.getMessage(), e);
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
 	@PostMapping("/sendEmailKey.do")
@@ -352,6 +362,27 @@ public class MemberController {
 		return "redirect:/member/sellerUpdate.do";
 		
 	}
+	
+//	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+//	@ResponseBody
+//	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
+//		SellerInfoAttachment attach = memberService.selectOneSellerInfoAttachment(no);
+//		log.debug("attach = {}", attach);
+//		
+//		String saveDirectory = application.getRealPath("/resources/upload/board");
+//		File downFile = new File(saveDirectory, attach.getRenamedFilename());
+//		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
+//		Resource resource = resourceLoader.getResource(location);
+//		log.debug("resource = {}", resource);
+//		log.debug("resource#file = {}", resource.getFile());
+//		
+//		// 응답헤더 작성
+//		response.setContentType("application/octet-stream; charset=utf-8");
+//		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
+//		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+//		
+//		return resource;
+//	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")

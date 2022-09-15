@@ -148,7 +148,7 @@
 				<label for="sellerUpdate-btn-download">기존파일</label>
 				<div id="sellerUpdate-attachUpdate-container">
 					<input type="button" class="btn btn-outline-success" id="sellerUpdate-btn-download"
-						onclick="location.href='${pageContext.request.contextPath}/board/fileDownload.do?no=<sec:authentication property='principal.attachment.sellerAttachNo'/>';"
+						onclick="location.href='${pageContext.request.contextPath}/member/fileDownload.do?no=<sec:authentication property='principal.attachment.sellerAttachNo'/>';"
 						value="<sec:authentication property='principal.attachment.originalFilename'/>" />
 					&nbsp;&nbsp; 
 					<label class="btn btn-outline-danger" title="삭제"> 
