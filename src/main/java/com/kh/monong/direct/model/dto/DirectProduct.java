@@ -25,5 +25,8 @@ public class DirectProduct extends DirectProductEntity {
 		this.attachCount = attachCount;
 	}
 	
+	public void add(DirectProductAttachment attach) {
+		this.directProductAttachments.add(attach);
+	}
 	
 }

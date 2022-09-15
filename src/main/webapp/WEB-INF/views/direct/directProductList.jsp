@@ -15,13 +15,18 @@
 			<li class="list-group-item">조회된 게시글이 없습니다.</li>
 		</ul>
 		</c:if>
-		<c:if test="${not empty list}"></c:if>
-<div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-    <li class="list-group-item">A third item</li>
-  </ul>
-</div>
+		<c:if test="${not empty list}">
+			<c:forEach items="${list}" var="directProduct">
+				<div class="card" style="width: 18rem;">
+		  			<img src="" class="card-img-top" alt="...">
+		  				<ul class="list-group list-group-flush">
+		    				<li class="list-group-item">${directProduct.DProductName}</li>
+		    				<li class="list-group-item">
+		    					<fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,### 원" />
+		    				</li>
+		    				<li class="list-group-item">판매자 : ${directProduct.memberId}</li>
+		  				</ul>
+				</div>
+			</c:forEach>
+		</c:if>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
