@@ -134,8 +134,30 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public SellerInfoAttachment selectSellerInfoAttachment(int no) {
+	public SellerInfoAttachment selectSellerInfoAttachment(long no) {
 		return memberDao.selectSellerInfoAttachment(no);
+	}
+	
+	@Override
+	public int updateSeller(Seller seller) {
+		int result = updateMember(seller);
+		result = updateSellerInfo(seller.getSellerInfo());
+		result = updateSellerAttachment(seller.getAttachment());
+		return result;
+	}
+	
+
+	private int updateSellerInfo(SellerInfo sellerInfo) {
+		return memberDao.updateSellerInfo(sellerInfo);
+	}
+	
+	private int updateSellerAttachment(SellerInfoAttachment attach) {
+		return memberDao.updateSellerAttachment(attach);
+	}
+	
+	@Override
+	public int deleteSellerAttachment(long delFileNo) {
+		return memberDao.deleteSellerAttachment(delFileNo);
 	}
 	//------------------수진 끝
 	

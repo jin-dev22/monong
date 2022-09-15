@@ -144,10 +144,10 @@ public class MemberController {
 	@PostMapping("/sellerEnroll.do")
 	public String sellerEnroll(
 			Seller seller,
-			String sellerName,
-			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
+			@RequestParam String sellerName,
+			@RequestParam String sellerRegNo, 
 			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-			RedirectAttributes redirectAttr) throws IllegalStateException, IOException {
+			RedirectAttributes redirectAttr) throws Exception {
 	
 		log.debug("member = {}", seller);
 		log.debug("regNo = {}", sellerRegNo);
@@ -370,19 +370,66 @@ public class MemberController {
 	}
 	@PostMapping("/sellerUpdate.do")
 	public String sellrUpdate(@ModelAttribute Seller seller, 
+							 @RequestParam String sellerName,
+							 @RequestParam String sellerRegNo, 
 							 RedirectAttributes redirectAttr,
-							 Model model) {
+							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
+							 @RequestParam(required = false) long delFileNo,
+							 Model model) throws Exception {
 		log.debug("seller = {}", seller);
-//		int result = memberService.updateSeller(seller);
-//		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
-//		
-//		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
-//				updatedMember,
-//				updatedMember.getPassword(),
-//				updatedMember.getAuthorities()
-//				);
-//		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
-//		log.debug("member={}", updatedMember);
+		seller.setSellerInfo(SellerInfo.builder()
+									.memberId(seller.getMemberId())
+									.sellerRegNo(sellerRegNo)
+									.sellerName(sellerName)
+									.build());
+		log.debug("seller = {}", seller);
+		
+		int result = 0;
+		if(!sellerRegFile.isEmpty() && delFileNo != 0) {
+			try {
+			String directory = "/resource/upload/sellerRegFiles";
+			String saveDirectory = application.getRealPath(directory);
+			
+			//첨부파일 삭제
+			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+			boolean isDeleted = delFile.delete();
+			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+			
+			//업로드파일 저장, db행 삭제
+			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
+			
+//			String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
+//			File destFile = new File(saveDirectory, renamedFilename);
+//			sellerRegFile.transferTo(destFile);
+			
+			result = memberService.deleteSellerAttachment(delFileNo);
+			log.debug("isDel in DB? = {}", result>0);	
+			
+			//seller에 attachment설정
+			seller.setAttachment(SellerInfoAttachment.builder()
+					.memberId(seller.getMemberId())
+					.originalFilename(sellerRegFile.getOriginalFilename())
+					.renamedFilename(renamedFilename)
+					.build());
+			log.debug("seller = {}", seller);
+			} catch (Exception e) {
+				log.error("판매자 정보수정 오류 : " + e.getMessage(), e);
+				throw e;
+			}
+		}
+		
+		//판매자 정보 변경		
+		result = memberService.updateSeller(seller);
+		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
+		
+		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
+				updatedMember,
+				updatedMember.getPassword(),
+				updatedMember.getAuthorities()
+				);
+		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
+		log.debug("member={}", updatedMember);
 		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
 		return "redirect:/member/sellerUpdate.do";
 		

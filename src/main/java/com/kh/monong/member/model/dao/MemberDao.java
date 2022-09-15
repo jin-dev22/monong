@@ -65,7 +65,16 @@ public interface MemberDao {
 	int updateDOrderStatus(Map<String, Object> param);	
 	
 	@Select("select * from seller_info_attachment where seller_attach_no = #{no}")
-	SellerInfoAttachment selectSellerInfoAttachment(int no);
+	SellerInfoAttachment selectSellerInfoAttachment(long no);
+	
+	@Update("update seller_info set seller_reg_no = #{sellerRegNo}, seller_name = #{sellerName} where member_id = #{memberId}")
+	int updateSellerInfo(SellerInfo sellerInfo);
+
+	@Update("update seller_info_attachment set original_filename = #{originalFilename}, renamed_filename = #{renamedFilename}")
+	int updateSellerAttachment(SellerInfoAttachment attach);
+	
+	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
+	int deleteSellerAttachment(long delFileNo);
 
 	//------------------------수진 끝 
 	

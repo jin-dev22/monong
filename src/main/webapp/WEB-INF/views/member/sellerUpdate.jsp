@@ -152,27 +152,13 @@
 						value="<sec:authentication property='principal.attachment.originalFilename'/>" />
 					&nbsp;&nbsp; 
 					<label class="btn btn-outline-danger" title="삭제"> 
-						<input type="checkbox" name="delFile" class="btn btn-outline-danger" id="delFile"
+						<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
 							value="<sec:authentication property='principal.attachment.sellerAttachNo'/>">
 						삭제
 					</label>
 				</div>
 			</div>
 		</div>
-	<script>
-	//삭제 체크시 파일업로드 required처리
-	document.querySelector("#delFile").addEventListener('change',(e)=>{
-		const upload = document.querySelector("#sellerRegFile");
-		if(e.target.checked){
-			upload.required = true;
-		}
-		else{
-			upload.required = false;
-		}
-		
-	});
-	</script>
-
 		<sec:csrfInput />
 		<br />
 		<div class="mb-3 text-center sellerUpdate-submitBtn-container">
@@ -182,6 +168,30 @@
 	</form>
 </div>
 <script>
+//삭제 체크시 파일업로드 required처리
+document.querySelector("#delFileNo").addEventListener('change',(e)=>{
+	const upload = document.querySelector("#sellerRegFile");
+	if(e.target.checked){
+		upload.required = true;
+	}
+	else{
+		upload.required = false;
+	}
+	
+});
+//파일 업로드 & 삭제 체크 안한 경우 자동 체크처리 후 submit
+document.memberUpdateFrm.addEventListener('submit', (e)=>{
+	e.preventDefault();
+	const delFileNo = document.querySelector("#delFileNo");
+	const newFile = document.querySelector("#sellerRegFile");
+	console.log(delFileNo, newFile.value);
+	if(newFile){
+		delFileNo.checked = true;
+		console.log('checked!!');
+	}
+	e.target.submit();
+});
+
 const emailValid = document.querySelector("#emailValid");
 const emailKeyValid = document.querySelector("#emailKeyValid");
 
