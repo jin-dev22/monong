@@ -220,57 +220,17 @@
 	    substr(seller_enroll_date,0,8) between(to_char(trunc(sysdate,'mm'), 'yy/mm/dd')) and (last_day(sysdate))
   </select>
   
-  <!-- <select id="selectRecentSubById" resultMap="subscriptionOrderMap">
+  <select id="selectRecentSubById" resultType="subscription">
     select
-	    *
-	 from   
-	(select
-	    s.*,
-	    row_number() over(partition by member_id order by s_no desc)rnum
+    *
 	from
-	    subscription s) s
-	    left join subscription_order so
-	    on s.s_no = so.s_no
-	where
-	    rnum = 1 and s.member_id=#{memberId} and s.s_quit_yn='N'
-	order by
-	    s.s_no desc
+	 subscription
+	where   
+	    member_id=#{memberId} and rownum =1
+	order by 
+	    s_no desc
   </select>
   
-  <select id="selectSubById" resultMap="subscriptionOrderMap">
-  	select 
-    	*
-	from
-	   subscription_order so 
-	    left join subscription s on so.s_no = s.s_no 
-	where
-	    s.member_id = #{memberId} and s.ㅐ_quit_yn='N';
-  
-  </select>
-  
-  <resultMap type="SubscriptionOrderEx" id="subscriptionOrderMap">
-		<id column="s_order_no" property="sOrderNo"/>
-		<result column="subscription_no" property="sNo" />
-		<result column="s_times" property="sTimes" />
-		<result column="s_price" property="sPrice" />
-		<result column="s_order_date" property="sOrderDate" />
-		<result column="s_order_status" property="sOrderStatus" />	
-		<association property="subscription" javaType="Subscription" >
-			<id column="s_no" property="sNo"/>
-			<result column="card_info_no" property="cardInfoNo" />
-			<result column="member_id" property="memberId" />
-			<result column="s_product_code" property="sProductCode" />
-			<result column="s_exclude_vegs" property="sExcludeVegs" />
-			<result column="s_delivery_cycle" property="sDeliveryCycle" />
-			<result column="s_next_delivery_date" property="sNextDeliveryDate" />
-			<result column="s_delay_yn" property="sDelayYn" />
-			<result column="s_recipient" property="sRecipient" />
-			<result column="s_phone" property="sPhone" />
-			<result column="s_address" property="sAddress" />
-			<result column="s_address_ex" property="sAddressEx" />
-			<result column="s_delivery_request" property="sDeliveryRequest" />
-			<result column="s_quit_yn" property="sQuitYn" />
-		</association>
-	</resultMap> -->
+ 
  <!-- ==================================================수아 끝 -->
 </mapper>

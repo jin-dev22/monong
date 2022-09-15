@@ -16,7 +16,7 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 @Mapper
@@ -104,10 +104,8 @@ public interface MemberDao {
 	int updateSellerStatus(String id);
 
 	int getTotalSellerEnrollByMonth();
-	
-	SubscriptionOrder selectSubById(String memberId);
 
-	SubscriptionOrder selectRecentSubById(String memberId);
+	Subscription selectRecentSubById(String memberId);
 
 	@Select("select * from subscription_product where s_product_code = #{pCode}")
 	SubscriptionProduct selectRecentSubProduct(String pCode);
