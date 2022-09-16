@@ -145,7 +145,6 @@
     </div>
 
     <p>※ 구독 플랜은 결제예정일 전까지 언제든 변경하실 수 있습니다 :)</p>
-    
     <input type="submit" class="btn btn-EA5C2B btn-subscribe-apply" value="신청하기">
     
 	</form:form>
