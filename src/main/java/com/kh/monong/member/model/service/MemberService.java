@@ -9,6 +9,7 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 public interface MemberService {
@@ -88,6 +89,12 @@ public interface MemberService {
 	SubscriptionProduct selectRecentSubProduct(String pCode);
 
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 //-----------수아 끝
 
 

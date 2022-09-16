@@ -231,6 +231,40 @@
 	    s_no desc
   </select>
   
+  <update id="updateSubscribeOrder">
+  	update 
+  		subscription
+  	set
+  		s_exclude_vegs = #{sExcludeVegs},
+  		s_product_code = #{sProductCode},
+  		s_delivery_cycle = #{sDeliveryCycle},
+  		s_next_delivery_date = #{sNextDeliveryDate},
+  		s_delay_yn = #{sDelayYn},
+  		s_recipient = #{sRecipient},
+  		s_phone = #{sPhone},
+  		s_address = #{sAddress},
+  		s_address_ex = #{sAddressEx},
+  		s_delivery_request = #{sDeliveryRequest},
+  		s_payment_date = #{sPaymentDate}
+  	where 
+  		s_no = #{sNo}
+  </update>
+  
+  <select id="selectSubscriptionListById" resultType="subscriptionOrder">
+  select
+    *
+	from
+	    subscription_order
+	where
+	   s_no in 
+	   (select 
+	      s_no 
+	    from  
+	      subscription 
+	    where 
+	        member_id = #{memberId}
+    )
+  </select>
  
  <!-- ==================================================수아 끝 -->
 </mapper>
