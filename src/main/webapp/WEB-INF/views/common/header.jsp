@@ -79,7 +79,7 @@
 						<sec:authentication property="principal.username"/>님&#128149;
                 	</p>
                 	<sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
-											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberOrderList.do">마이페이지</a>
+											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberSubscribeList.do">마이페이지</a>
                 	</sec:authorize>
                 	<sec:authorize access="hasRole('ROLE_SELLER')">
 						<a class="nav-link" href="${pageContext.request.contextPath}/member/sellerProdList.do">마이페이지</a>

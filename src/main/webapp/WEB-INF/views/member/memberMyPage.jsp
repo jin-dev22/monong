@@ -30,12 +30,7 @@
 			<h2><strong>정기 구독</strong></h2>
 		</div>
 		<br />
-		<table id="member-subscribe-tbl" class="table table-borderless text-center">
-		<colgroup>
-			<col style="width: 300px">
-			<col style="width: 300px">
-			<col style="width: 300px">
-		</colgroup>
+		<table id="member-subscribe-tbl" class="table table-borderless text-justify">
 		<thead>
 		  <tr>
 		    <td rowspan="3">
@@ -49,15 +44,14 @@
 					<img src="${pageContext.request.contextPath}/resources/images/subscribe/라지.jpg" alt="라지 이미지">
 				</c:if>
 			</td>
-		    <td><h4>${recentSubProduct.SProductName}&nbsp;&nbsp;&nbsp;${recentSubProduct.SProductInfo}</h4></td>
-		    <td></td>
+		    <td colspan="2"><h4>다음 배송일: ${recentSubscription.SNextDeliveryDate} </h4></td>
 		  </tr>
 		  <tr>
+		  	<td><h4>${recentSubProduct.SProductName}&nbsp;&nbsp;&nbsp;${recentSubProduct.SProductInfo}</h4></td>
 		    <td><h4>배송주기: ${recentSubscription.SDeliveryCycle}주</h4></td>
-		    <td><h4></h4></td>
 		  </tr>
 		  <tr>
-		    <td><h4>다음 배송일 <br /><br /> ${recentSubscription.SNextDeliveryDate}</h4></td>
+		    <td><h4>제외채소 : ${recentSubscription.SExcludeVegs}</h4></td>
 		    <td><button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button></td>
 		  </tr>
 		</thead>
@@ -65,7 +59,8 @@
 	</c:if>
 </div>
 <nav class="nav justify-content-around mt-5">
-	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">주문내역</a>
+	<a href="${pageContext.request.contextPath}/member/memberSubscribeList.do">구독내역</a>
+	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">직거래주문내역</a>
 	<a href="${pageContext.request.contextPath}/member/memberReviewList.do">작성후기</a>
 	<a href="${pageContext.request.contextPath}/member/memberDirectInquire.do">상품문의</a>
 	<a href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>

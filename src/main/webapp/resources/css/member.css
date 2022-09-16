@@ -142,6 +142,9 @@ nav#member-mypage-nav h5>a:hover{
 nav#member-mypage-nav h2{
 	margin-right: 380px;
 }
+#mypage-subscribe-btn{
+	margin-left: 100px;
+}
 
 /* -----판매자 마이페이지 관련----- */
 /* 판매자 상품목록 */
