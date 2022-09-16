@@ -44,7 +44,7 @@
 
 <body>
 	<header id="header">
-		<a href="#" class="logo">
+		<a href="${pageContext.request.contextPath}/" class="logo">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</a>
 		<nav class="nav mainmenu">
