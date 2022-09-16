@@ -17,6 +17,7 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 @Mapper
@@ -122,6 +123,14 @@ public interface MemberDao {
 
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	
+	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
 	//------------------------수아 끝
 
 	

@@ -16,6 +16,7 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 import lombok.extern.slf4j.Slf4j;
@@ -238,6 +239,11 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public int deleteSeller(String memberId) {
+		return memberDao.deleteSeller(memberId);
+	}
+	
+	@Override
 	public Subscription selectRecentSubById(String memberId) {
 		return memberDao.selectRecentSubById(memberId);
 	}
@@ -248,8 +254,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int deleteSeller(String memberId) {
-		return memberDao.deleteSeller(memberId);
+	public int updateSubscribeOrder(Subscription subscription) {
+		return memberDao.updateSubscribeOrder(subscription);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> selectSubscriptionListById(String memberId) {
+		return memberDao.selectSubscriptionListById(memberId);
+	}
+	
+	@Override
+	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
+		return memberDao.selectOneSubscriptionOrder(sOrderNo);
 	}
 	//------------------수아 끝
 }
