@@ -370,8 +370,9 @@ public class MemberController {
 							 @RequestParam String sellerRegNo, 
 							 RedirectAttributes redirectAttr,
 							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-							// @RequestParam(required = false) long delFileNo,
+							 @RequestParam(required = false) long delFileNo,
 							 Model model) throws Exception {
+		
 		seller.setSellerInfo(SellerInfo.builder()
 									.memberId(seller.getMemberId())
 									.sellerRegNo(sellerRegNo)
@@ -386,18 +387,18 @@ public class MemberController {
 			String saveDirectory = application.getRealPath(directory);
 			log.debug("sellerRegFile = {}",sellerRegFile);
 			//첨부파일 삭제
-//			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
-//			File delFile = new File(saveDirectory, attach.getRenamedFilename());
-//			boolean isDeleted = delFile.delete();
-//			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+			boolean isDeleted = delFile.delete();
+			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
 			
 			//업로드파일 저장, db행 삭제
 			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
 			log.debug("renamedFilename!!!!!!!!!!!! = {}",renamedFilename);
-//			if(isDeleted) {
-//				result = memberService.deleteSellerAttachment(delFileNo);//
-//				log.debug("isDel in DB? = {}", result>0);	
-//			}
+			if(isDeleted) {
+				result = memberService.deleteSellerAttachment(delFileNo);//
+				log.debug("isDel in DB? = {}", result>0);	
+			}
 			
 			//seller에 attachment설정
 			seller.setAttachment(SellerInfoAttachment.builder()
