@@ -347,8 +347,9 @@
 	height: 50px;
 }
 
-.s-pay-info > div {
-	margin-top: 20px;
+.s-pay-info .moveButton {
+	margin-top: 60px;
+	text-align: right;
 }
 
 
