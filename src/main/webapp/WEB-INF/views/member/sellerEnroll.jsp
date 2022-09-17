@@ -31,7 +31,7 @@
                 <span class="enroll-info-label">패스워드<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">
                 	<span id="memberPassword-container">
-                     <input type="password" class="form-control" name="memberPassword" id="password" value="1234" required>
+                     <input type="password" class="form-control" name="memberPassword" id="password" required>
                      <span class="invalid-feedback feedback-password">6자리 이상 작성해주시기 바랍니다.</span>
                 	</span>
                 </span>
@@ -40,7 +40,7 @@
                 <span class="enroll-info-label">패스워드확인<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
                 	<span id="passwordCheck-container">
-                     <input type="password" class="form-control" id="passwordCheck" value="1234" required>
+                     <input type="password" class="form-control" id="passwordCheck" required>
                      <span class="invalid-feedback feedback-password">비밀번호가 일치하지 않습니다.</span>
                 	</span>
                 </span>
@@ -48,20 +48,20 @@
             <div class="enroll-info-container">
                 <span class="enroll-info-label">업체명<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
-                    <input type="text" class="form-control" name="memberName" id="memberName" value="사과농장" required>
+                    <input type="text" class="form-control" name="memberName" id="memberName" required>
                 </span>
             </div>
             <div class="enroll-info-container">
                 <span class="enroll-info-label">대표자명<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
-                    <input type="text" class="form-control" name="sellerName" id="sellerName" value="홍길동" required>
+                    <input type="text" class="form-control" name="sellerName" id="sellerName" required>
                 </span>
             </div>
             <div class="enroll-info-container">
                 <span class="enroll-info-label">전화번호<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
                 	<span class="phone-container">
-                     <input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" value="01098989898" required>
+                     <input type="tel" class="form-control" placeholder="(-없이)01012345678" name="memberPhone" id="memberPhone" maxlength="11" required>
                      <span class="invalid-feedback feedback-phone">띄어쓰기없이 번호만 입력해주세요.</span>
                 	</span>
                     
@@ -71,7 +71,7 @@
                 <span class="enroll-info-label">이메일<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">
                     <span id="memberEmail-container">
-                        <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" value="" required>
+                        <input type="email" class="form-control" placeholder="abc@xyz.com" name="memberEmail" id="memberEmail" required>
                         <span class="valid-feedback feedback-email">사용가능한 이메일입니다.</span>
                         <span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span>
                         <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
@@ -92,19 +92,19 @@
             <div class="enroll-info-container">
                 <span class="enroll-info-label">주소<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
-                    <input type="text" class="form-control" placeholder="" name="memberAddress" id="address" value="서울시 강남구 역삼동 123" readonly required>
+                    <input type="text" class="form-control" placeholder="" name="memberAddress" id="address" readonly required>
                 </span>
             </div>
             <div class="enroll-info-container">
                 <span class="enroll-info-label">상세주소</span>
                 <span class="enroll-info">	
-                    <input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex" value="">
+                    <input type="text" class="form-control" placeholder="" name="memberAddressEx" id="address-ex">
                 </span>
             </div>
             <div class="enroll-info-container">
-                <span class="enroll-info-label">개업일<span class="enroll-form-required">*</span></span>
+                <span class="enroll-info-label">사업개시일<span class="enroll-form-required">*</span></span>
                 <span class="enroll-info">	
-                    <input type="date" class="form-control" name="memberBirthday" id="birthday" value="1999-09-09" required/>
+                    <input type="date" class="form-control" name="memberBirthday" id="birthday" required/>
                 </span>
             </div> 
             <div class="enroll-info-container">

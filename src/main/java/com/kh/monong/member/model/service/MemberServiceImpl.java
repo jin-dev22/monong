@@ -15,7 +15,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 import lombok.extern.slf4j.Slf4j;
@@ -132,6 +133,32 @@ public class MemberServiceImpl implements MemberService {
 	public int updateDOrderStatus(Map<String, Object> param) {
 		return memberDao.updateDOrderStatus(param);
 	}
+	
+	@Override
+	public SellerInfoAttachment selectSellerInfoAttachment(long no) {
+		return memberDao.selectSellerInfoAttachment(no);
+	}
+	
+	@Override
+	public int updateSeller(Seller seller) {
+		int result = updateMember(seller);
+		result = updateSellerInfo(seller.getSellerInfo());
+		if(seller.getAttachment() != null) {
+			result = insertSellerInfoAttachment(seller.getAttachment());
+		}
+		return result;
+	}
+	
+
+	private int updateSellerInfo(SellerInfo sellerInfo) {
+		return memberDao.updateSellerInfo(sellerInfo);
+	}
+	
+	
+	@Override
+	public int deleteSellerAttachment(long delFileNo) {
+		return memberDao.deleteSellerAttachment(delFileNo);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작
@@ -210,13 +237,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateSellerStatus(id);
 	}
 	
+	
 	@Override
-	public SubscriptionOrderEx selectSubById(String memberId) {
-		return memberDao.selectSubById(memberId);
+	public int deleteSeller(String memberId) {
+		return memberDao.deleteSeller(memberId);
 	}
 	
 	@Override
-	public SubscriptionOrderEx selectRecentSubById(String memberId) {
+	public Subscription selectRecentSubById(String memberId) {
 		return memberDao.selectRecentSubById(memberId);
 	}
 	
@@ -226,8 +254,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int deleteSeller(String memberId) {
-		return memberDao.deleteSeller(memberId);
+	public int updateSubscribeOrder(Subscription subscription) {
+		return memberDao.updateSubscribeOrder(subscription);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> selectSubscriptionListById(String memberId) {
+		return memberDao.selectSubscriptionListById(memberId);
+	}
+	
+	@Override
+	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
+		return memberDao.selectOneSubscriptionOrder(sOrderNo);
 	}
 	//------------------수아 끝
 }

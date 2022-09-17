@@ -12,7 +12,7 @@
 			<span>휴무</span>
 		</div>
 		<div>
-			<input type="button" class="btn btn-EA5C2B" value="문의하기">
+			<input type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/inquire/inquireAdmin.do';" value="문의하기">
 			<input type="button" class="btn btn-EA5C2B-reverse" onclick="faq()" value="자주 묻는 질문">
 		</div>
 	</nav>

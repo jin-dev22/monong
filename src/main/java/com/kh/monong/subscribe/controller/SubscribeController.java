@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
-import com.kh.monong.subscribe.model.dto.RecommendedSubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
@@ -43,9 +43,12 @@ public class SubscribeController {
 	
 	@Autowired
 	SubscribeService subscribeService;
-	
 	@Autowired
 	MemberService memberService;
+	@Autowired
+	ImportPayService importPayService;
+	@Autowired
+	RequestSubPayment requestSubPayment;
 	
 	// 선아코드 시작
 	@PostMapping("/subscribeOrder.do")
@@ -62,49 +65,34 @@ public class SubscribeController {
 		return "/subscribe/subscribeOrder";
 	}
 	
-	@Autowired
-	ImportPayService importPayService;
-	@Autowired
-	RequestSubPayment requestSubPayment;
-	
 	@PostMapping("/insertCardInfo.do")
 	public ResponseEntity<?> insertCardInfo(
-			@RequestParam String customerUid,
-			String merchantUid, int amount, String memberName,
-			Model model, CardInfo cardInfo
+			@RequestParam String customerUid, CardInfo cardInfo
 			) {
-		int result = subscribeService.insertCardInfo(cardInfo);
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("customer_uid", customerUid);
-		map.put("merchant_uid", merchantUid);
-		map.put("amount", amount);
-		map.put("name", memberName);
-		
-		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
+		return ResponseEntity.ok(subscribeService.insertCardInfo(cardInfo));
 	}
 	
 	@PostMapping("/subComplete.do")
 	public String insertSubOrder(
 			@RequestParam String sNo, @RequestParam String customerUid,
-			@RequestParam String sOrderNo,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate sNextDeliveryDate,
-			SubscriptionOrder subscriptionOrder, Subscription subscription, RedirectAttributes redirectAttr
+			Subscription subscription, RedirectAttributes redirectAttr
 		) {
+		// 카드번호 조회
 		int cardInfoNo = subscribeService.findCardInfoNoByUid(customerUid);
 		
 		// 구독정보 insert
 		int result = 0;
 		if(cardInfoNo != 0) {
 			subscription.setCardInfoNo(cardInfoNo);
-			result = subscribeService.insertSubscription(subscriptionOrder, subscription);
+			result = subscribeService.insertSubscription(subscription);
 		}
-		SubscriptionOrder orderList = null;
+		
+		Subscription subscriptionList = null;
 		if(result == 1) {
-			orderList = subscribeService.selectSubscriptionOrderRecent(subscriptionOrder.getSNo());
+			subscriptionList = subscribeService.selectSubscription(subscription.getSNo());
 		}
-		redirectAttr.addFlashAttribute("orderList", orderList);
-		redirectAttr.addFlashAttribute("msg", "구독이 완료되었습니다. :)");
+		redirectAttr.addFlashAttribute("subscriptionList", subscriptionList);
 		return "redirect:/subscribe/subComplate.do";
 	}
 	
@@ -120,6 +108,14 @@ public class SubscribeController {
 	
 	@PostMapping("/payschedule.do")
 	public void payschedule(String customerUid, int amount){
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("customer_uid", customerUid);
+//		map.put("merchant_uid", merchantUid);
+//		map.put("amount", amount);
+//		map.put("name", memberName);
+		
+//		return ResponseEntity.ok(requestSubPayment.requestPayAgain(map));
+		
 		// 매번 변경되어야 하는 주문번호 - ex) SO + 220901(년월일) + 1201(시분) + 랜덤3자리 = 총 15자리		
 		// 1. 다음배송일의 년월일 가져오기
 		Subscription subscription = subscribeService.findNextDeliveryDateByUid(customerUid);
@@ -158,8 +154,23 @@ public class SubscribeController {
 	}
 	
 	@GetMapping("/subscribeMain.do")
-	public void subscribeMain(Model model) {
+	public void subscribeMain(Model model, Authentication authentication) {
+		// 선아 추가(이미 구독중인 사람은 버튼 비활성화)
+		if(authentication != null) {
+			Member member = (Member) (authentication.getPrincipal());
+			log.debug("plan member = {}", member);
+			String isSubscribe = "";
+			if(member != null) {
+				isSubscribe = subscribeService.getSubscriptionByMemberId(member.getMemberId());
+				if(isSubscribe != null)
+					isSubscribe = "Y";
+			}
+			log.debug("isSubscribe = {}", isSubscribe);
+			model.addAttribute("isSubscribe", isSubscribe);
+		}
+		
 		double sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
+
 		log.debug("sReviewStarAvg = {}", sReviewStarAvg);
 		
 		int totalContent = subscribeService.getTotalContent();
@@ -167,7 +178,7 @@ public class SubscribeController {
 		
 		// 상품정보 불러오기
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
-		
+
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("sReviewStarAvg", sReviewStarAvg);
 		model.addAttribute("totalContent", totalContent);

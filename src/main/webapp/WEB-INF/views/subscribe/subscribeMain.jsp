@@ -88,9 +88,19 @@
 			</div>
 		</div>
 		<div class="step2-footer">
-			<span>&#128504; 이번주 배송 미루기</span> <span>&#128504; 구독 플랜 수정하기</span><br />
+			<span>&#128504; 배송 미루기</span> <span>&#128504; 구독 플랜 수정하기</span><br />
 			<span>※ 매주 화요일까지 변경 가능</span><br />
-			<button type="button" id="gotoPlan" class="btn btn-EA5C2B">구독하기</button>
+			<sec:authorize access="isAnonymous()"> 
+				<button type="button" id="gotoLogin" class="btn btn-EA5C2B">구독하기</button>
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
+		    	<c:if test="${isSubscribe eq 'Y'}">
+					<button type="button" id="gotoPlan" class="btn btn-EA5C2B" disabled>구독하기</button>
+				</c:if>
+				<c:if test="${isSubscribe ne 'Y'}">
+					<button type="button" id="gotoPlan" class="btn btn-EA5C2B">구독하기</button>
+				</c:if>
+			</sec:authorize>
 		</div>
 	</div>
 
@@ -146,6 +156,17 @@
 </nav>
 
 <script>
+//선아 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
+document.querySelector("#gotoLogin").addEventListener('click', () => {
+	alert("로그인 후 이용해주세요!");
+	location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
+});
+
+document.querySelector("#gotoPlan").addEventListener('click', () => {
+	location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
+});
+
+
 window.onload = () => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewList.do",
@@ -374,8 +395,5 @@ const sReviewRecommend = () => {
 	}
 };
 
-document.querySelector("#gotoPlan").addEventListener('click', () => {
-	location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
-});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

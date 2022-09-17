@@ -12,14 +12,20 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +37,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,7 +50,8 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
@@ -69,6 +77,9 @@ public class MemberController {
 	
 	@Autowired
 	ServletContext application;
+	
+	@Autowired
+	ResourceLoader resourceLoader;
 	
 	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {		
@@ -123,7 +134,7 @@ public class MemberController {
 			memberAuthMap.put("memberAuth", "ROLE_MEMBER");
 			int result = memberService.insertMember(memberAuthMap, member);
 			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-			return "redirect:/";
+			return "redirect:/member/memberLogin.do";
 		} catch(Exception e) {
 			log.error("회원가입 오류 : " + e.getMessage(), e);
 			e.printStackTrace();
@@ -134,10 +145,10 @@ public class MemberController {
 	@PostMapping("/sellerEnroll.do")
 	public String sellerEnroll(
 			Seller seller,
-			String sellerName,
-			@RequestParam(name="sellerRegNo")  String sellerRegNo, 
+			@RequestParam String sellerName,
+			@RequestParam String sellerRegNo, 
 			@RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-			RedirectAttributes redirectAttr) throws IllegalStateException, IOException {
+			RedirectAttributes redirectAttr) throws Exception {
 	
 		log.debug("member = {}", seller);
 		log.debug("regNo = {}", sellerRegNo);
@@ -148,38 +159,59 @@ public class MemberController {
 									.sellerRegNo(sellerRegNo)
 									.sellerName(sellerName)
 									.build());
+		try {
+			// 비밀번호 암호화
+			String rawPassword = seller.getPassword();
+			String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
+			seller.setMemberPassword(encodedPassword);
+			log.debug("encodedPassword = {}", encodedPassword);
+			
+			//회원권한 db입력용
+			Map<String, Object> memberAuthMap = new HashMap<>();
+			memberAuthMap.put("memberId", seller.getMemberId());
+			memberAuthMap.put("memberAuth", "ROLE_SELLER");
+			
+			//사업자등록증 서버컴퓨터 저장
+			String renamedFilename = fileSaver("/resources/upload/sellerRegFiles", sellerRegFile.getOriginalFilename(), sellerRegFile);
+			
+			
+			//판매자정보 저장
+			seller.setAttachment(SellerInfoAttachment.builder()
+					.memberId(seller.getMemberId())
+					.originalFilename(sellerRegFile.getOriginalFilename())
+					.renamedFilename(renamedFilename)
+					.build());	
+			log.debug("seller = {}", seller);
+			int result = memberService.insertSeller(memberAuthMap, seller);
+			
+			redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
+			return "redirect:/member/memberLogin.do";
+		} catch(Exception e) {
+			log.error("회원가입 오류 : " + e.getMessage(), e);
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * @param directoryPath 저장경로 문자열
+	 * @param originalFilename 파일원래이름
+	 * @param sellerRegFile 파일
+	 * @return renamedFilename 파일저장이름
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	public String fileSaver(String directoryPath, String originalFilename, 
+			MultipartFile sellerRegFile) throws IllegalStateException, IOException {
 		
-		// 비밀번호 암호화
-		String rawPassword = seller.getPassword();
-		String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
-		seller.setMemberPassword(encodedPassword);
-		log.debug("encodedPassword = {}", encodedPassword);
-		
-		//회원권한 db입력용
-		Map<String, Object> memberAuthMap = new HashMap<>();
-		memberAuthMap.put("memberId", seller.getMemberId());
-		memberAuthMap.put("memberAuth", "ROLE_SELLER");
-		
-		//사업자등록증 서버컴퓨터 저장
-		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		String saveDirectory = application.getRealPath(directoryPath);
 		log.debug("saveDirectory = {}",saveDirectory);
-		String renamedFilename = HelloSpringUtils.getRenamedFilename(sellerRegFile.getOriginalFilename());
+		String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
 		File destFile = new File(saveDirectory, renamedFilename);
 		log.debug("destFile = {}",destFile);
 		sellerRegFile.transferTo(destFile);
 		
-		seller.setAttachment(SellerInfoAttachment.builder()
-				.memberId(seller.getMemberId())
-				.originalFilename(sellerRegFile.getOriginalFilename())
-				.renamedFilename(renamedFilename)
-				.build());	
-		
-		//판매자정보 저장
-		log.debug("seller = {}", seller);
-		int result = memberService.insertSeller(memberAuthMap, seller);
-		
-		redirectAttr.addFlashAttribute("msg", "회원 가입이 정상적으로 처리되었습니다.");
-		return "redirect:/";
+		return renamedFilename;
 	}
 	
 	@PostMapping("/sendEmailKey.do")
@@ -282,13 +314,14 @@ public class MemberController {
 		param.put("startDate", startDate);
 		param.put("endDate",endDate);
 		log.debug("param = {}",param);
-		model.addAttribute("startDate",startDate);
+		
 		//endDate 다시 -1해서 view에 전달
 		if(endDate != null && endDate != "") {
 			LocalDate _endDate = LocalDate.parse(endDate, dtf);
 			_endDate = _endDate.plusDays(-1);
 			endDate =  _endDate.toString();
 		}
+		model.addAttribute("startDate",startDate);
 		model.addAttribute("endDate",endDate);
 		
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
@@ -325,6 +358,96 @@ public class MemberController {
 		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	@GetMapping("/sellerUpdate.do")
+	public void sellerUpdate() {
+		
+	}
+	@PostMapping("/sellerUpdate.do")
+	public String sellrUpdate(@ModelAttribute Seller seller, 
+							 @RequestParam String sellerName,
+							 @RequestParam String sellerRegNo, 
+							 RedirectAttributes redirectAttr,
+							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
+							 @RequestParam(required = false) long delFileNo,
+							 Model model) throws Exception {
+		
+		seller.setSellerInfo(SellerInfo.builder()
+									.memberId(seller.getMemberId())
+									.sellerRegNo(sellerRegNo)
+									.sellerName(sellerName)
+									.build());
+		log.debug("seller = {}", seller);
+		
+		int result = 0;
+		if(!sellerRegFile.isEmpty() && delFileNo != 0) {
+			try {
+			String directory = "/resources/upload/sellerRegFiles";
+			String saveDirectory = application.getRealPath(directory);
+			log.debug("sellerRegFile = {}",sellerRegFile);
+			//첨부파일 삭제
+			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+			boolean isDeleted = delFile.delete();
+			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+			
+			//업로드파일 저장, db행 삭제
+			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
+			log.debug("renamedFilename!!!!!!!!!!!! = {}",renamedFilename);
+			if(isDeleted) {
+				result = memberService.deleteSellerAttachment(delFileNo);//
+				log.debug("isDel in DB? = {}", result>0);	
+			}
+			
+			//seller에 attachment설정
+			seller.setAttachment(SellerInfoAttachment.builder()
+					.memberId(seller.getMemberId())
+					.originalFilename(sellerRegFile.getOriginalFilename())
+					.renamedFilename(renamedFilename)
+					.build());
+			log.debug("seller = {}", seller);
+			} catch (Exception e) {
+				log.error("판매자 정보수정 첨부파일오류 : " + e.getMessage(), e);
+				throw e;
+			}
+		}
+		
+		//판매자 정보 변경		
+		result = memberService.updateSeller(seller);
+		UserDetails updatedMember = memberSecurityService.loadUserByUsername(seller.getMemberId());
+		
+		Authentication updateAthentication = new UsernamePasswordAuthenticationToken(
+				updatedMember,
+				updatedMember.getPassword(),
+				updatedMember.getAuthorities()
+				);
+		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
+		log.debug("member={}", updatedMember);
+		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
+		return "redirect:/member/sellerUpdate.do";
+		
+	}
+	
+	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws IOException {
+		SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(no);
+		log.debug("attach = {}", attach);
+		
+		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
+		File downFile = new File(saveDirectory, attach.getRenamedFilename());
+		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
+		Resource resource = resourceLoader.getResource(location);
+		log.debug("resource = {}", resource);
+		log.debug("resource#file = {}", resource.getFile());
+		
+		// 응답헤더 작성
+		response.setContentType("application/octet-stream; charset=utf-8");
+		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+		
+		return resource;
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작
@@ -483,9 +606,12 @@ public class MemberController {
 							  @RequestParam String memberId,
 			  				  @RequestParam String memberPassword,
 			  				  RedirectAttributes redirectAttr) {
-		Member member = memberService.selectMemberById(memberId);
+		Member member = (Member) (authentication.getPrincipal());
 		String pwd = member.getPassword();
 		if(bcryptPasswordEncoder.matches(memberPassword, pwd)) {
+			if(member.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SELLER"))) {
+				return"redirect:/member/sellerUpdate.do";
+			}
 			return "redirect:/member/memberUpdate.do";
 		}
 		log.debug("memberPassword={}",memberPassword);
@@ -554,15 +680,34 @@ public class MemberController {
 		}
 	}
 
+	@GetMapping("/memberSubscribeList.do")
+	public void memberSubscribeList(Authentication authentication, Model model) {
+		String memberId = authentication.getName();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubscription", recentSubscription);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}
+		
+		List<SubscriptionOrder> subList = memberService.selectSubscriptionListById(memberId);
+		if(subList != null) {
+			log.debug("subList={}",subList);
+			model.addAttribute("subList", subList);
+		}
+	}	
+		
 	@GetMapping("/memberOrderList.do")
 	public void memberOrderList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubOrder={}",recentSubOrder);
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -570,11 +715,12 @@ public class MemberController {
 	@GetMapping("/memberReviewList.do")
 	public void memberReviewList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -582,11 +728,12 @@ public class MemberController {
 	@GetMapping("/memberDirectInquire.do")
 	public void memberDirectInquire(Authentication authentication, Model model){
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
@@ -594,13 +741,14 @@ public class MemberController {
 	@GetMapping("/memberInquireList.do")
 	public void memberInquireList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		if(recentSubOrder != null) {
-			String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubOrder", recentSubOrder);
+			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+		}
 	}
 	
 	@Autowired
@@ -618,13 +766,36 @@ public class MemberController {
 		model.addAttribute("vegetables", vegetables);
 		
 		String memberId = authentication.getName();
-		SubscriptionOrderEx recentSubOrder = memberService.selectRecentSubById(memberId); 
-		String pCode = recentSubOrder.getSubscription().getSProductCode();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		String pCode = recentSubscription.getSProductCode();
 		SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-		model.addAttribute("recentSubOrder", recentSubOrder);
+		model.addAttribute("recentSubscription", recentSubscription);
 		model.addAttribute("recentSubProduct", recentSubProduct);
 		
 	}
+	
+	@PostMapping("/memberSubscribeOrderUpdate.do")
+	public String memberSubscribeOrderUpdate(
+			Subscription subscription,
+			RedirectAttributes redirectAttr) {
+		
+		int result = memberService.updateSubscribeOrder(subscription);
+		redirectAttr.addFlashAttribute("msg", "구독 수정이 완료되었습니다. :)");
+		return "redirect:/member/memberSubscribeList.do";
+	}
+	
+	@GetMapping("/memberSubscribeDetail.do")
+		public void memberSubscribeDetail(@RequestParam String sOrderNo, Model model) {
+			log.debug("sOrderNo={}",sOrderNo);
+			SubscriptionOrder subOrder = memberService.selectOneSubscriptionOrder(sOrderNo);
+			SubscriptionProduct subProduct = memberService.selectRecentSubProduct(subOrder.getSoProductCode());
+			log.debug("subOrder={}",subOrder);
+			log.debug("subProduct={}",subProduct);
+			model.addAttribute("subOrder",subOrder);
+			model.addAttribute("subProduct", subProduct);
+			
+		}
+	
 	
 	//----------------------수아 끝
 }

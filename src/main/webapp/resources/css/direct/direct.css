@@ -1,5 +1,5 @@
 /* @CHARSET "UTF-8"; */
-
+/* 민지 시작 */
 /******상품 상세 페이지**** */
 /****** 구역 나누기 ***** */
 .main-container {
@@ -796,3 +796,34 @@
 	padding: 30px 2px 20px 2px;
 	text-align: center;
 }
+
+/* 민지 끝 */
+
+/* 재경 시작 */
+/* 상품 목록 */
+
+#moveToPage {
+	text-decoration: none;
+	color : black;
+}
+
+.form-control{
+	width : 170px;
+}
+
+.align {
+	width : 170px;
+}
+
+h6{
+	transform: translate(0, 30px);
+	color : black;
+	font-style: italic;
+	text-shadow: 1px 0px 3px white;
+}
+
+d-flex{
+	text-align: right;
+}
+
+/* 재경 끝 */

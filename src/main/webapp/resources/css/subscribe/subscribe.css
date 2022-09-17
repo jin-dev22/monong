@@ -16,6 +16,10 @@
 	padding: 20px 60px 30px 30px;
 }
 
+.s-product_selected input:focus-visible {
+	outline: none;
+}
+
 .s-product_selected h4 {
 	color: #EA5C2B;
 	font-weight: 700;
@@ -82,10 +86,6 @@
 	border: none;
 }
 
-.s-product-info-content input:focus-visible {
-	outline: none;
-}
-
 .s-product-info-content > div,
 .s-product-info-content > div > input,
 .s-pay-info-content > div,
@@ -114,10 +114,6 @@
 	border-style: none;
 	border-bottom: 1px solid #333;
 	width: 80%;
-}
-
-.s-order-addr-info-content input[type=text]:focus-visible {
-	outline: none;
 }
 
 .s-order-addr-info-content label {
@@ -152,9 +148,6 @@
 	border: none;
 }
 
-.s-pay-info-content input[type=text]:focus-visible {
-	outline: none;
-}
 #s-order-card {
 	display: flex;
 	margin: 20px 0;
@@ -164,38 +157,41 @@
 
 #s-order-card>p {
 	width: 150px;
-	display: inline-block;
 }
 
 .s-card {
-	width: 200px;
+	display: flex;
+	width: calc(100% - 140px);
+}
+
+.s-card div {
+	position: relative;
+	width: calc(100% / 2);
 	height: 160px;
-	margin-right: 40px;
-	border: 1px solid #EA5C2B;
+	margin-right: 20px;
 	border-radius: 10px;
 	text-align: center;
-	position: relative;
 	background-color: #f6d8601c;
 }
 
-.s-card>label {
-	width: 100%;
-}
-
-.s-card>input {
+.s-card #s-card-kg,
+.s-card #s-card-kakao {
 	position: absolute;
 	top: 20px;
-	left: 20px;
+	right: 140px;
 	accent-color: #EA5C2B;
 }
 
+.s-card .payCheck {
+	border: 1px solid #EA5C2B;
+}
 .s-card img, .s-card>span {
 	display: block;
 }
 
 .s-card img {
 	width: 120px;
-	margin: auto;
+	margin: auto 10px;
 }
 
 .s-order-totle-price {
@@ -233,8 +229,23 @@
 	color: #333;
 }
 
+.sPaymentDate {
+	display: flex;
+	justify-content: space-between;
+	font-size: 20px;
+	color: red;
+	margin-right: 20px;
+}
+
+.sPaymentDate input {
+	margin-left: auto;
+	border-style: none;
+	text-align: right;
+	color: red;
+}
+
 .privacyAgree {
-	margin-top: 50px;
+	margin-top: 60px;
 }
 
 .privacyAgree p {
@@ -336,8 +347,9 @@
 	height: 50px;
 }
 
-.s-pay-info > div {
-	margin-top: 20px;
+.s-pay-info .moveButton {
+	margin-top: 60px;
+	text-align: right;
 }
 
 

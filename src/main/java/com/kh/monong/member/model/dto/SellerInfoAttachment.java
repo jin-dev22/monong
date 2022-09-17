@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class SellerInfoAttachment {
-	private int sellerAttachNo;
+	private long sellerAttachNo;
 	@NonNull
 	private String memberId;
 	@NonNull

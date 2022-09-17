@@ -36,15 +36,13 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int insertSubscription(SubscriptionOrder subscriptionOrder, Subscription subscription) {
-		int result = subscribeDao.insertSubscription(subscription);
-		result = subscribeDao.insertSubscriptionOrder(subscriptionOrder);
-		return result;
+	public int insertSubscription(Subscription subscription) {
+		return subscribeDao.insertSubscription(subscription);
 	}
 	
 	@Override
-	public SubscriptionOrder selectSubscriptionOrderRecent(String sNo) {
-		return subscribeDao.selectSubscriptionOrderRecent(sNo);
+	public Subscription selectSubscription(String sNo) {
+		return subscribeDao.selectSubscription(sNo);
 	}
 	
 	@Override
@@ -117,6 +115,11 @@ public class SubscribeServiceImpl implements SubscribeService {
 		int result = subscribeDao.updateSubscribeReviewRecommendCancel(param);
 		result = subscribeDao.deleteRecommendedSubscribeReview(param);
 		return result;
+	}
+	
+	@Override
+	public String getSubscriptionByMemberId(String memberId) {
+		return subscribeDao.getSubscriptionByMemberId(memberId);
 	}
 	// 미송코드 끝
 }

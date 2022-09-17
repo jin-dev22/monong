@@ -1,4 +1,4 @@
-<%@page import="com.kh.monong.subscribe.model.dto.SubscriptionOrderEx"%>
+<%@page import="com.kh.monong.subscribe.model.dto.SubscriptionOrder"%>
 <%@page import="com.kh.monong.member.model.dto.Member"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

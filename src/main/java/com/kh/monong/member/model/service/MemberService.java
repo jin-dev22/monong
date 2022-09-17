@@ -8,7 +8,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 public interface MemberService {
@@ -48,6 +49,13 @@ public interface MemberService {
 	String selectProdNameByNo(String prodNo);
 
 	int updateDOrderStatus(Map<String, Object> param);
+	
+	SellerInfoAttachment selectSellerInfoAttachment(long delFileNo);
+	
+	int updateSeller(Seller seller);
+
+	int deleteSellerAttachment(long delFileNo);
+
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
@@ -75,14 +83,18 @@ public interface MemberService {
 	int updateSellerStatus(String id);
 
 	int getTotalSellerEnrollByMonth();
-	
-	SubscriptionOrderEx selectSubById(String memberId);
 
-	SubscriptionOrderEx selectRecentSubById(String memberId);
+	Subscription selectRecentSubById(String memberId);
 
 	SubscriptionProduct selectRecentSubProduct(String pCode);
 
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 //-----------수아 끝
 
 

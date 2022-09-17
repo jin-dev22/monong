@@ -32,7 +32,7 @@
 		<intercept-url pattern="/subscribe/subscribeMain.do" access="permitAll"/>
 		<intercept-url pattern="/subscribe/subscribeReviewList.do" access="permitAll"/>
 		<intercept-url pattern="/subscribe/subscribeReviewDetail.do" access="permitAll"/>
-		<intercept-url pattern="/faq/**" access="permitAll"/>
+		<intercept-url pattern="/common/**" access="permitAll"/>
 		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
 		

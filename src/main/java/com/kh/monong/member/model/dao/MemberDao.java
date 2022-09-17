@@ -16,7 +16,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 @Mapper
@@ -62,7 +63,17 @@ public interface MemberDao {
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 
 	@Update("update direct_order set d_order_status = #{newStatus} where d_order_no = #{dOrderNo}")
-	int updateDOrderStatus(Map<String, Object> param);
+	int updateDOrderStatus(Map<String, Object> param);	
+	
+	@Select("select * from seller_info_attachment where seller_attach_no = #{no}")
+	SellerInfoAttachment selectSellerInfoAttachment(long no);
+	
+	@Update("update seller_info set seller_reg_no = #{sellerRegNo}, seller_name = #{sellerName} where member_id = #{memberId}")
+	int updateSellerInfo(SellerInfo sellerInfo);
+	
+	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
+	int deleteSellerAttachment(long delFileNo);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
@@ -104,16 +115,22 @@ public interface MemberDao {
 	int updateSellerStatus(String id);
 
 	int getTotalSellerEnrollByMonth();
-	
-	SubscriptionOrderEx selectSubById(String memberId);
 
-	SubscriptionOrderEx selectRecentSubById(String memberId);
+	Subscription selectRecentSubById(String memberId);
 
 	@Select("select * from subscription_product where s_product_code = #{pCode}")
 	SubscriptionProduct selectRecentSubProduct(String pCode);
 
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	
+	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
 	//------------------------수아 끝
 
 	

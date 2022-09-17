@@ -38,13 +38,14 @@ public class DirectController {
 	private DirectService directService;
 	
 	//----------------- 재경 시작
-		// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
+	// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
 		@Autowired
 		ServletContext application;
-			
+				
 		@Autowired
 		ResourceLoader resourceLoader;
-		
+			
+		// 직거래 상품 리스트 출력
 		@GetMapping("/directProductList.do")
 		public void directProductList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 			// 1. content영역
@@ -53,15 +54,36 @@ public class DirectController {
 			param.put("cPage", cPage);
 			param.put("limit", limit);
 			List<DirectProduct> list = directService.selectDirectProductList(param);
+			List<DirectProductAttachment> attachList = directService.selectDirectProductAttachmentList();
 			log.debug("list = {}", list);
 			model.addAttribute("list", list);
-			
+			log.debug("attachList = {}", attachList);
+			model.addAttribute("attachList", attachList);
+				
 			// 2. pagebar영역
 			int totalContent = directService.getTotalContent();
-			log.debug("totalContent = {}", totalContent);
+			
 			String url = request.getRequestURI(); // /monong/direct/directProductList.do
 			String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 			model.addAttribute("pagebar", pagebar);
+		}
+		
+		// 상품 등록
+		@GetMapping("/directProductEnroll.do")
+		public void directProductEnroll() {
+			
+		}
+		
+		
+		@PostMapping("/directProductEnroll.do")
+		public String directProductEnroll(DirectProduct directProduct, RedirectAttributes rttr) {
+			log.debug("directProductEnroll.....", directProduct);
+			
+			directService.directProductEnroll(directProduct);
+			
+			rttr.addFlashAttribute("enroll_result", directProduct.getDProductNo());
+			
+			return "redirect:/direct/directProductList.do";
 		}
 		//----------------- 재경 끝
 	//----------------- 민지 시작
