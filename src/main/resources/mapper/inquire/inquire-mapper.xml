@@ -20,7 +20,12 @@
 		<result column="inquire_content" property="inquireContent"/>
 		<result column="inquire_created_at" property="inquireCreatedAt"/>
 		<result column="has_answer" property="hasAnswer"/>
-		<association colum property="inquireAnswer"/>
+		<association property="inquireAnswer" javaType="InquireAnswer">
+			<id column="inquire_a_no" property="inquireANo"/>
+			<result column="inquire_no" property="inquireNo"/>
+			<result column="inquire_a_content" property="inquireAContent"/>
+			<result column="inquire_answered_at" property="inquireAnsweredAt"/>
+		</association>
 	</resultMap>
   
 </mapper>

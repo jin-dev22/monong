@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.monong.inquire.model.dao.InquireDao;
 import com.kh.monong.inquire.model.dto.Inquire;
+import com.kh.monong.inquire.model.dto.InquireAnswer;
 
 @Service
 public class InquireServiceImpl implements InquireService{
@@ -28,5 +29,10 @@ public class InquireServiceImpl implements InquireService{
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		param.put("rowBounds", rowBounds);
 		return inquireDao.selectInquireListByMemberType(param);
+	}
+	
+	@Override
+	public int insertInquireAnswer(InquireAnswer inqAnswer) {
+		return inquireDao.insertInquireAnswer(inqAnswer);
 	}
 }
