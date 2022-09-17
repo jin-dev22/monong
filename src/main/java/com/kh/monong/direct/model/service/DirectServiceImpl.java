@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dao.DirectDao;
+import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 
@@ -53,10 +54,15 @@ public class DirectServiceImpl implements DirectService {
 	
 	
 	//----------------- 재경 끝
-		//----------------- 민지 시작
+	//----------------- 민지 시작
 	@Override
 	public DirectProduct selectOneDirectProduct(String dProductNo) {
 		return directDao.selectOneDirectProductCollection(dProductNo);
+	}
+	
+	@Override
+	public Cart checkCartDuplicate(Map<String, Object> cart) {
+		return directDao.checkCartDuplicate(cart);
 	}
 	//----------------- 민지 끝
 }
