@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +27,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.inquire.model.dto.Inquire;
+import com.kh.monong.inquire.model.service.InquireService;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
@@ -49,6 +50,9 @@ public class AdminController {
 	@Autowired
 	ResourceLoader resourceLoader;
 	
+	@Autowired
+	InquireService inquireService;
+	//--------------------------------------------------------수아시작
 	@GetMapping("/memberList.do")
 	public void memberList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();
@@ -161,4 +165,33 @@ public class AdminController {
 		redirectAttr.addFlashAttribute("msg", "가입거절 처리가 완료되었습니다.");
 		return "redirect:/admin/sellerWaitList.do";
 	}
+	//--------------------------------------------------------수아끝
+	//--------------------------------------------------------수진시작
+	@GetMapping("/adminInquireList.do")
+	public void adminInquireList(@RequestParam String memberType, 
+								@RequestParam(defaultValue = "1") int cPage,
+								Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		String auth = "";
+		switch (memberType) {
+		case "seller":
+			auth = "ROLE_SELLER";
+			break;
+		case "member":
+			auth = "ROLE_MEMBER";
+			break;
+		}
+		param.put("auth", auth);
+		List<Inquire> inqList = inquireService.selectInquireListByMemberType(param);
+		
+		int totalContent = inquireService.getTotalInqureContent(param);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+	};
+	
+	//--------------------------------------------------------수진끝
 }

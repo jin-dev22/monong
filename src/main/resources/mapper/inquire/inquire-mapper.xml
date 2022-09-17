@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.monong.inquire.model.dao.InquireDao">
+	<select id="selectInquireListByMemberType" resultMap="inquireMap">
+		select 
+		    *
+		from 
+		    inquire inq left join inquire_answer using(inquire_no)
+		where 
+		    member_id in(select member_id from member_authority where auth = #{auth}) 
+		order by 
+		    has_answer, inquire_created_at desc
+	</select>
+	<resultMap type="inquire" id="inquireMap">
+		<id column="inquire_no" property="inquireNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="inquire_title" property="inquireTitle"/>
+		<result column="inquire_content" property="inquireContent"/>
+		<result column="inquire_created_at" property="inquireCreatedAt"/>
+		<result column="has_answer" property="hasAnswer"/>
+		<association colum property="inquireAnswer"/>
+	</resultMap>
+  
+</mapper>
