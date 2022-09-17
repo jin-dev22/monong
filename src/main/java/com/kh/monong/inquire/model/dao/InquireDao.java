@@ -25,4 +25,7 @@ public interface InquireDao {
 	@Update("update inquire set has_answer = 'Y' where inquire_no = #{inquireNo}")
 	public int updateInquireHasAnswered(String inquireNo);
 
+	@Insert("insert into inquire values(seq_inquire_no.nextval, #{memberId}, #{inquireTitle}, #{inquireContent}, default, default)")
+	public int insertInquire(Inquire inquire);
+
 }

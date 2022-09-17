@@ -14,4 +14,6 @@ public interface InquireService {
 
 	int insertInquireAnswer(InquireAnswer inqAnswer);
 
+	int insertInquire(Inquire inquire);
+
 }

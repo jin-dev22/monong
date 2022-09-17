@@ -47,4 +47,9 @@ public class InquireServiceImpl implements InquireService{
 	private int updateInquireHasAnswered(String inquireNo) {
 		return inquireDao.updateInquireHasAnswered(inquireNo);
 	}
+	
+	@Override
+	public int insertInquire(Inquire inquire) {
+		return inquireDao.insertInquire(inquire);
+	}
 }
