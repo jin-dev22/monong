@@ -6,12 +6,18 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.inquire.model.dao.InquireDao;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.inquire.model.dto.InquireAnswer;
+import com.kh.monong.member.model.service.MemberServiceImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Transactional(rollbackFor = Exception.class)
 @Service
+@Slf4j
 public class InquireServiceImpl implements InquireService{
 
 	@Autowired
@@ -33,6 +39,12 @@ public class InquireServiceImpl implements InquireService{
 	
 	@Override
 	public int insertInquireAnswer(InquireAnswer inqAnswer) {
-		return inquireDao.insertInquireAnswer(inqAnswer);
+		int result = inquireDao.insertInquireAnswer(inqAnswer);
+		result = updateInquireHasAnswered(inqAnswer.getInquireNo());
+		return result;
+	}
+
+	private int updateInquireHasAnswered(String inquireNo) {
+		return inquireDao.updateInquireHasAnswered(inquireNo);
 	}
 }

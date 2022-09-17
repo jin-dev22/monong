@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.inquire.model.dto.InquireAnswer;
@@ -18,7 +19,10 @@ public interface InquireDao {
 
 	public List<Inquire> selectInquireListByMemberType(Map<String, Object> param);
 
-	@Insert("insert into inquire_answer values(seq_inq_a_no.nextval,#{inquireNo}, #{inquireAContent},  default)")
+	@Insert("insert into inquire_answer values(seq_inquire_a_no.nextval,#{inquireNo}, #{inquireAContent},  default)")
 	public int insertInquireAnswer(InquireAnswer inqAnswer);
+
+	@Update("update inquire set has_answer = 'Y' where inquire_no = #{inquireNo}")
+	public int updateInquireHasAnswered(String inquireNo);
 
 }
