@@ -381,7 +381,7 @@ public class MemberController {
 		log.debug("seller = {}", seller);
 		
 		int result = 0;
-		if(!sellerRegFile.isEmpty()) {// && delFileNo != 0) {
+		if(!sellerRegFile.isEmpty() && delFileNo != 0) {
 			try {
 			String directory = "/resources/upload/sellerRegFiles";
 			String saveDirectory = application.getRealPath(directory);
