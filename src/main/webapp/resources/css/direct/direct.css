@@ -1,4 +1,4 @@
-/* @CHARSET "UTF-8"; */
+@CHARSET "UTF-8";
 /* 민지 시작 */
 /******상품 상세 페이지**** */
 /****** 구역 나누기 ***** */
@@ -68,6 +68,27 @@
 	display: inline-block;
     font-size: 15px;
     padding-bottom: 15px;
+}
+
+.soldout {
+	display: none;
+	position: absolute;
+	z-index: 1;
+	background-color: #fff;
+	width: 400px;
+    min-height: 200px;
+    justify-content: center;
+}
+.soldout-content {
+	display: inline-flex;
+	background-color: rgba(196,199,204);
+	color: white;
+	font-size: 15px;
+	width: 396px;
+    height: 60px;
+    margin-top: 12px;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 /****** 이미지 슬라이드 ***** */
@@ -171,6 +192,7 @@
   display : block;
   width: 394px;
   margin: 0 auto;
+  z-index: 0;
 }
 
 .dropbtn{
@@ -288,7 +310,7 @@
     width: 80px;
     justify-content: center;
 }
-.minus {
+.option-count-minus {
 	width: 25px;
     height: 25px;
     border: none;
@@ -302,14 +324,14 @@
     height: 28px;
     align-items: center;
 }
-.plus {
+.option-count-plus {
 	width: 25px;
     height: 25px;
     border: none;
     vertical-align: top;
     justify-content: center;
 }
-#delete {
+#option-count-delete {
 	border: none;
     background-color: transparent;
 }
