@@ -58,8 +58,9 @@
 			if(confirm("답변을 등록하시겠습니까?")){
 				$.ajax({
 					url : "${pageContext.request.contextPath}/admin/inquireAnswer.do",
+					headers,
 					method : "POST",
-					data : {inquireAContent : inquireAContent.value, inquireNo : inqureNo.value},
+					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value},
 					success(result){
 						console.log(result);
 						if(result > 0){
