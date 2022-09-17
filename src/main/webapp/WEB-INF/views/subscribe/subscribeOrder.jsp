@@ -44,7 +44,6 @@
 			</c:if>
 			<div class="s-product-info-content">
 				<input type="hidden" name="sNo" value=""/>
-				<input type="hidden" name="sOrderNo" value=""/>
 				<input type="hidden" name="sProductCode" value="${orderProduct.SProductCode}"/>
 				<p class="bold">상품정보</p>
 				<p>상품명</p>
@@ -77,21 +76,26 @@
 		</div>
 		<div class="s-order-addr-info">
 			<h4>배송지 정보</h4>
-			<input type="hidden" name="memberId" value="<sec:authentication property="principal.memberId"/>" />
+			<sec:authentication property="principal" var="loginMember"/>
+			<input type="hidden" name="memberId" value="${loginMember.memberId}" />
 			<div class="s-order-addr-info-content">
 				<label for="sRecipient">수령인</label><br/>
-				<input type="text" id="sRecipient" name="sRecipient" value="<sec:authentication property="principal.memberName"/>" required /><br/>
+				<input type="text" id="sRecipient" name="sRecipient" value="${loginMember.memberName}" required /><br/>
 				<span class="sRecipientCheck error">수령인을 입력해주세요.</span><br />
 				<label for="sPhone">연락처</label><br/>
-				<input type="text" id="sPhone" name="sPhone" value="<sec:authentication property="principal.memberPhone"/>" required /><br/>
+				<input type="text" id="sPhone" name="sPhone" value="${loginMember.memberPhone}" required /><br/>
 				<span class="sPhoneCheck error">연락처는 '-'없이 숫자만 입력해주세요.</span><br />
 				<label for="sAddress">주소</label><br/>
-				<input type="text" id="sAddress" name="sAddress" value="<sec:authentication property="principal.memberAddress"/>" required readonly />
+				<input type="text" id="sAddress" name="sAddress" value="${loginMember.memberAddress}" required readonly />
 				<input type="button" id="researchButton" value="검색" class="btn btn-EA5C2B"><br/>
 				<span class="sAddressCheck error">받으실 주소를 입력해주세요.</span><br />
 				<label for="sAddressEx">상세주소</label><br/>
-				<input type="text" id="sAddressEx" name="sAddressEx"
-					value="<c:if test=""></c:if>" required /><br/>
+				<c:if test="${loginMember.memberAddressEx eq null}">
+					<input type="text" id="sAddressEx" name="sAddressEx" value="" required /><br/>
+				</c:if>
+				<c:if test="${loginMember.memberAddressEx ne null}">
+					<input type="text" id="sAddressEx" name="sAddressEx" value="${loginMember.memberAddressEx}" required /><br/>
+				</c:if>
 				<label for="sDeliveryRequest">배송 요청사항(선택)</label><br/>
 				<input type="text" id="sDeliveryRequest" name="sDeliveryRequest" value="">
 			</div>
@@ -328,36 +332,42 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 		},
 		function(rsp) {
 			console.log('rsp = ', rsp); // 화인용
-			if (rsp.success) {
+			const {success, status} = rsp;
+			if (success) {
 				let cardNo = rsp.card_number;
 				customerUid = rsp.customer_uid;
+				
 				console.log('cardNo = ', cardNo); // 화인용
 				console.log('customerUid = ', customerUid); // 화인용
-				// 1. 카드 정보 저장
-	 			$.ajax({
-					url: `${pageContext.request.contextPath}/subscribe/insertCardInfo.do`,
-					method: "POST",
-					data: {
-						cardNo,
-						customerUid,
-						[csrfName]: csrfHash // csrf값 전달
-					},
-					success(response){
-						// 2. 구독 테이블에 저장
-						console.log('response : ', response);
-						return;
-						frm.sNo.value = sNo;
-						frm.sOrderNo.value = merchantUid;
-						frm.customerUid.value = customerUid;
-						frm.sPrice.value = sPrice;
-						frm.sDeliveryRequest.value = frm.sDeliveryRequest.value;
-						frm.submit();
-						alert('첫 구독 성공!');
-					},
-					error(){
-						console.log();	
-					}
-				});
+				
+				if(status == "paid"){
+					// 1. 카드 정보 저장
+		 			$.ajax({
+						url: `${pageContext.request.contextPath}/subscribe/insertCardInfo.do`,
+						method: "POST",
+						data: {
+							cardNo,
+							customerUid,
+							[csrfName]: csrfHash // csrf값 전달
+						},
+						success(response){
+							console.log('response : ', response);
+							if(response == 1){
+								// 2. 구독 테이블에 저장
+								frm.sNo.value = sNo;
+								frm.customerUid.value = customerUid;
+								frm.sPrice.value = sPrice;
+								frm.sDeliveryRequest.value = frm.sDeliveryRequest.value;
+								frm.sPaymentDate.value = frm.sPaymentDate.value;
+								frm.submit();
+								alert('첫 구독 성공!');
+							}
+						},
+						error(){
+							console.log();	
+						}
+					});
+				}
 			} else {
 				alert('결제에 실패했습니다. 다시 시도해주세요');
 				console.log("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);

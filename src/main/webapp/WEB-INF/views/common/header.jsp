@@ -44,7 +44,7 @@
 
 <body>
 	<header id="header">
-		<a href="#" class="logo">
+		<a href="${pageContext.request.contextPath}/" class="logo">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</a>
 		<nav class="nav mainmenu">
@@ -79,7 +79,7 @@
 						<sec:authentication property="principal.username"/>님&#128149;
                 	</p>
                 	<sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
-											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberOrderList.do">마이페이지</a>
+											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberSubscribeList.do">마이페이지</a>
                 	</sec:authorize>
                 	<sec:authorize access="hasRole('ROLE_SELLER')">
 						<a class="nav-link" href="${pageContext.request.contextPath}/member/sellerProdList.do">마이페이지</a>
