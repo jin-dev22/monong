@@ -39,7 +39,7 @@ public interface SubscribeService {
 	
 	List<Vegetables> getVegetables();
 
-	int getSubscriptionReviewStarAvg();
+	double getSubscriptionReviewStarAvg();
 	
 	int getTotalContent();
 	
@@ -47,7 +47,11 @@ public interface SubscribeService {
 	
 	SubscriptionReview selectOneSubscriptionReview(String reviewNo);
 	
-	int updateSubscribeReviewRecommend(String sReviewNo);
+	int getRecommendedYn(Map<String, String> param);
+
+	int updateSubscribeReviewRecommendAdd(Map<String, String> param);
+	
+	int updateSubscribeReviewRecommendCancel(Map<String, String> param);
 	
 	// 미송코드 끝
 

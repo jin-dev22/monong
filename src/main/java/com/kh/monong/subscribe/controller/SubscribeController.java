@@ -1,8 +1,6 @@
 package com.kh.monong.subscribe.controller;
 
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +24,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
+import com.kh.monong.subscribe.model.dto.RecommendedSubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
-import com.kh.monong.subscribe.model.dto.SubscriptionOrderEx;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
@@ -161,7 +159,7 @@ public class SubscribeController {
 	
 	@GetMapping("/subscribeMain.do")
 	public void subscribeMain(Model model) {
-		int sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
+		double sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
 		log.debug("sReviewStarAvg = {}", sReviewStarAvg);
 		
 		int totalContent = subscribeService.getTotalContent();
@@ -206,11 +204,46 @@ public class SubscribeController {
 		return ResponseEntity.ok(sReview);
 	}
 	
-	@PostMapping("/subscribeReviewRecommend.do")
-	public ResponseEntity<?> subscribeReviewRecommend(@RequestParam(required = false) String sReviewNo) {
+	
+	@GetMapping("/subscribeReviewRecommended.do")
+	public ResponseEntity<?> subscribeReviewRecommended(@RequestParam String sReviewNo, @RequestParam String memberId) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		log.debug("param = {}", param);
+		
+		int sRecommendedYn = subscribeService.getRecommendedYn(param);
+		boolean recommended = sRecommendedYn == 1;
+		log.debug("recommended = {}", recommended);
+		
+		return ResponseEntity.ok(recommended);
+	}
+	
+	@PostMapping("/subscribeReviewRecommendAdd.do")
+	public ResponseEntity<?> subscribeReviewRecommendAdd(@RequestParam String memberId, @RequestParam String sReviewNo) {
+		log.debug("memberId = {}", memberId);
 		log.debug("sReviewNo = {}", sReviewNo);
 		
-		int result = subscribeService.updateSubscribeReviewRecommend(sReviewNo);
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		int result = subscribeService.updateSubscribeReviewRecommendAdd(param);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/subscribeReviewRecommendCancel.do")
+	public ResponseEntity<?> subscribeReviewRecommendCancel(@RequestParam String memberId, @RequestParam String sReviewNo) {
+		log.debug("memberId = {}", memberId);
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		int result = subscribeService.updateSubscribeReviewRecommendCancel(param);
 		
 		return ResponseEntity.ok(result);
 	}

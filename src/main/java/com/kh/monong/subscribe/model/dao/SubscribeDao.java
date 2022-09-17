@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.Insert;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -54,8 +56,8 @@ public interface SubscribeDao {
 	@Select("select * from vegetables")
 	List<Vegetables> getVegetables();
 	
-	@Select("select avg(s_review_star) from subscription_review")
-	int getSubscriptionReviewStarAvg();
+	@Select("select round(avg(s_review_star),1) from subscription_review")
+	double getSubscriptionReviewStarAvg();
 	
 	@Select("select count(*) from subscription_review")
 	int getTotalContent();
@@ -63,9 +65,21 @@ public interface SubscribeDao {
 	List<SubscriptionReview> selectSubscriptionReviewListCollection(RowBounds rowBounds);
 
 	SubscriptionReview selectOneSubscriptionReviewCollection(String sReviewNo);
-
+	
+	@Select("select count(*) from recommended_subscription_review where member_id = #{memberId} and s_review_no = #{sReviewNo}")
+	int getRecommendedYn(Map<String, String> param);
+	
 	@Update("update subscription_review set s_review_recommend_num  = s_review_recommend_num + 1 where s_review_no = #{sReviewNo}")
-	int updateSubscribeReviewRecommend(String sReviewNo);
+	int updateSubscribeReviewRecommendAdd(Map<String, String> param);
+
+	@Insert("insert into recommended_subscription_review values(#{memberId}, #{sReviewNo})")
+	int insertRecommendedSubscribeReview(Map<String, String> param);
+
+	@Update("update subscription_review set s_review_recommend_num  = s_review_recommend_num - 1 where s_review_no = #{sReviewNo}")
+	int updateSubscribeReviewRecommendCancel(Map<String, String> param);
+
+	@Insert("delete recommended_subscription_review where member_id = #{memberId} and s_review_no = #{sReviewNo}")
+	int deleteRecommendedSubscribeReview(Map<String, String> param);
 	
 	// 미송코드 끝
 
