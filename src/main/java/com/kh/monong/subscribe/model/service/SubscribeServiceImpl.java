@@ -75,7 +75,7 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int getSubscriptionReviewStarAvg() {
+	public double getSubscriptionReviewStarAvg() {
 		return subscribeDao.getSubscriptionReviewStarAvg();
 	}
 	
@@ -99,8 +99,22 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int updateSubscribeReviewRecommend(String sReviewNo) {
-		return subscribeDao.updateSubscribeReviewRecommend(sReviewNo);
+	public int getRecommendedYn(Map<String, String> param) {
+		return subscribeDao.getRecommendedYn(param);
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendAdd(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendAdd(param);
+		result = subscribeDao.insertRecommendedSubscribeReview(param);
+		return result;
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendCancel(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendCancel(param);
+		result = subscribeDao.deleteRecommendedSubscribeReview(param);
+		return result;
 	}
 	
 	@Override
