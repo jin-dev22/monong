@@ -44,11 +44,25 @@ public class DirectServiceImpl implements DirectService {
 	
 	// 상품 등록
 	@Override
-	public void directProductEnroll(DirectProduct directProduct) {
-		log.debug("(service)directProductEnroll......");
+	public int insertDirectProduct(DirectProduct directProduct) {
+		// insert directProduct
+		int result = directDao.insertDirectProduct(directProduct);
+		log.debug("directProduct#no = {}", directProduct.getDProductNo());
 		
-		directDao.directProductEnroll(directProduct);
-		
+		// insert attachment * 4
+		List<DirectProductAttachment> attachments = directProduct.getDirectProductAttachments();
+		if(!attachments.isEmpty()) {
+			for(DirectProductAttachment attach : attachments) {
+				attach.setDProductNo(directProduct.getDProductNo());
+				result = insertDirectProductAttachment(attach);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public int insertDirectProductAttachment(DirectProductAttachment attach) {
+		return directDao.insertDirectProductAttachment(attach);
 	}
 	
 	

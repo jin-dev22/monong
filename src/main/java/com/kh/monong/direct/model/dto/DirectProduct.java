@@ -13,20 +13,19 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class DirectProduct extends DirectProductEntity {
+//@SuperBuilder
+public class DirectProduct extends DirectProductEntity{
 	private int attachCount;
 	private Member member;
 	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
-	private List<DirectProductOption> directProductOptions = new ArrayList<>();
 	
-	public DirectProduct(String dProductNo, String memberId, String dProductName, String dProductContent,
-			LocalDateTime dProductCreatedAt, LocalDateTime dProductUpdatedAt, int dDefaultPrice, int dDeliveryFee, int attachCount) {
-		super(dProductNo, memberId, dProductName, dProductContent, dProductCreatedAt, dProductUpdatedAt, dDefaultPrice, dDeliveryFee);
-		this.attachCount = attachCount;
+	public DirectProduct(String dProductNo, String memberId, String dProductName, String dProductContent, LocalDateTime dProductCreatedAt,
+						LocalDateTime dProductUpdatedAt, int dDefaultPrice, int dDeliveryFee, int attachCount) {
+			super(dProductNo, memberId, dProductName, dProductContent, dProductCreatedAt, dProductUpdatedAt, dDefaultPrice, dDeliveryFee);
+			this.attachCount = attachCount;
 	}
 	
-	public void add(DirectProductAttachment attach) {
-		this.directProductAttachments.add(attach);
+	public void add(DirectProductAttachment attach){
+				this.directProductAttachments.add(attach);
 	}
-	
 }
