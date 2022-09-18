@@ -11,36 +11,66 @@
 <jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp">
 	<jsp:param name="title" value="모농모농-관리자페이지"></jsp:param>
 </jsp:include>
-<h1>관리자 1:1 문의</h1>
+<style>
+	div.inq-form-align{
+		display: flex;
+	}
+	div.inq-title-align{
+		display: flex;
+		justify-content: space-aound;
+	}	
+	button.inquire-answer-btn{
+		margin-top: 180%;
+	}
+	div.inquireList-header:first-child{
+		margin-right: 400px;
+	}
+</style>
+<h4>관리자 1:1 문의</h4>
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
 		<div>문의 내역이 없습니다.</div>
 	</c:if>
 	<c:if test="${not empty inqList}">
-		<div class="inquire-header"><span>제목</span><span>작성일</span><span>답변</span></div>
+		<div class="inquireList-header">
+			<span class="inq-header-item">제목</span>
+			<span class="inq-header-item">작성일</span>
+			<span class="inq-header-item">답변</span>
+		</div>
 		<div class="accordion" id="inqList-accordion">
 			<c:forEach items="${inqList}" var="inq" varStatus="vs">
 				<div class="accordion-item">
-				    <h2 class="accordion-header" id="heading${vs.count}">
+				    <div class="accordion-header" id="heading${vs.count}">
 				      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${vs.count}" aria-expanded="true" aria-controls="collapse${vs.count}">
-				        <span>${inq.inquireTitle}</span>
-						<span>${inq.inquireCreatedAt}</span>
-						<span>${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>
+				        <div class="inq-title-align">
+					        <span class="inq-title-item">${inq.inquireTitle}</span>
+							<span class="inq-title-item">${inq.inquireCreatedAt}</span>
+							<span class="inq-title-item">${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>
+				        </div>
 				      </button>
-				    </h2>
+				    </div>
 					<div id="collapse${vs.count}" class="accordion-collapse collapse" aria-labelledby="heading${vs.count}" data-bs-parent="#inqList-accordion">
 				      <div class="accordion-body">
-				        <div class="inq-content-container">
-				        	<span class="inq-memberId">${inq.memberId}</span> <span>${inq.inquireContent}</span>
+				        <div class="inq-content-container inq-form-align">
+				        	<label for="memberId" class="inq-memberId">🥕${inq.memberId} :&nbsp;</label>
+				        	<textarea name="memberId" id="memberId" cols="80" rows="10" style="resize: none;" readOnly>${inq.inquireContent}</textarea>
 				        </div>
-				        <div class="inq-answer">
+				        <br />
+				        <div class="inq-answer px-4">
 				        	<form action="" accept-charset="UTF-8">
-					        	<label for="inquireAContent">관리자 : </label>
-					        	<textarea name="inquireAContent" id="inquireAContent" cols="30" rows="10">${inq.inquireAnswer.inquireAContent}</textarea>
-					        	<span>${inq.inquireAnswer.inquireAnsweredAt}</span>
-					        	<input type="hidden" name="inquireNo" value="${inq.inquireNo}"/>
-					        	<sec:csrfInput />
-					        	<button type="button" name="bntSubmitAns" onclick="submitAnswer(this.form);" ${inq.hasAnswer eq 'Y' ? 'disabled' : ''}>답변등록</button>
+				        		<div class="inq-form-align">
+					        		<div class="inq-form-align">
+							        	<label for="inquireAContent">🍃관리자 :&nbsp;</label>
+							        	<textarea name="inquireAContent" id="inquireAContent" cols="80" rows="10" style="resize: none;">${inq.inquireAnswer.inquireAContent}</textarea>
+					        		</div>
+									<div class="px-2 d-flex flex-column justify-content-space-between">
+							        	<span>${inq.inquireAnswer.inquireAnsweredAt}</span>
+							        	<input type="hidden" name="inquireNo" value="${inq.inquireNo}"/>
+							        	<sec:csrfInput />
+							        	<br />
+							        	<button type="button" name="bntSubmitAns" class="btn btn-EA5C2B-reverse inquire-answer-btn" onclick="submitAnswer(this.form);" ${inq.hasAnswer eq 'Y' ? 'disabled' : ''}>답변등록</button>
+									</div>
+				        		</div>
 				        	</form>
 				        </div>
 				      </div>
