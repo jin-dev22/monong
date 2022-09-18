@@ -90,7 +90,7 @@ public interface MemberDao {
 	@Update("update member set member_password = #{memberTempPw} where member_email = #{email}")
 	int updateTempPw(Map<String, Object> map);
 
-	@Update("update member set member_name=#{memberName}, member_birthday = #{memberBirthday}, member_email = #{memberEmail}, member_phone = #{memberPhone}, member_address=#{memberAddress} where member_id = #{memberId}")
+	@Update("update member set member_name=#{memberName}, member_birthday = #{memberBirthday}, member_email = #{memberEmail}, member_phone = #{memberPhone}, member_address=#{memberAddress}, member_address_ex=#{memberAddressEx} where member_id = #{memberId}")
 	int updateMember(Member member);
 
 	@Update("update member set member_password = #{encodedPassword} where member_id= #{memberId}")

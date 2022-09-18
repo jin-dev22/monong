@@ -6,14 +6,6 @@
 
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%-- 
-<c:if test="${memberAuth eq '[ROLE_MEMBER]'}">
-	
-</c:if>
-<c:if test="${memberAuth eq '[ROLE_SELLER]'}">
-	
-</c:if>
- --%>
 <sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
 	<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp"></jsp:include>
 </sec:authorize>
