@@ -16,7 +16,9 @@ public interface DirectService {
 	int getTotalContent();
 	
 	// 상품 등록
-	public void directProductEnroll(DirectProduct directProduct);
+	int insertDirectProduct(DirectProduct directProduct);
+	
+	int insertDirectProductAttachment(DirectProductAttachment attachment);
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
@@ -24,6 +26,7 @@ public interface DirectService {
 
 	Cart checkCartDuplicate(Map<String, Object> cart);
 	//----------------- 민지 끝
+
 
 }
 
