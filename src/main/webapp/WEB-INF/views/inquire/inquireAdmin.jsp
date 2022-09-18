@@ -16,7 +16,7 @@
             <label for="inquireTitle" class="item">제목 : </label>
             <input type="text" class="form-control item" name="inquireTitle" id="inquireTitle" required/>
             <label for="inquireContent">내용 : </label>
-            <textarea name="inquireContent" class="form-control" id="inquireContent" cols="30" rows="10"  style="resize: none;" required></textarea>
+            <textarea name="inquireContent" class="form-control" id="inquireContent" cols="30" rows="10" style="resize: none;" required></textarea>
             <input type="hidden" class="form-control" name="memberId" id="memberId" value='<sec:authentication property="principal.username"/>'/>
 	        <sec:csrfInput />
 	        <br />
