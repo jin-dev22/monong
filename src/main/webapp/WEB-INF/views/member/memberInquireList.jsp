@@ -6,10 +6,14 @@
 
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%-- 
-<sec:authentication property="principal.memberAuthorities"/>
-<jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
- --%>
+
+<c:if test="${memberAuth eq '[ROLE_MEMBER]'}">
+	<jsp:include page="/WEB-INF/views/member/memberMyPage.jsp"></jsp:include>
+</c:if>
+<c:if test="${memberAuth eq '[ROLE_SELLER]'}">
+	<jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
+</c:if>
+
 <style>
 	div.inq-form-align{
 		display: flex;
@@ -74,9 +78,9 @@
 				</div>
 			</c:forEach>
 		</div>
+		<nav>
+			${pagebar}
+		</nav>
 	</c:if>
-	<nav>
-		${pagebar}
-	</nav>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
