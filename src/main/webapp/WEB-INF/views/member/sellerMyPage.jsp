@@ -31,7 +31,7 @@
 	<nav class="nav justify-content-around mt-5">
 		<a href="${pageContext.request.contextPath}/member/sellerProdList.do">판매목록</a>
 		<a href="${pageContext.request.contextPath}/member/sellerProductQnAList.do">상품문의</a>
-		<a href="${pageContext.request.contextPath}/member/sellerInquireList.do">관리자 문의</a>
+		<a href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
 	</nav>
 </div>
 

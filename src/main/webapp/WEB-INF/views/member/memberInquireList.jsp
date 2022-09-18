@@ -6,7 +6,10 @@
 
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%-- 
+<sec:authentication property="principal.memberAuthorities"/>
 <jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
+ --%>
 <style>
 	div.inq-form-align{
 		display: flex;

@@ -447,7 +447,7 @@ public class MemberController {
 		return resource;
 	}
 	
-	@GetMapping("/sellerInquireList.do")
+	@GetMapping("/memberInquireList.do")
 	public void memberInqurieList(Authentication authentication,
 								@RequestParam(defaultValue = "1") int cPage,
 								Model model, HttpServletRequest request) {
@@ -756,20 +756,20 @@ public class MemberController {
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
-	
-	@GetMapping("/memberInquireList.do")
-	public void memberInquireList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}
-	}
-	
+//	
+//	@GetMapping("/memberSubscriptionList.do")
+//	public void memberInquireList(Authentication authentication, Model model) {
+//		String memberId = authentication.getName();
+//		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+//		log.debug("recentSubscription={}",recentSubscription);
+//		if(recentSubscription != null) {
+//			String pCode = recentSubscription.getSProductCode();
+//			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+//			model.addAttribute("recentSubscription", recentSubscription);
+//			model.addAttribute("recentSubProduct", recentSubProduct);
+//		}
+//	}
+//	
 	@Autowired
 	private SubscribeService subscribeService;
 	
