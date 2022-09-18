@@ -35,20 +35,22 @@ public interface DirectDao {
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
+	// 상품 상세 조회
 	DirectProduct selectOneDirectProductCollection(String dProductNo);
 	
+	// 장바구니 중복 조회
 	@Select("select * from cart where d_option_no = #{optionNo} and member_id = #{memberId}")
 	Cart checkCartDuplicate(Map<String, Object> cart);
+
+	// 장바구니 추가
+	@Insert("insert into cart values (seq_cart_no.nextval, #{dOptionNo}, #{memberId}, #{productCount})")
+	int insertCart(Map<String, Object> addList);
+
+	// 장바구니(주문) 추가
+	@Insert("insert into cart values (seq_cart_no.nextval, #{dOptionNo}, #{memberId}, #{productCount})")
+	@SelectKey(statement = "select seq_cart_no.currval from dual", before = false, keyProperty = "cartNo", resultType = int.class)
+	int insertCartByIt(Map<String, Object> param);
+	
+	DirectProduct selectOrderListByCartNo(Object object);
 	//----------------- 민지 끝
-
-	
-
-
-
-
-	
-
-
-	
-
 }

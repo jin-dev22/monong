@@ -25,9 +25,11 @@ public interface DirectService {
 	DirectProduct selectOneDirectProduct(String dProductNo);
 
 	Cart checkCartDuplicate(Map<String, Object> cart);
+
+	int insertCart(Map<String, Object> addList);
+
+	DirectProduct buyIt(Map<String, Object> param);
 	//----------------- 민지 끝
-
-
 }
 
 
