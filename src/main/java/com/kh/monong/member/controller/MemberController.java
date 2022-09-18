@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,13 +44,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
-import com.kh.monong.direct.model.service.DirectService;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
@@ -71,10 +71,7 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-	//-------------수진 시작
-	@Autowired
-	private DirectService directService;
-	
+	//-------------수진 시작		
 	@Autowired
 	ServletContext application;
 	
@@ -370,8 +367,9 @@ public class MemberController {
 							 @RequestParam String sellerRegNo, 
 							 RedirectAttributes redirectAttr,
 							 @RequestParam(name="sellerRegFile", required = false) MultipartFile sellerRegFile,
-							// @RequestParam(required = false) long delFileNo,
+							 @RequestParam(required = false) long delFileNo,
 							 Model model) throws Exception {
+		
 		seller.setSellerInfo(SellerInfo.builder()
 									.memberId(seller.getMemberId())
 									.sellerRegNo(sellerRegNo)
@@ -380,24 +378,24 @@ public class MemberController {
 		log.debug("seller = {}", seller);
 		
 		int result = 0;
-		if(!sellerRegFile.isEmpty()) {// && delFileNo != 0) {
+		if(!sellerRegFile.isEmpty() && delFileNo != 0) {
 			try {
 			String directory = "/resources/upload/sellerRegFiles";
 			String saveDirectory = application.getRealPath(directory);
 			log.debug("sellerRegFile = {}",sellerRegFile);
 			//첨부파일 삭제
-//			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
-//			File delFile = new File(saveDirectory, attach.getRenamedFilename());
-//			boolean isDeleted = delFile.delete();
-//			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
+			SellerInfoAttachment attach = memberService.selectSellerInfoAttachment(delFileNo);
+			File delFile = new File(saveDirectory, attach.getRenamedFilename());
+			boolean isDeleted = delFile.delete();
+			log.debug("{} isDel? = {}",attach.getOriginalFilename() ,isDeleted);
 			
 			//업로드파일 저장, db행 삭제
 			String renamedFilename = fileSaver(directory, sellerRegFile.getOriginalFilename(), sellerRegFile);
 			log.debug("renamedFilename!!!!!!!!!!!! = {}",renamedFilename);
-//			if(isDeleted) {
-//				result = memberService.deleteSellerAttachment(delFileNo);//
-//				log.debug("isDel in DB? = {}", result>0);	
-//			}
+			if(isDeleted) {
+				result = memberService.deleteSellerAttachment(delFileNo);//
+				log.debug("isDel in DB? = {}", result>0);	
+			}
 			
 			//seller에 attachment설정
 			seller.setAttachment(SellerInfoAttachment.builder()
@@ -447,6 +445,30 @@ public class MemberController {
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
 		
 		return resource;
+	}
+	
+	@GetMapping("/memberInquireList.do")
+	public void memberInqurieList(Authentication authentication,
+								@RequestParam(defaultValue = "1") int cPage,
+								Model model, HttpServletRequest request) {
+		String memberId = authentication.getName();
+		log.debug("memberId ={}", memberId);
+		String memberAuth = authentication.getAuthorities().toString();
+		model.addAttribute("memberAuth",memberAuth);
+		Map<String, Object> param = new HashMap<>();
+		param.put("cPage", cPage);
+		int limit = 5;
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		List<Inquire> inqList = memberService.selectInquireList(param);
+		log.debug("inqList = {}", inqList);
+		model.addAttribute("inqList",inqList);
+		
+		int totalContent = memberService.getTotalInqCntBymemberId(memberId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+		log.debug("model",model);
 	}
 	//----------------------수진 끝
 	//----------------------수아 시작
@@ -679,6 +701,25 @@ public class MemberController {
 		}
 	}
 
+	@GetMapping("/memberSubscribeList.do")
+	public void memberSubscribeList(Authentication authentication, Model model) {
+		String memberId = authentication.getName();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubscription", recentSubscription);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}
+		
+		List<SubscriptionOrder> subList = memberService.selectSubscriptionListById(memberId);
+		if(subList != null) {
+			log.debug("subList={}",subList);
+			model.addAttribute("subList", subList);
+		}
+	}	
+		
 	@GetMapping("/memberOrderList.do")
 	public void memberOrderList(Authentication authentication, Model model) {
 		String memberId = authentication.getName();
@@ -717,20 +758,20 @@ public class MemberController {
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
-	
-	@GetMapping("/memberInquireList.do")
-	public void memberInquireList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
-	}
-	
+//	
+//	@GetMapping("/memberSubscriptionList.do")
+//	public void memberInquireList(Authentication authentication, Model model) {
+//		String memberId = authentication.getName();
+//		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+//		log.debug("recentSubscription={}",recentSubscription);
+//		if(recentSubscription != null) {
+//			String pCode = recentSubscription.getSProductCode();
+//			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+//			model.addAttribute("recentSubscription", recentSubscription);
+//			model.addAttribute("recentSubProduct", recentSubProduct);
+//		}
+//	}
+//	
 	@Autowired
 	private SubscribeService subscribeService;
 	
@@ -753,6 +794,29 @@ public class MemberController {
 		model.addAttribute("recentSubProduct", recentSubProduct);
 		
 	}
+	
+	@PostMapping("/memberSubscribeOrderUpdate.do")
+	public String memberSubscribeOrderUpdate(
+			Subscription subscription,
+			RedirectAttributes redirectAttr) {
+		
+		int result = memberService.updateSubscribeOrder(subscription);
+		redirectAttr.addFlashAttribute("msg", "구독 수정이 완료되었습니다. :)");
+		return "redirect:/member/memberSubscribeList.do";
+	}
+	
+	@GetMapping("/memberSubscribeDetail.do")
+		public void memberSubscribeDetail(@RequestParam String sOrderNo, Model model) {
+			log.debug("sOrderNo={}",sOrderNo);
+			SubscriptionOrder subOrder = memberService.selectOneSubscriptionOrder(sOrderNo);
+			SubscriptionProduct subProduct = memberService.selectRecentSubProduct(subOrder.getSoProductCode());
+			log.debug("subOrder={}",subOrder);
+			log.debug("subProduct={}",subProduct);
+			model.addAttribute("subOrder",subOrder);
+			model.addAttribute("subProduct", subProduct);
+			
+		}
+	
 	
 	//----------------------수아 끝
 }

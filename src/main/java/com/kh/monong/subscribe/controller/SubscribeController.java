@@ -1,8 +1,6 @@
 package com.kh.monong.subscribe.controller;
 
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
@@ -67,33 +66,33 @@ public class SubscribeController {
 	}
 	
 	@PostMapping("/insertCardInfo.do")
-	public int insertCardInfo(
+	public ResponseEntity<?> insertCardInfo(
 			@RequestParam String customerUid, CardInfo cardInfo
 			) {
-		return subscribeService.insertCardInfo(cardInfo);
+		return ResponseEntity.ok(subscribeService.insertCardInfo(cardInfo));
 	}
 	
 	@PostMapping("/subComplete.do")
 	public String insertSubOrder(
 			@RequestParam String sNo, @RequestParam String customerUid,
-			@RequestParam String sOrderNo,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate sNextDeliveryDate,
-			SubscriptionOrder subscriptionOrder, Subscription subscription, RedirectAttributes redirectAttr
+			Subscription subscription, RedirectAttributes redirectAttr
 		) {
+		// 카드번호 조회
 		int cardInfoNo = subscribeService.findCardInfoNoByUid(customerUid);
 		
 		// 구독정보 insert
 		int result = 0;
 		if(cardInfoNo != 0) {
 			subscription.setCardInfoNo(cardInfoNo);
-			result = subscribeService.insertSubscription(subscriptionOrder, subscription);
+			result = subscribeService.insertSubscription(subscription);
 		}
-		SubscriptionOrder orderList = null;
+		
+		Subscription subscriptionList = null;
 		if(result == 1) {
-			orderList = subscribeService.selectSubscriptionOrderRecent(subscriptionOrder.getSNo());
+			subscriptionList = subscribeService.selectSubscription(subscription.getSNo());
 		}
-		redirectAttr.addFlashAttribute("orderList", orderList);
-		redirectAttr.addFlashAttribute("msg", "구독이 완료되었습니다. :)");
+		redirectAttr.addFlashAttribute("subscriptionList", subscriptionList);
 		return "redirect:/subscribe/subComplate.do";
 	}
 	
@@ -155,8 +154,23 @@ public class SubscribeController {
 	}
 	
 	@GetMapping("/subscribeMain.do")
-	public void subscribeMain(Model model) {
-		int sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
+	public void subscribeMain(Model model, Authentication authentication) {
+		// 선아 추가(이미 구독중인 사람은 버튼 비활성화)
+		if(authentication != null) {
+			Member member = (Member) (authentication.getPrincipal());
+			log.debug("plan member = {}", member);
+			String isSubscribe = "";
+			if(member != null) {
+				isSubscribe = subscribeService.getSubscriptionByMemberId(member.getMemberId());
+				if(isSubscribe != null)
+					isSubscribe = "Y";
+			}
+			log.debug("isSubscribe = {}", isSubscribe);
+			model.addAttribute("isSubscribe", isSubscribe);
+		}
+		
+		double sReviewStarAvg = subscribeService.getSubscriptionReviewStarAvg();
+
 		log.debug("sReviewStarAvg = {}", sReviewStarAvg);
 		
 		int totalContent = subscribeService.getTotalContent();
@@ -164,7 +178,7 @@ public class SubscribeController {
 		
 		// 상품정보 불러오기
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
-		
+
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("sReviewStarAvg", sReviewStarAvg);
 		model.addAttribute("totalContent", totalContent);
@@ -201,11 +215,46 @@ public class SubscribeController {
 		return ResponseEntity.ok(sReview);
 	}
 	
-	@PostMapping("/subscribeReviewRecommend.do")
-	public ResponseEntity<?> subscribeReviewRecommend(@RequestParam(required = false) String sReviewNo) {
+	
+	@GetMapping("/subscribeReviewRecommended.do")
+	public ResponseEntity<?> subscribeReviewRecommended(@RequestParam String sReviewNo, @RequestParam String memberId) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		log.debug("param = {}", param);
+		
+		int sRecommendedYn = subscribeService.getRecommendedYn(param);
+		boolean recommended = sRecommendedYn == 1;
+		log.debug("recommended = {}", recommended);
+		
+		return ResponseEntity.ok(recommended);
+	}
+	
+	@PostMapping("/subscribeReviewRecommendAdd.do")
+	public ResponseEntity<?> subscribeReviewRecommendAdd(@RequestParam String memberId, @RequestParam String sReviewNo) {
+		log.debug("memberId = {}", memberId);
 		log.debug("sReviewNo = {}", sReviewNo);
 		
-		int result = subscribeService.updateSubscribeReviewRecommend(sReviewNo);
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		int result = subscribeService.updateSubscribeReviewRecommendAdd(param);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/subscribeReviewRecommendCancel.do")
+	public ResponseEntity<?> subscribeReviewRecommendCancel(@RequestParam String memberId, @RequestParam String sReviewNo) {
+		log.debug("memberId = {}", memberId);
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("sReviewNo", sReviewNo);
+		int result = subscribeService.updateSubscribeReviewRecommendCancel(param);
 		
 		return ResponseEntity.ok(result);
 	}

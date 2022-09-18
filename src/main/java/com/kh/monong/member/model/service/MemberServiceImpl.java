@@ -10,12 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 import lombok.extern.slf4j.Slf4j;
@@ -158,6 +160,20 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteSellerAttachment(long delFileNo) {
 		return memberDao.deleteSellerAttachment(delFileNo);
 	}
+	
+	@Override
+	public List<Inquire> selectInquireList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		return memberDao.selectInquireList(param);
+	}
+	
+	@Override
+	public int getTotalInqCntBymemberId(String memberId) {
+		return memberDao.getTotalInqCntBymemberId(memberId);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작
@@ -238,6 +254,11 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	@Override
+	public int deleteSeller(String memberId) {
+		return memberDao.deleteSeller(memberId);
+	}
+	
+	@Override
 	public Subscription selectRecentSubById(String memberId) {
 		return memberDao.selectRecentSubById(memberId);
 	}
@@ -248,8 +269,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int deleteSeller(String memberId) {
-		return memberDao.deleteSeller(memberId);
+	public int updateSubscribeOrder(Subscription subscription) {
+		return memberDao.updateSubscribeOrder(subscription);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> selectSubscriptionListById(String memberId) {
+		return memberDao.selectSubscriptionListById(memberId);
+	}
+	
+	@Override
+	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
+		return memberDao.selectOneSubscriptionOrder(sOrderNo);
 	}
 	//------------------수아 끝
 }

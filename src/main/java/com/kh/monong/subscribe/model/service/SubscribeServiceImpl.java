@@ -36,15 +36,13 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int insertSubscription(SubscriptionOrder subscriptionOrder, Subscription subscription) {
-		int result = subscribeDao.insertSubscription(subscription);
-		result = subscribeDao.insertSubscriptionOrder(subscriptionOrder);
-		return result;
+	public int insertSubscription(Subscription subscription) {
+		return subscribeDao.insertSubscription(subscription);
 	}
 	
 	@Override
-	public SubscriptionOrder selectSubscriptionOrderRecent(String sNo) {
-		return subscribeDao.selectSubscriptionOrderRecent(sNo);
+	public Subscription selectSubscription(String sNo) {
+		return subscribeDao.selectSubscription(sNo);
 	}
 	
 	@Override
@@ -77,7 +75,7 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int getSubscriptionReviewStarAvg() {
+	public double getSubscriptionReviewStarAvg() {
 		return subscribeDao.getSubscriptionReviewStarAvg();
 	}
 	
@@ -101,8 +99,27 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int updateSubscribeReviewRecommend(String sReviewNo) {
-		return subscribeDao.updateSubscribeReviewRecommend(sReviewNo);
+	public int getRecommendedYn(Map<String, String> param) {
+		return subscribeDao.getRecommendedYn(param);
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendAdd(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendAdd(param);
+		result = subscribeDao.insertRecommendedSubscribeReview(param);
+		return result;
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendCancel(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendCancel(param);
+		result = subscribeDao.deleteRecommendedSubscribeReview(param);
+		return result;
+	}
+	
+	@Override
+	public String getSubscriptionByMemberId(String memberId) {
+		return subscribeDao.getSubscriptionByMemberId(memberId);
 	}
 	// 미송코드 끝
 }

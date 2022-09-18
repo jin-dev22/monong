@@ -12,11 +12,13 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 @Mapper
@@ -73,6 +75,11 @@ public interface MemberDao {
 	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
 	int deleteSellerAttachment(long delFileNo);
 
+	List<Inquire> selectInquireList(Map<String, Object> param);
+
+	@Select("select count(*) from inquire where member_id = #{memberId}")
+	int getTotalInqCntBymemberId(String memberId);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
@@ -122,6 +129,14 @@ public interface MemberDao {
 
 	@Delete("delete from member where member_id = #{memberId}")
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	
+	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
 	//------------------------수아 끝
 
 	

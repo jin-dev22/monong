@@ -111,6 +111,31 @@
   	</collection>
   </resultMap>
  
+	<select id="selectInquireList" resultMap="inquireMap">
+		select 
+		    *
+		from 
+		    inquire inq left join inquire_answer using(inquire_no)
+		where 
+		    member_id = #{memberId} 
+		order by 
+		    has_answer, inquire_created_at desc
+	</select>
+	<resultMap type="inquire" id="inquireMap">
+		<id column="inquire_no" property="inquireNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="inquire_title" property="inquireTitle"/>
+		<result column="inquire_content" property="inquireContent"/>
+		<result column="inquire_created_at" property="inquireCreatedAt"/>
+		<result column="has_answer" property="hasAnswer"/>
+		<association property="inquireAnswer" javaType="InquireAnswer">
+			<id column="inquire_a_no" property="inquireANo"/>
+			<result column="inquire_no" property="inquireNo"/>
+			<result column="inquire_a_content" property="inquireAContent"/>
+			<result column="inquire_answered_at" property="inquireAnsweredAt"/>
+		</association>
+	</resultMap>
+	
 <!-- ==================================================수진 끝 -->
 
  <!-- ==================================================수아 시작 -->
@@ -231,6 +256,40 @@
 	    s_no desc
   </select>
   
+  <update id="updateSubscribeOrder">
+  	update 
+  		subscription
+  	set
+  		s_exclude_vegs = #{sExcludeVegs},
+  		s_product_code = #{sProductCode},
+  		s_delivery_cycle = #{sDeliveryCycle},
+  		s_next_delivery_date = #{sNextDeliveryDate},
+  		s_delay_yn = #{sDelayYn},
+  		s_recipient = #{sRecipient},
+  		s_phone = #{sPhone},
+  		s_address = #{sAddress},
+  		s_address_ex = #{sAddressEx},
+  		s_delivery_request = #{sDeliveryRequest},
+  		s_payment_date = #{sPaymentDate}
+  	where 
+  		s_no = #{sNo}
+  </update>
+  
+  <select id="selectSubscriptionListById" resultType="subscriptionOrder">
+  select
+    *
+	from
+	    subscription_order
+	where
+	   s_no in 
+	   (select 
+	      s_no 
+	    from  
+	      subscription 
+	    where 
+	        member_id = #{memberId}
+    )
+  </select>
  
  <!-- ==================================================수아 끝 -->
 </mapper>

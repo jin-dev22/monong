@@ -34,7 +34,7 @@ COMMENT ON COLUMN member_notification.d_order_no IS '주문관련 알림';
 COMMENT ON COLUMN member_notification.s_order_no IS '주문상태 변경시 알림';
 
 CREATE TABLE inquire (
-	inquire_no	varchar2(100)		NOT NULL,
+	inquire_no	number		NOT NULL,
 	member_id	varchar2(100)		NOT NULL,
 	inquire_title	varchar2(512)		NOT NULL,
 	inquire_content	varchar2(2000)		NULL,
@@ -43,8 +43,8 @@ CREATE TABLE inquire (
 );
 
 CREATE TABLE inquire_answer (
-	inquire_a_no	varchar2(100)	NOT NULL,
-	inquire_no	varchar2(100)		NOT NULL,
+	inquire_a_no	number	NOT NULL,
+	inquire_no	number		NOT NULL,
 	inquire_a_content	varchar2(2000)		NULL,
 	inquire_answered_at	date	DEFAULT current_date	NULL
 );
@@ -214,7 +214,8 @@ alter table subscription_order add so_delivery_request varchar2(150);
 -- 컬럼명 변경 9/15
 alter table subscription_order add so_next_delivery_date date;
 alter table subscription_order rename column so_next_delivery_date TO so_delivery_date;
-
+-- fk 제약조건 삭제 9/15
+ALTER TABLE subscription_order drop CONSTRAINT fk_s_o_s_no;
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,

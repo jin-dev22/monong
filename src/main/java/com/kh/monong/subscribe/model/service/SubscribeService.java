@@ -20,11 +20,11 @@ public interface SubscribeService {
 	// 선아코드 시작
 	int insertCardInfo(CardInfo cardInfo);
 
-	int insertSubscription(SubscriptionOrder subscriptionOrder, Subscription subscription);
+	int insertSubscription(Subscription subscription);
 
 	int findCardInfoNoByUid(String customerUid);
 	
-	SubscriptionOrder selectSubscriptionOrderRecent(String sNo);
+	Subscription selectSubscription(String sNo);
 	
 	SubscriptionProduct selectProductInfoByCode(String sProduct);
 	
@@ -39,7 +39,7 @@ public interface SubscribeService {
 	
 	List<Vegetables> getVegetables();
 
-	int getSubscriptionReviewStarAvg();
+	double getSubscriptionReviewStarAvg();
 	
 	int getTotalContent();
 	
@@ -47,7 +47,14 @@ public interface SubscribeService {
 	
 	SubscriptionReview selectOneSubscriptionReview(String reviewNo);
 	
-	int updateSubscribeReviewRecommend(String sReviewNo);
+	int getRecommendedYn(Map<String, String> param);
+
+	int updateSubscribeReviewRecommendAdd(Map<String, String> param);
+	
+	int updateSubscribeReviewRecommendCancel(Map<String, String> param);
+	
+	// 추가
+	String getSubscriptionByMemberId(String memberId);
 	
 	// 미송코드 끝
 

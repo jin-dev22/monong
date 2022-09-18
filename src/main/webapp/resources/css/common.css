@@ -291,3 +291,22 @@ footer {
 	padding: 10px;
 	display: none;
 }
+/* 
+-------------------- pagebar -------------------
+*/
+.page-item.active .page-link {
+	background-color: #F6D860;
+	border-color: #F6D860;
+}
+.page-link {
+	color: #F6D860;
+}
+.pagination {
+	margin-top: 50px;
+}
+.page-link:focus {
+	color: #F6D860;
+}
+.page-link:hover {
+	color: #F6D860;
+}

@@ -50,7 +50,9 @@
 				</div>
 			</div>
 		</c:forEach>
+		<nav>
+			${pagebar}
+		</nav>
 	</c:if>
 </div>
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -12,6 +12,7 @@
 	<jsp:param name="title" value="모농모농-관리자페이지"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div id="admin-mypage-container" class="mx-auto mt-10 text-center">
 
 <div id="admin-member-container" class="mx-auto row justify-content-around">
@@ -19,16 +20,25 @@
 	<a class="col-3"href="${pageContext.request.contextPath}/admin/sellerList.do">판매자회원</a>
 </div>
 
-<nav class="nav justify-content-around mt-5">
+<nav class="nav justify-content-around mt-5 navbar" >
 	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">정기구독</a>
-	<a href="${pageContext.request.contextPath}/member/memberReviewList.do">직거래</a>
-	<a href="${pageContext.request.contextPath}/member/memberDirectInquire.do">1:1문의</a>
-	<a href="${pageContext.request.contextPath}/member/memberInquireList.do">주간채소</a>
+	<a href="${pageContext.request.contextPath}/admin/directProductList.do">직거래</a>
+	<div class="dropdown">
+	  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+	    1:1문의
+	  </button>
+	  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+	    <li><a href="${pageContext.request.contextPath}/admin/adminInquireList.do?memberType=member">일반회원</a></li>
+	    <li><a href="${pageContext.request.contextPath}/admin/adminInquireList.do?memberType=seller">판매자</a></li>
+	  </ul>
+	</div>
+	<a href="#">주간채소</a>
 </nav>
 
 </div>
 
 <hr />
+
 <script>
 
 </script>

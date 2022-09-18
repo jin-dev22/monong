@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 
 public interface MemberService {
@@ -54,6 +56,10 @@ public interface MemberService {
 	int updateSeller(Seller seller);
 
 	int deleteSellerAttachment(long delFileNo);
+	
+	List<Inquire> selectInquireList(Map<String, Object> param);
+	
+	int getTotalInqCntBymemberId(String memberId);
 
 //-----------수진 끝
 //-----------수아 시작
@@ -88,6 +94,12 @@ public interface MemberService {
 	SubscriptionProduct selectRecentSubProduct(String pCode);
 
 	int deleteSeller(String memberId);
+	
+	int updateSubscribeOrder(Subscription subscription);
+
+	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+
+	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 //-----------수아 끝
 
 
