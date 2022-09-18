@@ -10,7 +10,6 @@
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
 	<h2>관리자 문의</h2>
-	회원 -> 관리자 문의하기: memberId, inquireTitle, inquireContent
 	<div id="enroll-container" class="mx-auto d-flex justify-content-center">
 	    <form name="inquireFrm" action="${pageContext.request.contextPath}/inquire/inquireAdmin.do" method="POST" accept-charset="UTF-8" >
             <label for="inquireTitle" class="item">제목 : </label>
