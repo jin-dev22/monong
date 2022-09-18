@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -158,6 +159,20 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int deleteSellerAttachment(long delFileNo) {
 		return memberDao.deleteSellerAttachment(delFileNo);
+	}
+	
+	@Override
+	public List<Inquire> selectInquireList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		param.put("rowBounds", rowBounds);
+		return memberDao.selectInquireList(param);
+	}
+	
+	@Override
+	public int getTotalInqCntBymemberId(String memberId) {
+		return memberDao.getTotalInqCntBymemberId(memberId);
 	}
 	//------------------수진 끝
 	

@@ -44,7 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
-import com.kh.monong.direct.model.service.DirectService;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -71,10 +71,7 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-	//-------------수진 시작
-	@Autowired
-	private DirectService directService;
-	
+	//-------------수진 시작		
 	@Autowired
 	ServletContext application;
 	
@@ -449,6 +446,28 @@ public class MemberController {
 		
 		return resource;
 	}
+	
+	@GetMapping("/memberInquireList.do")
+	public void memberInqurieList(Authentication authentication,
+								@RequestParam(defaultValue = "1") int cPage,
+								Model model, HttpServletRequest request) {
+		String memberId = authentication.getName();
+		log.debug("memberId ={}", memberId);
+		Map<String, Object> param = new HashMap<>();
+		param.put("cPage", cPage);
+		int limit = 5;
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		List<Inquire> inqList = memberService.selectInquireList(param);
+		log.debug("inqList = {}", inqList);
+		model.addAttribute("inqList",inqList);
+		
+		int totalContent = memberService.getTotalInqCntBymemberId(memberId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+		log.debug("model",model);
+	}
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
@@ -737,20 +756,20 @@ public class MemberController {
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}	
 	}
-	
-	@GetMapping("/memberInquireList.do")
-	public void memberInquireList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}
-	}
-	
+//	
+//	@GetMapping("/memberSubscriptionList.do")
+//	public void memberInquireList(Authentication authentication, Model model) {
+//		String memberId = authentication.getName();
+//		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+//		log.debug("recentSubscription={}",recentSubscription);
+//		if(recentSubscription != null) {
+//			String pCode = recentSubscription.getSProductCode();
+//			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+//			model.addAttribute("recentSubscription", recentSubscription);
+//			model.addAttribute("recentSubProduct", recentSubProduct);
+//		}
+//	}
+//	
 	@Autowired
 	private SubscribeService subscribeService;
 	
