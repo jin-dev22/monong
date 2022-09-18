@@ -453,8 +453,6 @@ public class MemberController {
 								Model model, HttpServletRequest request) {
 		String memberId = authentication.getName();
 		log.debug("memberId ={}", memberId);
-		String memberAuth = authentication.getAuthorities().toString();
-		model.addAttribute("memberAuth",memberAuth);
 		Map<String, Object> param = new HashMap<>();
 		param.put("cPage", cPage);
 		int limit = 5;
