@@ -12,6 +12,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -73,6 +74,11 @@ public interface MemberDao {
 	
 	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
 	int deleteSellerAttachment(long delFileNo);
+
+	List<Inquire> selectInquireList(Map<String, Object> param);
+
+	@Select("select count(*) from inquire where member_id = #{memberId}")
+	int getTotalInqCntBymemberId(String memberId);
 
 	//------------------------수진 끝 
 	

@@ -91,6 +91,9 @@
 				</div>
 			</div>
 		</c:forEach>
+		<nav>
+			${pagebar}
+		</nav>
 	</c:if>
 </div>
 <script>
