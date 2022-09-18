@@ -69,5 +69,53 @@ values
   		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
   	</collection>
   </resultMap>
+  
+  <select id="selectOrderListByCartNo" resultMap="orderListMap">
+  	select
+	    c.*,
+	    dpo.*,
+	    dpa.*,
+	    dp.d_product_no,
+	    dp.d_product_name,
+	    dp.d_default_price,
+	    dp.d_delivery_fee
+	from
+	    cart c
+	        left join direct_product_option dpo
+	            on c.d_option_no = dpo.d_option_no
+	        left join direct_product dp
+	            on dpo.d_product_no = dp.d_product_no
+	        left join direct_product_attachment dpa
+        		on dp.d_product_no = dpa.d_product_no
+	where
+	    c.cart_no = #{cartNo}
+  </select>
+  
+  <resultMap type="directProduct" id="orderListMap">
+  	<id column="d_product_no" property="dProductNo"/>
+  	<result column="d_product_name" property="dProductName"/>
+  	<result column="d_default_price" property="dDefaultPrice"/>
+  	<result column="d_delivery_fee" property="dDeliveryFee"/>
+  	<association property="directProductOptions" javaType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</association>
+  	<association property="cart" javaType="Cart">
+  		<id column="cart_no" property="cartNo"/>
+  		<result column="d_option_no" property="dOptionNo"/>
+  		<result column="member_id" property="memberId"/>
+  		<result column="product_count" property="productCount"/>
+  	</association>
+  	<collection property="directProductAttachments" ofType="DirectProductAttachment">
+  		<id column="d_product_attach_no" property="dProductAttachNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_product_original_filename" property="dProductOriginalFilename"/>
+  		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
+  	</collection>
+  </resultMap>
 <!-- 민지 끝 -->
 </mapper>
