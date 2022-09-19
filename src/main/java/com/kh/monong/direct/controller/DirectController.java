@@ -146,10 +146,10 @@ public class DirectController {
 			log.debug("cart = {}", cart);
 			
 			Cart oneCart = directService.checkCartDuplicate(cart);
-			boolean available = oneCart == null;
 			log.debug("oneCart = {}", oneCart);
 			
-			cartList.add(oneCart);
+			if(oneCart != null)
+				cartList.add(oneCart);
 		}
 		log.debug("cartList = {}", cartList);
 		
@@ -161,15 +161,26 @@ public class DirectController {
 	// 장바구니 추가
 	@ResponseBody
 	@PostMapping("/addCart.do")
-	public String addCart(@RequestBody List<Map<String,Object>> cartList, Model model) {
+	public void addCart(@RequestBody List<Map<String,Object>> cartList, Model model) {
 		log.debug("cartList = {}", cartList);
 
 		for(Map<String, Object> addList : cartList) {
-			int result = directService.insertCart(addList);
+			int checkCount = directService.checkCountCartDuplicate(addList);
+			log.debug("checkCount = {}", checkCount);
+			if(checkCount > 0) {
+				int updateResult = directService.updateCart(addList);
+				log.debug("update = {}", updateResult);
+			}
+			else {
+				int insertResult = directService.insertCart(addList);
+				log.debug("insert = {}", insertResult);
+			}
+						
 		}
-		
-		return null;
 	}
+	
+	@GetMapping("/directOrder.do")
+	public void directOrder() {}
 	
 	@PostMapping("/directOrder.do")
 	public void directOrder(@RequestParam(value="dOptionNo") List<String> dOptionNo, @RequestParam(value="productCount") List<Integer> productCount, @RequestParam(value="memberId") List<String> memberId, Model model) {

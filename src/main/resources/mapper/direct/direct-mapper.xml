@@ -78,7 +78,8 @@ values
 	    dp.d_product_no,
 	    dp.d_product_name,
 	    dp.d_default_price,
-	    dp.d_delivery_fee
+	    dp.d_delivery_fee,
+	    dp.member_id seller
 	from
 	    cart c
 	        left join direct_product_option dpo
@@ -96,6 +97,7 @@ values
   	<result column="d_product_name" property="dProductName"/>
   	<result column="d_default_price" property="dDefaultPrice"/>
   	<result column="d_delivery_fee" property="dDeliveryFee"/>
+  	<result column="seller" property="memberId"/>
   	<association property="directProductOptions" javaType="DirectProductOption">
   		<id column="d_option_no" property="dOptionNo"/>
   		<result column="d_product_no" property="dProductNo"/>

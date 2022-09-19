@@ -80,6 +80,16 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
+	public int checkCountCartDuplicate(Map<String, Object> addList) {
+		return directDao.checkCountCartDuplicate(addList);
+	}
+	
+	@Override
+	public int updateCart(Map<String, Object> addList) {
+		return directDao.updateCart(addList);
+	}
+		
+	@Override
 	public int insertCart(Map<String, Object> addList) {
 		return directDao.insertCart(addList);
 	}
@@ -93,6 +103,7 @@ public class DirectServiceImpl implements DirectService {
 		orderList = directDao.selectOrderListByCartNo(param.get("cartNo"));
 		return orderList;
 	}
+	
 	//----------------- 민지 끝
 }
 	

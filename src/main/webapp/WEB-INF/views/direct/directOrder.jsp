@@ -12,19 +12,29 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <h2 class="pay-title">결제 &#128179;</h2>
 <div class="dProduct_selected">
-	<form name="directOrderFrm" method="POST" action="${pageContext.request.contextPath}/direct/directOrder.do">
+	<form name="directPayFrm" method="POST" action="${pageContext.request.contextPath}/direct/directPay.do">
 		<h4>선택상품</h4>
 		<div class="dProduct-info">
 			<div class="dProduct-info-content">
 				<input type="hidden" name="dOrderNo" value=""/>
 				<input type="hidden" name="dOptionNo" value=""/>
-				<p class="bold">상품정보<button type="button">▽</button></p>
-				<div class="dOrder-info">
-					<span class="dOrder-img">사진</span>
-					<span class="dOrder-name">상품명상품명상품명상푸명</span>
-					<span class="dOrder-count">수량</span>
-					<span class="dOrder-price">29,900원</span>					
-				</div>
+				<p class="bold">상품정보</p>
+				<c:forEach items="${orderList}" var="orderList">
+					<c:forEach items="${orderList.directProductOptions}" var="option">
+					<c:forEach items="${orderList.directProductAttachments}" var="attach">
+					<div class="dOrder-info">
+						<span class="dOrder-img" style="background-image: url(${attach.DProductRenamedFilename});"></span>
+						<div class="dOrder-name-container">
+							<span class="dOrder-productName">${orderList.DProductName}</span>
+							<input type="hidden" name="seller" value="${orderList.memberId}" />
+							<span class="dOrder-optionName">[옵션] ${option.DOptionName}</span>
+						</div>
+						<span class="dOrder-count">${orderList.cart.productCount}개</span>
+						<span class="dOrder-price"><fmt:formatNumber value="${option.DPrice * orderList.cart.productCount}" pattern="#,###" />원</span>					
+					</div>
+					</c:forEach>
+					</c:forEach>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="dOrder-wrapper">
@@ -52,16 +62,16 @@
 				<h4>결제 정보</h4>
 				<div class="dPay-info-content">
 					<p>상품금액</p>
-					<input type="text" name="dTotalPrice" value="<fmt:formatNumber value="" type="number" pattern="#,###원" />" readonly/>
+					<input type="text" name="dProductPrice" value="" readonly/>
 					<p>배송비</p>
 					<c:set var="dDeliveryFee" value="" />
-					<input type="text" name="dDeliveryFee" value="<fmt:formatNumber value="" type="number" pattern="#,###원" />" readonly/>
+					<input type="text" name="dDeliveryFee" value="" readonly/>
 					<hr>
 					<p>합계</p>
-					<fmt:parseNumber value="${sDeliveryFee}" var="deliveryFee"/>
-					<fmt:parseNumber value="${sProductPrice}" var="productPrice"/>
-					<c:set var="sPrice" value="${productPrice +  sDeliveryFee}"/>
-					<input type="text" name="sPrice" value="<fmt:formatNumber value="${sPrice}" type="number" pattern="#,###원" />" readonly/>
+					<fmt:parseNumber value="${dDeliveryFee}" var="deliveryFee"/>
+					<fmt:parseNumber value="${dProductPrice}" var="productPrice"/>
+					<c:set var="dPrice" value="${dProductPrice +  dDeliveryFee}"/>
+					<input type="text" name="dPrice" value="<fmt:formatNumber value="${dPrice}" type="number" pattern="#,###원" />" readonly/>
 				</div>
 				<div id="dOrder-card">
 					<p>결제 수단</p>
@@ -74,8 +84,7 @@
 				</div>
 				<div class="dOrder-totle-price">
 					<span>총 결제 금액</span>
-					전달받은 ${subscription.sDeliveryCycle}
-					<span class="s-price"><fmt:formatNumber value="${sPrice}" type="number" pattern="#,###" /></span><span>원</span>
+					<span class="d-price"><fmt:formatNumber value="${dPrice}" type="number" pattern="#,###" /></span><span>원</span>
 				</div>
 				<button type="button" class="btn btn-EA5C2B btn-d-pay" id="requestPay">주문하기</button>
 			</div>
@@ -84,6 +93,19 @@
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+// 총 금액
+window.addEventListener('load', (e) => {
+	const productPrice = document.querySelectorAll(".dOrder-price");
+	const productTotalPrice = document.querySelector("[name=dProductPrice]");
+	// const deliveryFee = 
+	// const totalPrice = document.querySelector("")
+	
+	const price = [...productPrice].map((p) => parseInt(p.innerHTML.replace(",", ""))).reduce((total, price) => total + price);
+	console.log(price);
+	
+	productTotalPrice.value = price.toLocaleString('ko-KR') + '원';;
+});
+
 // 주소 API
 document.querySelector("#researchButton").addEventListener('click', function(){
 	new daum.Postcode({
