@@ -33,8 +33,6 @@ public interface DirectDao {
 	
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, 'DP'||#{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDirectProductAttachment(DirectProductAttachment attach);
-	
-	@Insert("insert into direct_product_")
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
