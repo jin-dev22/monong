@@ -80,6 +80,9 @@ public interface MemberDao {
 	@Select("select count(*) from inquire where member_id = #{memberId}")
 	int getTotalInqCntBymemberId(String memberId);
 
+	@Select("update direct_product_option  set d_stock = d_stock + 1 where d_option_no in(select d_option_no  from member_direct_order where d_order_no = #{dOrderNo})")
+	int reStoreDirectProductStock(String dOrderNo);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
