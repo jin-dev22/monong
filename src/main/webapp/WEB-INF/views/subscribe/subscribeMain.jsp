@@ -149,12 +149,20 @@
 
 
 <script>
-// 선아 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
-document.querySelector("#gotoLogin").addEventListener('click', () => {
-	alert("로그인 후 이용해주세요!");
-	location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
-});
-
+// 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
+const gotoLogin = document.querySelector("#gotoLogin");
+if(gotoLogin != null){
+	gotoLogin.addEventListener('click', () => {
+		alert("로그인 후 이용해주세요!");
+		location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
+	});
+}
+const gotoPlan = document.querySelector("#gotoPlan");
+if(gotoPlan != null){
+	gotoPlan.addEventListener('click', () => {
+		location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
+	});
+}
 
 const sReviewRecommend = () => {
 	const recommendNum = document.querySelector(".modal-s-review-recommend-num");	
@@ -313,8 +321,6 @@ const showModal = () => {
 	var myModal = new bootstrap.Modal(document.getElementById('myModal'), 'show');
 	myModal.show();
 }
-document.querySelector("#gotoPlan").addEventListener('click', () => {
-	location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
-});
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

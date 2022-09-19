@@ -37,9 +37,6 @@ public class RequestSubPayment {
 		RestTemplate restTemplate = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
-//		Charset utf8 = Charset.forName("UTF-8");
-//		MediaType mediaType = new MediaType("applicatoin", "json", utf8);
-//		headers.setContentType(mediaType);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(access_token);
 		
