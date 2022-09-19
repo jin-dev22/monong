@@ -1,22 +1,22 @@
 package com.kh.monong.direct.model.dto;
 
-import java.time.LocalDateTime;
-
-import org.springframework.lang.NonNull;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@ToString
 public class DirectInquireAnswer {
 	@NonNull
 	private String dInquireNo;
-	@NonNull
 	private String dInquireAContent;
-	private LocalDateTime dInquireCreatedAt;
+	private LocalDate dInquireAnsweredAt;
 }

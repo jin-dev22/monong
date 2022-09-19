@@ -3,6 +3,8 @@ package com.kh.monong.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
@@ -60,6 +62,12 @@ public interface MemberService {
 	List<Inquire> selectInquireList(Map<String, Object> param);
 	
 	int getTotalInqCntBymemberId(String memberId);
+
+	List<DirectInquire> selectDirectInqList(Map<String, Object> param);
+
+	int getTotalDirectInqCntBysellerId(String sellerId);
+	
+	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
 
 //-----------수진 끝
 //-----------수아 시작

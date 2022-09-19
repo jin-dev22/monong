@@ -397,7 +397,7 @@ CREATE TABLE direct_inquire (
 	inquire_title	varchar2(255)		NULL,
 	content	 varchar2(2000)		NOT NULL,
 	created_at	date	DEFAULT current_date	NULL,
-	status	varchar2(1)	DEFAULT 'W'	NOT NULL,
+	has_answer	varchar2(1)	DEFAULT 'N'	NULL,--컬럼명, 값 YN타입으로 변경
     
 	constraint pk_direct_inquire  primary key(d_inquire_no),
 	constraint fk_d_product_no_01 foreign key(d_product_no) references direct_product(d_product_no),
@@ -407,7 +407,7 @@ CREATE TABLE direct_inquire (
 CREATE TABLE direct_inquire_answer (
 	d_inquire_no	varchar2(100)		NOT NULL,
 	d_inquire_a_content	varchar2(2000)		NOT NULL,
-	d_inquire_created_at	date	DEFAULT current_date	NULL,
+	d_inquire_answered_at	date	DEFAULT current_date	NULL,
 	constraint fk_d_inquire_no_01 foreign key(d_inquire_no) references direct_inquire(d_inquire_no)
 );
 

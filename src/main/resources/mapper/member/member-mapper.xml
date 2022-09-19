@@ -136,6 +136,36 @@
 		</association>
 	</resultMap>
 	
+	
+	<select id="selectDirectInqList" resultMap="directInqMap">
+		select 
+			d_inq.*,
+			(select d_product_name from direct_product dp where d_inq.d_product_no = dp.d_product_no) d_product_name
+		from(
+			select 
+				*
+			from direct_inquire di left join direct_inquire_answer dia using(d_inquire_no)
+			where 
+				d_product_no 
+					in (select d_product_no from direct_product where member_id = #{memberId}) 
+			order by has_answer, created_at
+			) d_inq
+	</select>
+	<resultMap type="directInquire" id="directInqMap">
+		<id column="d_inquire_no" property="dInquireNo"/>
+		<result column="d_product_no" property="dProductNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="inquire_title" property="inquireTitle"/>
+		<result column="content" property="content"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="has_answer" property="hasAnswer"/>
+		<result column="d_product_name" property="dProductName"/>
+		<association property="directInquireAnswer" javaType="DirectInquireAnswer">
+			<id column="d_inquire_no" property="dInquireNo"/>
+			<result column="d_inquire_a_content" property="dInquireAContent"/>
+			<result column="d_inquire_answered_at" property="dInquireAnsweredAt"/>
+		</association>
+	</resultMap>
 <!-- ==================================================수진 끝 -->
 
  <!-- ==================================================수아 시작 -->
