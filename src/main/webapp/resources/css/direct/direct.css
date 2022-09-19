@@ -446,18 +446,36 @@
 	display: inline-flex;
     width: 90px;
     height: 90px;
-    background-image: url(https://img-cf.kurly.com/shop/data/goods/1637805975157l0.jpg);
     background-size: cover;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     margin: 0px 30px;
 }
 
-.dOrder-name {
+.dOrder-name-container {
 	margin: 0px 30px;
 	width: 620px;
 	text-align: left;
+	display: flex;
+	flex-direction: column;
 }
+
+.dOrder-productName {
+	max-height: 54px;
+	padding-top: 5px;
+	margin: 0;
+}
+
+.dOrder-optionName {
+	max-height: 38px;
+	margin: 2px 0 0;
+	padding-bottom: 5px;
+	font-size: 14px;
+	line-height: 19px;
+    color: rgb(153, 153, 153);
+    overflow: hidden;
+}
+
 .dOrder-count {
 	width: 100px;
     text-align: center;

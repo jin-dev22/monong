@@ -84,14 +84,14 @@
 		</div>
 	</div>
 	<div class="btn-container">
-<%-- 		<sec:authorize access="isAnonymous()"> --%>
-<!-- 	    	<button type="button" class="btn-add-cart btn-116530" onclick="alert('로그인 후 이용해 주세요.')">장바구니</button> -->
-<%-- 	    </sec:authorize> --%>
-<%-- 	    <sec:authorize access="isAuthenticated()"> --%>
+		<sec:authorize access="isAnonymous()">
+	    	<button type="button" class="btn-add-cart btn-116530" id="cart" onclick="checkLogin();">장바구니</button>
+	    </sec:authorize>
+	    <sec:authorize access="isAuthenticated()">
 	    	<button type="button" class="btn-add-cart btn-116530" id="cart">장바구니</button>
-<%-- 	    </sec:authorize> --%>
+	    </sec:authorize>
 	    <sec:authorize access="isAnonymous()">
-	    	<button type="button" class="btn-add-order btn-EA5C2B" onclick="alert('로그인 후 이용해 주세요.')">주문하기</button>
+	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order" onclick="checkLogin();">주문하기</button>
 	    </sec:authorize>
 	    <sec:authorize access="isAuthenticated()">
 	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order">주문하기</button>
@@ -164,6 +164,12 @@ $('.slider-1 > .side-btns > div').click(function(){
 //    $('.slider-1 > .side-btns > div').eq(1).click();
 //}, 3000);
 
+// 로그인 확인
+function checkLogin() {
+	alert('로그인 후 이용해 주세요.');
+	location.href = "${pageContext.request.contextPath}/member/memberLogin.do";
+	return;
+}
 
 // 드롭다운
 document.querySelector('.dropbtn').addEventListener('click', (e) => {
@@ -486,7 +492,7 @@ cart.addEventListener('click', (e) => {
 	console.log(optionNoList);
 	console.log(cartList);
 	
-	if(container.children.length === 0) {
+	if(memberId && container.children.length === 0) {
 		alert("옵션을 선택해 주세요.");
 		return;
 	}
@@ -507,41 +513,6 @@ cart.addEventListener('click', (e) => {
 				if(confirm(`장바구니에 동일한 상품이 있습니다.
 장바구니에 추가하시겠습니까?`)) {
 					addCart(cartList);
-// 				let addCartList = [];
-// 				for(let list of response.cartList) {
-// 					console.log(list)
-// 					if(list == null) {
-// 						for(let addCartList of cartList) {
-// 							// addCartList.push({"cartNo" : list.cartNo, "productCount" : })
-// 							// addCart(addCartList);
-							
-// 						}
-// 					}
-// 					else {
-// 						// updateCartList.push({"cartNo" : list.cartNo, "productCount" : });
-// 					}
-// 				}
-// 				let updateCartList = [];
-// 					for(let list of response.cartList) {
-// 						for(let i = 0; i < optionNoList.length; i++) {
-// 							if((optionNoList[i] == list.DOptionNo) == true){
-// 								console.log(1);
-// 								// updateCartList.push({"cartNo" : list.cartNo, "productCount" : });
-// 							}
-// 							else if(optionNoList[i].includes(list.DOptionNo) == -1){
-// 								console.log(2);
-// 							}
-// 						}
-// 					}
-// 					console.log(updateCartList);
-// 					if(optionNoList.indexOf(list.DOptionNo) > 0) {
-// 						updateCartList.push({"cartNo" : list.cartNo, "productCount" : list.productCount});
-// 					}
-					
-				
-// 				console.log(updateCartList);
-				// console.log(dOptionNo, cartNo, memberId, productCount);
-				// addCart(updateOptionNo, );
 				} else return;
 			}
 		},
@@ -562,41 +533,39 @@ const addCart = (cartList) => {
 		data : JSON.stringify(cartList),
 		contentType : 'application/json; charset=utf-8',
 		success(response) {
-			console.log(response);
 			const modal = `
-				<div class="modal" tabindex="-1">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title">Modal title</h5>
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body">
-				        <p>Modal body text goes here.</p>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				        <button type="button" class="btn btn-primary">Save changes</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>`;
+			<div class="modal" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Modal title</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <p>Modal body text goes here.</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-primary">Save changes</button>
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>`;
+			
+			
 		},
 		error : console.log
 	});
 };
-
-// 장바구니 중복 옵션 수량 변경
-// const updateCartCout = (cartList) {
-	
-// }
 
 // 바로 주문
 order.addEventListener('click', (e) => {
 	const frm = document.totalProductFrm;
 	const container = document.querySelector(".pOption-container");
 	
-	if(container.children.length === 0) {
+	if(memberId && container.children.length === 0) {
 		alert("옵션을 선택해 주세요.");
 		return;
 	}

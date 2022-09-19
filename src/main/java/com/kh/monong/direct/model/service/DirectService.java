@@ -23,13 +23,21 @@ public interface DirectService {
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);
-
-	Cart checkCartDuplicate(Map<String, Object> cart);
-
+	
+	int checkCountCartDuplicate(Map<String, Object> addList);
+	
+	int updateCart(Map<String, Object> addList);
+	
 	int insertCart(Map<String, Object> addList);
 
 	DirectProduct buyIt(Map<String, Object> param);
+	
+	Cart checkCartDuplicate(Map<String, Object> cart);
 	//----------------- 민지 끝
+
+
+
+
 }
 
 

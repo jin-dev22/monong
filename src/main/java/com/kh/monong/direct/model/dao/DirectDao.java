@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.Cart;
@@ -41,8 +42,14 @@ public interface DirectDao {
 	// 장바구니 중복 조회
 	@Select("select * from cart where d_option_no = #{optionNo} and member_id = #{memberId}")
 	Cart checkCartDuplicate(Map<String, Object> cart);
-
+	
 	// 장바구니 추가
+	@Select("select count(*) from cart where d_option_no = #{dOptionNo} and member_id = #{memberId}")
+	int checkCountCartDuplicate(Map<String, Object> addList);
+
+	@Update("update cart set product_count = product_count + #{productCount} where d_option_no = #{dOptionNo} and member_id = #{memberId}")
+	int updateCart(Map<String, Object> addList);
+	
 	@Insert("insert into cart values (seq_cart_no.nextval, #{dOptionNo}, #{memberId}, #{productCount})")
 	int insertCart(Map<String, Object> addList);
 
@@ -53,4 +60,9 @@ public interface DirectDao {
 	
 	DirectProduct selectOrderListByCartNo(Object object);
 	//----------------- 민지 끝
+
+	
+
+
+
 }
