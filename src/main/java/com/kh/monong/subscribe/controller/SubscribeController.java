@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.enums.YN;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.CardInfo;
@@ -49,6 +50,9 @@ public class SubscribeController {
 	MemberService memberService;
 	
 	// 선아코드 시작
+	/**
+	 * 주문결제 페이지
+	 */
 	@PostMapping("/subscribeOrder.do")
 	public String subscribePlan(
 			@RequestParam String sProduct, 
@@ -62,19 +66,25 @@ public class SubscribeController {
 		model.addAttribute("sDeliveryCycle", sDeliveryCycle);
 		return "/subscribe/subscribeOrder";
 	}
-	
+	/**
+	 * 카드정보 저장
+	 */
 	@PostMapping("/insertCardInfo.do")
 	public ResponseEntity<?> insertCardInfo(
 			@RequestParam String customerUid, CardInfo cardInfo
 			) {
 		return ResponseEntity.ok(subscribeService.insertCardInfo(cardInfo));
 	}
-	
+	/**
+	 * 구독정보 저장
+	 */
 	@PostMapping("/subComplete.do")
 	public String insertSubOrder(
-			@RequestParam String sNo, @RequestParam String customerUid,
+			@RequestParam String sNo,
+			@RequestParam String customerUid,
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate sNextDeliveryDate,
-			Subscription subscription, RedirectAttributes redirectAttr
+			Subscription subscription,
+			RedirectAttributes redirectAttr
 		) {
 		// 카드번호 조회
 		int cardInfoNo = subscribeService.findCardInfoNoByUid(customerUid);
@@ -94,29 +104,31 @@ public class SubscribeController {
 		return "redirect:/subscribe/subComplate.do";
 	}
 	
+	/**
+	 * 구독 완료 페이지
+	 */
 	@GetMapping("/subComplate.do")
 	public void subComplete(Authentication authentication, Model model) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 	}
 	
+	/**
+	 * 스케줄 관련 메소드
+	 */
 	// 스케줄
-	@Autowired
-	ReqPayScheduler scheduler;
-	@Autowired
-	ImportPayService importPayService;
 	@Autowired
 	RequestSubPayment requestSubPayment;
 	
-//	@PostMapping("/payschedule.do")
-//	@Scheduled(cron = "0 0/5 * 1/1 * ? *")
-	@GetMapping("schedule.do")
+	/**
+	 * servlet-context.xml에 schedule task 추가
+	 * - 매주 수요일 7~8시에 실행하도록 설정
+	 */
 	public void payschedule(){
-		// 현재 날짜가 수요일인 경우 실행
 		LocalDate today = LocalDate.now();
 		int todayDay = today.getDayOfWeek().getValue();
-		// 1 -> 3으로 변경해야함
-		if(todayDay == 1) {
+		// 오늘이 수요일인 경우 스케쥴 진행되며 한 번 더 확인
+		if(todayDay == 3) {
 			// 현재 날짜와 결제예정일이 일치하는 구독 조회
 			List<Subscription> payLists = subscribeService.getPayList(today);
 			log.debug("payList = {}", payLists);
@@ -125,10 +137,12 @@ public class SubscribeController {
 				String customerUid = "";
 				String payName = "";
 				int amount = 0;
+				int cycle = 0;
 				int result = 0;
+				YN delayYn = YN.N; // 기본값
 				
 				for(Subscription payList : payLists) {
-					SubscriptionOrder subOrder = null;
+					SubscriptionOrder subOrder = new SubscriptionOrder();
 					for(int i = 0; i < payLists.size(); i++) {
 						// 결제용 고유번호 전달					
 						int cardNo = payList.getCardInfoNo();
@@ -138,6 +152,7 @@ public class SubscribeController {
 						
 						String productCode = payList.getSProductCode();
 						SubscriptionProduct product = subscribeService.getAmountByPcode(productCode);
+						
 						// 결제이름(정기구독 + 사이즈)
 						payName = "정기구독 " + product.getSProductName();
 						log.debug("payName = {}", payName);
@@ -161,9 +176,11 @@ public class SubscribeController {
 						map.put("amount", amount);
 						map.put("name", payName);
 						
+						// iamport에 rest api를 통해 결제 진행
 						String response = requestSubPayment.requestPayAgain(map);
 						log.debug("response = {}", response);
 						
+						// 결제에 대한 json 결과값의 내용을 변환하여 꺼내기
 						JsonParser parser = new JsonParser();
 						JsonElement element = parser.parse(response);
 						int success = element.getAsJsonObject().get("code").getAsInt();
@@ -171,39 +188,77 @@ public class SubscribeController {
 						
 						String sNo = payList.getSNo();
 						subOrder.setSNo(sNo);
+						log.debug("sNo = {}", sNo);
 						
-						int times = 0;
-						times = subscribeService.getTimesBysNo(sNo);
-						if(times == 0) {
-							subOrder.setSTimes(times); // 구독회차
+						// 현재 구독 회수 조회
+						SubscriptionOrder isExists = subscribeService.getTimesBysNo(sNo);
+						int times = 1;
+						log.debug("times = {}", times);
+						if(isExists == null) {
+							subOrder.setSTimes(times); // null이면 첫 구독 결제
 						}
 						else {
-							subOrder.setSTimes(times + 1); // 구독회차
+							times = isExists.getSTimes();
+							subOrder.setSTimes(times + 1);
 						}
 						subOrder.setSoExcludeVegs(payList.getSExcludeVegs());
-						subOrder.setSoDeliveryCycle(payList.getSDeliveryCycle());
+						cycle = payList.getSDeliveryCycle();
+						log.debug("cycle = {}", cycle);
+						subOrder.setSoDeliveryCycle(cycle);
 						subOrder.setSoDeliveryDate(payList.getSNextDeliveryDate());
-						subOrder.setSoDelayYn(payList.getSDelayYn());
-						subOrder.setSNo(payList.getSRecipient());
+						delayYn = payList.getSDelayYn();
+						log.debug("delayYn = {}", delayYn);
+						subOrder.setSoDelayYn(delayYn);
+						subOrder.setSoRecipient(payList.getSRecipient());
 						subOrder.setSoPhone(payList.getSPhone());
 						subOrder.setSoAddress(payList.getSAddress());
 						subOrder.setSoAddressEx(payList.getSAddressEx());
 						subOrder.setSoDeliveryRequest(payList.getSDeliveryRequest());
 						log.debug("subOrder = {}", subOrder);
-						if(success == 0) { // 0이면 성공, 실패일 경우 0이 아닌 값 + message 
+						
+						// success가 0이면 성공, 실패일 경우 0이 아닌 값 + message
+						if(success == 0) { 
 							result = subscribeService.insertSubOrder(subOrder);
+						}
+						log.debug("result = {}", result);
+						
+						// 결제 완료 후 미루기여부/다음배송일/다음결제예정일 update
+						if(result == 1) {
+							// 미루기 완료 후 결제가 되었기 때문에 다시 N으로 변경
+							if("Y".equals(delayYn))
+								delayYn = YN.N;
+							LocalDate currPaymentDate = payList.getSPaymentDate();
+							LocalDate currDeliveryDate = payList.getSNextDeliveryDate();
+							log.debug("currPaymentDate, currDeliveryDate = {}, {}", currPaymentDate, currDeliveryDate);
+							
+							int plusDay = cycle * 7;
+							LocalDate nextPaymentDate = currPaymentDate.plusDays(plusDay);
+							LocalDate nextDeliveryDate = currDeliveryDate.plusDays(plusDay);
+							log.debug("nextPaymentDate, nextDeliveryDate = {}, {}", nextPaymentDate, nextDeliveryDate);
+							
+							Subscription updateSub = Subscription.builder()
+																.sNo(sNo)
+																.sDelayYn(delayYn)
+																.sPaymentDate(nextPaymentDate)
+																.sNextDeliveryDate(nextDeliveryDate)
+																.build();
+							result = subscribeService.updateSubscriptionSuccessPay(updateSub);
 						}
 					}
 				}
 				log.debug("result = {}", result);
 			}
 		}
-		return;
 	}
 	
+	/**
+	 * merchantUid(주문번호) 생성 메소드
+	 * - 주문번호는 매번 변경되어 전달해야 한다.
+	 * - ex) SO + 220901(년월일) + 랜덤 7자리 = 총 15자리
+	 * - 기존에는 SO + 220901(년월일) + 1201(시분) + 랜덤3자리 이었으나
+	 *   스케줄로 인해 거의 비슷한 시분에 결제가 진행되어 겹칠 위험이 있으므로 랜덤 7자리로 변경
+	 */
 	public String makemerchantUid(String paymentDate) {
-		// 매번 변경되어야 하는 주문번호 - ex) SO + 220901(년월일) + 1201(시분) + 랜덤3자리 = 총 15자리
-		// 1. 기존에는 시분 + 랜덤3자리였으나 예약결제는 시분은 없기때문에 랜덤 7자리로 변경
 		String date = paymentDate.replaceAll("-", "");
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder();
@@ -213,12 +268,9 @@ public class SubscribeController {
 			sb.append(random.nextInt(10));
 		}
 		String ran = sb.toString();
-		log.debug("ran = {}", ran);
 		
 		return "SO" + date + ran;
 	}
-	
-	
 	
 	// 선아코드 끝
 

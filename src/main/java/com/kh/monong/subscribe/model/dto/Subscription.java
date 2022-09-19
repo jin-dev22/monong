@@ -1,22 +1,14 @@
 package com.kh.monong.subscribe.model.dto;
 
 import java.time.LocalDate;
-
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
-
 import com.kh.monong.common.enums.YN;
-import com.kh.monong.member.model.dto.Member;
-import com.kh.monong.member.model.dto.Seller;
-import com.kh.monong.member.model.dto.SellerInfo;
-import com.kh.monong.member.model.dto.SellerInfoAttachment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 @Data
 @Builder
