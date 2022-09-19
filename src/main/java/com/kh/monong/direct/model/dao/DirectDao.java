@@ -30,9 +30,11 @@ public interface DirectDao {
 	@SelectKey(statement = "select seq_d_product_no.currval from dual", before = false, keyProperty = "dProductNo", resultType = String.class)
 	int insertDirectProduct(DirectProduct directProduct);
 
-	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
+	
+	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, 'DP'||#{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDirectProductAttachment(DirectProductAttachment attach);
 	
+	@Insert("insert into direct_product_")
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
