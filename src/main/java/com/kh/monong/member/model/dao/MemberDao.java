@@ -10,8 +10,12 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -52,14 +56,14 @@ public interface MemberDao {
 	@Select("select * from seller_info where member_id = #{memberId}")
 	SellerInfo selectSellerInfo(String memberId);
 	
-	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param);
+	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param, RowBounds rowBounds);
 	
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	
 	int getTotalProdCntBySeller(Map<String, Object> param);
 	
-	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param);
+	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param, RowBounds rowBounds);
 	
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 
@@ -75,13 +79,24 @@ public interface MemberDao {
 	@Delete("delete from seller_info_attachment where seller_attach_no = #{delFileNo}")
 	int deleteSellerAttachment(long delFileNo);
 
-	List<Inquire> selectInquireList(Map<String, Object> param);
+	List<Inquire> selectInquireList(Map<String, Object> param, RowBounds rowBounds);
 
 	@Select("select count(*) from inquire where member_id = #{memberId}")
 	int getTotalInqCntBymemberId(String memberId);
 
 	@Select("update direct_product_option  set d_stock = d_stock + 1 where d_option_no in(select d_option_no  from member_direct_order where d_order_no = #{dOrderNo})")
 	int reStoreDirectProductStock(String dOrderNo);
+
+	List<DirectInquire> selectDirectInqList(Map<String, Object> param, RowBounds rowBounds);
+	
+	@Select("select count(*) from direct_inquire di left join direct_inquire_answer dia on di.d_inquire_no = dia.d_inquire_no where d_product_no in (select d_product_no from direct_product where member_id = #{memberId})")
+	int getTotalDirectInqCntBysellerId(String sellerId);
+
+	@Insert("insert into direct_inquire_answer values(#{dInquireNo}, #{dInquireAContent}, current_date)")
+	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
+
+	@Update("update direct_inquire set has_answer = 'Y' where d_inquire_no = #{dInquireNo}")
+	int updateDirectInquireAnswered(String dInquireNo);
 
 	//------------------------수진 끝 
 	
@@ -139,6 +154,25 @@ public interface MemberDao {
 	
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
+	@Select("select * from direct_order where member_id = #{memberId}")
+	List<DirectOrder> selectDirectListByMemberId(String memberId);
+
+	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
+
+	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
+	List<DirectProductAttachment> selectProdAttach(String dProductNo);
+
+	@Select("select * from direct_order where d_order_no = #{dOrderNo}")
+	DirectOrder selectOneDirectOrder(String dOrderNo);
+
+	List<Map<String, Object>> selectDirectOptionList(String dOrderNo);
+
+	@Update("update direct_order set d_order_status='C' where d_order_no = #{dOrderNo}")
+	int deleteMemberDirectOrder(String dOrderNo);
+
+	@Update("update subscription set s_quit_yn = 'Y' where s_no = #{sNo}")
+	int deleteMemberSubscribeOrder(String sNo);
 
 	//------------------------수아 끝
 

@@ -40,7 +40,6 @@
 								<p class="dCart-productName">상품명</p>
 								<p class="dCart-optionName">[옵션] 옵션명</p>
 							</a>					
-							<div></div>
 						</div>
 						<div class="dCart-count-container">
 							<button class="dCart-minus-btn" type="button">-</button>

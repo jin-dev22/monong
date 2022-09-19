@@ -3,7 +3,12 @@ package com.kh.monong.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -61,6 +66,12 @@ public interface MemberService {
 	
 	int getTotalInqCntBymemberId(String memberId);
 
+	List<DirectInquire> selectDirectInqList(Map<String, Object> param);
+
+	int getTotalDirectInqCntBysellerId(String sellerId);
+	
+	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
+
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
@@ -100,6 +111,20 @@ public interface MemberService {
 	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
 
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
+	List<DirectOrder> selectDirectListByMemberId(String memberId);
+
+	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
+
+	List<DirectProductAttachment> selectProdAttach(String dProductNo);
+
+	DirectOrder selectOneDirectOrder(String dOrderNo);
+
+	List<Map<String, Object>> selectDirectOptionList(String dOrderNo);
+
+	int deleteMemberDirectOrder(String dOrderNo);
+
+	int deleteMemberSubscribeOrder(String sNo);
 //-----------수아 끝
 
 

@@ -19,21 +19,23 @@
 	<h5><a class="nav-link" href="${pageContext.request.contextPath}/member/memberCheckForm.do"><strong>내 정보 관리</strong></a></h5>
 </nav>
 <div id="mypage-subcribe-container">
-	<!-- 구독중인 플랜이 없을 때 -->
-	<c:if test="${recentSubscription == null}">
+	<!-- 구독중인 플랜이 없거나, 다음 배송일이 없을 때 -->
+	<c:if test="${recentSubscription == null || recentSubscription.SNextDeliveryDate eq null}">
 		<h3>구독중인 플랜이 없어요 :( </h3>
 		<button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B-reverse" onclick="location.href='${pageContext.request.contextPath}/subscribe/subscribeMain.do';">구독신청</button>
 	</c:if>
 	<!-- 구독중인 플랜이 있을 때 -->
 	<c:if test="${recentSubscription != null}">
 		<div class="text-left">
-			<h2><strong>정기 구독</strong></h2>
+			<h2>
+				<strong>정기 구독</strong>
+			</h2>
 		</div>
 		<br />
 		<table id="member-subscribe-tbl" class="table table-borderless text-justify">
 		<thead>
 		  <tr>
-		    <td rowspan="3">
+		    <td rowspan="4">
 				<c:if test="${recentSubscription.SProductCode eq 'SP1'}">
 					<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg" alt="싱글 이미지">
 				</c:if>
@@ -52,7 +54,13 @@
 		  </tr>
 		  <tr>
 		    <td><h4>제외채소 : ${recentSubscription.SExcludeVegs}</h4></td>
-		    <td><button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button></td>
+		    <td>
+		    <button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button>
+		    </td>
+		  </tr>
+		  <tr>
+		  	<td></td>
+			<td></td>
 		  </tr>
 		</thead>
 		</table>
@@ -60,9 +68,9 @@
 </div>
 <nav class="nav justify-content-around mt-5">
 	<a href="${pageContext.request.contextPath}/member/memberSubscribeList.do">구독내역</a>
-	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">직거래주문내역</a>
+	<a href="${pageContext.request.contextPath}/member/memberDirectList.do">직거래주문내역</a>
 	<a href="${pageContext.request.contextPath}/member/memberReviewList.do">작성후기</a>
-	<a href="${pageContext.request.contextPath}/member/memberDirectInquire.do">상품문의</a>
+	<a href="${pageContext.request.contextPath}/member/memberDirectInquireList.do">상품문의내역</a>
 	<a href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
 </nav>
 </div>
