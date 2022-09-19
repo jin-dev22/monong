@@ -145,6 +145,20 @@ nav#member-mypage-nav h2{
 #mypage-subscribe-btn{
 	margin-left: 100px;
 }
+div#member-orderList-container img{
+	width: 100px;
+	height: 100px;
+	margin: auto;
+}
+div#member-direct-detail-container img{
+	width: 100px;
+	height: 100px;
+	margin: auto;
+}
+.member-mypage-active-color{
+	color: EA5C2B;
+	font-weight: bold;
+}
 
 /* -----판매자 마이페이지 관련----- */
 /* 판매자 상품목록 */
@@ -174,7 +188,7 @@ nav#member-mypage-nav h2{
 		margin: 0 50px;
 		width: 50%;
 		padding-left: 30px; 
-	}
+	}	
 /* 판매자 주문내역 */
        .prod-order-container{
             border: 1px solid grey;

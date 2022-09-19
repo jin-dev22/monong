@@ -12,8 +12,10 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -152,6 +154,25 @@ public interface MemberDao {
 	
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
+
+	@Select("select * from direct_order where member_id = #{memberId}")
+	List<DirectOrder> selectDirectListByMemberId(String memberId);
+
+	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
+
+	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
+	List<DirectProductAttachment> selectProdAttach(String dProductNo);
+
+	@Select("select * from direct_order where d_order_no = #{dOrderNo}")
+	DirectOrder selectOneDirectOrder(String dOrderNo);
+
+	List<Map<String, Object>> selectDirectOptionList(String dOrderNo);
+
+	@Update("update direct_order set d_order_status='C' where d_order_no = #{dOrderNo}")
+	int deleteMemberDirectOrder(String dOrderNo);
+
+	@Update("update subscription set s_quit_yn = 'Y' where s_no = #{sNo}")
+	int deleteMemberSubscribeOrder(String sNo);
 
 	//------------------------수아 끝
 

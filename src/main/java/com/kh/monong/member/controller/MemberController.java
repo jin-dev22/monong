@@ -45,7 +45,10 @@ import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -738,81 +741,76 @@ public class MemberController {
 	}
 
 	@GetMapping("/memberSubscribeList.do")
-	public void memberSubscribeList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+	public void memberSubscribeList(Authentication authentication, Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Subscription recentSubscription = memberService.selectRecentSubById(authentication.getName()); 
 		log.debug("recentSubscription={}",recentSubscription);
 		if(recentSubscription != null) {
 			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
 			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
+			session.setAttribute("recentSubscription", recentSubscription);
+			session.setAttribute("recentSubProduct", recentSubProduct);
 		}
 		
-		List<SubscriptionOrder> subList = memberService.selectSubscriptionListById(memberId);
-		if(subList != null) {
-			log.debug("subList={}",subList);
-			model.addAttribute("subList", subList);
-		}
 	}	
 		
-	@GetMapping("/memberOrderList.do")
-	public void memberOrderList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+	@GetMapping("/memberDirectList.do")
+	public void memberOrderList(Model model, Authentication authentication) {
+		
+		List<DirectOrder> directOrderList = memberService.selectDirectListByMemberId(authentication.getName());
+		if(directOrderList != null) {
+			model.addAttribute("directOrderList", directOrderList);
+				for(DirectOrder order : directOrderList) {
+					List<DirectProductEntity> prodList = memberService.selectProdListBydOrderNo(order.getDOrderNo());
+					model.addAttribute("prodList", prodList);
+					for(DirectProductEntity d : prodList) {
+						List<DirectProductAttachment> prodAttachList = memberService.selectProdAttach(d.getDProductNo());
+						if(prodAttachList != null) {
+							model.addAttribute("prodAttachList", prodAttachList);
+						}
+					}
+				}
+			}
+		}
+	
+	
+	@GetMapping("/memberDirectDetail.do")
+	public void memberDirectDetail(@RequestParam String dOrderNo, Model model) {
+		
+		DirectOrder directOrder = memberService.selectOneDirectOrder(dOrderNo);
+		if(directOrder != null) {
+			model.addAttribute("directOrder",directOrder);
+			List<Map<String,Object>> directOptList = memberService.selectDirectOptionList(dOrderNo);
+			model.addAttribute("directOptList", directOptList);
+		}
+		
+	}
+	
+	@PostMapping("/deleteMemberDirectOrder.do")
+	public String deleteMemberDirectOrder(@RequestParam String dOrderNo, RedirectAttributes redirectAttr) {
+		int result = memberService.deleteMemberDirectOrder(dOrderNo);
+		redirectAttr.addFlashAttribute("msg", "주문이 취소되었습니다!");
+		return "redirect:/member/memberDirectList.do";
 	}
 	
 	@GetMapping("/memberReviewList.do")
-	public void memberReviewList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+	public void memberReviewList() {
+		
 	}
 	
-	@GetMapping("/memberDirectInquire.do")
-	public void memberDirectInquire(Authentication authentication, Model model){
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+	
+	@GetMapping("/memberDirectInquireList.do")
+	public void memberDirectInquireList() {
+	
 	}
-//	
-//	@GetMapping("/memberSubscriptionList.do")
-//	public void memberInquireList(Authentication authentication, Model model) {
-//		String memberId = authentication.getName();
-//		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-//		log.debug("recentSubscription={}",recentSubscription);
-//		if(recentSubscription != null) {
-//			String pCode = recentSubscription.getSProductCode();
-//			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-//			model.addAttribute("recentSubscription", recentSubscription);
-//			model.addAttribute("recentSubProduct", recentSubProduct);
-//		}
-//	}
-//	
+	
 	@Autowired
 	private SubscribeService subscribeService;
 	
 	@GetMapping("/memberSubscribeOrder.do")
-	public void memberSubscribeOrder(Authentication authentication, Model model) {
+	public void memberSubscribeOrder(Authentication authentication, Model model, HttpSession session) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
 		log.debug("subscriptionProduct = {}", subscriptionProduct);
 
@@ -822,12 +820,11 @@ public class MemberController {
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("vegetables", vegetables);
 		
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		String pCode = recentSubscription.getSProductCode();
-		SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+		Subscription recentSubscription = (Subscription) session.getAttribute("recentSubscription");
+		SubscriptionProduct recentSubProduct = (SubscriptionProduct) session.getAttribute("recentSubProduct");
 		model.addAttribute("recentSubscription", recentSubscription);
 		model.addAttribute("recentSubProduct", recentSubProduct);
+		
 		
 	}
 	
@@ -852,6 +849,14 @@ public class MemberController {
 			model.addAttribute("subProduct", subProduct);
 			
 		}
+	
+	@PostMapping("/deleteMemberSubscribeOrder.do")
+		public String deleteMemberSubscribeOrder(@RequestParam String sNo, RedirectAttributes redirectAttr) {
+		int result = memberService.deleteMemberSubscribeOrder(sNo);
+		redirectAttr.addFlashAttribute("msg", "정기구독이 취소되었습니다.");
+		return "redirect:/member/memberSubscribeList.do";
+	}
+	
 	
 	
 	//----------------------수아 끝

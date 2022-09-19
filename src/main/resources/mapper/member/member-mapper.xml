@@ -320,6 +320,58 @@
 	        member_id = #{memberId}
     )
   </select>
+  
+   <select id="selectProdListBydOrderNo" resultType="directProductEntity">
+  select
+    *
+	from
+	    direct_product
+	where
+	  d_product_no in  (
+	    select
+	       d_product_no
+	    from
+	        member_direct_order
+	    where
+	        d_order_no = #{dOrderNo} )
+  </select>
+  
+  <select id="selectDirectOptionList" resultMap="orderDirectOptionMap">
+  	select
+  	    *
+	from
+	    member_direct_order mdo
+	    left join direct_product_option dpo
+	    on mdo.d_option_no = dpo.d_option_no
+	    left join direct_product dp
+	    on mdo.d_product_no = dp.d_product_no
+	    left join direct_product_attachment dpa
+	    on mdo.d_product_no = dpa.d_product_no
+	where
+	    mdo.d_order_no = #{dOrderNo}
+  </select>
+  
+  
+  <resultMap type="map" id="orderDirectOptionMap">
+  	<id column="d_option_no" property="dOptionNo"/>
+  	<result column="d_order_no" property="dOrderNo"/>
+  	<result column="d_product_no" property="dProductNo"/>
+  	<result column="d_option_count" property="dOptionCount"/>
+  	<association property="directOptions" javaType="directProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_price" property="dPrice"/>
+  	</association>
+  	<association property="directProds" javaType="directProductEntity">
+  		<id column="d_product_no" property="dProductNo"/>
+  		<result column="d_product_name" property="dProductName"/>
+  	</association>
+  	<association property="directattachs" javaType="directProductAttachment">
+  		<id column="d_product_no" property="dProductNo"/>
+  		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
+  	</association>
+  </resultMap>
  
  <!-- ==================================================수아 끝 -->
 </mapper>

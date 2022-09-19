@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
@@ -313,6 +315,41 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
 		return memberDao.selectOneSubscriptionOrder(sOrderNo);
+	}
+	
+	@Override
+	public List<DirectOrder> selectDirectListByMemberId(String memberId) {
+		return memberDao.selectDirectListByMemberId(memberId);
+	}
+	
+	@Override
+	public List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo) {
+		return memberDao.selectProdListBydOrderNo(dOrderNo);
+	}
+	
+	@Override
+	public List<DirectProductAttachment> selectProdAttach(String dProductNo) {
+		return memberDao.selectProdAttach(dProductNo);
+	}
+	
+	@Override
+	public DirectOrder selectOneDirectOrder(String dOrderNo) {
+		return memberDao.selectOneDirectOrder(dOrderNo);
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectDirectOptionList(String dOrderNo) {
+		return memberDao.selectDirectOptionList(dOrderNo);
+	}
+	
+	@Override
+	public int deleteMemberDirectOrder(String dOrderNo) {
+		return memberDao.deleteMemberDirectOrder(dOrderNo);
+	}
+	
+	@Override
+	public int deleteMemberSubscribeOrder(String sNo) {
+		return memberDao.deleteMemberSubscribeOrder(sNo);
 	}
 	//------------------수아 끝
 }
