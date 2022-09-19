@@ -44,11 +44,25 @@ public class DirectServiceImpl implements DirectService {
 	
 	// 상품 등록
 	@Override
-	public void directProductEnroll(DirectProduct directProduct) {
-		log.debug("(service)directProductEnroll......");
+	public int insertDirectProduct(DirectProduct directProduct) {
+		// insert directProduct
+		int result = directDao.insertDirectProduct(directProduct);
+		log.debug("directProduct#no = {}", directProduct.getDProductNo());
 		
-		directDao.directProductEnroll(directProduct);
-		
+		// insert attachment * 4
+		List<DirectProductAttachment> attachments = directProduct.getDirectProductAttachments();
+		if(!attachments.isEmpty()) {
+			for(DirectProductAttachment attach : attachments) {
+				attach.setDProductNo(directProduct.getDProductNo());
+				result = insertDirectProductAttachment(attach);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public int insertDirectProductAttachment(DirectProductAttachment attach) {
+		return directDao.insertDirectProductAttachment(attach);
 	}
 	
 	
@@ -63,6 +77,21 @@ public class DirectServiceImpl implements DirectService {
 	@Override
 	public Cart checkCartDuplicate(Map<String, Object> cart) {
 		return directDao.checkCartDuplicate(cart);
+	}
+	
+	@Override
+	public int insertCart(Map<String, Object> addList) {
+		return directDao.insertCart(addList);
+	}
+	
+	@Override
+	public DirectProduct buyIt(Map<String, Object> param) {
+		DirectProduct orderList = null;
+		// insert cart
+		int result = directDao.insertCartByIt(param);
+		// select orderList
+		orderList = directDao.selectOrderListByCartNo(param.get("cartNo"));
+		return orderList;
 	}
 	//----------------- 민지 끝
 }

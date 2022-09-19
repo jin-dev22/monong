@@ -16,15 +16,20 @@ public interface DirectService {
 	int getTotalContent();
 	
 	// 상품 등록
-	public void directProductEnroll(DirectProduct directProduct);
+	int insertDirectProduct(DirectProduct directProduct);
+	
+	int insertDirectProductAttachment(DirectProductAttachment attachment);
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);
 
 	Cart checkCartDuplicate(Map<String, Object> cart);
-	//----------------- 민지 끝
 
+	int insertCart(Map<String, Object> addList);
+
+	DirectProduct buyIt(Map<String, Object> param);
+	//----------------- 민지 끝
 }
 
 

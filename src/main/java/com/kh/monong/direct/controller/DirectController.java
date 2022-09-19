@@ -1,5 +1,7 @@
 package com.kh.monong.direct.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +15,16 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.direct.model.dto.Cart;
-import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.service.DirectService;
@@ -43,6 +46,10 @@ public class DirectController {
 			
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	@Autowired
+    private ServletContext servletContext;
+	
 		
 	// 직거래 상품 리스트 출력
 	@GetMapping("/directProductList.do")
@@ -75,17 +82,41 @@ public class DirectController {
 	
 	
 	@PostMapping("/directProductEnroll.do")
-	public String directProductEnroll(DirectProduct directProduct, RedirectAttributes rttr) {
-		log.debug("directProductEnroll.....", directProduct);
+	public String directProductEnroll(
+			DirectProduct directProduct,
+			@RequestParam(name = "upFile") List<MultipartFile> upFileList,
+			RedirectAttributes redirectAttr) 
+					throws IllegalStateException, IOException {
 		
-		directService.directProductEnroll(directProduct);
+		for(MultipartFile upFile : upFileList){
+			if(!upFile.isEmpty()) {
+				// a. 서버컴퓨터에 저장
+				String saveDirectory = application.getRealPath("/resources/upload/product");
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename()); // 20220816_193012345_123.txt
+				File destFile = new File(saveDirectory, renamedFilename);
+				upFile.transferTo(destFile); // 해당경로에 파일을 저장
+				
+				// b. DB저장을 위해 Attachment객체 생성
+				DirectProductAttachment attach = new DirectProductAttachment(upFile.getOriginalFilename(), renamedFilename);
+				directProduct.add(attach);
+			}
+		}
 		
-		rttr.addFlashAttribute("enroll_result", directProduct.getDProductNo());
+		log.debug("directProduct = {}", directProduct);
+		
+		// db저장
+		int result = directService.insertDirectProduct(directProduct);
+		
+		redirectAttr.addFlashAttribute("msg", "상품을 성공적으로 등록했습니다.");
 		
 		return "redirect:/direct/directProductList.do";
+	
 	}
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
+	
+	// 상품 상세 불러오기
 	@GetMapping("/directProductDetail.do")
 	public void directProductDetail(@RequestParam String dProductNo, Model model) {
 		DirectProduct directProduct = directService.selectOneDirectProduct(dProductNo);
@@ -94,39 +125,72 @@ public class DirectController {
 		model.addAttribute("directProduct", directProduct);
 	}
 	
+	// 장바구니 페이지
 	@GetMapping("/cart.do")
 	public void cart() {
 		
 	}
 	
-	@GetMapping("/findCart.do")
-	public void findCart(@RequestParam(value="dOptionNo", required=false) List<String> dOptionNo) {
-		log.debug("dOptionNo = {}", dOptionNo);
-	}
-	
+	// 장바구니 중복 검사
 	@GetMapping("/checkCartDuplicate.do")
-	public void checkCartDuplicate(@RequestParam(value="optionNoList[]") List<String> optionNoList, @RequestParam String memberId, Model model) {
+	public String checkCartDuplicate(@RequestParam(value="optionNoList[]") List<String> optionNoList, @RequestParam String memberId, Model model) {
 		log.debug("optionNoList = {}", optionNoList);
 		log.debug("memberId = {}", memberId);
 		
 		List<Cart> cartList = new ArrayList<>();
 		Map<String, Object> cart = new HashMap<>();
+		
 		for(String optionNo : optionNoList) {
 			cart.put("optionNo", optionNo);
 			cart.put("memberId", memberId);
 			log.debug("cart = {}", cart);
-				cartList.add(directService.checkCartDuplicate(cart));
+			
+			Cart oneCart = directService.checkCartDuplicate(cart);
+			boolean available = oneCart == null;
+			log.debug("oneCart = {}", oneCart);
+			
+			cartList.add(oneCart);
 		}
 		log.debug("cartList = {}", cartList);
-		if(cartList != null)
-			model.addAttribute("cartList", cartList);
+		
+		model.addAttribute("cartList", cartList);
+			
+		return "jsonView";
+	}
+	
+	// 장바구니 추가
+	@ResponseBody
+	@PostMapping("/addCart.do")
+	public String addCart(@RequestBody List<Map<String,Object>> cartList, Model model) {
+		log.debug("cartList = {}", cartList);
+
+		for(Map<String, Object> addList : cartList) {
+			int result = directService.insertCart(addList);
+		}
+		
+		return null;
 	}
 	
 	@PostMapping("/directOrder.do")
-	public String directOrder(@RequestParam String dOptionNo, @RequestParam String dOptionCount, @ModelAttribute DirectOrder directOrder, RedirectAttributes redirectAttr, Model model) {
+	public void directOrder(@RequestParam(value="dOptionNo") List<String> dOptionNo, @RequestParam(value="productCount") List<Integer> productCount, @RequestParam(value="memberId") List<String> memberId, Model model) {
+		log.debug("dOptionNo = {}", dOptionNo);
+		log.debug("productCount = {}", productCount);
+		log.debug("memberId = {}", memberId);
 		
+		List<DirectProduct> orderList = new ArrayList<>();
 		
-		return "redirect:/member/directOrderList.do";
+		Map<String, Object> param = new HashMap<>();
+		for(int i = 0; i < dOptionNo.size(); i++) {
+			param.put("dOptionNo", dOptionNo.get(i));
+			param.put("productCount", productCount.get(i));
+			param.put("memberId", memberId.get(i));
+			log.debug("param = {}", param);
+			orderList.add(directService.buyIt(param));
+		}
+		log.debug("orderList = {}", orderList);
+		
+		model.addAttribute("orderList", orderList);
+		
 	}
 	//----------------- 민지 끝
 }
