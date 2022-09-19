@@ -1,6 +1,5 @@
 package com.kh.monong.subscribe.controller;
 
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,6 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
-import com.kh.monong.subscribe.model.service.ImportPayService;
 import com.kh.monong.subscribe.model.service.RequestSubPayment;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
@@ -122,7 +120,7 @@ public class SubscribeController {
 	
 	/**
 	 * servlet-context.xml에 schedule task 추가
-	 * - 매주 수요일 7~8시에 실행하도록 설정
+	 * - 매주 수요일에 실행하도록 설정
 	 */
 	public void payschedule(){
 		LocalDate today = LocalDate.now();

@@ -39,8 +39,8 @@ public interface SubscribeDao {
 	@Select("select * from subscription_product where s_product_code = #{sProductCode}")
 	SubscriptionProduct selectProductInfoByCode(String sProductCode);
 	
-//	@Select("select s.* from subscription s where s.s_payment_date = #{today} and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and so.s_order_date = #{today})")
-	@Select("select s.* from subscription s where s.s_payment_date = '22-09-21' and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and s_order_date >= '22-09-20' and s_order_date < '22-09-21')")
+	@Select("select s.* from subscription s where s.s_payment_date = #{today} and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and so.s_order_date >= #{today} and s_order_date < to_date(#{today}) + 0.99999)")
+//	@Select("select s.* from subscription s where s.s_payment_date = '22-09-21' and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and s_order_date >= '22-09-20' and s_order_date < '22-09-21')")
 	List<Subscription> getPayList(LocalDate today);
 	
 	@Select("select * from subscription_product where s_product_code = #{sProductCode}")
@@ -52,7 +52,7 @@ public interface SubscribeDao {
 	@Select("select * from subscription_order where s_no = #{sNo}")
 	SubscriptionOrder getTimesBysNo(String sNo);
 	
-	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, #{sTimes}, #{sPrice}, default, default, #{soCardInfoNo}, #{soProductCode}, #{soExcludeVegs}, #{soDeliveryCycle}, #{soDeliveryDate}, #{soDelayYn}, #{soRecipient}, #{soPhone}, #{soAddress}, #{soAddressEx}, #{soDeliveryRequest})")
+	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, #{sTimes}, #{sPrice}, default, default, #{soCardInfoNo}, #{soProductCode}, #{soExcludeVegs}, #{soDeliveryCycle}, #{soDeliveryDate}, #{soDelayYn}, #{soRecipient}, #{soPhone}, #{soAddress}, #{soAddressEx}, #{soDeliveryRequest}, default)")
 	int insertSubOrder(SubscriptionOrder subOrder);
 	
 	@Update("update subscription set s_delay_yn = #{sDelayYn}, s_payment_date = #{sPaymentDate}, s_next_delivery_date = #{sNextDeliveryDate} where s_no = #{sNo}")

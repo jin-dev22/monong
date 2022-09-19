@@ -216,6 +216,8 @@ alter table subscription_order add so_next_delivery_date date;
 alter table subscription_order rename column so_next_delivery_date TO so_delivery_date;
 -- fk 제약조건 삭제 9/15
 ALTER TABLE subscription_order drop CONSTRAINT fk_s_o_s_no;
+-- 컬럼추가 9/20
+alter table subscription_order add so_delivery_completed_date date;
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,
