@@ -97,6 +97,7 @@
 	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order">주문하기</button>
 	    </sec:authorize>
 	</div>
+	<div class="modal-container"></div>
   </div>
   <div class="direct-footer-container">
   	  <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
@@ -518,6 +519,7 @@ cart.addEventListener('click', (e) => {
 		},
 		error : console.log
 	});
+	
 });
 
 // 장바구니 상품 추가
@@ -533,33 +535,36 @@ const addCart = (cartList) => {
 		data : JSON.stringify(cartList),
 		contentType : 'application/json; charset=utf-8',
 		success(response) {
+			const container = document.querySelector('.modal-container');
 			const modal = `
-			<div class="modal" tabindex="-1" role="dialog">
-			  <div class="modal-dialog" role="document">
+			<div class="modal fade" id="complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
 			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title">Modal title</h5>
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
+			      <div class="modal-body" style="display: flex; justify-content: center;">
+			        <p style="margin:40px 0;">장바구니에 상품이 정상적으로 담겼습니다.
+		        		<img src="${pageContext.request.contextPath}/resources/images/cart.png" alt="장바구니 추가" style="width: 120px; margin: 20px auto 0;">
+		        	</p>
 			      </div>
-			      <div class="modal-body">
-			        <p>Modal body text goes here.</p>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-primary">Save changes</button>
-			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			      <div class="modal-footer" style="justify-content: center;">
+			        <button type="button" class="btn btn-116530" onclick="goCart();" style="font-size: 13px;">장바구니로 이동</button>
+			        <button type="button" class="btn btn-EA5C2B" data-bs-dismiss="modal" style="font-size: 13px; width: 118.13px;">계속 쇼핑하기</button>
 			      </div>
 			    </div>
 			  </div>
 			</div>`;
 			
+			container.insertAdjacentHTML('beforeend', modal);
+			
+			$('#complete-modal').modal("show");
 			
 		},
 		error : console.log
 	});
 };
-
+function goCart() {
+	location.href = "${pageContext.request.contextPath}/direct/cart.do"; 
+};
+	
 // 바로 주문
 order.addEventListener('click', (e) => {
 	const frm = document.totalProductFrm;

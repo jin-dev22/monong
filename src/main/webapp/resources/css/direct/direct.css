@@ -91,6 +91,10 @@
     justify-content: space-evenly;
 }
 
+/***** 모달 쏠림 방지 *****/
+.modal-open { padding-right: 0px !important; }
+.modal { padding-right: 0px !important; }
+
 /****** 이미지 슬라이드 ***** */
 /* 슬라이더 1 시작 */
 .slider-1 {
