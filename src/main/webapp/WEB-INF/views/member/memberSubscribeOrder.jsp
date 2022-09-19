@@ -130,7 +130,7 @@
 			
 		</c:if>
     </div>
-
+	
     <div class="s-form-part-container">
         <h2 class="s-form-part-title">배송 주기 선택</h2>
         <div class="s-vegs-category d-flex justify-content-start flex-wrap">
@@ -188,9 +188,26 @@
     <p class="pt-5">※ 정기결제일 이후에 수정하시는 경우, 다음 배송부터 해당 플랜이 적용됩니다 :)</p>
     
     <input type="submit" class="btn btn-EA5C2B btn-subscribe-apply" value="수정하기">
-    
 	</form:form>
-
+	<br /><br />
+	<hr />
+	<div class="text-center mx-auto">
+	<c:if test="${recentSubscription.SQuitYn eq 'Y'}">
+	<h5>다음 구독이 만료된 건입니다 :)</h5>
+	</c:if>
+	
+	<c:if test="${recentSubscription.SQuitYn eq 'N'}">
+	<h5>구독을 취소하시겠어요?</h5>
+	<p class="pt-5">※ 정기결제일 이후에 취소하시는 경우, 다음 배송부터 구독이 만료됩니다 :)</p>
+	
+	<form:form name="deleteMemberSubscribeOrderFrm"
+				action="${pageContext.request.contextPath}/member/deleteMemberSubscribeOrder.do"
+				method="post">
+				<input type="hidden" name="sNo" value="${recentSubscription.SNo}" />
+				<button id="mypage-subscribe-del-btn" type="submit" class="btn btn-danger" onclick="return confirm('구독을 취소하시겠습니까?')">구독취소</button>
+	</form:form>
+	</c:if>
+	</div>
 </div>
 
 
