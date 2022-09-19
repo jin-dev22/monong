@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
@@ -132,9 +133,16 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public int updateDOrderStatus(Map<String, Object> param) {
+		if("C".equals(param.get("newStatus"))) {
+			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
+		}//재고 복구시 판매상태 '판매중'으로 변경되도록 트리거 생성.
 		return memberDao.updateDOrderStatus(param);
 	}
 	
+	private int reStoreDirectProductStock(String dOrderNo) {
+		return memberDao.reStoreDirectProductStock(dOrderNo);
+	}
+
 	@Override
 	public SellerInfoAttachment selectSellerInfoAttachment(long no) {
 		return memberDao.selectSellerInfoAttachment(no);
