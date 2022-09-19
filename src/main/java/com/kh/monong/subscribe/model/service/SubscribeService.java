@@ -30,6 +30,15 @@ public interface SubscribeService {
 	
 	Subscription findNextDeliveryDateByUid(String customerUid);
 	
+	List<Subscription> getPayList(LocalDate today);
+	
+	CardInfo getCardInfoList(int cardNo);
+	
+	SubscriptionProduct getAmountByPcode(String sProductCode);
+	
+	int getTimesBysNo(String sNo);
+
+	int insertSubOrder(SubscriptionOrder subOrder);
 	
 	
 	// 선아코드 끝
@@ -55,6 +64,13 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
+
+
+
+
 	
 	// 미송코드 끝
 

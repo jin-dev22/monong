@@ -60,6 +60,31 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.findNextDeliveryDateByUid(customerUid);
 	}
 	
+	@Override
+	public List<Subscription> getPayList(LocalDate today) {
+		return subscribeDao.getPayList(today);
+	}
+	
+	@Override
+	public CardInfo getCardInfoList(int cardNo) {
+		return subscribeDao.getCardInfoList(cardNo);
+	}
+	
+	@Override
+	public SubscriptionProduct getAmountByPcode(String sProductCode) {
+		return subscribeDao.getAmountByPcode(sProductCode);
+	}
+	
+	@Override
+	public int getTimesBysNo(String sNo) {
+		return subscribeDao.getTimesBysNo(sNo);
+	}
+	
+	@Override
+	public int insertSubOrder(SubscriptionOrder subOrder) {
+		return subscribeDao.insertSubOrder(subOrder);
+	}
+	
 	
 	// 선아코드 끝
 		
