@@ -34,7 +34,23 @@ public interface SubscribeDao {
 	@Insert("insert into subscription values(#{sNo}, #{cardInfoNo}, #{memberId}, #{sProductCode}, #{sExcludeVegs}, #{sDeliveryCycle}, #{sNextDeliveryDate}, default, #{sRecipient}, #{sPhone}, #{sAddress}, #{sAddressEx}, #{sDeliveryRequest}, default, #{sPaymentDate})")
 	int insertSubscription(Subscription subscription);
 	
-	// 현재 미사용
+//	@Select("select s.* from subscription s where s.s_payment_date = #{today} and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and so.s_order_date = #{today})")
+	@Select("select s.* from subscription s where s.s_payment_date = '22-09-21' and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and so.s_order_date = '22-09-21')")
+	List<Subscription> getPayList(LocalDate today);
+	
+	@Select("select * from subscription_product where s_product_code = #{sProductCode}")
+	SubscriptionProduct getAmountByPcode(String sProductCode);
+	
+	@Select("select * from card_info where card_info_no = #{cardNo}")
+	CardInfo getCardInfoList(int cardNo);
+	
+	@Select("select s_times from subscription_order where s_no = #{sNo}")
+	int getTimesBysNo(String sNo);
+	
+	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, #{sTimes}, #{sPrice}, default, default, #{soCardInfoNo}, #{soProductCode}, #{soExcludeVegs}, #{soDeliveryCycle}, #{soDeliveryDate}, #{soDelayYn}, #{soRecipient}, #{soPhone}, #{soAddress}, #{soAddressEx}, #{soDeliveryRequest})")
+	int insertSubOrder(SubscriptionOrder subOrder);
+	
+	// 스케줄러 관련 현재 미사용
 	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, default, #{sPrice}, default, default)")
 	int insertSubscriptionOrder(SubscriptionOrder subscriptionOrder);
 	
@@ -46,8 +62,7 @@ public interface SubscribeDao {
 	
 	@Select("select s.*, ci.* from subscription s left join card_info ci on s.card_info_no = ci.card_info_no where customer_uid = #{customerUid}")
 	Subscription findNextDeliveryDateByUid(String customerUid);
-	
-	
+
 	
 	// 선아코드 끝
 	
@@ -86,6 +101,12 @@ public interface SubscribeDao {
 	// 추가
 	@Select("select s_no from subscription where member_id = #{memberId} and s_quit_yn = 'N'")
 	String getSubscriptionByMemberId(String memberId);
+
+
+
+
+
+
 	
 	// 미송코드 끝
 

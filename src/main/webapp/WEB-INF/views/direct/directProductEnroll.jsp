@@ -136,7 +136,6 @@ document.querySelectorAll("[name=upFile]").forEach((input) => {
 		}
 	});
 });
-
 $(document).ready(function() {
 	  $('#summernote').summernote({
  	    	placeholder: 'content',
