@@ -135,7 +135,7 @@ public class MemberServiceImpl implements MemberService {
 	public int updateDOrderStatus(Map<String, Object> param) {
 		if("C".equals(param.get("newStatus"))) {
 			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
-		}
+		}//재고 복구시 판매상태 '판매중'으로 변경되도록 트리거 생성.
 		return memberDao.updateDOrderStatus(param);
 	}
 	
