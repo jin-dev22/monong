@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DirectProductEntity {
-//	@NonNull
+	@NonNull
 	private String dProductNo;
 	@NonNull
 	private String memberId;
