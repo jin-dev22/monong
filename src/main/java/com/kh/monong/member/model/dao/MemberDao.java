@@ -80,6 +80,9 @@ public interface MemberDao {
 	@Select("select count(*) from inquire where member_id = #{memberId}")
 	int getTotalInqCntBymemberId(String memberId);
 
+	@Select("update direct_product_option  set d_stock = d_stock + 1 where d_option_no in(select d_option_no  from member_direct_order where d_order_no = #{dOrderNo})")
+	int reStoreDirectProductStock(String dOrderNo);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
@@ -90,7 +93,7 @@ public interface MemberDao {
 	@Update("update member set member_password = #{memberTempPw} where member_email = #{email}")
 	int updateTempPw(Map<String, Object> map);
 
-	@Update("update member set member_name=#{memberName}, member_birthday = #{memberBirthday}, member_email = #{memberEmail}, member_phone = #{memberPhone}, member_address=#{memberAddress} where member_id = #{memberId}")
+	@Update("update member set member_name=#{memberName}, member_birthday = #{memberBirthday}, member_email = #{memberEmail}, member_phone = #{memberPhone}, member_address=#{memberAddress}, member_address_ex=#{memberAddressEx} where member_id = #{memberId}")
 	int updateMember(Member member);
 
 	@Update("update member set member_password = #{encodedPassword} where member_id= #{memberId}")
