@@ -1,11 +1,8 @@
 package com.kh.monong.subscribe.model.service;
 
-
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
-
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,17 +25,18 @@ public interface SubscribeService {
 	
 	SubscriptionProduct selectProductInfoByCode(String sProduct);
 	
-	Subscription findNextDeliveryDateByUid(String customerUid);
-	
 	List<Subscription> getPayList(LocalDate today);
 	
 	CardInfo getCardInfoList(int cardNo);
 	
 	SubscriptionProduct getAmountByPcode(String sProductCode);
 	
-	int getTimesBysNo(String sNo);
+	SubscriptionOrder getTimesBysNo(String sNo);
 
 	int insertSubOrder(SubscriptionOrder subOrder);
+	
+	int updateSubscriptionSuccessPay(Subscription updateSub);
+	
 	
 	
 	// 선아코드 끝
@@ -64,6 +62,7 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
 
 
 

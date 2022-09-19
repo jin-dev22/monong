@@ -5,8 +5,10 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
 		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
@@ -81,6 +83,15 @@
 			</beans:props>
 		</beans:property>
 	</beans:bean>
+
+	<!-- scheduler task 추가 -->
+	<task:annotation-driven scheduler="scheduler"/>
+	<task:scheduler id="scheduler" pool-size="10"/>
+	<task:scheduled-tasks scheduler="scheduler">
+		<!-- 테스트용 -->
+		<!-- <task:scheduled ref="subscribeController" method="payschedule" cron = "0 0/1 3-4 * * *"/> -->
+		<task:scheduled ref="subscribeController" method="payschedule" cron = "0 58 ? ? * WED"/>
+	</task:scheduled-tasks>
 	
 	<!-- #14.1. echoHandler 등록 -->
 	<!-- <websocket:handlers>
