@@ -8,11 +8,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp">
-	<jsp:param name="title" value="모농모농-관리자페이지"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
-<h4>관리자 1:1 문의</h4>
+<h4>판매자 1:1 문의</h4>
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
 		<div>문의 내역이 없습니다.</div>
@@ -29,8 +27,9 @@
 				    <div class="accordion-header" id="heading${vs.count}">
 				      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${vs.count}" aria-expanded="true" aria-controls="collapse${vs.count}">
 				        <div class="inq-title-align">
+				        	<span class="inq-title-item">${inq.DProductName}</span>
 					        <span class="inq-title-item">${inq.inquireTitle}</span>
-							<span class="inq-title-item">${inq.inquireCreatedAt}</span>
+							<span class="inq-title-item">${inq.createdAt}</span>
 							<span class="inq-title-item">${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>
 				        </div>
 				      </button>
@@ -39,19 +38,19 @@
 				      <div class="accordion-body">
 				        <div class="inq-content-container inq-form-align">
 				        	<label for="memberId" class="inq-memberId">🥕${inq.memberId} :&nbsp;</label>
-				        	<textarea name="memberId" id="memberId" cols="80" rows="10" style="resize: none;" readOnly>${inq.inquireContent}</textarea>
+				        	<textarea name="memberId" id="memberId" cols="80" rows="10" style="resize: none;" readOnly>${inq.content}</textarea>
 				        </div>
 				        <br />
 				        <div class="inq-answer px-4">
 				        	<form action="" accept-charset="UTF-8">
 				        		<div class="inq-form-align">
 					        		<div class="inq-form-align">
-							        	<label for="inquireAContent">🍃관리자 :&nbsp;</label>
-							        	<textarea name="inquireAContent" id="inquireAContent" cols="80" rows="10" style="resize: none;">${inq.inquireAnswer.inquireAContent}</textarea>
+							        	<label for="dInquireAContent">🍉<sec:authentication property="principal.username"/> :&nbsp;</label>
+							        	<textarea name="dInquireAContent" id="dInquireAContent" cols="80" rows="10" style="resize: none;">${inq.directInquireAnswer.DInquireAContent}</textarea>
 					        		</div>
 									<div class="px-2 d-flex flex-column justify-content-space-between">
-							        	<span>${inq.inquireAnswer.inquireAnsweredAt}</span>
-							        	<input type="hidden" name="inquireNo" value="${inq.inquireNo}"/>
+							        	<span>${inq.directInquireAnswer.DInquireAnsweredAt}</span>
+							        	<input type="hidden" name="dInquireNo" value="${inq.DInquireNo}"/>
 							        	<sec:csrfInput />
 							        	<br />
 							        	<button type="button" name="bntSubmitAns" class="btn btn-EA5C2B-reverse inquire-answer-btn" onclick="submitAnswer(this.form);" ${inq.hasAnswer eq 'Y' ? 'disabled' : ''}>답변등록</button>
@@ -68,15 +67,15 @@
 		const headers = {};
 		headers['${_csrf.headerName}'] = '${_csrf.token}';
 		const submitAnswer = (frm) =>{
-			const {inquireAContent, inquireNo, bntSubmitAns} = frm;
-			console.log(inquireAContent.value, inquireNo.value, bntSubmitAns);
+			const {dInquireAContent, dInquireNo, bntSubmitAns} = frm;
+			console.log(dInquireAContent.value, dInquireNo.value, bntSubmitAns);
 			
 			if(confirm("답변을 등록하시겠습니까?")){
 				$.ajax({
-					url : "${pageContext.request.contextPath}/admin/inquireAnswer.do",
+					url : "${pageContext.request.contextPath}/member/sellerProductQnAList.do",
 					headers,
 					method : "POST",
-					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value},
+					data : {dInquireAContent : dInquireAContent.value, dInquireNo : dInquireNo.value},
 					success(result){
 						console.log(result);
 						if(result > 0){

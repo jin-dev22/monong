@@ -1,29 +1,17 @@
 package com.kh.monong.direct.model.dto;
 
-import java.time.LocalDateTime;
-
-import org.springframework.lang.NonNull;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-@NoArgsConstructor
+@SuperBuilder
 @AllArgsConstructor
-public class DirectInquire {
-	@NonNull
-	private String dInquireNo;
-	@NonNull
-	private String dProductNo;
-	@NonNull
-	private String memberId;
-	private String inquireTitle;
-	@NonNull
-	private String content;
-	private LocalDateTime createdAt;
-	@NonNull
-	private Status status;
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class DirectInquire extends DirectInquireEntity {
+	private String dProductName;
+	private DirectInquireAnswer directInquireAnswer;
 }

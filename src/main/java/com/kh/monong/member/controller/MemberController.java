@@ -43,6 +43,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
@@ -262,12 +264,12 @@ public class MemberController {
 								@RequestParam(defaultValue = "1") int cPage, 
 								@RequestParam(defaultValue = "판매중") String dSaleStatus,
 								Model model, HttpServletRequest request) {
-		Member member = (Member) (authentication.getPrincipal());
+		Seller seller = (Seller) (authentication.getPrincipal());
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
-		param.put("memberId", member.getMemberId());
+		param.put("memberId", seller.getMemberId());
 		param.put("dSaleStatus", dSaleStatus);
 		log.debug("param = {}", param);
 		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
@@ -468,6 +470,42 @@ public class MemberController {
 		model.addAttribute("pagebar",pagebar);
 		log.debug("model",model);
 	}
+	
+	@GetMapping("/sellerProductQnAList.do")
+	public void sellerDirectProductInquireList(Authentication authentication,
+			@RequestParam(defaultValue = "1") int cPage,
+			Model model, HttpServletRequest request) {
+		String sellerId = authentication.getName();
+		log.debug("sellerId={}",sellerId);
+		Map<String, Object> param = new HashMap<>();
+		param.put("cPage", cPage);
+		int limit = 5;
+		param.put("limit", limit);
+		param.put("memberId", sellerId);
+		List<DirectInquire> inqList = memberService.selectDirectInqList(param);
+		model.addAttribute("inqList",inqList);
+		log.debug("inqList={}", inqList);
+
+		int totalContent = memberService.getTotalDirectInqCntBysellerId(sellerId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+		log.debug("model={}",model);
+	};
+	
+	@PostMapping("/sellerProductQnAList.do")
+	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, @RequestParam String dInquireNo){
+		log.debug("dInquireAContent={}",dInquireAContent);
+		log.debug("dInquireNo={}",dInquireNo);
+
+		DirectInquireAnswer directInqAnswer = DirectInquireAnswer.builder().dInquireAContent(dInquireAContent).dInquireNo(dInquireNo).build();
+		//주문내역변경
+		int result = memberService.insertDirectInquireAnswer(directInqAnswer);
+		//알림정보 저장
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
