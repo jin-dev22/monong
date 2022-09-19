@@ -3,6 +3,8 @@ package com.kh.monong.subscribe.model.service;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+import javax.xml.ws.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,9 +39,6 @@ public class RequestSubPayment {
 		RestTemplate restTemplate = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
-//		Charset utf8 = Charset.forName("UTF-8");
-//		MediaType mediaType = new MediaType("applicatoin", "json", utf8);
-//		headers.setContentType(mediaType);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(access_token);
 		
@@ -48,7 +47,7 @@ public class RequestSubPayment {
 		log.debug("json = {}", json);
 		HttpEntity<String> entity = new HttpEntity<>(json, headers);
 		
-		return restTemplate.postForObject("https://api.iamport.kr/subscribe/payments/again", entity, String.class);
+		return restTemplate.postForObject("https://api.iamport.kr/subscribe/payments/again", entity, String.class); 
 	}
 
 }
