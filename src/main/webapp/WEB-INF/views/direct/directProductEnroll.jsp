@@ -100,4 +100,28 @@
 		</div>
 	</form>
 </div>
+<script>
+document.querySelectorAll("[name=upFile]").forEach((input) => {
+	input.addEventListener("change", (e) => {
+		const {files} = e.target;
+		const label = e.target.nextElementSibling;
+		if(files[0]){
+			label.textContent = files[0].name;	
+		}
+		else {
+			label.textContent = "파일을 선택하세요";
+		}
+	});
+});
+
+$(document).ready(function() {
+	  $('#summernote').summernote({
+ 	    	placeholder: 'content',
+	        minHeight: 370,
+	        maxHeight: null,
+	        focus: true, 
+	        lang : 'ko-KR'
+	  });
+	});
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

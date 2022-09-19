@@ -1,8 +1,8 @@
 package com.kh.monong.direct.model.dao;
 
 import java.util.List;
-import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
@@ -25,6 +25,8 @@ public interface DirectDao {
 	// 상품 등록
 	public void directProductEnroll(DirectProduct directProduct);
 	
+	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, 'DP'||#{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
+	int insertDirectProductAttachment(DirectProductAttachment attach);
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProductCollection(String dProductNo);
