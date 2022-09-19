@@ -113,15 +113,16 @@
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
 				<label for="address-ex">상세주소</label> 
+				<sec:authentication property='principal.memberAddressEx'  var="addrEx"/>
 				<input type="text" name="memberAddressEx" class="form-control" id="address-ex"
-					value='<sec:authentication property="principal.memberAddressEx"/>'>
+					value="${addrEx != null? addrEx : ''}">
 			</div>
 		</div>
 
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<label for="birthday">사업개시일<span class="enroll-form-required">*</span></label> 
-				<input type="date" name="memberBirthday" class="form-control" id="birthday" 
+				<label for="memberBirthday">사업개시일<span class="enroll-form-required">*</span></label> 
+				<input type="date" name="memberBirthday" class="form-control" id="memberBirthday" 
 					placeholder="사업개시일" 
 					value='<sec:authentication property="principal.memberBirthday"/>' required/>
 			</div>

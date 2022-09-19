@@ -63,7 +63,8 @@
 					<div class="order-status">
 						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
 							method="POST" accept-charset="UTF-8">
-							<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);">
+							<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);"
+									${order.dOrderStatus eq 'C' ? 'disabled' : ''}>
 								<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
 								<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
 								<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
