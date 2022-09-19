@@ -51,6 +51,9 @@
     <div class="seller-container">
     	<span class="seller-title">판매자</span><span class="seller">${directProduct.member.memberName}</span>
     </div>
+    <div class="soldout">
+    	<div class="soldout-content">품절이에요</div>
+    </div>
     <div class="dropdown">
 	    <button class="dropbtn">
 	      <span class="dropbtn_content">옵션 선택</span>
@@ -63,16 +66,16 @@
 			      	<td class="dPOName">${option.DOptionName}</td>
 			      	<td class="dPrice"><fmt:formatNumber value="${option.DPrice}" pattern="#,###" />원</td>
 			    </tr>
-			    <input type="hidden" name="dStock" value="${option.DStock}" />
+			    <input type="hidden" class="dStock" name="dStock" value="${option.DStock}" />
 			    <input type="hidden" name="dSaleStatus" value="${option.DSaleStatus}" />
 		      </c:forEach>
 		    </table>
 	    </div>
 	</div>
-	<form action="" method="POST" name="totalProductFrm">
+	<form:form action="" method="POST" name="totalProductFrm">
 		<div class="pOption-container">
 		</div>
-	</form>
+	</form:form>
     <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
 	<div class="pPrice-container">
 		<span class="total-price">총 상품 금액</span>
@@ -81,12 +84,17 @@
 		</div>
 	</div>
 	<div class="btn-container">
-	    <button type="button" class="btn-add-cart btn-116530" id="cart">장바구니</button>
+<%-- 		<sec:authorize access="isAnonymous()"> --%>
+<!-- 	    	<button type="button" class="btn-add-cart btn-116530" onclick="alert('로그인 후 이용해 주세요.')">장바구니</button> -->
+<%-- 	    </sec:authorize> --%>
+<%-- 	    <sec:authorize access="isAuthenticated()"> --%>
+	    	<button type="button" class="btn-add-cart btn-116530" id="cart">장바구니</button>
+<%-- 	    </sec:authorize> --%>
 	    <sec:authorize access="isAnonymous()">
 	    	<button type="button" class="btn-add-order btn-EA5C2B" onclick="alert('로그인 후 이용해 주세요.')">주문하기</button>
 	    </sec:authorize>
 	    <sec:authorize access="isAuthenticated()">
-	    	<button type="button" class="btn-add-order" id="order" onclick="location.href='${pageContext.request.contextPath}/direct/directOrder.do';">주문하기</button>
+	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order">주문하기</button>
 	    </sec:authorize>
 	</div>
   </div>
@@ -156,6 +164,7 @@ $('.slider-1 > .side-btns > div').click(function(){
 //    $('.slider-1 > .side-btns > div').eq(1).click();
 //}, 3000);
 
+
 // 드롭다운
 document.querySelector('.dropbtn').addEventListener('click', (e) => {
 	// console.log(e.target);
@@ -213,7 +222,33 @@ document.querySelector('.dropbtn').addEventListener('click', (e) => {
 	      }
 	    }
   };
-    
+  
+// 판매상태 확인
+const dSaleStatus = document.querySelectorAll('[name="dSaleStatus"]');
+const soldout = document.querySelector('.soldout');
+let soldoutAll = [];
+
+dSaleStatus.forEach((status) => {
+	soldoutAll.push(status.value);
+	const target = status.previousElementSibling.previousElementSibling;
+	// console.log(status.value);
+	
+	if(status.value !== "판매중") {
+		target.children[0].style.color = 'rgb(153, 153, 153)';
+		target.children[0].style.textDecorationLine = 'line-through';
+		target.children[0].style.textDecorationColor = 'rgb(153, 153, 153)';
+		target.children[1].innerText = '품절';
+		return;
+	}
+});
+
+// 전 옵션 판매마감/판매중단인 경우 옵션 선택 불가
+
+console.log(soldoutAll);
+if(soldoutAll.indexOf('판매중') == -1) {
+	soldout.style.display = "inline-flex";
+}
+ 
 // 재고 확인
 const dStock = document.querySelectorAll('[name="dStock"]');
 dStock.forEach((stock) => {
@@ -229,30 +264,12 @@ dStock.forEach((stock) => {
 	}
 });
 
-// 판매상태 확인
-const dSaleStatus = document.querySelectorAll('[name="dSaleStatus"]');
-const soldout = document.querySelector('.dropdown');
-
-dSaleStatus.forEach((status) => {
-	// console.dir(status);
-	const target = status.previousElementSibling.previousElementSibling;
-	// console.log(status.value);
-	if(status.value !== "판매중") {
-		target.children[0].style.color = 'rgb(153, 153, 153)';
-		target.children[0].style.textDecorationLine = 'line-through';
-		target.children[0].style.textDecorationColor = 'rgb(153, 153, 153)';
-		target.children[1].innerText = '품절';
-		return;
-	}
-	if(status.value === "판매마감") {
-		soldout.style.display = 'none';
-	}
-});
 
 
 // 사용자가 선택한 옵션 박스 생성
 document.querySelectorAll(".select_option").forEach((select) => {
 	select.addEventListener('click', (e) => {
+		// console.dir(select);
 		const parent = e.target.parentElement;
 		const optionNo = parent.dataset.optionNo;
 		// console.log(optionNo);
@@ -260,6 +277,7 @@ document.querySelectorAll(".select_option").forEach((select) => {
 		const place = document.querySelector(".pOption-container");
 		const dPOName = select.children[0].innerHTML;
 		const dPrice = select.children[1].innerHTML;
+		const dStock = select.nextElementSibling.value;
 		// console.log(dPOName);
 		const box = `
 		<div id="option-box" class="option-box" data-option-no="\${optionNo}">
@@ -269,21 +287,25 @@ document.querySelectorAll(".select_option").forEach((select) => {
 			<div class="option-count-wrap">
 				<span class="selected-price">\${dPrice}</span>
 				<input type="hidden" name="dPrice" value="\${dPrice}" />
+				<input type="hidden" name="stock" value="\${dStock}" />
 				<div class="option-count-box">
-					<button type="button" class="minus" onclick="minusBtn(event)">-</button>
+					<button type="button" class="option-count-minus" onclick="minusBtn(event)">-</button>
 					<div class="dOptionCount" id="dOptionCount">1</div>
-					<button type="button" class="plus" onclick="plusBtn(event)">+</button>
+					<button type="button" class="option-count-plus" onclick="plusBtn(event)">+</button>
 				</div>
-				<button type="button" id="delete" onclick="deleteBtn(event)">x</button>
+				<button type="button" id="option-count-delete" onclick="deleteBtn(event)">x</button>
 			</div>
-			<input type="hidden" name="memberId" />
+			<sec:authorize access="isAuthenticated()">
+	    		<input type="hidden" name="memberId" value='<sec:authentication property="principal.memberId"/>' />
+	    	</sec:authorize>
 			<input type="hidden" name="dOptionNo" value="\${optionNo}" />
 			<input type="hidden" name="productCount" value="1" />
 		</div>`;
-
+		
 		const optionBox = document.querySelector(`div[data-option-no="\${optionNo}"]`);
 		const targetStock = Number(e.target.parentElement.nextElementSibling.value);
 		const targetStatus = e.target.parentElement.nextElementSibling.nextElementSibling.value;
+		
 		if(!optionBox && targetStock > 0 && targetStatus === "판매중"){				
 			place.insertAdjacentHTML('beforeend', box);	
 		}
@@ -307,8 +329,8 @@ document.querySelectorAll(".select_option").forEach((select) => {
 
 // 삭제 핸들러
 const deleteBtn = (e) => {
-	const btn = document.getElementById('option-box');
-	btn.remove();
+	const deleteTarget = e.target.parentElement.parentElement;
+	deleteTarget.remove();
 
 	let totalPrice = totalCalc();
 	totalCalc();
@@ -322,18 +344,30 @@ const minusBtn = (e) => {
 	// console.dir(e.target);
 	let countVal = Number(e.target.nextElementSibling.innerHTML);
 	const count = e.target.nextElementSibling;
+	const member = document.querySelectorAll("[name=memberId]");
+	const inputCount = e.target.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling;
 	countVal--;
 	if(countVal > 0) {
 		count.innerHTML = countVal;
+		if(member.length == 0) {
+		}
+		else {
+			inputCount.value = countVal;
+		}
 	}
 	else if(countVal = 1) {
 		count.innerHTML = countVal;
+		if(member.length == 0) {
+		}
+		else {
+			inputCount.value = countVal;
+		}
 	}
-	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.value.replace(",",""));
+	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.previousElementSibling.value.replace(",",""));
 	// console.log(defaultPriceVal);
 	const sumVal = countVal * defaultPriceVal;
 	// console.log(sumVal);	
-	e.target.parentElement.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
+	e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
 	
 	let totalPrice = totalCalc();
 	totalCalc();
@@ -343,23 +377,67 @@ const minusBtn = (e) => {
 
 // 증량 핸들러
 const plusBtn = (e) => {
-	
-	// console.dir(e.target);
+	console.dir(e.target.parentElement.parentElement.previousElementSibling);
 	let countVal = Number(e.target.previousElementSibling.innerHTML);
 	const count = e.target.previousElementSibling;
+	const member = document.querySelectorAll("[name=memberId]");
+	const inputCount = e.target.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling;
+	const checkStock = Number(e.target.parentElement.previousElementSibling.value);
+	// console.log(checkStock, typeof checkStock);
 	countVal++;
 	// console.log(countVal);
 	if(countVal < 5) {
-		count.innerHTML = countVal;	
+		if(countVal < checkStock) {
+			count.innerHTML = countVal;	
+			if(member.length == 0) {
+			}
+			else {
+				inputCount.value = countVal;
+			}
+		}	
+		else if(countVal = checkStock) {
+			console.log(countVal);
+			count.innerHTML = countVal;	
+			if(member.length == 0) {
+			}
+			else {
+				inputCount.value = countVal;
+			}
+			setTimeout(() => {
+				alert('현재 주문 가능한 최대 수량입니다.');
+			}, 100);
+		}
 	}
 	else if(countVal = 5) {
-		count.innerHTML = countVal;	
+		if(countVal < checkStock) {
+			count.innerHTML = countVal;	
+			if(member.length == 0) {
+			}
+			else {
+				inputCount.value = countVal;
+			}
+		}	
+		else if(countVal = checkStock) {
+			console.log(countVal);
+			count.innerHTML = countVal;	
+			if(member.length == 0) {
+			}
+			else {
+				inputCount.value = countVal;
+			}
+			setTimeout(() => {
+				alert('현재 주문 가능한 최대 수량입니다.');
+			}, 200);
+		}
+		setTimeout(() => {
+		alert('최대 주문 가능 수량은 5개입니다.');
+		}, 200);
 	}
-	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.value.replace(",",""));
+	const defaultPriceVal = parseInt(e.target.parentElement.previousElementSibling.previousElementSibling.value.replace(",",""));
 	// console.log(defaultPriceVal);
 	const sumVal = countVal * defaultPriceVal;
 	// console.log(sumVal);	
-	e.target.parentElement.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
+	e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerText = sumVal.toLocaleString('ko-KR') + '원';
 	
 	let totalPrice = totalCalc();
 	totalCalc();
@@ -378,7 +456,7 @@ const totalCalc = () => {
 		totalCount += count;
 		// console.log(totalCount, typeof totalCount);
 		// console.log(e.parentElement.previousElementSibling);
-		const price = parseInt(e.parentElement.previousElementSibling.value.replace(",",""));
+		const price = parseInt(e.parentElement.previousElementSibling.previousElementSibling.value.replace(",",""));
 		// console.log(price, typeof price);
 		totalPrice += count * price;
 	});
@@ -387,56 +465,104 @@ const totalCalc = () => {
 
 
 // 장바구니 추가 및 주문하기
-document.querySelectorAll("button").forEach((button) => {
-	button.addEventListener('click', (e) => {
-		const frm = document.totalProductFrm;
-		const container = document.querySelector(".pOption-container");
-		const optionNo = document.querySelectorAll("[name=dOptionNo]");
-		
-		let cartList = [];
-		[...optionNo].forEach((no) => {
-			console.log(no);
-			const productCount = no.nextElementSibling.value;
-			cartList.push({"dOptionNo" : no.value, "productCount" : productCount});
-		});
-		
-		if(e.target.id === 'cart' || e.target.id === 'order') {
-			if(container.children.length === 0) {
-				alert("옵션을 선택해 주세요.");
-				return;
-			}
-		}
-		
-		// 장바구니
-		if(e.target.id === 'cart') {
-			$.ajax({
-				url : "${pageContext.request.contextPath}/direct/findCart.do",
-				type : "GET",
-				success(response) {
-					// 장바구니 중복 체크
-// 					if(response[0]) {
-// 						if(confirm('장바구니에 이미 존재하는 상품입니다. 그래도 추가하시겠습니까?')) {
-// 							addCart(cartList);
-// 						} else return;
-// 					} else {
-// 						addCart(cartList);
-// 					}
-				},
-				error : console.log
-			});
-		}
-		
-		// 주문하기
-		
-	})
-})
+const cart = document.querySelector('#cart');
+const order = document.querySelector('#order');
 
+cart.addEventListener('click', (e) => {
+	const frm = document.totalProductFrm;
+	const container = document.querySelector(".pOption-container");
+	const optionNo = document.querySelectorAll("[name=dOptionNo]");
+	
+	let optionNoList = [];
+	let cartList = [];
+	[...optionNo].forEach((no) => {
+		console.dir(no);
+		const productCount = no.nextElementSibling.value;
+		const memberId = no.previousElementSibling.value;
+		optionNoList.push(no.value);
+		cartList.push({"dOptionNo" : no.value, "productCount" : productCount, "memberId" : memberId});
+	});
+	
+	console.log(optionNoList);
+	console.log(cartList);
+	
+	if(container.children.length === 0) {
+		alert("옵션을 선택해 주세요.");
+		return;
+	}
+	
+	// 장바구니
+	$.ajax({
+		url : "${pageContext.request.contextPath}/direct/checkCartDuplicate.do",
+		method : "GET",
+		data : {optionNoList : optionNoList,
+				memberId},
+		success(response) {
+			console.log(response.cartList);
+			
+			// 장바구니 중복 체크
+			if(Array.isArray(response.cartList) && response.cartList.length === 0) {
+				addCart(cartList);
+			} else {
+				if(confirm(`장바구니에 동일한 상품이 있습니다.
+장바구니에 추가하시겠습니까?`)) {
+					addCart(cartList);
+// 				let addCartList = [];
+// 				for(let list of response.cartList) {
+// 					console.log(list)
+// 					if(list == null) {
+// 						for(let addCartList of cartList) {
+// 							// addCartList.push({"cartNo" : list.cartNo, "productCount" : })
+// 							// addCart(addCartList);
+							
+// 						}
+// 					}
+// 					else {
+// 						// updateCartList.push({"cartNo" : list.cartNo, "productCount" : });
+// 					}
+// 				}
+// 				let updateCartList = [];
+// 					for(let list of response.cartList) {
+// 						for(let i = 0; i < optionNoList.length; i++) {
+// 							if((optionNoList[i] == list.DOptionNo) == true){
+// 								console.log(1);
+// 								// updateCartList.push({"cartNo" : list.cartNo, "productCount" : });
+// 							}
+// 							else if(optionNoList[i].includes(list.DOptionNo) == -1){
+// 								console.log(2);
+// 							}
+// 						}
+// 					}
+// 					console.log(updateCartList);
+// 					if(optionNoList.indexOf(list.DOptionNo) > 0) {
+// 						updateCartList.push({"cartNo" : list.cartNo, "productCount" : list.productCount});
+// 					}
+					
+				
+// 				console.log(updateCartList);
+				// console.log(dOptionNo, cartNo, memberId, productCount);
+				// addCart(updateOptionNo, );
+				} else return;
+			}
+		},
+		error : console.log
+	});
+});
+
+// 장바구니 상품 추가
 const addCart = (cartList) => {
+	const headers = {};
+	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	console.log(headers);
+	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/direct/addCart.do",
-		type : "POST",
-		data : {data : cartList},
+		method : "POST",
+		headers,
+		data : JSON.stringify(cartList),
+		contentType : 'application/json; charset=utf-8',
 		success(response) {
+			console.log(response);
 			const modal = `
 				<div class="modal" tabindex="-1">
 				  <div class="modal-dialog">
@@ -457,8 +583,27 @@ const addCart = (cartList) => {
 				</div>`;
 		},
 		error : console.log
-	})
-}
+	});
+};
+
+// 장바구니 중복 옵션 수량 변경
+// const updateCartCout = (cartList) {
+	
+// }
+
+// 바로 주문
+order.addEventListener('click', (e) => {
+	const frm = document.totalProductFrm;
+	const container = document.querySelector(".pOption-container");
+	
+	if(container.children.length === 0) {
+		alert("옵션을 선택해 주세요.");
+		return;
+	}
+	
+	frm.action = "${pageContext.request.contextPath}/direct/directOrder.do";
+	frm.submit();
+});
 
 // 네비게이션
 const items = document.querySelectorAll('.direct-detail-nav-item');

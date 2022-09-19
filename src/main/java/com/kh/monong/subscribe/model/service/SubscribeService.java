@@ -30,13 +30,15 @@ public interface SubscribeService {
 	
 	Subscription findNextDeliveryDateByUid(String customerUid);
 	
-	List<Subscription> getPayList();
+	List<Subscription> getPayList(LocalDate today);
 	
 	CardInfo getCardInfoList(int cardNo);
 	
-	int getDeliveryFee();
-
 	SubscriptionProduct getAmountByPcode(String sProductCode);
+	
+	int getTimesBysNo(String sNo);
+
+	int insertSubOrder(SubscriptionOrder subOrder);
 	
 	
 	// 선아코드 끝
@@ -46,7 +48,7 @@ public interface SubscribeService {
 	
 	List<Vegetables> getVegetables();
 
-	int getSubscriptionReviewStarAvg();
+	double getSubscriptionReviewStarAvg();
 	
 	int getTotalContent();
 	
@@ -54,10 +56,17 @@ public interface SubscribeService {
 	
 	SubscriptionReview selectOneSubscriptionReview(String reviewNo);
 	
-	int updateSubscribeReviewRecommend(String sReviewNo);
+	int getRecommendedYn(Map<String, String> param);
+
+	int updateSubscribeReviewRecommendAdd(Map<String, String> param);
+	
+	int updateSubscribeReviewRecommendCancel(Map<String, String> param);
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
 
 
 

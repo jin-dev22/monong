@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.kh.monong.common.enums.YN;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

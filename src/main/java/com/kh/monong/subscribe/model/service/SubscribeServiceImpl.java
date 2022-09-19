@@ -61,8 +61,8 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public List<Subscription> getPayList() {
-		return subscribeDao.getPayList();
+	public List<Subscription> getPayList(LocalDate today) {
+		return subscribeDao.getPayList(today);
 	}
 	
 	@Override
@@ -71,14 +71,20 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int getDeliveryFee() {
-		return subscribeDao.getDeliveryFee();
-	}
-	
-	@Override
 	public SubscriptionProduct getAmountByPcode(String sProductCode) {
 		return subscribeDao.getAmountByPcode(sProductCode);
 	}
+	
+	@Override
+	public int getTimesBysNo(String sNo) {
+		return subscribeDao.getTimesBysNo(sNo);
+	}
+	
+	@Override
+	public int insertSubOrder(SubscriptionOrder subOrder) {
+		return subscribeDao.insertSubOrder(subOrder);
+	}
+	
 	
 	// 선아코드 끝
 		
@@ -94,7 +100,7 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int getSubscriptionReviewStarAvg() {
+	public double getSubscriptionReviewStarAvg() {
 		return subscribeDao.getSubscriptionReviewStarAvg();
 	}
 	
@@ -118,8 +124,22 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int updateSubscribeReviewRecommend(String sReviewNo) {
-		return subscribeDao.updateSubscribeReviewRecommend(sReviewNo);
+	public int getRecommendedYn(Map<String, String> param) {
+		return subscribeDao.getRecommendedYn(param);
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendAdd(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendAdd(param);
+		result = subscribeDao.insertRecommendedSubscribeReview(param);
+		return result;
+	}
+	
+	@Override
+	public int updateSubscribeReviewRecommendCancel(Map<String, String> param) {
+		int result = subscribeDao.updateSubscribeReviewRecommendCancel(param);
+		result = subscribeDao.deleteRecommendedSubscribeReview(param);
+		return result;
 	}
 	
 	@Override

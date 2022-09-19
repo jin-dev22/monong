@@ -111,6 +111,31 @@
   	</collection>
   </resultMap>
  
+	<select id="selectInquireList" resultMap="inquireMap">
+		select 
+		    *
+		from 
+		    inquire inq left join inquire_answer using(inquire_no)
+		where 
+		    member_id = #{memberId} 
+		order by 
+		    has_answer, inquire_created_at desc
+	</select>
+	<resultMap type="inquire" id="inquireMap">
+		<id column="inquire_no" property="inquireNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="inquire_title" property="inquireTitle"/>
+		<result column="inquire_content" property="inquireContent"/>
+		<result column="inquire_created_at" property="inquireCreatedAt"/>
+		<result column="has_answer" property="hasAnswer"/>
+		<association property="inquireAnswer" javaType="InquireAnswer">
+			<id column="inquire_a_no" property="inquireANo"/>
+			<result column="inquire_no" property="inquireNo"/>
+			<result column="inquire_a_content" property="inquireAContent"/>
+			<result column="inquire_answered_at" property="inquireAnsweredAt"/>
+		</association>
+	</resultMap>
+	
 <!-- ==================================================수진 끝 -->
 
  <!-- ==================================================수아 시작 -->

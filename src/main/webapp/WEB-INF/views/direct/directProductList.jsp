@@ -13,7 +13,7 @@
 <h1 class="d-list" style="padding-bottom: 10px;color: #EA5C2B;border-bottom: 1px solid #EA5C2B;">농산물 직거래 장터</h1>
 <div class="d-flex flex-wrap justify-content-between">
 		<div class="productEnroll">
-			<input type="button" class="btn btn-EA5C2B float-right" value="상품 등록" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
+			<input type="button" class="btn btn-EA5C2B float-right" onclick="location.href='directProductEnroll.do' "value="상품 등록" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
 		</div>
 	</div>
 	<c:if test="${empty list}">
