@@ -21,7 +21,7 @@
 </div>
 
 <nav class="nav justify-content-around mt-5 navbar" >
-	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">정기구독</a>
+	<a href="#">정기구독</a>
 	<a href="${pageContext.request.contextPath}/admin/directProductList.do">직거래</a>
 	<div class="dropdown">
 	  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
