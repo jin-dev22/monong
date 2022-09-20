@@ -84,6 +84,21 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.updateSubscriptionSuccessPay(updateSub);
 	}
 	
+	/**
+	 * 관리자
+	 */
+	@Override
+	public List<Subscription> getSubscriptionListAll(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.getSubscriptionListAll(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSubscriptionListAll() {
+		return subscribeDao.getTotalSubscriptionListAll();
+	}
 	
 	
 	// 선아코드 끝
