@@ -58,6 +58,16 @@ public interface SubscribeDao {
 	@Update("update subscription set s_delay_yn = #{sDelayYn}, s_payment_date = #{sPaymentDate}, s_next_delivery_date = #{sNextDeliveryDate} where s_no = #{sNo}")
 	int updateSubscriptionSuccessPay(Subscription updateSub);
 	
+	/**
+	 * 관리자
+	 */
+	@Select("select * from subscription where s_quit_yn = 'N' order by card_info_no desc")
+	List<Subscription> getSubscriptionListAll(RowBounds rowBounds);
+	
+	@Select("select count(*) from subscription where s_quit_yn = 'N'")
+	int getTotalSubscriptionListAll();
+	
+	
 	
 	
 	// 선아코드 끝
@@ -97,6 +107,7 @@ public interface SubscribeDao {
 	// 추가
 	@Select("select s_no from subscription where member_id = #{memberId} and s_quit_yn = 'N'")
 	String getSubscriptionByMemberId(String memberId);
+
 	
 	
 	
