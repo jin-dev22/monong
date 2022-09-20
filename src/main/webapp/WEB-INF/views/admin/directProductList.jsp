@@ -25,7 +25,7 @@
 		<c:forEach items="${prodList}" var="prod">
 			<div class="prod-container">
 				<div class="prod-container-column prod-col-1">
-					<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="" style="width: 100px;"/>
+					<img src="${pageContext.request.contextPath}/resources/upload/product/${prod.directProductAttachments[0].DProductRenamedFilename}" alt="" style="width: 100px;"/>
 				</div>
 				<div class="prod-container-column prod-col-2">
 					<div class="prod-name">${prod.DProductName}</div>
