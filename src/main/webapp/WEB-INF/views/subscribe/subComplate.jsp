@@ -71,7 +71,7 @@
 			</c:forEach>
 		</div>
 		<div class="moveButton">
-			<a href="${pageContext.request.contextPath}/member/memberOrderList.do">
+			<a href="${pageContext.request.contextPath}/member/memberSubscribeList.do">
 				<button type="button" class="btn btn-116530">구독 확인하기</button>
 			</a>
 			<a href="${pageContext.request.contextPath}/index.jsp">
