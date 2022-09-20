@@ -9,9 +9,11 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -127,8 +129,19 @@ public class DirectController {
 	
 	// 장바구니 페이지
 	@GetMapping("/cart.do")
-	public void cart() {
+	public void cart(Authentication authentication, Model model) {
+		// String sessionId = session.getId();
+		// log.debug("sessionId = {}", sessionId);
+		String memberId = authentication.getName();
+		log.debug("memberId = {}", memberId);
 		
+		List<Cart> cartList = new ArrayList<>();
+		if(memberId != null) {
+			cartList = directService.selectCartListByMemberId(memberId);
+		}
+		log.debug("cartList = {}", cartList);
+		
+		model.addAttribute("cartList", cartList);
 	}
 	
 	// 장바구니 중복 검사
