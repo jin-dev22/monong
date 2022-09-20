@@ -294,19 +294,17 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 	// 주문번호 및 고객고유번호 insert
 	document.querySelector("#requestPay").addEventListener('click', function requestPay(){
 		const frm = document.subscribeOrderFrm;
-		// 미사용?
-//		let merchantUid = sOrderNoMaker(); // 상점에서 관리하는 주문 번호로 정기결제 사용(중복x)
+		
 		let sNo = sNoMaker(); // 구독번호, 고유번호로 변경x
 		let pg = document.querySelector("[name=s-card]:checked").value;
 		
 		let productName = '정기구독 ' + frm.sProductName.value;
-		// 미사용?
-//		let amount = frm.sPrice.value.replace(/[^0-9]/g, "");
 		let customerUid = frm.memberId.value + randomMaker(5);
 		let memberName = frm.sRecipient.value;
 		let memberTel = frm.sPhone.value;
 		let sPrice = frm.sPrice.value.replace(/[^0-9]/g, "");
 		
+		// csrf
 		let csrfName = $('.csrfname').attr('name'); // CSRF Token name
 		let csrfHash = $('.csrfname').val(); // CSRF hash
 		
@@ -325,20 +323,17 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 			pg: pg,
 			pay_method: "card",
 			name : productName, // 상품명
-			amount : 0, // 빌링키 발급을 위한 0
-			customer_uid : customerUid, // 필수 입력 // 회원아이디+sub + 랜덤숫자
+			amount : 0, // 빌링키 발급
+			customer_uid : customerUid, // 필수 입력값, 회원아이디 + 랜덤숫자
 			buyer_name : memberName, // 회원이름
 			buyer_tel : memberTel // 회원 전화번호
 		},
 		function(rsp) {
-			console.log('rsp = ', rsp); // 화인용
+			// console.log('rsp = ', rsp); // 화인용
 			const {success, status} = rsp;
 			if (success) {
 				let cardNo = rsp.card_number;
 				customerUid = rsp.customer_uid;
-				
-				console.log('cardNo = ', cardNo); // 화인용
-				console.log('customerUid = ', customerUid); // 화인용
 				
 				if(status == "paid"){
 					// 1. 카드 정보 저장
@@ -351,7 +346,7 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 							[csrfName]: csrfHash // csrf값 전달
 						},
 						success(response){
-							console.log('response : ', response);
+							// console.log('response : ', response);
 							if(response == 1){
 								// 2. 구독 테이블에 저장
 								frm.sNo.value = sNo;
@@ -370,7 +365,7 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 				}
 			} else {
 				alert('결제에 실패했습니다. 다시 시도해주세요');
-				console.log("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+				// console.log("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
 				$('#checkModal').modal('hide');
 			}
 		});
@@ -386,20 +381,6 @@ function todayFormat(){
 	day = day >= 10 ? day : '0' + day;
 	
 	return today.getFullYear() + month + day;
-};
-
-//주문번호 SO2209011201 + 랜덤3자리 = 총 15자리(매변 변경되고 매번 전달되어야함)
-function sOrderNoMaker(){
-	let merchantUid = '';
-	let random = randomMaker(3);
-	
-	let today = todayFormat();
-	let hh = new Date().getHours();
-	let mm = new Date().getMinutes();
-	let time = hh + mm;
-	
-	merchantUid = 'SO' + today + time + random;
-	return merchantUid;
 };
 
 // 구독번호 S + 220902 + 12345 12자리
