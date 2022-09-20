@@ -9,11 +9,12 @@ import com.kh.monong.member.model.dto.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
 @ToString(callSuper = true)
-//@SuperBuilder
+@SuperBuilder
 public class DirectProduct extends DirectProductEntity{
 	private int attachCount;
 	private Member member;

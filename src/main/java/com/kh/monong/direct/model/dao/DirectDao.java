@@ -61,7 +61,17 @@ public interface DirectDao {
 	DirectProduct selectOrderListByCartNo(Object object);
 	//----------------- 민지 끝
 
+	//----------------- 수진 시작
+	List<DirectProduct> adminSelectProdList(Map<String, Object> param, RowBounds rowBounds);
+
+	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
+	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
+
+	@Select(" select count(*) from (select distinct d_product_no from direct_product left join direct_product_option using(d_product_no) where d_sale_status = #{dSaleStatus})")
+	int getTotalProdCntByStatus(Map<String, Object> param);
+
 	
+	//----------------- 수진 시작
 
 
 

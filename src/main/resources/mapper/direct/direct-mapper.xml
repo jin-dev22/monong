@@ -120,4 +120,42 @@ values
   	</collection>
   </resultMap>
 <!-- 민지 끝 -->
+
+<!-- 수진 시작 -->
+<select id="adminSelectProdList" resultMap="directProductListMap">
+  	select * 
+	from 
+	    direct_product 
+	    left join 
+	    direct_product_option 
+	        using(d_product_no)
+	where 
+	    d_product_no in(select 
+	    					distinct d_product_no
+                        from 
+	                        direct_product 
+	                        left join 
+	                        direct_product_option 
+	                        using(d_product_no)
+                        where 
+                        	d_sale_status = #{dSaleStatus})
+  </select>
+  <resultMap type="directProduct" id="directProductListMap">
+  	<id column="d_product_no" property="dProductNo"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="d_product_name" property="dProductName"/>
+	<result column="d_product_content" property="dProductContent"/>
+  	<result column="d_product_created_at" property="dProductCreatedAt"/>
+  	<result column="d_product_updated_at" property="dProductUpdatedAt"/>
+  	<result column="d_default_price" property="dDefaultPrice"/>
+  	<collection property="directProductOptions" ofType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</collection>
+  </resultMap>
+<!-- 수진 끝 -->
 </mapper>

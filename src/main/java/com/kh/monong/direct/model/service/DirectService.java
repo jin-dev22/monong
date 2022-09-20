@@ -35,6 +35,13 @@ public interface DirectService {
 	Cart checkCartDuplicate(Map<String, Object> cart);
 	//----------------- 민지 끝
 
+	//----------------- 수진 시작
+	List<DirectProduct> adminSelectPordList(Map<String, Object> param);
+
+	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
+	
+	int getTotalProdCntByStatus(Map<String, Object> param);
+	//----------------- 수진 끝
 
 
 
