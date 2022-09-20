@@ -75,6 +75,11 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
+	public List<Cart> selectCartListByMemberId(String memberId) {
+		return directDao.selectCartListByMemberId(memberId);
+	}
+	
+	@Override
 	public Cart checkCartDuplicate(Map<String, Object> cart) {
 		return directDao.checkCartDuplicate(cart);
 	}

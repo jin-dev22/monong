@@ -39,6 +39,9 @@ public interface DirectDao {
 	// 상품 상세 조회
 	DirectProduct selectOneDirectProductCollection(String dProductNo);
 	
+	// 해당 회원 장바구니 조회
+	List<Cart> selectCartListByMemberId(String memberId);
+	
 	// 장바구니 중복 조회
 	@Select("select * from cart where d_option_no = #{optionNo} and member_id = #{memberId}")
 	Cart checkCartDuplicate(Map<String, Object> cart);
