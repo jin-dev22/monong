@@ -6,9 +6,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농-상품수정"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <!-- include summernote css/js-->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
@@ -61,10 +59,15 @@ div#enroll-container{
 #DProductContent-container{
 	width: 600px;
 }
+.delFiles-container{
+	overflow-x: auto;
+	width: 300px;
+}
 </style>
 <div id="enroll-container" class="mx-auto text-center">
-	<sec:authentication property="principal" var="loginMember"/>
-	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+<sec:authentication property="principal" var="loginMember"/>
+<c:if test="${loginMember.memberId eq prod.memberId}">
+	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductUpdate.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
         <div class="mx-auto">
         	<div class="enroll-info-container">
         		<span class="enroll-info-label">판매자</span>
@@ -78,10 +81,22 @@ div#enroll-container{
         		<span class="enroll-info-label">상품명<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DProductName-container">
-                    	<input type="text" class="form-control" name="DProductName" id="DProductName" required>
+                    	<input type="text" class="form-control" name="DProductName" id="DProductName" value="${prod.DProductName}" required>
                     </span>
         		</span>
         	</div>
+        	<div class="enroll-info-container">
+        		<span class="enroll-info-label"><label for="upFile">기존파일</label></span>
+        		<span class="delFiles-container">
+	        		<c:forEach items="${prod.directProductAttachments}" var="attach" varStatus="vs">
+						<label class="btn btn-outline-danger" title="삭제"> 
+							<img src="${pageContext.request.contextPath}/resources/upload/product/${attach.DProductRenamedFilename}" style="width:50px;" alt="" />
+							<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
+								value="${attach.DProductNo}">
+						</label>
+	        		</c:forEach>
+           		</span>
+           </div>
         	<div class="enroll-info-container">
         		<span class="enroll-info-label"><label for="upFile">상품 사진</label></span>
         		<span class="enroll-info">
@@ -92,6 +107,20 @@ div#enroll-container{
            			<input class="form-control" name="upFile" type="file" id="upFile4" multiple>
            			</span>
            		</span>
+           </div>
+           <div class="enroll-info-container">
+        		<span class="enroll-info-label"><label for="upFile">상품 옵션</label></span>
+        		<fieldset name="directProductOptions">
+        			<c:forEach items="${prod.directProductOptions}" var="opt" varStatus="vStatus">
+        				<label for="dOptionName${vSataus.count}">옵션${vStatus.count}</label>
+	        			<input type="text" name="dOptionName" id="dOptionName${vSataus.count}" value="${opt.DOptionName}"/> 
+	        			<select name="dSaleStatus" id="direct-saleStatus" onchange="this.form.submit()">
+							<option value="판매중" ${opt.DSaleStatus eq '판매중' ? 'selected' : ''}>판매중</option>
+							<option value="판매중단" ${opt.DSaleStatus eq '판매중단' ? 'selected' : ''}>판매중단</option>
+							<option value="판매마감" ${opt.DSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
+						</select>
+        			</c:forEach>
+        		</fieldset>
            </div>
            <div class="enroll-info-container">
         		<span class="enroll-info-label">상품 상세 설명<span class="enroll-form-required">*</span></span>
@@ -119,9 +148,13 @@ div#enroll-container{
         	</div>
 		</div>
 		<sec:csrfInput />
-        <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
+        <input type="submit" class="btn btn-EA5C2B" value="상품 수정">
         <input type="reset" class="btn btn-116530" value="취소">
 	</form>
+</c:if>
+<c:if test="${not(loginMember.memberId eq prod.memberId)}">
+	<h2>올바른 접근이 아닙니다.</h2><!-- 판매글 작성자가 아닌 다른 계정이 url로 접속할 경우 대비 -->
+</c:if>
 </div>
 <script>
 document.querySelectorAll("[name=upFile]").forEach((input) => {
@@ -138,12 +171,14 @@ document.querySelectorAll("[name=upFile]").forEach((input) => {
 });
 $(document).ready(function() {
 	  $('#summernote').summernote({
- 	    	placeholder: 'content',
 	        minHeight: 370,
 	        maxHeight: null,
 	        focus: true, 
+	        disableResizeEditor: true,
 	        lang : 'ko-KR'
 	  });
-	});
+
+	  $("#summernote").summernote('code',  '${prod.DProductContent}');
+});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

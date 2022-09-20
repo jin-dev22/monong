@@ -221,7 +221,9 @@ public class DirectController {
 	//----------------- 수진 시작
 	@GetMapping("/directProductUpdate.do")
 	public void updateProduct(@RequestParam String prodNo, Model model) {
-		
+		DirectProduct oldProd = directService.selectOneDirectProduct(prodNo);
+		log.debug("oldProd={}", oldProd);
+		model.addAttribute("prod",oldProd);
 	}
 	
 	//----------------- 수진 끝
