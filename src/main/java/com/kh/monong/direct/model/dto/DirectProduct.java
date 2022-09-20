@@ -19,7 +19,7 @@ public class DirectProduct extends DirectProductEntity{
 	private Member member;
 	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
 	private List<DirectProductOption> directProductOptions = new ArrayList<>();
-	private Cart cart;
+	private CartEntity cart;
 	
 	public DirectProduct(String dProductNo, String memberId, String dProductName, String dProductContent, LocalDateTime dProductCreatedAt,
 						LocalDateTime dProductUpdatedAt, int dDefaultPrice, int dDeliveryFee, int attachCount) {

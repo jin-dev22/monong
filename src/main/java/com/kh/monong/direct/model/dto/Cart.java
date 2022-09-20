@@ -1,22 +1,26 @@
 package com.kh.monong.direct.model.dto;
 
-import org.springframework.lang.NonNull;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class Cart {
-	@NonNull
-	private String cartNo;
-	@NonNull
-	private String dOptionNo;
-	@NonNull
-	private String memberId;
-	private int productCount;
+@ToString(callSuper = true)
+public class Cart extends CartEntity {
+	private DirectProductEntity directProduct;
+	private List<DirectProductAttachment> directProductAttachments = new ArrayList<>();
+	private List<DirectProductOption> directProductOptions = new ArrayList<>();
+	
+	public Cart(String cartNo, String dOptionNo, String memberId, int productCount) {
+		super(cartNo, dOptionNo, memberId, productCount);
+	}
+	
+	public void add(DirectProductAttachment attach){
+		this.directProductAttachments.add(attach);
+	}
+	
 }
