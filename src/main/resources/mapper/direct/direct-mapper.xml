@@ -139,6 +139,7 @@ values
 	                        using(d_product_no)
                         where 
                         	d_sale_status = #{dSaleStatus})
+   	order by d_product_created_at desc
   </select>
   <resultMap type="directProduct" id="directProductListMap">
   	<id column="d_product_no" property="dProductNo"/>
