@@ -296,6 +296,7 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 		const frm = document.subscribeOrderFrm;
 		
 		let sNo = sNoMaker(); // 구독번호, 고유번호로 변경x
+		console.log(sNo);
 		let pg = document.querySelector("[name=s-card]:checked").value;
 		
 		let productName = '정기구독 ' + frm.sProductName.value;
@@ -380,7 +381,7 @@ function todayFormat(){
 	month = month >= 10 ? month : '0' + month;
 	day = day >= 10 ? day : '0' + day;
 	
-	return today.getFullYear() + month + day;
+	return today.getFullYear().toString().substring(2) + month + day;
 };
 
 // 구독번호 S + 220902 + 12345 12자리

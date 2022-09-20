@@ -258,8 +258,10 @@ public class SubscribeController {
 	 */
 	public String makemerchantUid(String paymentDate) {
 		String date = paymentDate.replaceAll("-", "");
+		date = date.substring(2);
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder();
+		log.debug("date", date);
 		
 		final int len = 7;
 		for(int i = 0; i < len; i++) {
