@@ -1,0 +1,22 @@
+/* 관리자 정기구독 페이지 css */
+.btn-116530,
+.btn-116530-reverse {
+	margin-top: 20px;
+	width: 100px;
+	height: 40px;
+}
+.admin-subscriptionList-table-header {
+	background-color: #F6D860;
+}
+#admin-subscriptionList-container .admin-subscriptionList-table-header th:nth-of-type(2) {
+	width: 550px;
+}
+#admin-subscriptionList-container .admin-subscriptionList-table-header th:not(th:nth-of-type(2)) {
+	width: calc((100% - 550px - 20px) / 2);
+}
+#admin-subscriptionList-container .table:hover {
+	background-color: #F6D860;
+}
+#admin-subscriptionList-container .table {
+	border-color: #fff;
+}

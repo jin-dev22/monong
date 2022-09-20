@@ -37,6 +37,13 @@ public interface SubscribeService {
 	
 	int updateSubscriptionSuccessPay(Subscription updateSub);
 	
+	/**
+	 * 관리자
+	 */
+	List<Subscription> getSubscriptionListAll(Map<String, Integer> param);
+
+	int getTotalSubscriptionListAll();
+	
 	
 	
 	// 선아코드 끝
@@ -62,7 +69,6 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
-
 
 
 

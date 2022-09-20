@@ -38,6 +38,8 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,6 +62,9 @@ public class AdminController {
 	
 	@Autowired
 	DirectService directService;
+
+	@Autowired
+	SubscribeService subscribeService;
 	//--------------------------------------------------------수아시작
 	@GetMapping("/memberList.do")
 	public void memberList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
@@ -240,4 +245,45 @@ public class AdminController {
 		log.debug("model = {}", model);
 	}
 	//--------------------------------------------------------수진끝
+	//--------------------------------------------------------선아 시작
+	@GetMapping("/subscriptionList.do")
+	public void subscriptionList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
+		int totalContent = subscribeService.getTotalSubscriptionListAll();
+		log.debug(">> subscriptionList = {}", subscriptionList);
+		log.debug(">> totalContent = {}", totalContent);
+
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("subscriptionList",subscriptionList);
+		model.addAttribute("pagebar", pagebar);
+	}
+	
+	@GetMapping("/subscriptionOrderList.do")
+	public void subscriptionOrderList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
+		int totalContent = subscribeService.getTotalSubscriptionListAll();
+		log.debug(">> subscriptionList = {}", subscriptionList);
+		log.debug(">> totalContent = {}", totalContent);
+		
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("subscriptionList",subscriptionList);
+		model.addAttribute("pagebar", pagebar);
+	}
+	
+	
+	
+	
+	//--------------------------------------------------------선아 끝
 }
