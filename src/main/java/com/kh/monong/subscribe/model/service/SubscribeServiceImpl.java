@@ -18,7 +18,6 @@ import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Transactional(rollbackFor = Exception.class)
@@ -56,11 +55,6 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public Subscription findNextDeliveryDateByUid(String customerUid) {
-		return subscribeDao.findNextDeliveryDateByUid(customerUid);
-	}
-	
-	@Override
 	public List<Subscription> getPayList(LocalDate today) {
 		return subscribeDao.getPayList(today);
 	}
@@ -76,7 +70,7 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public int getTimesBysNo(String sNo) {
+	public SubscriptionOrder getTimesBysNo(String sNo) {
 		return subscribeDao.getTimesBysNo(sNo);
 	}
 	
@@ -84,6 +78,12 @@ public class SubscribeServiceImpl implements SubscribeService {
 	public int insertSubOrder(SubscriptionOrder subOrder) {
 		return subscribeDao.insertSubOrder(subOrder);
 	}
+	
+	@Override
+	public int updateSubscriptionSuccessPay(Subscription updateSub) {
+		return subscribeDao.updateSubscriptionSuccessPay(updateSub);
+	}
+	
 	
 	
 	// 선아코드 끝
