@@ -6,9 +6,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8"/>
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농-상품 상세 페이지" />
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
@@ -16,16 +14,32 @@
   <div class="slider-container">
     <div class="slider-1">
         <div class="slides">
-          <div class="active" style="background-image:url(/sample/image/flower1.PNG);background-size: 100%;"></div>
-          <div style="background-image:url(https://images.prismic.io/stayfolio-production/038914a1-9b23-4f26-9b10-84669d9a1339_banner.jpg?auto=compress,format);"></div>
-          <div style="background-image:url(https://images.prismic.io/stayfolio-production/586abdef-7163-4629-9c39-6d7a627ae10e_01_banner_picture.jpg?auto=compress,format);"></div>
-          <div style="background-image:url(https://images.prismic.io/stayfolio-production/3b4bf417-3c41-4d05-b62c-f02a293ba115_banner.jpg?auto=compress,format);"></div>
+        <c:if test="${not empty directProduct.directProductAttachments[0].DProductRenamedFilename}">
+          	<div class="active" style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename});background-size: 100%;"></div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[1].DProductRenamedFilename}">
+          	<div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: 100%;"></div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[2].DProductRenamedFilename}">
+          	<div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[2].DProductRenamedFilename});background-size: 100%;"></div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[3].DProductRenamedFilename}">
+          	<div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[3].DProductRenamedFilename});background-size: 100%;"></div>
+        </c:if>
         </div>
         <div class="page-btns">
-            <div class="active" style="background-image:url(/sample/image/flower1.PNG);background-size: cover;background-position: center;"> </div>
-            <div style="background-image:url(https://images.prismic.io/stayfolio-production/038914a1-9b23-4f26-9b10-84669d9a1339_banner.jpg?auto=compress,format);background-size: cover;background-position: center;"> </div>
-            <div style="background-image:url(https://images.prismic.io/stayfolio-production/586abdef-7163-4629-9c39-6d7a627ae10e_01_banner_picture.jpg?auto=compress,format);background-size: cover;background-position: center;"> </div>
-            <div style="background-image:url(https://images.prismic.io/stayfolio-production/3b4bf417-3c41-4d05-b62c-f02a293ba115_banner.jpg?auto=compress,format);background-size: cover;background-position: center;"> </div>
+        <c:if test="${not empty directProduct.directProductAttachments[0].DProductRenamedFilename}">
+            <div class="active" style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[1].DProductRenamedFilename}">
+            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[2].DProductRenamedFilename}">
+            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+        </c:if>
+        <c:if test="${not empty directProduct.directProductAttachments[3].DProductRenamedFilename}">
+            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+        </c:if>
         </div>
         <div class="side-btns">
             <div>
