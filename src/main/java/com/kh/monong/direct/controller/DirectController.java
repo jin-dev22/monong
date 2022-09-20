@@ -204,4 +204,12 @@ public class DirectController {
 		
 	}
 	//----------------- 민지 끝
+	
+	//----------------- 수진 시작
+	@GetMapping("/directProductUpdate.do")
+	public void updateProduct(@RequestParam String prodNo, Model model) {
+		
+	}
+	
+	//----------------- 수진 끝
 }
