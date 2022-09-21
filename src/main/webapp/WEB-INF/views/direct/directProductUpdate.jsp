@@ -63,6 +63,27 @@ div#enroll-container{
 	overflow-x: auto;
 	width: 300px;
 }
+
+div.option-row{
+	height: 30px;
+	display: flex;
+	width: 500px;
+	
+}
+label.optName-label{
+	width:50px;
+}
+div.option-row input.update-dStock{
+	width: 50px;
+}
+div.opntion-list-container{
+	/* display: flex;
+	align-items: center; */
+}
+div.note-toolbar {
+   /*  position: relative; */
+    z-index: 0;
+}
 </style>
 <div id="enroll-container" class="mx-auto text-center">
 <sec:authentication property="principal" var="loginMember"/>
@@ -108,33 +129,20 @@ div#enroll-container{
            			</span>
            		</span>
            </div>
-           <div class="enroll-info-container">
-        		<span class="enroll-info-label"><label for="upFile">상품 옵션</label></span>
-        		<fieldset name="directProductOptions">
-        			<c:forEach items="${prod.directProductOptions}" var="opt" varStatus="vStatus">
-        				<label for="dOptionName${vSataus.count}">옵션${vStatus.count}</label>
-	        			<input type="text" name="dOptionName" id="dOptionName${vSataus.count}" value="${opt.DOptionName}"/> 
-	        			<select name="dSaleStatus" id="direct-saleStatus" onchange="this.form.submit()">
-							<option value="판매중" ${opt.DSaleStatus eq '판매중' ? 'selected' : ''}>판매중</option>
-							<option value="판매중단" ${opt.DSaleStatus eq '판매중단' ? 'selected' : ''}>판매중단</option>
-							<option value="판매마감" ${opt.DSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
-						</select>
-        			</c:forEach>
-        		</fieldset>
-           </div>
+           
            <div class="enroll-info-container">
         		<span class="enroll-info-label">상품 상세 설명<span class="enroll-form-required">*</span></span>
-        			<span class="enroll-info">
-        				<span id="DProductContent-container">
-                        	<textarea name="DProductContent" id="summernote"></textarea>
-                        </span>
-        			</span>
+       			<span class="enroll-info">
+       				<span id="DProductContent-container">
+                       	<textarea name="DProductContent" id="summernote"></textarea>
+                       </span>
+       			</span>
         	</div>
         	<div class="enroll-info-container">
         		<span class="enroll-info-label">상품 가격<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDefaultPrice-container">
-                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" required>
+                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" value="${prod.DDefaultPrice}" required>
                     </span>
         		</span>
         	</div>
@@ -142,14 +150,50 @@ div#enroll-container{
         		<span class="enroll-info-label">배송비<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDeliveryFee-container">
-                    	<input type="text" class="form-control" name="DDeliveryFee" id="DDeliveryFee" required>
+                    	<input type="text" class="form-control" name="DDeliveryFee" id="DDeliveryFee" value="${prod.DDeliveryFee}" required>
                     </span>
         		</span>
         	</div>
 		</div>
+		<div class="enroll-info-container">
+	   		<span class="enroll-info-label">상품 옵션</span>
+    	 		<div class="opntion-list-container">
+     			<c:forEach items="${prod.directProductOptions}" var="opt" varStatus="vStatus">
+     				<div class="option-one">
+	     				<div class="option-row">
+		      				<label for="dOptionName${vStatus.count}" class="optName-label">옵션${vStatus.count}</label>
+		    	   			<input type="text" name="directProductOptions[${vStatus.index}].dOptionName" 
+		    	   					id="dOptionName${vStatus.count}" value="${opt.DOptionName}" readOnly/> 
+	     				</div>
+	     				<div class="option-row">
+							<span>가격 </span>
+							<input type="text" name="directProductOptions[${vStatus.index}].dPrice" 
+									value="<fmt:formatNumber value="${opt.DPrice}" pattern="#,###" />"/>
+	     				</div>
+	     				<div class="option-row">
+							<label for="dStock${vStatus.count}">수량</label>
+							<input type="number" name="directProductOptions[${vStatus.index}].dStock" class="update-dStock" id="dStock${vStatus.count}" value="${opt.DStock}"/>
+			       			<select name="directProductOptions[${vStatus.index}].dSaleStatus" id="direct-saleStatus${vStatus.count}" onchange="checkStatus(this)">
+								<option value="판매중" ${opt.DSaleStatus eq '판매중' ? 'selected' : ''}>판매중</option>
+								<option value="판매중단" ${opt.DSaleStatus eq '판매중단' ? 'selected' : ''}>판매중단</option>
+								<option value="판매마감" ${opt.DSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
+							</select>
+							<input type="hidden" name="directProductOptions[${vStatus.index}].dOptionNo" value="${opt.DOptionNo}" />
+	     				</div>
+	    				<br />
+	    				<span class="vStatus" style="display: none">${vStatus.count}</span>
+     				</div>
+     			</c:forEach>
+     		</div>
+        </div>
+   			<button type="button" onclick="addOption(this.form)">옵션추가</button>
+   			<button type="button" onclick="delOption(this.form)">옵션삭제</button>
 		<sec:csrfInput />
-        <input type="submit" class="btn btn-EA5C2B" value="상품 수정">
-        <input type="reset" class="btn btn-116530" value="취소">
+        <div class="enroll-info-container">
+	        <input type="submit" class="btn btn-EA5C2B" value="상품 수정">&nbsp;
+	        <input type="reset" class="btn btn-116530" value="취소">
+        </div>
+		<sec:csrfInput />
 	</form>
 </c:if>
 <c:if test="${not(loginMember.memberId eq prod.memberId)}">
@@ -157,6 +201,54 @@ div#enroll-container{
 </c:if>
 </div>
 <script>
+const vStatusCnt = parseInt(document.querySelector(".option-one:last-child").querySelector(".vStatus:last-child").innerText);
+let newOptCnt = 1;
+function checkStatus(select){
+	console.log(select);
+}
+
+function delOption(optList){
+	const lastOne = document.querySelector(".option-one:last-child");
+	const delCnt = parseInt(lastOne.querySelector(".vStatus").innerText);
+	console.log(lastOne, delCnt);
+	if(delCnt > vStatusCnt){
+		lastOne.remove();
+		newOptCnt--;		
+	}else{
+		alert("기존 옵션은 삭제하실 수 없습니다.");
+	}
+}
+
+function addOption (optList)  {
+	console.log(optList);
+	const lastOne = document.querySelector(".option-one:last-child");
+	const cnt = vStatusCnt + newOptCnt;
+	newOptCnt++;
+	
+	html= `<div class="option-one">
+			<div class="option-row">
+			<label for="dOptionName\${cnt}" class="optName-label">옵션\${cnt}</label>
+			<input type="text" name="directProductOptions[\${cnt-1}].dOptionName" id="dOptionName\${cnt}" value="" readOnly/> 
+		</div>
+		<div class="option-row">
+		<span>가격 </span>
+		<input type="text" name="directProductOptions[\${cnt-1}].dPrice" value=""/>
+		</div>
+		<div class="option-row">
+		<label for="dStock\${cnt}">수량</label>
+		<input type="number" name="directProductOptions[\${cnt-1}].dStock" class="update-dStock" id="dStock\${cnt}" value=""/>
+			<select name="directProductOptions[\${cnt-1}].dSaleStatus" id="direct-saleStatus\${cnt}" onchange="checkStatus(this)">
+			<option value="판매중" selected>판매중</option>
+			<option value="판매중단">판매중단</option>
+			<option value="판매마감">판매마감</option>
+		</select>
+		</div>
+	<br />
+	<span class="vStatus" style="display: none">\${cnt}</span>
+	</div>`;
+	$(lastOne).after(html);
+}
+
 document.querySelectorAll("[name=upFile]").forEach((input) => {
 	input.addEventListener("change", (e) => {
 		const {files} = e.target;
@@ -173,7 +265,6 @@ $(document).ready(function() {
 	  $('#summernote').summernote({
 	        minHeight: 370,
 	        maxHeight: null,
-	        focus: true, 
 	        disableResizeEditor: true,
 	        lang : 'ko-KR'
 	  });
