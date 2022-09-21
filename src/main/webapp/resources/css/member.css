@@ -159,6 +159,11 @@ div#member-direct-detail-container img{
 	color: EA5C2B;
 	font-weight: bold;
 }
+div#member-direct-review-enroll-list-container img{
+	width: 100px;
+	height: 100px;
+	margin: auto;
+}
 
 /* -----판매자 마이페이지 관련----- */
 /* 판매자 상품목록 */
@@ -277,9 +282,64 @@ div.prod-option-container{
 	color: #fff;
 }
 
+/*회원 마이페이지 직거래 상품 후기 관련*/
+div#review-enroll-header-container{
+	
+}
+#dReviewTitle{
+	width: 500px;
+	height: 40px;
+}
+
+.star-rating {
+  display:flex;
+  flex-direction: row-reverse;
+  font-size:3em;
+  justify-content:space-around;
+  padding:0 .2em;
+  text-align:center;
+  width:400px;
+  height: 100px;
+  position: relative;
+  background-color: inherit;
+  left: 420px;
+}
+
+.star-rating input {
+  display:none;
+}
+
+.star-rating label {
+  color:#ccc;
+  cursor:pointer;
+}
+
+.star-rating :checked ~ label {
+  color:#f90;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color:#fc0;
+}
 
 
+#direct-reviewList-tbl img{
+	width: 200px;
+}
+#direct-reviewList-tbl{
+	margin-left: 70px;
+	margin-top : 20px;
+}
 
+.member-mypage-color-a{
+	color: #EA5C2B;
+	font-weight: bold;
+	text-decoration: none;
+}
+.member-mypage-color-a:hover{
+	color: #116530;
+}
 
 
 
