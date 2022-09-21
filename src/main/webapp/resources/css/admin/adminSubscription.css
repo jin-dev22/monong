@@ -22,6 +22,9 @@
 .btn-fillter-container .form-select {
 	width: 80%;
 }
+[name=subOrderDeliveryFilterFrm] .form-select {
+	width: 100%;
+}
 .admin-subscriptionList-table-header {
 	background-color: #F6D860;
 }
@@ -29,10 +32,10 @@
 	width: 100%;
 }
 #admin-subscriptionList-container .admin-subscriptionList-table-header th:nth-of-type(2) {
-	width: 550px;
+	width: 500px;
 }
-#admin-subscriptionList-container .admin-subscriptionList-table-header th:not(th:nth-of-type(2)) {
-	width: calc((100% - 550px - 20px) / 2);
+#admin-subscriptionList-container .admin-subscriptionList-table-header th:nth-of-type(3) {
+	width: 350px;
 }
 #admin-subscriptionList-container .admin-subscriptionList:hover {
 	background-color: #F6D860;
