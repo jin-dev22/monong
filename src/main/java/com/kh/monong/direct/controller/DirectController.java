@@ -226,5 +226,11 @@ public class DirectController {
 		model.addAttribute("prod",oldProd);
 	}
 	
+	@PostMapping("/directProductUpdate.do")
+	public void updateProduct(DirectProduct directProduct, 
+			@RequestParam(name="upFile", required = false) MultipartFile upFile) {
+		log.debug("directProduct={}",directProduct);
+		log.debug("upFile ={}",upFile);
+	}
 	//----------------- 수진 끝
 }

@@ -113,7 +113,7 @@ div.note-toolbar {
 						<label class="btn btn-outline-danger" title="삭제"> 
 							<img src="${pageContext.request.contextPath}/resources/upload/product/${attach.DProductRenamedFilename}" style="width:50px;" alt="" />
 							<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
-								value="${attach.DProductNo}">
+								value="${attach.DProductNo}">삭제
 						</label>
 	        		</c:forEach>
            		</span>
@@ -142,7 +142,8 @@ div.note-toolbar {
         		<span class="enroll-info-label">상품 가격<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDefaultPrice-container">
-                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" value="${prod.DDefaultPrice}" required>
+                    	<input type="text" class="form-control price" name="DDefaultPrice" id="DDefaultPrice" 
+                    			value="<fmt:formatNumber value="${prod.DDefaultPrice}" pattern="#,###" />" required>
                     </span>
         		</span>
         	</div>
@@ -150,7 +151,8 @@ div.note-toolbar {
         		<span class="enroll-info-label">배송비<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDeliveryFee-container">
-                    	<input type="text" class="form-control" name="DDeliveryFee" id="DDeliveryFee" value="${prod.DDeliveryFee}" required>
+                    	<input type="text" class="form-control price" name="DDeliveryFee" id="DDeliveryFee" 
+                    			value="<fmt:formatNumber value="${prod.DDeliveryFee}" pattern="#,###" />" required>
                     </span>
         		</span>
         	</div>
@@ -168,12 +170,13 @@ div.note-toolbar {
 	     				<div class="option-row">
 							<span>가격 </span>
 							<input type="text" name="directProductOptions[${vStatus.index}].dPrice" 
-									value="<fmt:formatNumber value="${opt.DPrice}" pattern="#,###" />"/>
+									class="price" value="<fmt:formatNumber value="${opt.DPrice}" pattern="#,###" />" />
 	     				</div>
 	     				<div class="option-row">
 							<label for="dStock${vStatus.count}">수량</label>
-							<input type="number" name="directProductOptions[${vStatus.index}].dStock" class="update-dStock" id="dStock${vStatus.count}" value="${opt.DStock}"/>
-			       			<select name="directProductOptions[${vStatus.index}].dSaleStatus" id="direct-saleStatus${vStatus.count}" onchange="checkStatus(this)">
+							<input type="number" min="0" name="directProductOptions[${vStatus.index}].dStock" class="update-dStock" 
+									id="dStock${vStatus.count}" value="${opt.DStock}" onchange="checkStatus(this)"/>
+			       			<select name="directProductOptions[${vStatus.index}].dSaleStatus" id="direct-saleStatus${vStatus.count}">
 								<option value="판매중" ${opt.DSaleStatus eq '판매중' ? 'selected' : ''}>판매중</option>
 								<option value="판매중단" ${opt.DSaleStatus eq '판매중단' ? 'selected' : ''}>판매중단</option>
 								<option value="판매마감" ${opt.DSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
@@ -201,10 +204,23 @@ div.note-toolbar {
 </c:if>
 </div>
 <script>
+productEnrollFrm.addEventListener('submit', (e)=>{
+	e.preventDefault();
+	const frm = e.target;
+	const price = frm.querySelectorAll(".price");
+	price.forEach((elem)=>{
+		let str = elem.value;
+		elem.value = parseInt(str.replace(/,/g, ''));
+		console.log(elem.value);
+		
+	});
+});
+
 const vStatusCnt = parseInt(document.querySelector(".option-one:last-child").querySelector(".vStatus:last-child").innerText);
 let newOptCnt = 1;
-function checkStatus(select){
-	console.log(select);
+function checkStatus(stock){
+	
+	console.log(stock);
 }
 
 function delOption(optList){
@@ -228,7 +244,7 @@ function addOption (optList)  {
 	html= `<div class="option-one">
 			<div class="option-row">
 			<label for="dOptionName\${cnt}" class="optName-label">옵션\${cnt}</label>
-			<input type="text" name="directProductOptions[\${cnt-1}].dOptionName" id="dOptionName\${cnt}" value="" readOnly/> 
+			<input type="text" name="directProductOptions[\${cnt-1}].dOptionName" id="dOptionName\${cnt}" value=""/> 
 		</div>
 		<div class="option-row">
 		<span>가격 </span>
