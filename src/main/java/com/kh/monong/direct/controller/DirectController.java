@@ -227,10 +227,12 @@ public class DirectController {
 	}
 	
 	@PostMapping("/directProductUpdate.do")
-	public void updateProduct(DirectProduct directProduct, 
+	public String updateProduct(DirectProduct directProduct, 
 			@RequestParam(name="upFile", required = false) MultipartFile upFile) {
 		log.debug("directProduct={}",directProduct);
 		log.debug("upFile ={}",upFile);
+		
+		return "redirect:/direct/directProductUpdate.do?prodNo=" + directProduct.getDProductNo();
 	}
 	//----------------- 수진 끝
 }

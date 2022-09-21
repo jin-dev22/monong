@@ -88,7 +88,8 @@ div.note-toolbar {
 <div id="enroll-container" class="mx-auto text-center">
 <sec:authentication property="principal" var="loginMember"/>
 <c:if test="${loginMember.memberId eq prod.memberId}">
-	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductUpdate.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+	<form name="productUpdateFrm" action="${pageContext.request.contextPath}/direct/directProductUpdate.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+        <input type="hidden" name="dProductNo" value="${prod.DProductNo}"/>
         <div class="mx-auto">
         	<div class="enroll-info-container">
         		<span class="enroll-info-label">판매자</span>
@@ -142,7 +143,8 @@ div.note-toolbar {
         		<span class="enroll-info-label">상품 가격<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDefaultPrice-container">
-                    	<input type="text" class="form-control price" name="DDefaultPrice" id="DDefaultPrice" 
+                    	<input type="text" maxlength="10" onkeyup="inputNumberFormat(this);" 
+                    			class="form-control price" name="DDefaultPrice" id="DDefaultPrice" 
                     			value="<fmt:formatNumber value="${prod.DDefaultPrice}" pattern="#,###" />" required>
                     </span>
         		</span>
@@ -151,7 +153,8 @@ div.note-toolbar {
         		<span class="enroll-info-label">배송비<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDeliveryFee-container">
-                    	<input type="text" class="form-control price" name="DDeliveryFee" id="DDeliveryFee" 
+                    	<input type="text" maxlength="10" onkeyup="inputNumberFormat(this);"
+                    			class="form-control price" name="DDeliveryFee" id="DDeliveryFee" 
                     			value="<fmt:formatNumber value="${prod.DDeliveryFee}" pattern="#,###" />" required>
                     </span>
         		</span>
@@ -170,6 +173,7 @@ div.note-toolbar {
 	     				<div class="option-row">
 							<span>가격 </span>
 							<input type="text" name="directProductOptions[${vStatus.index}].dPrice" 
+									maxlength="10" onkeyup="inputNumberFormat(this);"
 									class="price" value="<fmt:formatNumber value="${opt.DPrice}" pattern="#,###" />" />
 	     				</div>
 	     				<div class="option-row">
@@ -204,16 +208,16 @@ div.note-toolbar {
 </c:if>
 </div>
 <script>
-productEnrollFrm.addEventListener('submit', (e)=>{
+document.querySelector('[name="productUpdateFrm"]').addEventListener('submit', (e)=>{
 	e.preventDefault();
 	const frm = e.target;
 	const price = frm.querySelectorAll(".price");
 	price.forEach((elem)=>{
 		let str = elem.value;
-		elem.value = parseInt(str.replace(/,/g, ''));
-		console.log(elem.value);
-		
+		elem.value = uncomma(str);
+		console.log(elem.value);	
 	});
+	frm.submit();
 });
 
 const vStatusCnt = parseInt(document.querySelector(".option-one:last-child").querySelector(".vStatus:last-child").innerText);
@@ -221,6 +225,25 @@ let newOptCnt = 1;
 function checkStatus(stock){
 	
 	console.log(stock);
+}
+
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+} 
+
+function inputNumberFormat(obj) {
+    obj.value = comma(uncomma(obj.value));
+}
+
+function onlynumber(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g,'$1');
 }
 
 function delOption(optList){
