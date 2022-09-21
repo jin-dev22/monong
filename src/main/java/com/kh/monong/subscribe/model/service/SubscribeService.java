@@ -1,11 +1,8 @@
 package com.kh.monong.subscribe.model.service;
 
-
 import com.kh.monong.subscribe.model.dto.CardInfo;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
-
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +25,32 @@ public interface SubscribeService {
 	
 	SubscriptionProduct selectProductInfoByCode(String sProduct);
 	
-	Subscription findNextDeliveryDateByUid(String customerUid);
+	List<Subscription> getPayList(LocalDate today);
+	
+	CardInfo getCardInfoList(int cardNo);
+	
+	SubscriptionProduct getAmountByPcode(String sProductCode);
+	
+	SubscriptionOrder getTimesBysNo(String sNo);
+
+	int insertSubOrder(SubscriptionOrder subOrder);
+	
+	int updateSubscriptionSuccessPay(Subscription updateSub);
+	
+	/**
+	 * 관리자
+	 */
+	List<Subscription> getSubscriptionListAll(Map<String, Integer> param);
+
+	int getTotalSubscriptionListAll();
+	
+	List<Subscription> findByQuitYnSubList(String selectOption, Map<String, Integer> param);
+
+	int getTotalFindByQuitYnSubList(String selectOption);
+	
+	List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param);
+
+	int getTotalSubscriptionOrderListAll();
 	
 	
 	
@@ -55,6 +77,16 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
+
+
+
+
+
+
+
 	
 	// 미송코드 끝
 

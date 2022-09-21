@@ -21,8 +21,8 @@
 </div>
 
 <nav class="nav justify-content-around mt-5 navbar" >
-	<a href="${pageContext.request.contextPath}/member/memberOrderList.do">정기구독</a>
-	<a href="${pageContext.request.contextPath}/member/memberReviewList.do">직거래</a>
+	<a href="${pageContext.request.contextPath}/admin/subscriptionList.do">정기구독</a>
+	<a href="${pageContext.request.contextPath}/admin/directProductList.do">직거래</a>
 	<div class="dropdown">
 	  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
 	    1:1문의
@@ -32,7 +32,7 @@
 	    <li><a href="${pageContext.request.contextPath}/admin/adminInquireList.do?memberType=seller">판매자</a></li>
 	  </ul>
 	</div>
-	<a href="${pageContext.request.contextPath}/member/memberInquireList.do">주간채소</a>
+	<a href="#">주간채소</a>
 </nav>
 
 </div>

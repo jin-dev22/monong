@@ -145,82 +145,102 @@ nav#member-mypage-nav h2{
 #mypage-subscribe-btn{
 	margin-left: 100px;
 }
+div#member-orderList-container img{
+	width: 100px;
+	height: 100px;
+	margin: auto;
+}
+div#member-direct-detail-container img{
+	width: 100px;
+	height: 100px;
+	margin: auto;
+}
+.member-mypage-active-color{
+	color: EA5C2B;
+	font-weight: bold;
+}
 
 /* -----판매자 마이페이지 관련----- */
 /* 판매자 상품목록 */
-	div#prodList-container{
-		max-width: 900px;
-		margin: 0 auto;
-	}
+div#prodList-container{
+	max-width: 900px;
+	margin: 0 auto;
+}
 
-	.prod-container{
-		display: flex;
-		align-items: center;
-		border: 1px solid black;
-		border-radius: 15px; 
-		margin: 20px 0;
-		height: 150px;
-	};
-	div.prod-container-column{
-		display: inline-block;
-		width: 150px; 
-	}
+.prod-container{
+	display: flex;
+	align-items: center;
+	border: 1px solid black;
+	border-radius: 15px; 
+	margin: 20px 0;
+	height: 150px;
+};
+div.prod-container-column{
+	display: inline-block;
+	width: 150px; 
+}
+
+div.prod-col-1{
+	margin-left: 30px;
+}
+
+div.prod-col-2{
+	margin: 0 50px;
+	width: 50%;
+	padding-left: 30px; 
+}	
+
+div.prod-option-container{
+	height: 100px;
+	overflow-y: auto;
+}	
 	
-	div.prod-col-1{
-		margin-left: 30px;
-	}
-	
-	div.prod-col-2{
-		margin: 0 50px;
-		width: 50%;
-		padding-left: 30px; 
-	}
 /* 판매자 주문내역 */
-       .prod-order-container{
-            border: 1px solid grey;
-            margin: 20px 0;
-            min-height: 200px;
-        };
-        
-        div.order-container-row.ord-row-1 >*{
-            display: inline-block;
-        }
-        div.order-container-row.ord-row-1{
-            background-color: lightgrey;
-            display: flex;
-            justify-content: space-between;
-        }
-        div.order-container-row.ord-row-2{
-            display: flex;
-            align-items: center; 
-            justify-content: space-between;
-        }
-        div.order-container-row.ord-row-2 > *{
-            display: inline-block;
-            min-width: 100px;
-            margin: 10px 15px;
-            padding: 0 10px;
-        }
-        div.order-prodNam{
-            display: inline-block;
-            width: 150px;
-        }
-        div.order-options{
-            display: inline-block;
-        }
+.prod-order-container{
+     border: 1px solid grey;
+     margin: 20px 0;
+     min-height: 200px;
+ };
+ 
+ div.order-container-row.ord-row-1 >*{
+     display: inline-block;
+ }
+ div.order-container-row.ord-row-1{
+     background-color: lightgrey;
+     display: flex;
+     justify-content: space-between;
+ }
+ div.order-container-row.ord-row-2{
+     display: flex;
+     align-items: center; 
+     justify-content: space-between;
+ }
+ div.order-container-row.ord-row-2 > *{
+     display: inline-block;
+     min-width: 100px;
+     margin: 10px 15px;
+     padding: 0 10px;
+ }
+ div.order-prodNam{
+     display: inline-block;
+     width: 150px;
+ }
+ div.order-options{
+     display: inline-block;
+ }
 
-        div.order-container-row.ord-row-4 >*{
-            display: inline-block;
-            min-width: 100px;
-            margin: 10px 15px;
-        }
-        div.order-container-row.ord-row-4{
-            display: flex;
-            justify-content: space-between;
-        }
-        div.order-address{
-            margin: 10px 15px;
-        }
+ div.order-container-row.ord-row-4 >*{
+     display: inline-block;
+     min-width: 100px;
+     margin: 10px 15px;
+ }
+ div.order-container-row.ord-row-4{
+     display: flex;
+     justify-content: space-between;
+ }
+ div.order-address{
+     margin: 10px 15px;
+ }
 
 /*회원 구독*/
 .mypage-order-addr-info-content input:not(.btn){

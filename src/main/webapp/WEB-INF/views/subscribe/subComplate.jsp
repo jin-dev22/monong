@@ -6,9 +6,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/subscribe.css">
 <h2 class="pay-title">모농모농 첫 구독에 성공했습니다. &#127881;</h2>
 <div class="s-product_selected grid-container-s-order">
@@ -71,7 +69,7 @@
 			</c:forEach>
 		</div>
 		<div class="moveButton">
-			<a href="${pageContext.request.contextPath}/member/memberOrderList.do">
+			<a href="${pageContext.request.contextPath}/member/memberSubscribeList.do">
 				<button type="button" class="btn btn-116530">구독 확인하기</button>
 			</a>
 			<a href="${pageContext.request.contextPath}/index.jsp">

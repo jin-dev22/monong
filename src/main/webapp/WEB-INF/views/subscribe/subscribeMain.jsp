@@ -9,9 +9,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sMain.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sReview.css">
@@ -143,6 +141,45 @@
   </div>
 </div>
 
+<script>
+// 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
+const gotoLogin = document.querySelector("#gotoLogin");
+if(gotoLogin != null){
+	gotoLogin.addEventListener('click', () => {
+		alert("로그인 후 이용해주세요!");
+		location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
+	});
+}
+const gotoPlan = document.querySelector("#gotoPlan");
+if(gotoPlan != null){
+	gotoPlan.addEventListener('click', () => {
+		location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
+	});
+}
+
+const sReviewRecommend = () => {
+	const recommendNum = document.querySelector(".modal-s-review-recommend-num");	
+	console.log(recommendNum.dataset.sReviewNo);
+	
+	const sReviewNo = recommendNum.dataset.sReviewNo;
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewRecommend.do",
+		data: {sReviewNo},
+		method : "POST",
+		beforeSend : function(xhr){  
+			            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		       		 },
+		success(result){
+    		const recommendNum = document.querySelector(".modal-s-review-recommend-num");
+			recommendNum.innerHTML = Number(recommendNum.innerHTML) + 1;
+		},
+		error : console.log
+	});
+};
+
+</script>
+
 <p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
 <div class="s-review-statistics">
     <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
@@ -156,17 +193,6 @@
 </nav>
 
 <script>
-//선아 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
-document.querySelector("#gotoLogin").addEventListener('click', () => {
-	alert("로그인 후 이용해주세요!");
-	location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
-});
-
-document.querySelector("#gotoPlan").addEventListener('click', () => {
-	location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
-});
-
-
 window.onload = () => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewList.do",
@@ -337,7 +363,6 @@ const showModal = () => {
 	var myModal = new bootstrap.Modal(document.getElementById('myModal'), 'show');
 	myModal.show();
 };
-
 
 const sReviewRecommend = () => {	
 	const loginMember = document.querySelector(".s-review-login-member");

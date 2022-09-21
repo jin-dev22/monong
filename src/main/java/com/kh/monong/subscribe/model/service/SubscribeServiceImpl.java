@@ -18,7 +18,6 @@ import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Transactional(rollbackFor = Exception.class)
@@ -56,8 +55,75 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public Subscription findNextDeliveryDateByUid(String customerUid) {
-		return subscribeDao.findNextDeliveryDateByUid(customerUid);
+	public List<Subscription> getPayList(LocalDate today) {
+		return subscribeDao.getPayList(today);
+	}
+	
+	@Override
+	public CardInfo getCardInfoList(int cardNo) {
+		return subscribeDao.getCardInfoList(cardNo);
+	}
+	
+	@Override
+	public SubscriptionProduct getAmountByPcode(String sProductCode) {
+		return subscribeDao.getAmountByPcode(sProductCode);
+	}
+	
+	@Override
+	public SubscriptionOrder getTimesBysNo(String sNo) {
+		return subscribeDao.getTimesBysNo(sNo);
+	}
+	
+	@Override
+	public int insertSubOrder(SubscriptionOrder subOrder) {
+		return subscribeDao.insertSubOrder(subOrder);
+	}
+	
+	@Override
+	public int updateSubscriptionSuccessPay(Subscription updateSub) {
+		return subscribeDao.updateSubscriptionSuccessPay(updateSub);
+	}
+	
+	/**
+	 * 관리자
+	 */
+	@Override
+	public List<Subscription> getSubscriptionListAll(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.getSubscriptionListAll(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSubscriptionListAll() {
+		return subscribeDao.getTotalSubscriptionListAll();
+	}
+	
+	@Override
+	public List<Subscription> findByQuitYnSubList(String selectOption, Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.findByQuitYnSubList(selectOption, rowBounds);
+	}
+	
+	@Override
+	public int getTotalFindByQuitYnSubList(String selectOption) {
+		return subscribeDao.getTotalFindByQuitYnSubList(selectOption);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.getSubscriptionOrderListAll(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSubscriptionOrderListAll() {
+		return subscribeDao.getTotalSubscriptionOrderListAll();
 	}
 	
 	

@@ -29,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.inquire.model.dto.InquireAnswer;
 import com.kh.monong.inquire.model.service.InquireService;
@@ -36,6 +38,9 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +60,12 @@ public class AdminController {
 	
 	@Autowired
 	InquireService inquireService;
+	
+	@Autowired
+	DirectService directService;
+
+	@Autowired
+	SubscribeService subscribeService;
 	//--------------------------------------------------------수아시작
 	@GetMapping("/memberList.do")
 	public void memberList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
@@ -212,5 +223,90 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
+	@GetMapping("/directProductList.do")
+	public void adminDirectProdList(@RequestParam(defaultValue = "1") int cPage, 
+			@RequestParam(defaultValue = "판매중") String dSaleStatus,
+			Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("dSaleStatus", dSaleStatus);
+		log.debug("param = {}", param);
+		List<DirectProduct> prodList = directService.adminSelectPordList(param);
+		
+		model.addAttribute("prodList", prodList);
+		
+		int totalContent = directService.getTotalProdCntByStatus(param);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		
+		log.debug("model = {}", model);
+	}
 	//--------------------------------------------------------수진끝
+	//--------------------------------------------------------선아 시작
+	@GetMapping("/subscriptionList.do")
+	public void subscriptionList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
+		int totalContent = subscribeService.getTotalSubscriptionListAll();
+//		log.debug(">> subscriptionList = {}", subscriptionList);
+//		log.debug(">> totalContent = {}", totalContent);
+
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("subscriptionList",subscriptionList);
+		model.addAttribute("pagebar", pagebar);
+	}
+	
+	@GetMapping("/findByQuitYn.do")
+	public ResponseEntity<?> findByQuitYnSubscriptionList(@RequestParam(defaultValue = "1") int cPage, @RequestParam String selectOption, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+//		log.debug("selectOption = {}", selectOption);
+		
+		List<Subscription> findSubscriptionList = subscribeService.findByQuitYnSubList(selectOption, param);
+		int findTotalContent = subscribeService.getTotalFindByQuitYnSubList(selectOption);
+//		log.debug(">> findSubscriptionList = {}", findSubscriptionList);
+//		log.debug(">> findTotalContent = {}", findTotalContent);
+		
+		Map<Object, Object> map = new HashMap<>();
+		map.put("findSubscriptionList",findSubscriptionList);
+		map.put("cPage", cPage);
+		map.put("findTotalContent", findTotalContent);
+		
+		return ResponseEntity.ok().body(map);
+	}
+	
+	@GetMapping("/subscriptionOrderList.do")
+	public void subscriptionOrderList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		
+		List<SubscriptionOrder> subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
+		int totalContent = subscribeService.getTotalSubscriptionOrderListAll();
+		log.debug(">> subscriptionOrderList = {}", subscriptionOrderList);
+		log.debug(">> totalContent = {}", totalContent);
+		
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
+		model.addAttribute("pagebar", pagebar);
+	}
+	
+	
+	
+	
+	//--------------------------------------------------------선아 끝
 }

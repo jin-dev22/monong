@@ -43,8 +43,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
-import com.kh.monong.direct.model.service.DirectService;
+import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
@@ -74,10 +79,7 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-	//-------------수진 시작
-	@Autowired
-	private DirectService directService;
-	
+	//-------------수진 시작		
 	@Autowired
 	ServletContext application;
 	
@@ -268,12 +270,12 @@ public class MemberController {
 								@RequestParam(defaultValue = "1") int cPage, 
 								@RequestParam(defaultValue = "판매중") String dSaleStatus,
 								Model model, HttpServletRequest request) {
-		Member member = (Member) (authentication.getPrincipal());
+		Seller seller = (Seller) (authentication.getPrincipal());
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
-		param.put("memberId", member.getMemberId());
+		param.put("memberId", seller.getMemberId());
 		param.put("dSaleStatus", dSaleStatus);
 		log.debug("param = {}", param);
 		List<DirectProduct> prodList = memberService.selectDirectListBySellerId(param);
@@ -452,6 +454,64 @@ public class MemberController {
 		
 		return resource;
 	}
+	
+	@GetMapping("/memberInquireList.do")
+	public void memberInqurieList(Authentication authentication,
+								@RequestParam(defaultValue = "1") int cPage,
+								Model model, HttpServletRequest request) {
+		String memberId = authentication.getName();
+		log.debug("memberId ={}", memberId);
+		Map<String, Object> param = new HashMap<>();
+		param.put("cPage", cPage);
+		int limit = 5;
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		List<Inquire> inqList = memberService.selectInquireList(param);
+		log.debug("inqList = {}", inqList);
+		model.addAttribute("inqList",inqList);
+		
+		int totalContent = memberService.getTotalInqCntBymemberId(memberId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+		log.debug("model",model);
+	}
+	
+	@GetMapping("/sellerProductQnAList.do")
+	public void sellerDirectProductInquireList(Authentication authentication,
+			@RequestParam(defaultValue = "1") int cPage,
+			Model model, HttpServletRequest request) {
+		String sellerId = authentication.getName();
+		log.debug("sellerId={}",sellerId);
+		Map<String, Object> param = new HashMap<>();
+		param.put("cPage", cPage);
+		int limit = 5;
+		param.put("limit", limit);
+		param.put("memberId", sellerId);
+		List<DirectInquire> inqList = memberService.selectDirectInqList(param);
+		model.addAttribute("inqList",inqList);
+		log.debug("inqList={}", inqList);
+
+		int totalContent = memberService.getTotalDirectInqCntBysellerId(sellerId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar",pagebar);
+		log.debug("model={}",model);
+	};
+	
+	@PostMapping("/sellerProductQnAList.do")
+	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, @RequestParam String dInquireNo){
+		log.debug("dInquireAContent={}",dInquireAContent);
+		log.debug("dInquireNo={}",dInquireNo);
+
+		DirectInquireAnswer directInqAnswer = DirectInquireAnswer.builder().dInquireAContent(dInquireAContent).dInquireNo(dInquireNo).build();
+		//주문내역변경
+		int result = memberService.insertDirectInquireAnswer(directInqAnswer);
+		//알림정보 저장
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
@@ -684,17 +744,20 @@ public class MemberController {
 	}
 
 	@GetMapping("/memberSubscribeList.do")
-	public void memberSubscribeList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+	public void memberSubscribeList(Authentication authentication, Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Subscription recentSubscription = memberService.selectRecentSubById(authentication.getName()); 
 		log.debug("recentSubscription={}",recentSubscription);
 		if(recentSubscription != null) {
 			String pCode = recentSubscription.getSProductCode();
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
 			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
+			session.setAttribute("recentSubscription", recentSubscription);
+			session.setAttribute("recentSubProduct", recentSubProduct);
 		}
-		
+
+		String memberId = authentication.getName();
 		List<SubscriptionOrderExt> subList = memberService.selectSubscriptionListById(memberId);
 		if(subList != null) {
 			log.debug("subList={}",subList);
@@ -702,17 +765,43 @@ public class MemberController {
 		}
 	}	
 		
-	@GetMapping("/memberOrderList.do")
-	public void memberOrderList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+	@GetMapping("/memberDirectList.do")
+	public void memberOrderList(Model model, Authentication authentication) {
+		
+		List<DirectOrder> directOrderList = memberService.selectDirectListByMemberId(authentication.getName());
+		if(directOrderList != null) {
+			model.addAttribute("directOrderList", directOrderList);
+				for(DirectOrder order : directOrderList) {
+					List<DirectProductEntity> prodList = memberService.selectProdListBydOrderNo(order.getDOrderNo());
+					model.addAttribute("prodList", prodList);
+					for(DirectProductEntity d : prodList) {
+						List<DirectProductAttachment> prodAttachList = memberService.selectProdAttach(d.getDProductNo());
+						if(prodAttachList != null) {
+							model.addAttribute("prodAttachList", prodAttachList);
+						}
+					}
+				}
+			}
+		}
+	
+	
+	@GetMapping("/memberDirectDetail.do")
+	public void memberDirectDetail(@RequestParam String dOrderNo, Model model) {
+		
+		DirectOrder directOrder = memberService.selectOneDirectOrder(dOrderNo);
+		if(directOrder != null) {
+			model.addAttribute("directOrder",directOrder);
+			List<Map<String,Object>> directOptList = memberService.selectDirectOptionList(dOrderNo);
+			model.addAttribute("directOptList", directOptList);
+		}
+		
+	}
+	
+	@PostMapping("/deleteMemberDirectOrder.do")
+	public String deleteMemberDirectOrder(@RequestParam String dOrderNo, RedirectAttributes redirectAttr) {
+		int result = memberService.deleteMemberDirectOrder(dOrderNo);
+		redirectAttr.addFlashAttribute("msg", "주문이 취소되었습니다!");
+		return "redirect:/member/memberDirectList.do";
 	}
 	
 	@GetMapping("/memberReviewList.do")
@@ -746,37 +835,16 @@ public class MemberController {
 		// 미송 코드 끝
 	}
 	
-	@GetMapping("/memberDirectInquire.do")
-	public void memberDirectInquire(Authentication authentication, Model model){
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
-	}
+	@GetMapping("/memberDirectInquireList.do")
+	public void memberDirectInquireList() {
 	
-	@GetMapping("/memberInquireList.do")
-	public void memberInquireList(Authentication authentication, Model model) {
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		log.debug("recentSubscription={}",recentSubscription);
-		if(recentSubscription != null) {
-			String pCode = recentSubscription.getSProductCode();
-			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
-			model.addAttribute("recentSubscription", recentSubscription);
-			model.addAttribute("recentSubProduct", recentSubProduct);
-		}
 	}
 	
 	@Autowired
 	private SubscribeService subscribeService;
 	
 	@GetMapping("/memberSubscribeOrder.do")
-	public void memberSubscribeOrder(Authentication authentication, Model model) {
+	public void memberSubscribeOrder(Authentication authentication, Model model, HttpSession session) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
 		log.debug("subscriptionProduct = {}", subscriptionProduct);
 
@@ -786,12 +854,11 @@ public class MemberController {
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
 		model.addAttribute("vegetables", vegetables);
 		
-		String memberId = authentication.getName();
-		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
-		String pCode = recentSubscription.getSProductCode();
-		SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+		Subscription recentSubscription = (Subscription) session.getAttribute("recentSubscription");
+		SubscriptionProduct recentSubProduct = (SubscriptionProduct) session.getAttribute("recentSubProduct");
 		model.addAttribute("recentSubscription", recentSubscription);
 		model.addAttribute("recentSubProduct", recentSubProduct);
+		
 		
 	}
 	
@@ -816,6 +883,14 @@ public class MemberController {
 			model.addAttribute("subProduct", subProduct);
 			
 		}
+	
+	@PostMapping("/deleteMemberSubscribeOrder.do")
+		public String deleteMemberSubscribeOrder(@RequestParam String sNo, RedirectAttributes redirectAttr) {
+		int result = memberService.deleteMemberSubscribeOrder(sNo);
+		redirectAttr.addFlashAttribute("msg", "정기구독이 취소되었습니다.");
+		return "redirect:/member/memberSubscribeList.do";
+	}
+	
 	
 	
 	//----------------------수아 끝

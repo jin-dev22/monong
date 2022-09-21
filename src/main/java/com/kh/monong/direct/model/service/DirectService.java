@@ -3,6 +3,7 @@ package com.kh.monong.direct.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 
@@ -15,17 +16,37 @@ public interface DirectService {
 	int getTotalContent();
 	
 	// 상품 등록
-	public void directProductEnroll(DirectProduct directProduct);
+	int insertDirectProduct(DirectProduct directProduct);
+	
+	int insertDirectProductAttachment(DirectProductAttachment attachment);
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
-
-
 	DirectProduct selectOneDirectProduct(String dProductNo);
+	
+	List<Cart> selectCartListByMemberId(String memberId);
+	
+	Cart checkCartDuplicate(Map<String, Object> cart);
+	
+	int checkCountCartDuplicate(Map<String, Object> addList);
+	
+	int updateCart(Map<String, Object> addList);
+	
+	int insertCart(Map<String, Object> addList);
+
+	DirectProduct buyIt(Map<String, Object> param);
+	//----------------- 민지 끝
+
+	//----------------- 수진 시작
+	List<DirectProduct> adminSelectPordList(Map<String, Object> param);
+
+	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
+	
+	int getTotalProdCntByStatus(Map<String, Object> param);
+	//----------------- 수진 끝
 
 
 
-	}
-//----------------- 민지 끝
+}
 
 

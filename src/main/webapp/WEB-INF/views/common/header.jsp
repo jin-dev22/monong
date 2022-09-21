@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${param.title}</title>
+<title>모농모농</title>
 
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <!-- 부트스트랩 -->
@@ -59,7 +59,7 @@
 		  <sec:authorize access="isAnonymous()"> 
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
-					<a class="nav-link" href="#">&#128722;</a>
+					<a class="nav-link" href="#" onclick="alert('로그인 후 이용해 주세요.')">&#128722;</a>
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
@@ -72,17 +72,22 @@
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="#">&#128276;</a>
-					<a class="nav-link" href="#">&#128722;</a>
+					<sec:authorize access="!hasRole('ROLE_SELLER')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
+                	</sec:authorize>
 				</nav>
 				<nav class="nav justify-content-end">
 					<p>
 						<sec:authentication property="principal.username"/>님&#128149;
                 	</p>
-                	<sec:authorize access="isAuthenticated() && !hasRole('ROLE_SELLER')">
-											<a class="nav-link" href="${pageContext.request.contextPath}/member/memberSubscribeList.do">마이페이지</a>
+                	<sec:authorize access="hasRole('ROLE_MEMBER')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/member/memberSubscribeList.do">마이페이지</a>
                 	</sec:authorize>
                 	<sec:authorize access="hasRole('ROLE_SELLER')">
 						<a class="nav-link" href="${pageContext.request.contextPath}/member/sellerProdList.do">마이페이지</a>
+                	</sec:authorize>
+                	<sec:authorize access="hasRole('ROLE_ADMIN')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/member/memberCheckForm.do">관리자 정보</a>
                 	</sec:authorize>
 					<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="POST" class="my-auto">
 					  <button class="nav-link btn" type="submit">로그아웃</button>

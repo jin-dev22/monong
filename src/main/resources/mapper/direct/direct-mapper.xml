@@ -69,5 +69,147 @@ values
   		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
   	</collection>
   </resultMap>
+  
+  <select id="selectOrderListByCartNo" resultMap="orderListMap">
+  	select
+	    c.*,
+	    dpo.*,
+	    dpa.*,
+	    dp.d_product_no,
+	    dp.d_product_name,
+	    dp.d_default_price,
+	    dp.d_delivery_fee,
+	    dp.member_id seller
+	from
+	    cart c
+	        left join direct_product_option dpo
+	            on c.d_option_no = dpo.d_option_no
+	        left join direct_product dp
+	            on dpo.d_product_no = dp.d_product_no
+	        left join direct_product_attachment dpa
+        		on dp.d_product_no = dpa.d_product_no
+	where
+	    c.cart_no = #{cartNo}
+  </select>
+  
+  <select id="selectCartListByMemberId" resultMap="cartListMap">
+  	select
+	    c.*,
+	    dpo.*,
+	    dpa.*,
+	    dp.d_product_no,
+	    dp.d_product_name,
+	    dp.d_default_price,
+	    dp.d_delivery_fee,
+	    dp.member_id seller
+	from
+	    cart c 
+	        left join direct_product_option dpo
+	            on c.d_option_no = dpo.d_option_no
+	        left join direct_product dp
+	            on dpo.d_product_no = dp.d_product_no
+	        left join direct_product_attachment dpa
+	            on dp.d_product_no = dpa.d_product_no
+	where
+	    c.member_id = #{memberId}
+	order by
+	    cart_no
+  </select>
+  
+  <resultMap type="directProduct" id="orderListMap">
+  	<id column="d_product_no" property="dProductNo"/>
+  	<result column="d_product_name" property="dProductName"/>
+  	<result column="d_default_price" property="dDefaultPrice"/>
+  	<result column="d_delivery_fee" property="dDeliveryFee"/>
+  	<result column="seller" property="memberId"/>
+  	<association property="directProductOptions" javaType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</association>
+  	<association property="cart" javaType="CartEntity">
+  		<id column="cart_no" property="cartNo"/>
+  		<result column="d_option_no" property="dOptionNo"/>
+  		<result column="member_id" property="memberId"/>
+  		<result column="product_count" property="productCount"/>
+  	</association>
+  	<collection property="directProductAttachments" ofType="DirectProductAttachment">
+  		<id column="d_product_attach_no" property="dProductAttachNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_product_original_filename" property="dProductOriginalFilename"/>
+  		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
+  	</collection>
+  </resultMap>
+  
+  <resultMap type="Cart" id="cartListMap">
+  	<id column="cart_no" property="cartNo"/>
+	<result column="d_option_no" property="dOptionNo"/>
+	<result column="member_id" property="memberId"/>
+	<result column="product_count" property="productCount"/>
+  	<association property="directProductOption" javaType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</association>
+  	<association property="directProduct" javaType="DirectProductEntity">
+  		<id column="d_product_no" property="dProductNo"/>
+	  	<result column="d_product_name" property="dProductName"/>
+	  	<result column="d_default_price" property="dDefaultPrice"/>
+	  	<result column="d_delivery_fee" property="dDeliveryFee"/>
+	  	<result column="seller" property="memberId"/>
+  	</association>
+  	<collection property="directProductAttachments" ofType="DirectProductAttachment">
+  		<id column="d_product_attach_no" property="dProductAttachNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_product_original_filename" property="dProductOriginalFilename"/>
+  		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
+  	</collection>
+  </resultMap>
+  
 <!-- 민지 끝 -->
+
+<!-- 수진 시작 -->
+<select id="adminSelectProdList" resultMap="directProductListMap">
+  	select * 
+	from 
+	    direct_product 
+	    left join 
+	    direct_product_option 
+	        using(d_product_no)
+	where 
+	    d_product_no in(select 
+	    					distinct d_product_no
+                        from 
+	                        direct_product 
+	                        left join 
+	                        direct_product_option 
+	                        using(d_product_no)
+                        where 
+                        	d_sale_status = #{dSaleStatus})
+   	order by d_product_created_at desc
+  </select>
+  <resultMap type="directProduct" id="directProductListMap">
+  	<id column="d_product_no" property="dProductNo"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="d_product_name" property="dProductName"/>
+	<result column="d_product_content" property="dProductContent"/>
+  	<result column="d_product_created_at" property="dProductCreatedAt"/>
+  	<result column="d_product_updated_at" property="dProductUpdatedAt"/>
+  	<result column="d_default_price" property="dDefaultPrice"/>
+  	<collection property="directProductOptions" ofType="DirectProductOption">
+  		<id column="d_option_no" property="dOptionNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
+  		<result column="d_option_name" property="dOptionName"/>
+  		<result column="d_sale_status" property="dSaleStatus"/>
+  		<result column="d_price" property="dPrice"/>
+  		<result column="d_stock" property="dStock"/>
+  	</collection>
+  </resultMap>
+<!-- 수진 끝 -->
 </mapper>

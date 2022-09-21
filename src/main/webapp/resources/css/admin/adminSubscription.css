@@ -1,0 +1,42 @@
+/* 관리자 정기구독 페이지 css */
+#admin-mypage-container > .nav > a:first-of-type {
+	color: #EA5C2B;
+}
+
+.btn-fillter-container {
+	display: flex;
+	margin-top: 20px;
+	justify-content: space-between;
+}
+.btn-fillter-wrapper {
+	width: 300px;
+	display: flex;
+	justify-content: space-between;
+}
+.btn-116530,
+.btn-116530-reverse {
+	width: 100px;
+	height: 40px;
+	margin-right: 10px;
+}
+.btn-fillter-container .form-select {
+	width: 80%;
+}
+.admin-subscriptionList-table-header {
+	background-color: #F6D860;
+}
+#admin-subscriptionList-container .admin-subscriptionList {
+	width: 100%;
+}
+#admin-subscriptionList-container .admin-subscriptionList-table-header th:nth-of-type(2) {
+	width: 550px;
+}
+#admin-subscriptionList-container .admin-subscriptionList-table-header th:not(th:nth-of-type(2)) {
+	width: calc((100% - 550px - 20px) / 2);
+}
+#admin-subscriptionList-container .admin-subscriptionList:hover {
+	background-color: #F6D860;
+}
+#admin-subscriptionList-container .admin-subscriptionList {
+	border-color: #fff;
+}

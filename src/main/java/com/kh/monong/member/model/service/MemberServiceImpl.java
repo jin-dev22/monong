@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.monong.direct.model.dto.DirectInquire;
+import com.kh.monong.direct.model.dto.DirectInquireAnswer;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -22,6 +27,7 @@ import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Transactional(rollbackFor = Exception.class)
@@ -96,8 +102,7 @@ public class MemberServiceImpl implements MemberService {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		param.put("rowBounds", rowBounds);
-		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);
+		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param, rowBounds);
 		for(DirectProduct prod : prodList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
 		}
@@ -118,8 +123,7 @@ public class MemberServiceImpl implements MemberService {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		param.put("rowBounds", rowBounds);
-		return memberDao.selectOrderListByProdNo(param);
+		return memberDao.selectOrderListByProdNo(param, rowBounds);
 	}
 	
 	@Override
@@ -134,9 +138,16 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public int updateDOrderStatus(Map<String, Object> param) {
+		if("C".equals(param.get("newStatus"))) {
+			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
+		}//재고 복구시 판매상태 '판매중'으로 변경되도록 트리거 생성.
 		return memberDao.updateDOrderStatus(param);
 	}
 	
+	private int reStoreDirectProductStock(String dOrderNo) {
+		return memberDao.reStoreDirectProductStock(dOrderNo);
+	}
+
 	@Override
 	public SellerInfoAttachment selectSellerInfoAttachment(long no) {
 		return memberDao.selectSellerInfoAttachment(no);
@@ -162,6 +173,44 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteSellerAttachment(long delFileNo) {
 		return memberDao.deleteSellerAttachment(delFileNo);
 	}
+	
+	@Override
+	public List<Inquire> selectInquireList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectInquireList(param, rowBounds);
+	}
+	
+	@Override
+	public int getTotalInqCntBymemberId(String memberId) {
+		return memberDao.getTotalInqCntBymemberId(memberId);
+	}
+	
+	@Override
+	public List<DirectInquire> selectDirectInqList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectDirectInqList(param, rowBounds);
+	}
+	
+	@Override
+	public int getTotalDirectInqCntBysellerId(String sellerId) {
+		return memberDao.getTotalDirectInqCntBysellerId(sellerId);
+	}
+	
+	@Override
+	public int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer) {
+		int result = memberDao.insertDirectInquireAnswer(directInqAnswer);
+		result = updateDirectInquireAnswered(directInqAnswer.getDInquireNo());
+		return result;
+	};
+	
+	private int updateDirectInquireAnswered(@NonNull String dInquireNo) {
+		return memberDao.updateDirectInquireAnswered(dInquireNo);
+	}
+
 	//------------------수진 끝
 	
 	//------------------수아 시작
@@ -269,6 +318,41 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
 		return memberDao.selectOneSubscriptionOrder(sOrderNo);
+	}
+	
+	@Override
+	public List<DirectOrder> selectDirectListByMemberId(String memberId) {
+		return memberDao.selectDirectListByMemberId(memberId);
+	}
+	
+	@Override
+	public List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo) {
+		return memberDao.selectProdListBydOrderNo(dOrderNo);
+	}
+	
+	@Override
+	public List<DirectProductAttachment> selectProdAttach(String dProductNo) {
+		return memberDao.selectProdAttach(dProductNo);
+	}
+	
+	@Override
+	public DirectOrder selectOneDirectOrder(String dOrderNo) {
+		return memberDao.selectOneDirectOrder(dOrderNo);
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectDirectOptionList(String dOrderNo) {
+		return memberDao.selectDirectOptionList(dOrderNo);
+	}
+	
+	@Override
+	public int deleteMemberDirectOrder(String dOrderNo) {
+		return memberDao.deleteMemberDirectOrder(dOrderNo);
+	}
+	
+	@Override
+	public int deleteMemberSubscribeOrder(String sNo) {
+		return memberDao.deleteMemberSubscribeOrder(sNo);
 	}
 	//------------------수아 끝
 	

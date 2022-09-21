@@ -1,7 +1,6 @@
 package com.kh.monong.subscribe.model.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -23,10 +21,8 @@ public class SubscriptionOrder {
 	private int sTimes; // 구독회차
 	private int sPrice; // 결제금액
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime sOrderDate; // 결제일 -> 앞으로는 수요일이 되어야함
+	private LocalDate sOrderDate; // 결제일(수요일)
 	private String sOrderStatus; // 주문상태 기본값 상품준비중
-
-	// 9/15 추가 - Subscription 별도로 관리하기 위함
 	private int soCardInfoNo; // 카드정보번호
 	private String soProductCode; // 상품코드
 	private String soExcludeVegs; // 제외채소
@@ -39,4 +35,7 @@ public class SubscriptionOrder {
 	private String soAddress; // 수령자 배송지
 	private String soAddressEx; // 수령자 상세배송지
 	private String soDeliveryRequest; //배송요청사항
+	// 9/20 추가
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate soDeliveryCompletedDate; // 배송완료일 
 }

@@ -3,18 +3,18 @@
 
 div#admin-member-container{
 	width: 1000px;
-	height: 400px;
+	height: 200px;
 	border: 3px solid #116530;
 	border-radius: 25px;
-	padding: 170px 0px;
+}
+div#admin-member-container.row{
+	align-items: center;
 }
 div#admin-member-container a{
 	font-size: 2rem;
-	text-decoration: none;	
 }
 
  div#admin-sellerList-wait-container a{
- 	text-decoration: none;
  	color: 116530;
  }
  div#admin-sellerList-wait-container a:hover{
@@ -23,4 +23,11 @@ div#admin-member-container a{
  
 form[name="adminSellerUpdateFrm"]{
 	margin-block-end: 0em;
+}
+/* #admin-mypage-container의 a태그 공통 */
+#admin-mypage-container a {
+	text-decoration: none;
+}
+#admin-mypage-container a:hover {
+	color: #EA5C2B;
 }

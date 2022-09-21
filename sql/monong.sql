@@ -216,6 +216,8 @@ alter table subscription_order add so_next_delivery_date date;
 alter table subscription_order rename column so_next_delivery_date TO so_delivery_date;
 -- fk 제약조건 삭제 9/15
 ALTER TABLE subscription_order drop CONSTRAINT fk_s_o_s_no;
+-- 컬럼추가 9/20
+alter table subscription_order add so_delivery_completed_date date;
 
 CREATE TABLE subscription_review (
 	s_review_no	varchar2(100)		NOT NULL,
@@ -359,6 +361,18 @@ CREATE TABLE direct_order (
 	constraint ck_direct_order_status check(d_order_status in ('P', 'R', 'C', 'D', 'F'))
 );
 
+--주문취소로 재고 복구처리시 판매상태 변경하는 트리거
+create trigger trigger_stock_update_by_cancel 
+    after
+    update on direct_product_option
+    for each row
+begin
+    if :new.d_stock > 0 and :new.d_sale_status not like '판매중단' then
+        update direct_product_option set d_sale_status = '판매중';
+    end if;
+end;
+/
+
 CREATE TABLE member_direct_order (
 	d_option_no	varchar2(100)		NOT NULL,
 	d_order_no	varchar2(100)		NOT NULL,
@@ -385,7 +399,7 @@ CREATE TABLE direct_inquire (
 	inquire_title	varchar2(255)		NULL,
 	content	 varchar2(2000)		NOT NULL,
 	created_at	date	DEFAULT current_date	NULL,
-	status	varchar2(1)	DEFAULT 'W'	NOT NULL,
+	has_answer	varchar2(1)	DEFAULT 'N'	NULL,--컬럼명, 값 YN타입으로 변경
     
 	constraint pk_direct_inquire  primary key(d_inquire_no),
 	constraint fk_d_product_no_01 foreign key(d_product_no) references direct_product(d_product_no),
@@ -395,7 +409,7 @@ CREATE TABLE direct_inquire (
 CREATE TABLE direct_inquire_answer (
 	d_inquire_no	varchar2(100)		NOT NULL,
 	d_inquire_a_content	varchar2(2000)		NOT NULL,
-	d_inquire_created_at	date	DEFAULT current_date	NULL,
+	d_inquire_answered_at	date	DEFAULT current_date	NULL,
 	constraint fk_d_inquire_no_01 foreign key(d_inquire_no) references direct_inquire(d_inquire_no)
 );
 
