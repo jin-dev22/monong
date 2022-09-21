@@ -243,10 +243,22 @@ CREATE TABLE subscription_review_attachment (
 ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no);
 -- 컬럼명 변경(s_review_origin_filename -> s_review_original_filename)(9/7)
 ALTER TABLE subscription_review_attachment RENAME COLUMN s_review_origin_filename TO s_review_original_filename;
+-- 제약조건 제거 후 새로 생성(9/21)
+ALTER TABLE subscription_review_attachment DROP CONSTRAINT fk_s_r_a_s_review_no;
+ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no) on delete cascade;
 
 create sequence seq_s_attach_no;
 -- 시퀀스 증가 오류 방지(9/2)
 alter sequence seq_s_attach_no nocache;
+
+-- 회원별 정기구독후기 추천 목록 테이블 생성(9/13)
+CREATE TABLE recommended_subscription_review (
+	member_id	varchar2(100)		NOT NULL,
+	s_review_no	varchar2(100)		NOT NULL
+);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT PK_RECOMMENDED_SUBSCRIPTION_REVIEW PRIMARY KEY (member_id, s_review_no);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT fk_r_s_r_member_id FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT fk_r_s_r_s_review_no FOREIGN KEY (s_review_no) REFERENCES subscription_review (s_review_no);
 
 CREATE TABLE vegetables (
 	veg_code	varchar2(30)		NOT NULL,
