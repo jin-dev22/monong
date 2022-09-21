@@ -651,8 +651,9 @@
 .checkbox-container {
 	display: flex;
 	justify-content: space-between;
-	padding: 18px 10px 8px 2px;
-	align-items: center;
+	padding: 18px 2px 8px 2px;
+	align-items: flex-end;
+	height: 56px;
 	border-bottom: 1px solid rgb(51, 51, 51);
 }
 
@@ -684,6 +685,10 @@
 	padding: 0;
 }
 
+.allClear {
+	font-size: 14px;
+}
+
 .dCart-info {
 	list-style-type: none;
 	padding-inline-start: 30px;
@@ -694,6 +699,7 @@
 	align-items: center;
 	position: relative;
 	padding: 20px 0px;
+	border-bottom: 1px solid rgb(244, 244, 244);
 }
 
 .dCart-img-container {
@@ -711,7 +717,6 @@
 .dCart-img {
 	display: block;
     height: 100%;
-    background-image: url(https://product-image.kurly.com/product/image/b7bf4efa-a0a6-46c0-9799-317dfd2731ab.jpg);
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -796,7 +801,39 @@
 	background-color: transparent;
 }
 
-/* 하단 정보 */
+/* 장바구니 테이블 */
+.dCartProduct-pay-info {
+    margin: 50px 0;
+}
+
+.tbl-dCartProduct-pay {
+	width: 100%;
+	table-layout: fixed;
+}
+
+.tbl-dCartProduct-pay thead {
+	border-top: 1px solid rgb(51, 51, 51);
+	border-bottom: 1px solid rgb(51, 51, 51);
+	height: 68px;
+    font-size: 19px;
+}
+
+.tbl-dCartProduct-pay tbody {
+	border-bottom: 1px solid rgb(51, 51, 51);
+	height: 125px;
+    font-size: 19px;
+}
+
+.tbl-dCartProduct-pay th, td {
+	text-align: center;
+}
+
+.dCartProduct-pay-btn {
+	display: flex;
+    justify-content: flex-end;
+}
+
+/***** 하단 정보 *****/
 
 .direct-detail-nav {
   display: inline-flex;

@@ -24,6 +24,10 @@ public interface DirectService {
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);
 	
+	List<Cart> selectCartListByMemberId(String memberId);
+	
+	Cart checkCartDuplicate(Map<String, Object> cart);
+	
 	int checkCountCartDuplicate(Map<String, Object> addList);
 	
 	int updateCart(Map<String, Object> addList);
@@ -31,10 +35,15 @@ public interface DirectService {
 	int insertCart(Map<String, Object> addList);
 
 	DirectProduct buyIt(Map<String, Object> param);
-	
-	Cart checkCartDuplicate(Map<String, Object> cart);
 	//----------------- 민지 끝
 
+	//----------------- 수진 시작
+	List<DirectProduct> adminSelectPordList(Map<String, Object> param);
+
+	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
+	
+	int getTotalProdCntByStatus(Map<String, Object> param);
+	//----------------- 수진 끝
 
 
 

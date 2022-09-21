@@ -29,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.direct.model.dto.DirectProduct;
+import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.inquire.model.dto.InquireAnswer;
 import com.kh.monong.inquire.model.service.InquireService;
@@ -59,6 +61,9 @@ public class AdminController {
 	@Autowired
 	InquireService inquireService;
 	
+	@Autowired
+	DirectService directService;
+
 	@Autowired
 	SubscribeService subscribeService;
 	//--------------------------------------------------------수아시작
@@ -218,6 +223,28 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
+	@GetMapping("/directProductList.do")
+	public void adminDirectProdList(@RequestParam(defaultValue = "1") int cPage, 
+			@RequestParam(defaultValue = "판매중") String dSaleStatus,
+			Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("dSaleStatus", dSaleStatus);
+		log.debug("param = {}", param);
+		List<DirectProduct> prodList = directService.adminSelectPordList(param);
+		
+		model.addAttribute("prodList", prodList);
+		
+		int totalContent = directService.getTotalProdCntByStatus(param);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		
+		log.debug("model = {}", model);
+	}
 	//--------------------------------------------------------수진끝
 	//--------------------------------------------------------선아 시작
 	@GetMapping("/subscriptionList.do")

@@ -75,6 +75,11 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
+	public List<Cart> selectCartListByMemberId(String memberId) {
+		return directDao.selectCartListByMemberId(memberId);
+	}
+	
+	@Override
 	public Cart checkCartDuplicate(Map<String, Object> cart) {
 		return directDao.checkCartDuplicate(cart);
 	}
@@ -105,6 +110,31 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	//----------------- 민지 끝
+	
+	//----------------- 수진 시작
+	@Override
+	public List<DirectProduct> adminSelectPordList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> prodList  = directDao.adminSelectProdList(param, rowBounds);
+		for(DirectProduct prod : prodList) {
+			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
+		}
+		return prodList;
+	}
+
+	@Override
+	public List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
+		return directDao.selectDirectAttachments(dProductNo);
+	}
+	
+	@Override
+	public int getTotalProdCntByStatus(Map<String, Object> param) {
+		return directDao.getTotalProdCntByStatus(param);
+	}
+	//----------------- 수진 끝
+
 }
 	
 	
