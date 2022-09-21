@@ -243,10 +243,22 @@ CREATE TABLE subscription_review_attachment (
 ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no);
 -- 컬럼명 변경(s_review_origin_filename -> s_review_original_filename)(9/7)
 ALTER TABLE subscription_review_attachment RENAME COLUMN s_review_origin_filename TO s_review_original_filename;
+-- 제약조건 제거 후 새로 생성(9/21)
+ALTER TABLE subscription_review_attachment DROP CONSTRAINT fk_s_r_a_s_review_no;
+ALTER TABLE subscription_review_attachment ADD CONSTRAINT fk_s_r_a_s_review_no FOREIGN KEY (s_review_no)REFERENCES subscription_review (s_review_no) on delete cascade;
 
 create sequence seq_s_attach_no;
 -- 시퀀스 증가 오류 방지(9/2)
 alter sequence seq_s_attach_no nocache;
+
+-- 회원별 정기구독후기 추천 목록 테이블 생성(9/13)
+CREATE TABLE recommended_subscription_review (
+	member_id	varchar2(100)		NOT NULL,
+	s_review_no	varchar2(100)		NOT NULL
+);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT PK_RECOMMENDED_SUBSCRIPTION_REVIEW PRIMARY KEY (member_id, s_review_no);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT fk_r_s_r_member_id FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE recommended_subscription_review ADD CONSTRAINT fk_r_s_r_s_review_no FOREIGN KEY (s_review_no) REFERENCES subscription_review (s_review_no);
 
 CREATE TABLE vegetables (
 	veg_code	varchar2(30)		NOT NULL,
@@ -361,18 +373,6 @@ CREATE TABLE direct_order (
 	constraint ck_direct_order_status check(d_order_status in ('P', 'R', 'C', 'D', 'F'))
 );
 
---주문취소로 재고 복구처리시 판매상태 변경하는 트리거
-create trigger trigger_stock_update_by_cancel 
-    after
-    update on direct_product_option
-    for each row
-begin
-    if :new.d_stock > 0 and :new.d_sale_status not like '판매중단' then
-        update direct_product_option set d_sale_status = '판매중';
-    end if;
-end;
-/
-
 CREATE TABLE member_direct_order (
 	d_option_no	varchar2(100)		NOT NULL,
 	d_order_no	varchar2(100)		NOT NULL,
@@ -438,6 +438,10 @@ CREATE TABLE direct_review_attachment (
 	constraint pk_direct_review_attachment_no primary key(d_review_attach_no),
 	constraint fk_direct_review_no foreign key(d_review_no) references direct_review(d_review_no)
 );
+--0922 수아 - fk 삭제 후, 다시 추가 (on delete cascade)
+alter table direct_review_attachment drop constraint fk_direct_review_no;
+alter table direct_review_attachment add constraint fk_direct_review_no foreign key(d_review_no) 
+references direct_review(d_review_no) on delete cascade;
 
 create sequence seq_d_product_no;
 create sequence seq_d_product_attach_no;

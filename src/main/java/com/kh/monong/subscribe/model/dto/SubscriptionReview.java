@@ -7,8 +7,10 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class SubscriptionReview extends SubscriptionReviewEntity {
@@ -26,4 +28,7 @@ public class SubscriptionReview extends SubscriptionReviewEntity {
 		this.sAttachments = sAttachments;
 	}	
 	
+	public void add(SubscriptionReviewAttachment attach) {
+		this.sAttachments.add(attach);
+	}
 }

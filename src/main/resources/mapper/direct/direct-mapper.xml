@@ -211,5 +211,26 @@ values
   		<result column="d_stock" property="dStock"/>
   	</collection>
   </resultMap>
+  
+  <update id="updateDirectProduct">
+  	update direct_product
+  	set d_product_content = #{dProductContent},
+  		d_default_price = #{dDefaultPrice},
+  		d_delivery_fee = #{dDeliveryFee},
+  		d_product_updated_at = current_date 
+  	where d_product_no = #{dProductNo}
+  </update>
+  
+  <update id="mergeIntoDOption">
+  	merge into direct_product_option
+    using dual
+    on (d_option_no = #{dOptionNo})
+        when matched then
+            update set d_sale_status = #{dSaleStatus},
+                            d_price = #{dPrice},
+                            d_stock = #{dStock}
+        when not matched then
+            insert (d_option_no, d_product_no, d_option_name, d_sale_status, d_price, d_stock) values ('DO'||seq_d_option_no.nextval, #{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})
+  </update>
 <!-- 수진 끝 -->
 </mapper>

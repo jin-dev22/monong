@@ -66,13 +66,47 @@
 		</table>
 	</c:if>
 </div>
-<nav class="nav justify-content-around mt-5">
-	<a href="${pageContext.request.contextPath}/member/memberSubscribeList.do">구독내역</a>
-	<a href="${pageContext.request.contextPath}/member/memberDirectList.do">직거래주문내역</a>
-	<a href="${pageContext.request.contextPath}/member/memberReviewList.do">작성후기</a>
-	<a href="${pageContext.request.contextPath}/member/memberDirectInquireList.do">상품문의내역</a>
-	<a href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
-</nav>
+ 
+
+	<div class="container">
+      <ul class="nav justify-content-around bg-light">
+      	<li class="nav-item">
+			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberSubscribeList.do">구독내역</a>
+		</li>
+		
+		<li class="nav-item">	
+			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberDirectList.do">직거래주문내역</a>
+		</li>
+		
+		<li class="nav-item">	
+			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberReviewList.do">작성후기</a>
+		</li>
+		
+		<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            직거래작성후기
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewEnrollList.do">직거래작성가능후기</a></li>
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewList.do">직거래작성완료후기</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">구독작성후기</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+		</li>
+		
+		<li class="nav-item">
+			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberDirectInquireList.do">상품문의내역</a>
+		</li>
+		
+		<li class="nav-item">
+			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
+		</li>
+		
+		</ul>
+	</div>
+
+
 </div>
 <hr />
 <script>

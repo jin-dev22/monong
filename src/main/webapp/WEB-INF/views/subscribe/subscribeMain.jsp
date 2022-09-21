@@ -109,6 +109,18 @@
 	<input type="hidden" class="s-review-login-member" data-member-id="${loginMember.memberId}"/>
 </sec:authorize>
 
+<p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
+<div class="s-review-statistics">
+    <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
+    <div class="s-review-stat-num">전체 후기 수<span class="s-review-statistics-data">${totalContent}</span></div>
+</div>
+
+<div class="s-reviews-wrapper"></div>
+
+<nav class="s-review-page-bar">
+	${pagebar}
+</nav>
+
 <!-- Modal -->
 <div class="modal" id="myModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -142,7 +154,7 @@
 </div>
 
 <script>
-// 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
+//비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
 const gotoLogin = document.querySelector("#gotoLogin");
 if(gotoLogin != null){
 	gotoLogin.addEventListener('click', () => {
@@ -157,42 +169,7 @@ if(gotoPlan != null){
 	});
 }
 
-const sReviewRecommend = () => {
-	const recommendNum = document.querySelector(".modal-s-review-recommend-num");	
-	console.log(recommendNum.dataset.sReviewNo);
-	
-	const sReviewNo = recommendNum.dataset.sReviewNo;
-	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewRecommend.do",
-		data: {sReviewNo},
-		method : "POST",
-		beforeSend : function(xhr){  
-			            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-		       		 },
-		success(result){
-    		const recommendNum = document.querySelector(".modal-s-review-recommend-num");
-			recommendNum.innerHTML = Number(recommendNum.innerHTML) + 1;
-		},
-		error : console.log
-	});
-};
 
-</script>
-
-<p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
-<div class="s-review-statistics">
-    <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
-    <div class="s-review-stat-num">전체 후기 수<span class="s-review-statistics-data">${totalContent}</span></div>
-</div>
-
-<div class="s-reviews-wrapper"></div>
-
-<nav class="s-review-page-bar">
-	${pagebar}
-</nav>
-
-<script>
 window.onload = () => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewList.do",
@@ -221,10 +198,9 @@ window.onload = () => {
 				}
 				else{
 					console.log('이미지 있음');
-					/* 구독 작성 기능 완료 후 이미지 경로 수정 진행 */
 					html += `
 						<div>
-							<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg">
+							<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}">
 						</div>
 						<div class="s-review-container with-img">`;
 				}
@@ -244,7 +220,7 @@ window.onload = () => {
 			    }
 				else{
 					html += `
-						<p class="s-review-content">\${sreviewContent.length > 35 ? sreviewContent.substr(0, 38) + '...': sreviewContent}</p>`;
+						<p class="s-review-content">\${sreviewContent.length > 38 ? sreviewContent.substr(0, 38) + '...': sreviewContent}</p>`;
 			    }
 			    
 			    const year = sreviewCreatedAt[0];
@@ -298,7 +274,7 @@ const reviewDetail = (obj, sReviewNo) =>{
 				
 			},
 			error : console.log
-		});;
+		});
 	}
 		
 	
@@ -315,10 +291,9 @@ const reviewDetail = (obj, sReviewNo) =>{
 			if(sAttach[0]){
 				document.querySelector(".modal-dialog").classList.remove("no-img");
 				document.querySelector(".modal-dialog").classList.add("with-img");
-				
-				/* 구독 작성 기능 완료 후 이미지 경로 수정 진행 */
-				const html = `
-			      	<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg" width="300px" class="modal-s-review-img"/>
+			
+				const html = `   
+			      	<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" width="300px" class="modal-s-review-img"/>
 			      `;
 		     	modalImg.innerHTML = html;
 			}
