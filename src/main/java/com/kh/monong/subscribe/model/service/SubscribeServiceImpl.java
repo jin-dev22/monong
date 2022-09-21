@@ -100,6 +100,32 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getTotalSubscriptionListAll();
 	}
 	
+	@Override
+	public List<Subscription> findByQuitYnSubList(String selectOption, Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.findByQuitYnSubList(selectOption, rowBounds);
+	}
+	
+	@Override
+	public int getTotalFindByQuitYnSubList(String selectOption) {
+		return subscribeDao.getTotalFindByQuitYnSubList(selectOption);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.getSubscriptionOrderListAll(rowBounds);
+	}
+	
+	@Override
+	public int getTotalSubscriptionOrderListAll() {
+		return subscribeDao.getTotalSubscriptionOrderListAll();
+	}
+	
 	
 	// 선아코드 끝
 		

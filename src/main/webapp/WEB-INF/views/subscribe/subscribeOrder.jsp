@@ -9,9 +9,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/subscribe.css">
 <!-- 아임포트 라이브러리 -->
 <!-- jQuery -->
