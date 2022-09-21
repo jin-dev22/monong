@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
@@ -59,11 +60,31 @@ public interface DirectDao {
 	int insertCart(Map<String, Object> addList);
 
 	// 장바구니(주문) 추가
+	@Update("update cart set product_count = #{productCount}, cart_no = seq_cart_no.nextval where d_option_no = #{dOptionNo} and member_id = #{memberId}")
+	@SelectKey(statement = "select seq_cart_no.currval from dual", before = false, keyProperty = "cartNo", resultType = int.class)
+	int updateCartBuyIt(Map<String, Object> param);
+	
 	@Insert("insert into cart values (seq_cart_no.nextval, #{dOptionNo}, #{memberId}, #{productCount})")
 	@SelectKey(statement = "select seq_cart_no.currval from dual", before = false, keyProperty = "cartNo", resultType = int.class)
-	int insertCartByIt(Map<String, Object> param);
+	int insertCartBuyIt(Map<String, Object> param);
 	
 	DirectProduct selectOrderListByCartNo(Object object);
+	
+	// 결제 처리
+	@Insert("insert into direct_order values (#{dOrderNo}, #{memberId}, #{dTotalPrice}, #{dDestAddress}, #{dDestAddressEx}, #{dDeliveryRequest}, #{dRecipient}, #{dOrderPhone}, default, #{dPayments}, #{dOrderStatus})")
+	int insertDirectOrder(DirectOrder directOrder);
+	
+	@Insert("insert into member_direct_order values (#{dOptionNo}, #{dOrderNo}, #{dOptionCount}, #{dProductNo})")
+	int insertMemberDirectOrder(Map<String, Object> param);
+	
+	@Update("update direct_product_option set d_stock = d_stock - #{dOptionCount} where d_option_no = #{dOptionNo}")
+	int updateStockByOptionNo(Map<String, Object> param);
+	
+	@Delete("delete from cart where d_option_no = #{dOptionNo} and member_id = #{memberId}")
+	int deleteCartByOptionNoAndMemberId(Map<String, Object> param);
+	
+	@Update("update direct_product_option set d_sale_status = '판매마감' where d_stock = 0 and d_sale_status = '판매중'")
+	int updateStatusByStock();
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작

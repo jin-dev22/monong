@@ -3,7 +3,6 @@ package com.kh.monong.direct.model.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
@@ -87,30 +87,66 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
-	public int checkCountCartDuplicate(Map<String, Object> addList) {
-		return directDao.checkCountCartDuplicate(addList);
-	}
-	
-	@Override
-	public int updateCart(Map<String, Object> addList) {
-		return directDao.updateCart(addList);
+	public int addCart(Map<String, Object> addList) {
+		int result = 0;
+		
+		// select cartCount
+		int checkCount = directDao.checkCountCartDuplicate(addList);
+		log.debug("checkCount = {}", checkCount);
+		// update cart (이미 카트에 담겨있을 경우)
+		if(checkCount > 0) {
+			result = directDao.updateCart(addList);
+		}
+		// insert cart (카트에 없는 경우)
+		else {
+			result = directDao.insertCart(addList);
+		}
+		return result;
 	}
 		
 	@Override
-	public int insertCart(Map<String, Object> addList) {
-		return directDao.insertCart(addList);
-	}
-	
-	@Override
 	public DirectProduct buyIt(Map<String, Object> param) {
 		DirectProduct orderList = null;
-		// insert cart
-		int result = directDao.insertCartByIt(param);
-		// select orderList
-		orderList = directDao.selectOrderListByCartNo(param.get("cartNo"));
+		// select cartList
+		int checkCount = directDao.checkCountCartDuplicate(param);
+		log.debug("checkCount = {}", checkCount);
+		// update cart (이미 카트에 담겨있을 경우)
+		if(checkCount > 0) {
+			// update cart
+			int result = directDao.updateCartBuyIt(param);
+			log.debug("result = {}", result);
+			// select orderList
+			orderList = directDao.selectOrderListByCartNo(param.get("cartNo"));
+		}
+		else {
+			// insert cart
+			int result = directDao.insertCartBuyIt(param);
+			log.debug("result = {}", result);
+			// select orderList
+			orderList = directDao.selectOrderListByCartNo(param.get("cartNo"));
+		}
 		return orderList;
 	}
 	
+	@Override
+	public int insertDirectOrder(DirectOrder directOrder) {
+		return directDao.insertDirectOrder(directOrder);
+	}
+	
+	@Override
+	public int insertMemberDirectOrder(Map<String, Object> param) {
+		int result = 0;
+		// insert member_direct_order
+		result = directDao.insertMemberDirectOrder(param);
+		// update d_stock
+		result = directDao.updateStockByOptionNo(param);
+		// delete cart
+		result = directDao.deleteCartByOptionNoAndMemberId(param);
+		// update d_sale_status where d_stock = 0
+		result = directDao.updateStatusByStock();
+		
+		return result;
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작
