@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
@@ -23,7 +24,10 @@ import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
 @Mapper
 public interface MemberDao {
@@ -150,7 +154,7 @@ public interface MemberDao {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
 	
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
@@ -175,6 +179,23 @@ public interface MemberDao {
 	int deleteMemberSubscribeOrder(String sNo);
 
 	//------------------------수아 끝
+	//-----------미송 시작
+	@Insert("insert into subscription_review values('SR' || seq_s_review_no.nextval, #{sOrderNo}, #{sReviewContent}, #{sReviewStar}, default, default, null)")
+	@SelectKey(statement = "select 'SR' || seq_s_review_no.currval from dual", before = false, keyProperty = "sReviewNo", resultType = String.class)
+	int insertSubscriptionReview(SubscriptionReview review);
+
+	@Insert("insert into subscription_review_attachment values (seq_s_attach_no.nextval, #{sReviewNo}, #{sReviewOriginalFilename}, #{sReviewRenamedFilename}, DEFAULT)")
+	int insertSubscriptionReviewAttachment(SubscriptionReviewAttachment attach);
+	
+	@Select("select count(*) from subscription_review where s_order_no = #{sOrderNo}")
+	int getSubscriptionReviewYn(String sOrderNo);
+
+	List<SubscriptionReview> selectSubscriptionReviewList(RowBounds rowBounds, String memberId);
+
+	
+	int getTotalContent(String memberId);
+	//-----------미송 끝
+
 
 	
 }

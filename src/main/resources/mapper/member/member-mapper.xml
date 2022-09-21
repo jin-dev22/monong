@@ -306,20 +306,21 @@
   		s_no = #{sNo}
   </update>
   
-  <select id="selectSubscriptionListById" resultType="subscriptionOrder">
-  select
-    *
+  <select id="selectSubscriptionListById" resultMap="subscriptionListMap">
+    select
+	    so.*,
+	    sr.s_review_no
 	from
-	    subscription_order
+	    subscription_order so left join subscription_review sr on so.s_order_no=sr.s_order_no
 	where
-	   s_no in 
-	   (select 
-	      s_no 
-	    from  
-	      subscription 
-	    where 
-	        member_id = #{memberId}
-    )
+	   so.s_no in 
+		   (select 
+		      s_no 
+		    from  
+		      subscription 
+		    where 
+		        member_id = #{memberId}
+	    	)	
   </select>
   
    <select id="selectProdListBydOrderNo" resultType="directProductEntity">
@@ -375,4 +376,55 @@
   </resultMap>
  
  <!-- ==================================================수아 끝 -->
+ <!-- ==================================================미송 시작 -->
+   <resultMap type="subscriptionOrderExt" id="subscriptionListMap">
+  	<id column="s_order_no" property="sOrderNo"/>
+  		<result column="s_no" property="sNo"/>
+		<result column="s_times" property="sTimes"/>
+		<result column="s_price" property="sPrice"/>
+		<result column="s_order_date" property="sOrderDate"/>
+		<result column="s_order_status" property="sOrderStatus"/>
+  	<association property="sReviewNo" javaType="string">
+  		<result column="s_review_no" property="sReviewNo"/>
+  	</association>
+  </resultMap>
+   
+  <select id="getTotalContent" resultType="_int">
+ 	select
+		count(*)
+	from
+	    subscription_review sr 
+	        left join subscription_order so
+	            on sr.s_order_no = so.s_order_no
+	        left join subscription s 
+	            on so.s_no = s.s_no
+	where s.member_id = #{memberId}
+  </select>
+  
+  <select id="selectSubscriptionReviewList" resultMap="subscriptionReviewMap">
+  select
+	    so.s_times,
+	    sr.*
+	from
+	    subscription_review sr 
+	        left join subscription_order so
+	            on sr.s_order_no = so.s_order_no
+	        left join subscription s 
+	            on so.s_no = s.s_no
+	where s.member_id = #{memberId}
+  </select>
+  
+  <resultMap type="subscriptionReview" id="subscriptionReviewMap">
+		<id column="s_review_no" property="sReviewNo"/>
+		<result column="s_order_no" property="sOrderNo"/>
+		<result column="s_review_content" property="sReviewContent"/>
+		<result column="s_review_star" property="sReviewStar"/>
+		<result column="s_review_recommend_num" property="sReviewRecommendNum"/>
+		<result column="s_review_created_at" property="sReviewCreatedAt"/>
+		<result column="s_review_updated_at" property="sReviewUpdatedAt"/>
+		<association property="sTimes" javaType="_int">
+			<result column="s_times" property="sTimes"/>
+		</association>
+	</resultMap>
+ <!-- ==================================================미송 끝 -->
 </mapper>

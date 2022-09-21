@@ -22,7 +22,10 @@ import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -308,7 +311,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public List<SubscriptionOrder> selectSubscriptionListById(String memberId) {
+	public List<SubscriptionOrderExt> selectSubscriptionListById(String memberId) {
 		return memberDao.selectSubscriptionListById(memberId);
 	}
 	
@@ -352,4 +355,46 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.deleteMemberSubscribeOrder(sNo);
 	}
 	//------------------수아 끝
+	
+	//-----------미송 시작
+	@Override
+	public int insertSubscriptionReview(SubscriptionReview review) {
+		int result = memberDao.insertSubscriptionReview(review);
+		List<SubscriptionReviewAttachment> attachments = review.getSAttachments();
+		
+		if(!attachments.isEmpty()) {
+			for(SubscriptionReviewAttachment attach : attachments) {
+				attach.setSReviewNo(review.getSReviewNo());
+				result = insertSubscriptionReviewAttachment(attach);
+			}
+		}
+
+		return result;
+	}
+	
+	private int insertSubscriptionReviewAttachment(SubscriptionReviewAttachment attach) {
+		return memberDao.insertSubscriptionReviewAttachment(attach);
+	}
+	
+	@Override
+	public int getSubscriptionReviewYn(String sOrderNo) {
+		return memberDao.getSubscriptionReviewYn(sOrderNo);
+	}
+	
+	@Override
+	public List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param, String memberId) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return memberDao.selectSubscriptionReviewList(rowBounds, memberId);
+	}
+
+	@Override
+	public int getTotalContent(String memberId) {
+		return memberDao.getTotalContent(memberId);
+	}
+	
+	//-----------미송 끝
+
 }
