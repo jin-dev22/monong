@@ -450,6 +450,10 @@ CREATE TABLE direct_review_attachment (
 	constraint pk_direct_review_attachment_no primary key(d_review_attach_no),
 	constraint fk_direct_review_no foreign key(d_review_no) references direct_review(d_review_no)
 );
+--0922 수아 - fk 삭제 후, 다시 추가 (on delete cascade)
+alter table direct_review_attachment drop constraint fk_direct_review_no;
+alter table direct_review_attachment add constraint fk_direct_review_no foreign key(d_review_no) 
+references direct_review(d_review_no) on delete cascade;
 
 create sequence seq_d_product_no;
 create sequence seq_d_product_attach_no;

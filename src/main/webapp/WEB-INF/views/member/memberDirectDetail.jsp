@@ -18,16 +18,20 @@
 		<thead>
 		  <tr>
 		    <td class="tg-0lax" rowspan="2">
-		    	<c:if test="${doList.directattachs eq not null}">
-		    		<img src="${pageContext.request.contextPath}/resources/upload/product/${doList.directattachs.DProductRenamedFilename}" alt="상품이미지"/>
+		    	<c:if test="${dOList.directattachs.DProductRenamedFilename != null}">
+		    		<img src="${pageContext.request.contextPath}/resources/upload/product/${dOList.directattachs.DProductRenamedFilename}" alt="상품이미지"/>
 		    	</c:if>
-		    	<c:if test="${doList.directattachs eq null}">
+		    	<c:if test="${dOList.directattachs.DProductRenamedFilename == null}">
 		    		<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="로고"/>
 		    	</c:if>
 		    </td>
-		    <td class="tg-0pky">${dOList.directProds.DProductName} - ${dOList.directOptions.DOptionName}</td>
+		    <td class="tg-0pky">
+		   <a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${dOList.directOptions.DProductNo}">${dOList.directProds.DProductName} - ${dOList.directOptions.DOptionName}</a></td>
 		    <td class="tg-0lax" rowspan="2">${dOList.directOptions.DPrice * dOList.dOptionCount} 원</td>
-		    <td class="tg-0lax" rowspan="2">리뷰쓰기</td>
+		    
+		    <td class="tg-0lax" rowspan="2"></td>
+		    <c:if test="${directOrder.DOrderStatus eq 'F' }">
+		    </c:if>
 		  </tr>
 		  <tr>
 		   	 <td class="tg-0pky">수량 : ${dOList.dOptionCount}</td>
