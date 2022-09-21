@@ -109,6 +109,18 @@
 	<input type="hidden" class="s-review-login-member" data-member-id="${loginMember.memberId}"/>
 </sec:authorize>
 
+<p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
+<div class="s-review-statistics">
+    <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
+    <div class="s-review-stat-num">전체 후기 수<span class="s-review-statistics-data">${totalContent}</span></div>
+</div>
+
+<div class="s-reviews-wrapper"></div>
+
+<nav class="s-review-page-bar">
+	${pagebar}
+</nav>
+
 <!-- Modal -->
 <div class="modal" id="myModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -142,7 +154,7 @@
 </div>
 
 <script>
-// 비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
+//비로그인 - 구독하기 버튼 클릭 시 로그인페이지로 이동
 const gotoLogin = document.querySelector("#gotoLogin");
 if(gotoLogin != null){
 	gotoLogin.addEventListener('click', () => {
@@ -157,42 +169,7 @@ if(gotoPlan != null){
 	});
 }
 
-const sReviewRecommend = () => {
-	const recommendNum = document.querySelector(".modal-s-review-recommend-num");	
-	console.log(recommendNum.dataset.sReviewNo);
-	
-	const sReviewNo = recommendNum.dataset.sReviewNo;
-	
-	$.ajax({
-		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewRecommend.do",
-		data: {sReviewNo},
-		method : "POST",
-		beforeSend : function(xhr){  
-			            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-		       		 },
-		success(result){
-    		const recommendNum = document.querySelector(".modal-s-review-recommend-num");
-			recommendNum.innerHTML = Number(recommendNum.innerHTML) + 1;
-		},
-		error : console.log
-	});
-};
 
-</script>
-
-<p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
-<div class="s-review-statistics">
-    <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
-    <div class="s-review-stat-num">전체 후기 수<span class="s-review-statistics-data">${totalContent}</span></div>
-</div>
-
-<div class="s-reviews-wrapper"></div>
-
-<nav class="s-review-page-bar">
-	${pagebar}
-</nav>
-
-<script>
 window.onload = () => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewList.do",
