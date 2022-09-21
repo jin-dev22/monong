@@ -20,10 +20,7 @@
 	<c:forEach items="${subList}" var="subList">
 			<thead>
 			  <tr>
-			    <th>
-				    <fmt:parseDate value="${subList.SOrderDate}" pattern="yyyy-MM-dd'T'HH:mm" var="orderDate"/>
-				    <fmt:formatDate value="${orderDate}" pattern="yyyy-MM-dd"/>
-			    </th>
+			    <th>${subList.SOrderDate}</th>
 			    <th><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
 			    <th class="s-order-status" data-review-no="${subList.SReviewNo}">${subList.SOrderStatus}</th>			    
 			  </tr>
