@@ -306,20 +306,21 @@
   		s_no = #{sNo}
   </update>
   
-  <select id="selectSubscriptionListById" resultType="subscriptionOrder">
-  select
-    *
+  <select id="selectSubscriptionListById" resultMap="subscriptionListMap">
+    select
+	    so.*,
+	    sr.s_review_no
 	from
-	    subscription_order
+	    subscription_order so left join subscription_review sr on so.s_order_no=sr.s_order_no
 	where
-	   s_no in 
-	   (select 
-	      s_no 
-	    from  
-	      subscription 
-	    where 
-	        member_id = #{memberId}
-    )
+	   so.s_no in 
+		   (select 
+		      s_no 
+		    from  
+		      subscription 
+		    where 
+		        member_id = #{memberId}
+	    	)	
   </select>
   
    <select id="selectProdListBydOrderNo" resultType="directProductEntity">
@@ -369,10 +370,190 @@
   		<result column="d_product_name" property="dProductName"/>
   	</association>
   	<association property="directattachs" javaType="directProductAttachment">
-  		<id column="d_product_no" property="dProductNo"/>
+  		<id column="d_product_attach_no" property="dProductAttachNo"/>
+  		<result column="d_product_no" property="dProductNo"/>
   		<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
   	</association>
   </resultMap>
  
  <!-- ==================================================수아 끝 -->
+ <!-- ==================================================미송 시작 -->
+   <resultMap type="subscriptionOrderExt" id="subscriptionListMap">
+  	<id column="s_order_no" property="sOrderNo"/>
+  		<result column="s_no" property="sNo"/>
+		<result column="s_times" property="sTimes"/>
+		<result column="s_price" property="sPrice"/>
+		<result column="s_order_date" property="sOrderDate"/>
+		<result column="s_order_status" property="sOrderStatus"/>
+  	<association property="sReviewNo" javaType="string">
+  		<result column="s_review_no" property="sReviewNo"/>
+  	</association>
+  </resultMap>
+   
+  <select id="getTotalContent" resultType="_int">
+ 	select
+		count(*)
+	from
+	    subscription_review sr 
+	        left join subscription_order so
+	            on sr.s_order_no = so.s_order_no
+	        left join subscription s 
+	            on so.s_no = s.s_no
+	where s.member_id = #{memberId}
+  </select>
+  
+  <select id="selectSubscriptionReviewList" resultMap="subscriptionReviewMap">
+  select
+	    so.s_times,
+	    sr.*
+	from
+	    subscription_review sr 
+	        left join subscription_order so
+	            on sr.s_order_no = so.s_order_no
+	        left join subscription s 
+	            on so.s_no = s.s_no
+	where s.member_id = #{memberId}
+  </select>
+  
+  <resultMap type="subscriptionReview" id="subscriptionReviewMap">
+		<id column="s_review_no" property="sReviewNo"/>
+		<result column="s_order_no" property="sOrderNo"/>
+		<result column="s_review_content" property="sReviewContent"/>
+		<result column="s_review_star" property="sReviewStar"/>
+		<result column="s_review_recommend_num" property="sReviewRecommendNum"/>
+		<result column="s_review_created_at" property="sReviewCreatedAt"/>
+		<result column="s_review_updated_at" property="sReviewUpdatedAt"/>
+		<association property="sTimes" javaType="_int">
+			<result column="s_times" property="sTimes"/>
+		</association>
+	</resultMap>
+ <!-- ==================================================미송 끝 -->
+ <!--===============================수아 시작-->
+  <select id="selectReviewDirectProduct" resultMap="reviewDirectProdMap">
+ 	select 
+	    *
+	from
+	    member_direct_order mdo
+	    left join  direct_product_option dpo
+	    on mdo.d_option_no = dpo.d_option_no
+	    left join direct_product dp
+	    on dpo.d_product_no = dp.d_product_no
+	where
+	    dpo.d_option_no = #{dOptionNo} and mdo.d_order_no=#{dOrderNo}
+ 	</select>
+ 	
+ 	<resultMap type="map" id="reviewDirectProdMap">
+ 		<id column="d_option_no" property="dOptionNo"/>
+ 		<result column="d_order_no" property="dOrderNo"/>
+ 		<association property="directOpt" javaType="directProductOption">
+ 			<id column="d_option_no" property="dOptionNo"/>
+ 			<result column="d_product_no" property="dProductNo"/>
+ 			<result column="d_option_name" property="dOptionName"/>
+ 			<result column="d_option_name" property="dOptionName"/>
+ 		</association>
+ 		<association property="directProd" javaType="directProductEntity">
+ 			<id column="d_product_no" property="dProductNo"/>
+ 			<result column="d_product_name" property="dProductName"/>
+ 		</association>
+ 	</resultMap>
+ 	
+ 	<select id="selectDirectReviewProdList" resultMap="orderDirectOptionMap">
+ 	select 
+	    *
+	from
+	    member_direct_order mdo
+	    left join direct_product_option dpo
+	    on mdo.d_option_no = dpo.d_option_no
+	    left join direct_product dp
+	    on dpo.d_product_no = dp.d_product_no
+	    left join direct_product_attachment dpa
+	    on mdo.d_product_no = dpa.d_product_no
+	where
+	   mdo.d_order_no in (
+	    select
+	        d_order_no
+	    from
+	        direct_order
+	    where
+	        member_id=#{memberId} and d_order_status='F'
+	    ) and
+	    mdo.d_option_no not in (
+	    select
+	        d_option_no
+	    from
+	        direct_review
+	    where
+	        member_id=#{memberId}
+	    )
+ 	
+ 	</select>
+ 
+ 	<select id="selectDirectReviewList" resultMap="directReviewMap">
+ 	select
+	    dr.*,
+	    dra.d_review_renamed_filename,
+	    dpo.d_option_name,
+	    dp.d_product_name,
+	    dp.d_product_no
+	from
+	    direct_review dr
+	    left join direct_review_attachment dra
+	    on dr.d_review_no = dra.d_review_no
+	    left join direct_product_option dpo
+	    on dr.d_option_no = dpo.d_option_no
+	    left join direct_product dp
+	    on dpo.d_product_no = dp.d_product_no
+	where
+	    dr.member_id= #{memberId}
+ 	</select>
+ 	
+ 	<resultMap type="map" id="directReviewMap">
+ 		<id column="d_review_no" property="dReviewNo"/>
+ 		<result column="d_option_no" property="dOptionNo"/>
+ 		<result column="d_order_no" property="dOrderNo"/>
+ 		<result column="d_review_title" property="dReviewTitle"/>
+ 		<result column="member_id" property="memberId"/>
+ 		<result column="d_review_content" property="dReviewContent"/>
+ 		<result column="review_rating" property="reviewRating"/>
+ 		<result column="d_review_recommend" property="dReviewRecommend"/>
+ 		<result column="d_review_created_at" property="dReviewCreatedAt"/>
+ 		<result column="d_review_updated_at" property="dReviewUpdatedAt"/>
+ 		<association property="reviewAttach" javaType="directReviewAttachment">
+ 			<id column="d_review_attach_no" property="dReviewAttachNo"/>
+ 			<result column="d_review_no" property="dReviewNo"/>
+ 			<result column="d_review_renamed_filename" property="dReviewRenamedFilename"/>
+ 			<result column="d_review_original_filename" property="dReviewOriginalFilename"/>
+ 		</association>
+ 		<association property="reviewOpt" javaType="directProductOption">
+ 			<id column="d_option_no" property="dOptionNo"/>
+ 			<result column="d_option_name" property="dOptionName"/>
+ 			<result column="d_product_no" property="dProductNo"/>
+ 		</association>
+ 		<association property="reviewProd" javaType="directProductEntity">
+ 			<id column="d_product_no" property="dProductNo"/>
+ 			<result column="d_product_name" property="dProductName"/>
+ 		</association>
+ 	</resultMap>
+ 	
+ 	<select id="selectDirectReview" resultMap="directReviewMap">
+ 		select
+		    dr.*,
+		    dra.d_review_renamed_filename,
+		    dra.d_review_original_filename,
+		    dra.d_review_attach_no,
+		    dpo.d_option_name,
+		    dp.d_product_name,
+		    dp.d_product_no
+		from
+		    direct_review dr
+		    left join direct_review_attachment dra
+		    on dr.d_review_no = dra.d_review_no
+		    left join direct_product_option dpo
+		    on dr.d_option_no = dpo.d_option_no
+		    left join direct_product dp
+		    on dpo.d_product_no = dp.d_product_no
+		where
+		    dr.d_review_no= #{dReviewNo}
+ 	</select>
+ <!--=================================수아 끝-->
 </mapper>

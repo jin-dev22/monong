@@ -49,6 +49,8 @@ import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.direct.model.dto.DirectReview;
+import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -57,7 +59,10 @@ import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 import com.kh.security.model.service.MemberSecurityService;
@@ -753,13 +758,24 @@ public class MemberController {
 			session.setAttribute("recentSubscription", recentSubscription);
 			session.setAttribute("recentSubProduct", recentSubProduct);
 		}
-		
+
+		String memberId = authentication.getName();
+		List<SubscriptionOrderExt> subList = memberService.selectSubscriptionListById(memberId);
+		if(subList != null) {
+			log.debug("subList={}",subList);
+			model.addAttribute("subList", subList);
+		}
 	}	
 		
 	@GetMapping("/memberDirectList.do")
-	public void memberOrderList(Model model, Authentication authentication) {
-		
-		List<DirectOrder> directOrderList = memberService.selectDirectListByMemberId(authentication.getName());
+	public void memberOrderList(@RequestParam(defaultValue = "1") int cPage, Model model, Authentication authentication,HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		String memberId = authentication.getName();
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		List<DirectOrder> directOrderList = memberService.selectDirectListByMemberId(param);
 		if(directOrderList != null) {
 			model.addAttribute("directOrderList", directOrderList);
 				for(DirectOrder order : directOrderList) {
@@ -773,6 +789,10 @@ public class MemberController {
 					}
 				}
 			}
+		int totalContent = memberService.getTotalDirectList(memberId);
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
 		}
 	
 	
@@ -796,10 +816,35 @@ public class MemberController {
 	}
 	
 	@GetMapping("/memberReviewList.do")
-	public void memberReviewList() {
+	public void memberReviewList(Authentication authentication, Model model, @RequestParam(defaultValue = "1") int cPage, HttpServletRequest request) {
+		String memberId = authentication.getName();
+		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
+		log.debug("recentSubscription={}",recentSubscription);
+		if(recentSubscription != null) {
+			String pCode = recentSubscription.getSProductCode();
+			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
+			model.addAttribute("recentSubscription", recentSubscription);
+			model.addAttribute("recentSubProduct", recentSubProduct);
+		}
+		// 미송 코드 시작
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		log.debug("memberId = {}", memberId);
+		int totalContent = memberService.getTotalContent(memberId);
+		log.debug("totalContent = {}", totalContent);
 		
+		List<SubscriptionReview> sReviewList = memberService.selectSubscriptionReviewList(param, memberId);
+		log.debug("sReviewList = {}", sReviewList);
+		
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("sReviewList", sReviewList);
+		model.addAttribute("pagebar", pagebar);
+		// 미송 코드 끝
 	}
-	
 	
 	@GetMapping("/memberDirectInquireList.do")
 	public void memberDirectInquireList() {
@@ -860,4 +905,216 @@ public class MemberController {
 	
 	
 	//----------------------수아 끝
+	
+	//----------------------미송 시작
+	@GetMapping("/memberSubscribeReviewForm.do")
+	public void memberSubscribeReviewForm(@RequestParam String sOrderNo, Model model) {
+		log.debug("sOrderNo={}",sOrderNo);
+		
+		SubscriptionOrder subOrder = memberService.selectOneSubscriptionOrder(sOrderNo);
+		SubscriptionProduct subProduct = memberService.selectRecentSubProduct(subOrder.getSoProductCode());
+		log.debug("subOrder={}",subOrder);
+		log.debug("subProduct={}",subProduct);
+		
+		model.addAttribute("subOrder",subOrder);
+		model.addAttribute("subProduct", subProduct);
+	}
+	
+	
+	@PostMapping("/memberSubscribeReview.do")
+	public ResponseEntity<?> memberWriteSubscribeReview(SubscriptionReview review, List<MultipartFile> upFiles) throws IllegalStateException, IOException {
+		log.debug("review={}", review);
+		log.debug("upFiles = {}", upFiles);
+		
+		for(MultipartFile upFile : upFiles) {
+			if(!upFile.isEmpty()) {
+				String saveDirectory = application.getRealPath("/resources/upload/subscribe/review");
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				File destFile = new File(saveDirectory, renamedFilename);
+				log.debug("destFile = {}", destFile);
+				upFile.transferTo(destFile);
+			
+				review.add(SubscriptionReviewAttachment.builder().sReviewOriginalFilename(upFile.getOriginalFilename()).sReviewRenamedFilename(renamedFilename).build());
+			}
+		}
+		
+		int result = memberService.insertSubscriptionReview(review);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/memberSubscribeReviewDetail.do")
+	public ResponseEntity<?> subscribeReviewDetail(@RequestParam String sReviewNo) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		SubscriptionReview sReview = subscribeService.selectOneSubscriptionReview(sReviewNo);
+		log.debug("sReview = {}", sReview);
+		
+		return ResponseEntity.ok(sReview);
+	}
+	
+	
+	//----------------------미송 끝
+	
+	//-------------------수아 시작
+	@GetMapping("/memberDirectReviewEnrollList.do")
+	public void memberDirectReviewEnrollList(@RequestParam(defaultValue = "1") int cPage, Authentication authentication, Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		String memberId = authentication.getName();
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		
+		List<Map<String, Object>> orderProdList = memberService.selectDirectReviewProdList(param);
+		int totalContent = memberService.getTotalDirectEnrollReviewByMemberId(memberId);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("orderProdList", orderProdList);
+	}
+	
+	@GetMapping("/memberDirectReviewList.do")
+	public void memberDirectReviewList(@RequestParam(defaultValue = "1") int cPage, Authentication authentication, Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		String memberId = authentication.getName();
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		
+		List<Map<String, Object>> directReviewList = memberService.selectDirectReviewList(param);
+		int totalContent = memberService.getTotalDirectReviewByMemberId(memberId);
+		String url = request.getRequestURI(); 
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("directReviewList", directReviewList);
+	}
+	
+	@GetMapping("/memberDirectReviewEnrollForm.do")
+	public void memberDirectReviewEnrollForm(@RequestParam String dOrderNo, @RequestParam String dOptionNo, Model model) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("dOrderNo",dOrderNo);
+		map.put("dOptionNo", dOptionNo);
+		
+		Map<String,Object> reviewProd = memberService.selectReviewDirectProduct(map);
+		model.addAttribute("reviewProd", reviewProd);
+
+	}
+	
+	@PostMapping("/memberDirectReviewEnrollForm.do")
+	public String memberDirectReviewEnrollForm(DirectReview directReview, 
+												RedirectAttributes redirectAttr,
+												@RequestParam(name="directReviewRegFile", required = false) MultipartFile directReviewRegFile) {
+		int result = 0;
+		log.debug("directReviewRegFile={}", directReviewRegFile);
+			try {
+				
+				if(!directReviewRegFile.isEmpty()) {
+					String saveDirectory = application.getRealPath("/resources/upload/directReviewAttach");
+					String renamedFilename = HelloSpringUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
+					File destFile = new File(saveDirectory, renamedFilename);
+					directReviewRegFile.transferTo(destFile);
+					
+							directReview.setDirectReviewAttach(DirectReviewAttachment.builder()
+									.dReviewOriginalFilename(directReviewRegFile.getOriginalFilename())
+									.dReviewRenamedFilename(renamedFilename)
+									.build());	
+				}
+				log.debug("directReview={}", directReview);
+			} catch (Exception e) {
+				log.error("직거래 리뷰 첨부파일 등록 오류"+e.getMessage(), e);
+			}
+			
+		result = memberService.insertDirectReview(directReview);
+		
+		redirectAttr.addFlashAttribute("msg", "리뷰를 성공적으로 등록했습니다.");
+		return "redirect:/member/memberDirectReviewList.do";
+	}
+	
+	@PostMapping("/deleteDirectReview.do")
+	public String deleteDirectReview(@RequestParam String dReviewNo, RedirectAttributes redirectAttr) {
+		int result = memberService.deleteDirectReview(dReviewNo);
+		
+		redirectAttr.addFlashAttribute("msg", "리뷰를 삭제했습니다!");
+		return "redirect:/member/memberDirectReviewList.do";
+	}
+	
+	@GetMapping("/memberDirectReviewUpdateForm.do")
+	public void memberDirectReviewUpdateForm(@RequestParam String dReviewNo, Model model) {
+		Map<String, Object> dReview = memberService.selectDirectReview(dReviewNo);
+		model.addAttribute("dReview", dReview);
+	}
+	
+	@GetMapping(path = "/directReviewfileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public Resource directReviewfileDownload(@RequestParam int dReviewAttachNo, HttpServletResponse response) throws IOException {
+		DirectReviewAttachment attach = memberService.selectDirectReviewAttach(dReviewAttachNo);
+		log.debug("attach = {}", attach);
+		
+		String saveDirectory = application.getRealPath("/resources/upload/directReviewAttach");
+		File downFile = new File(saveDirectory, attach.getDReviewRenamedFilename());
+		String location = "file:" + downFile; 
+		Resource resource = resourceLoader.getResource(location);
+		log.debug("resource = {}", resource);
+		log.debug("resource#file = {}", resource.getFile());
+		
+		// 응답헤더 작성
+		response.setContentType("application/octet-stream; charset=utf-8");
+		String filename = new String(attach.getDReviewOriginalFilename().getBytes("utf-8"), "iso-8859-1");
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+		
+		return resource;
+	}
+	
+	@PostMapping("/memberDirectReviewUpdateForm.do")
+	public String memberDirectReviewUpdateForm(DirectReview directReview, 
+												RedirectAttributes redirectAttr,
+												@RequestParam(name="directReviewRegFile", required = false) MultipartFile directReviewRegFile,
+												 @RequestParam(name="deleteFileNo", required = false) String deleteFileNo) {
+		
+		log.debug("directReviewRegFile={}",directReviewRegFile);
+		log.debug("deleteFileNo={}",deleteFileNo);
+		String saveDirectory  = application.getRealPath("/resources/upload/directReviewAttach");
+		
+		int result = 0;
+		try {
+				//새로 업로드 할 경우 - 기존 파일 삭제 후 새로 생성
+				if(deleteFileNo != null) {
+					
+					int delFileNo = Integer.parseInt(deleteFileNo);
+					DirectReviewAttachment attach = memberService.selectDirectReviewAttach(delFileNo);
+					//삭제할기존파일객체를 만듬
+					File delFile = new File(saveDirectory, attach.getDReviewRenamedFilename());
+					boolean deleted = delFile.delete();	
+					log.debug("{} 파일삭제 : {}", attach.getDReviewRenamedFilename(), deleted);
+					//DB삭제
+					result = memberService.deleteDirectReviewAttachment(delFileNo);
+					log.debug("{}번 attachment 삭제", delFileNo);
+				}
+				
+					if(!directReviewRegFile.isEmpty()) {
+						//새로운 파일 저장
+						String renamedFilename = HelloSpringUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
+						File destFile = new File(saveDirectory, renamedFilename);
+						directReviewRegFile.transferTo(destFile);
+						
+						directReview.setDirectReviewAttach(DirectReviewAttachment.builder()
+								.dReviewNo(directReview.getDReviewNo())
+								.dReviewOriginalFilename(directReviewRegFile.getOriginalFilename())
+								.dReviewRenamedFilename(renamedFilename)
+								.build());	
+					
+				}
+				
+			} catch (Exception e) {
+				log.error("직거래 리뷰 수정 첨부파일 등록 오류"+e.getMessage(), e);
+			}
+		
+			result = memberService.updateDirectReview(directReview);
+		
+			redirectAttr.addFlashAttribute("msg", "리뷰를 성공적으로 수정했습니다.");
+		return "redirect:/member/memberDirectReviewList.do";
+	}
+	//-------------------수아 끝
 }

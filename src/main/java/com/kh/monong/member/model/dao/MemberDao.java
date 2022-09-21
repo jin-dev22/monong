@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
@@ -16,6 +17,8 @@ import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.direct.model.dto.DirectReview;
+import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -23,7 +26,10 @@ import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
 @Mapper
 public interface MemberDao {
@@ -150,13 +156,13 @@ public interface MemberDao {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
 	
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
 	@Select("select * from direct_order where member_id = #{memberId}")
-	List<DirectOrder> selectDirectListByMemberId(String memberId);
+	List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param, RowBounds rowBounds);
 
 	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
 
@@ -175,6 +181,60 @@ public interface MemberDao {
 	int deleteMemberSubscribeOrder(String sNo);
 
 	//------------------------수아 끝
+	//-----------미송 시작
+	@Insert("insert into subscription_review values('SR' || seq_s_review_no.nextval, #{sOrderNo}, #{sReviewContent}, #{sReviewStar}, default, default, null)")
+	@SelectKey(statement = "select 'SR' || seq_s_review_no.currval from dual", before = false, keyProperty = "sReviewNo", resultType = String.class)
+	int insertSubscriptionReview(SubscriptionReview review);
+
+	@Insert("insert into subscription_review_attachment values (seq_s_attach_no.nextval, #{sReviewNo}, #{sReviewOriginalFilename}, #{sReviewRenamedFilename}, DEFAULT)")
+	int insertSubscriptionReviewAttachment(SubscriptionReviewAttachment attach);
+	
+	@Select("select count(*) from subscription_review where s_order_no = #{sOrderNo}")
+	int getSubscriptionReviewYn(String sOrderNo);
+
+	List<SubscriptionReview> selectSubscriptionReviewList(RowBounds rowBounds, String memberId);
+
+	
+	int getTotalContent(String memberId);
+	//-----------미송 끝
+
+	//---------------수아시작
+	Map<String, Object> selectReviewDirectProduct(Map<String, Object> map);
+
+	List<Map<String, Object>> selectDirectReviewProdList(Map<String, Object> param, RowBounds rowBounds);
+
+	@Insert("insert into direct_review values('SR'||seq_d_review_no.nextval, #{dOptionNo}, #{dOrderNo}, #{dReviewTitle}, #{memberId}, #{dReviewContent}, #{reviewRating}, default, default, null)")
+	@SelectKey(statement = "select 'SR'||seq_d_review_no.currval from dual", before=false, keyProperty="dReviewNo", resultType = String.class)
+	int insertDirectReview(DirectReview directReview);
+
+	@Insert("insert into direct_review_attachment values(seq_d_review_attach_no.nextval, #{dReviewNo}, #{dReviewOriginalFilename}, #{dReviewRenamedFilename}, default)")
+	int insertDirectReviewAttachment(DirectReviewAttachment directReviewAttach);
+
+	List<Map<String, Object>> selectDirectReviewList(Map<String, Object> param, RowBounds rowBounds);
+
+	@Select("select count(*) from direct_order where member_id=#{memberId}")
+	int getTotalDirectList(String memberId);
+
+	@Select("select count(*) from direct_review where member_id=#{memberId}")
+	int getTotalDirectReviewByMemberId(String memberId);
+
+	@Delete("delete from direct_review where d_review_no = #{dReviewNo}")
+	int deleteDirectReview(String dReviewNo);
+
+	Map<String, Object> selectDirectReview(String dReviewNo);
+
+	@Delete("delete from direct_review_attachment where d_review_attach_no = #{delFileNo}")
+	int deleteDirectReviewAttachment(int delFileNo);
+
+	@Select("select * from direct_review_attachment where d_review_attach_no = #{dReviewAttachNo}")
+	DirectReviewAttachment selectDirectReviewAttach(int dReviewAttachNo);
+
+	@Update("update direct_review set d_review_title=#{dReviewTitle}, d_review_content=#{dReviewContent}, review_rating=#{reviewRating}, d_review_updated_at= sysdate where d_review_no = #{dReviewNo}")
+	int updateDirectReview(DirectReview directReview);
+
+	@Select("select count(*) from direct_order where member_id=#{memberId} and d_order_status='F'")
+	int getTotalDirectEnrollReviewByMemberId(String memberId);
+	//------------------수아끝
 
 	
 }

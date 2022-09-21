@@ -9,6 +9,8 @@ import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.direct.model.dto.DirectReview;
+import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -16,7 +18,9 @@ import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 
 public interface MemberService {
 //-----------수진시작
@@ -108,11 +112,11 @@ public interface MemberService {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
 
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
-	List<DirectOrder> selectDirectListByMemberId(String memberId);
+	List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param);
 
 	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
 
@@ -125,6 +129,41 @@ public interface MemberService {
 	int deleteMemberDirectOrder(String dOrderNo);
 
 	int deleteMemberSubscribeOrder(String sNo);
+//-----------수아 끝
+//-----------미송 시작
+	int insertSubscriptionReview(SubscriptionReview review);
+	
+	int getSubscriptionReviewYn(String sOrderNo);
+	
+	List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param, String memberId);
+	
+	int getTotalContent(String memberId);
+//-----------미송 끝
+
+//----------수아 시작
+	Map<String, Object> selectReviewDirectProduct(Map<String, Object> map);
+
+	List<Map<String, Object>> selectDirectReviewProdList(Map<String, Object> param);
+
+	int insertDirectReview(DirectReview directReview);
+
+	List<Map<String, Object>> selectDirectReviewList(Map<String, Object> param);
+
+	int getTotalDirectList(String memberId);
+
+	int getTotalDirectReviewByMemberId(String memberId);
+
+	int deleteDirectReview(String dReviewNo);
+
+	Map<String, Object> selectDirectReview(String dReviewNo);
+
+	int deleteDirectReviewAttachment(int delFileNo);
+
+	int updateDirectReview(DirectReview directReview);
+
+	DirectReviewAttachment selectDirectReviewAttach(int dReviewAttachNo);
+
+	int getTotalDirectEnrollReviewByMemberId(String memberId);
 //-----------수아 끝
 
 
