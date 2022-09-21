@@ -44,6 +44,14 @@ public interface SubscribeService {
 
 	int getTotalSubscriptionListAll();
 	
+	List<Subscription> findByQuitYnSubList(String selectOption, Map<String, Integer> param);
+
+	int getTotalFindByQuitYnSubList(String selectOption);
+	
+	List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param);
+
+	int getTotalSubscriptionOrderListAll();
+	
 	
 	
 	// 선아코드 끝
@@ -69,6 +77,9 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
 
 
 

@@ -129,7 +129,7 @@ public class SubscribeController {
 		if(todayDay == 3) {
 			// 현재 날짜와 결제예정일이 일치하는 구독 조회
 			List<Subscription> payLists = subscribeService.getPayList(today);
-			log.debug("payList = {}", payLists);
+			log.debug("payLists = {}", payLists);
 			Map<String, Object> map = new HashMap<>();
 			if(payLists != null) {
 				String customerUid = "";
@@ -141,110 +141,107 @@ public class SubscribeController {
 				
 				for(Subscription payList : payLists) {
 					SubscriptionOrder subOrder = new SubscriptionOrder();
-					for(int i = 0; i < payLists.size(); i++) {
-						// 결제용 고유번호 전달					
-						int cardNo = payList.getCardInfoNo();
-						CardInfo cardInfoList = subscribeService.getCardInfoList(cardNo);
-						customerUid = cardInfoList.getCustomerUid();
-						subOrder.setSoCardInfoNo(cardNo);
+					// 결제용 고유번호 전달					
+					int cardNo = payList.getCardInfoNo();
+					CardInfo cardInfoList = subscribeService.getCardInfoList(cardNo);
+					customerUid = cardInfoList.getCustomerUid();
+					subOrder.setSoCardInfoNo(cardNo);
+					
+					String productCode = payList.getSProductCode();
+					SubscriptionProduct product = subscribeService.getAmountByPcode(productCode);
+					
+					// 결제이름(정기구독 + 사이즈)
+					payName = "정기구독 " + product.getSProductName();
+					log.debug("payName = {}", payName);
+					subOrder.setSoProductCode(productCode);
+					
+					// amount(가격)
+					int sDeliveryFee = product.getSDeliveryFee();
+					amount = product.getSProductPrice() + sDeliveryFee;
+					log.debug("amount = {}", amount);
+					subOrder.setSPrice(amount);
+					
+					// merchantUid(주문번호)
+					String paymentDate = payList.getSPaymentDate().toString();
+					String merchantUid = makemerchantUid(paymentDate);
+					log.debug("merchantUid = {}", merchantUid);
+					subOrder.setSOrderNo(merchantUid);;
+					
+					// payments again 진행
+					map.put("customer_uid", customerUid);
+					map.put("merchant_uid", merchantUid);
+					map.put("amount", amount);
+					map.put("name", payName);
+					
+					// iamport에 rest api를 통해 결제 진행
+					String response = requestSubPayment.requestPayAgain(map);
+					log.debug("response = {}", response);
+					
+					// 결제에 대한 json 결과값의 내용을 변환하여 꺼내기
+					JsonParser parser = new JsonParser();
+					JsonElement element = parser.parse(response);
+					int success = element.getAsJsonObject().get("code").getAsInt();
+					log.debug("success = {}", success);
+					
+					String sNo = payList.getSNo();
+					subOrder.setSNo(sNo);
+					log.debug("sNo = {}", sNo);
+					
+					// 현재 구독 회수 조회
+					SubscriptionOrder isExists = subscribeService.getTimesBysNo(sNo);
+					int times = 1;
+					if(isExists == null) {
+						subOrder.setSTimes(times); // null이면 첫 구독 결제
+					}
+					else {
+						times = isExists.getSTimes();
+						subOrder.setSTimes(times + 1);
+					}
+					log.debug("times = {}", times);
+					
+					subOrder.setSoExcludeVegs(payList.getSExcludeVegs());
+					cycle = payList.getSDeliveryCycle();
+					log.debug("cycle = {}", cycle);
+					subOrder.setSoDeliveryCycle(cycle);
+					subOrder.setSoDeliveryDate(payList.getSNextDeliveryDate());
+					delayYn = payList.getSDelayYn();
+					log.debug("delayYn = {}", delayYn);
+					subOrder.setSoDelayYn(delayYn);
+					subOrder.setSoRecipient(payList.getSRecipient());
+					subOrder.setSoPhone(payList.getSPhone());
+					subOrder.setSoAddress(payList.getSAddress());
+					subOrder.setSoAddressEx(payList.getSAddressEx());
+					subOrder.setSoDeliveryRequest(payList.getSDeliveryRequest());
+					log.debug("subOrder = {}", subOrder);
+					
+					// success가 0이면 성공, 실패일 경우 0이 아닌 값 + message
+					if(success == 0) { 
+						result = subscribeService.insertSubOrder(subOrder);
+					}
+					log.debug("result = {}", result);
+					
+					// 결제 완료 후 미루기여부/다음배송일/다음결제예정일 update
+					if(result == 1) {
+						// 미루기 완료 후 결제가 되었기 때문에 다시 N으로 변경
+						if("Y".equals(delayYn))
+							delayYn = YN.N;
+						LocalDate currPaymentDate = payList.getSPaymentDate();
+						LocalDate currDeliveryDate = payList.getSNextDeliveryDate();
 						
-						String productCode = payList.getSProductCode();
-						SubscriptionProduct product = subscribeService.getAmountByPcode(productCode);
+						int plusDay = cycle * 7;
+						LocalDate nextPaymentDate = currPaymentDate.plusDays(plusDay);
+						LocalDate nextDeliveryDate = currDeliveryDate.plusDays(plusDay);
 						
-						// 결제이름(정기구독 + 사이즈)
-						payName = "정기구독 " + product.getSProductName();
-						log.debug("payName = {}", payName);
-						subOrder.setSoProductCode(productCode);
-						
-						// amount(가격)
-						int sDeliveryFee = product.getSDeliveryFee();
-						amount = product.getSProductPrice() + sDeliveryFee;
-						log.debug("amount = {}", amount);
-						subOrder.setSPrice(amount);
-						
-						// merchantUid(주문번호)
-						String paymentDate = payList.getSPaymentDate().toString();
-						String merchantUid = makemerchantUid(paymentDate);
-						log.debug("merchantUid = {}", merchantUid);
-						subOrder.setSOrderNo(merchantUid);;
-						
-						// payments again 진행
-						map.put("customer_uid", customerUid);
-						map.put("merchant_uid", merchantUid);
-						map.put("amount", amount);
-						map.put("name", payName);
-						
-						// iamport에 rest api를 통해 결제 진행
-						String response = requestSubPayment.requestPayAgain(map);
-						log.debug("response = {}", response);
-						
-						// 결제에 대한 json 결과값의 내용을 변환하여 꺼내기
-						JsonParser parser = new JsonParser();
-						JsonElement element = parser.parse(response);
-						int success = element.getAsJsonObject().get("code").getAsInt();
-						log.debug("success = {}", success);
-						
-						String sNo = payList.getSNo();
-						subOrder.setSNo(sNo);
-						log.debug("sNo = {}", sNo);
-						
-						// 현재 구독 회수 조회
-						SubscriptionOrder isExists = subscribeService.getTimesBysNo(sNo);
-						int times = 1;
-						log.debug("times = {}", times);
-						if(isExists == null) {
-							subOrder.setSTimes(times); // null이면 첫 구독 결제
-						}
-						else {
-							times = isExists.getSTimes();
-							subOrder.setSTimes(times + 1);
-						}
-						subOrder.setSoExcludeVegs(payList.getSExcludeVegs());
-						cycle = payList.getSDeliveryCycle();
-						log.debug("cycle = {}", cycle);
-						subOrder.setSoDeliveryCycle(cycle);
-						subOrder.setSoDeliveryDate(payList.getSNextDeliveryDate());
-						delayYn = payList.getSDelayYn();
-						log.debug("delayYn = {}", delayYn);
-						subOrder.setSoDelayYn(delayYn);
-						subOrder.setSoRecipient(payList.getSRecipient());
-						subOrder.setSoPhone(payList.getSPhone());
-						subOrder.setSoAddress(payList.getSAddress());
-						subOrder.setSoAddressEx(payList.getSAddressEx());
-						subOrder.setSoDeliveryRequest(payList.getSDeliveryRequest());
-						log.debug("subOrder = {}", subOrder);
-						
-						// success가 0이면 성공, 실패일 경우 0이 아닌 값 + message
-						if(success == 0) { 
-							result = subscribeService.insertSubOrder(subOrder);
-						}
-						log.debug("result = {}", result);
-						
-						// 결제 완료 후 미루기여부/다음배송일/다음결제예정일 update
-						if(result == 1) {
-							// 미루기 완료 후 결제가 되었기 때문에 다시 N으로 변경
-							if("Y".equals(delayYn))
-								delayYn = YN.N;
-							LocalDate currPaymentDate = payList.getSPaymentDate();
-							LocalDate currDeliveryDate = payList.getSNextDeliveryDate();
-							log.debug("currPaymentDate, currDeliveryDate = {}, {}", currPaymentDate, currDeliveryDate);
-							
-							int plusDay = cycle * 7;
-							LocalDate nextPaymentDate = currPaymentDate.plusDays(plusDay);
-							LocalDate nextDeliveryDate = currDeliveryDate.plusDays(plusDay);
-							log.debug("nextPaymentDate, nextDeliveryDate = {}, {}", nextPaymentDate, nextDeliveryDate);
-							
-							Subscription updateSub = Subscription.builder()
-																.sNo(sNo)
-																.sDelayYn(delayYn)
-																.sPaymentDate(nextPaymentDate)
-																.sNextDeliveryDate(nextDeliveryDate)
-																.build();
-							result = subscribeService.updateSubscriptionSuccessPay(updateSub);
-						}
+						Subscription updateSub = Subscription.builder()
+															.sNo(sNo)
+															.sDelayYn(delayYn)
+															.sPaymentDate(nextPaymentDate)
+															.sNextDeliveryDate(nextDeliveryDate)
+															.build();
+						result = subscribeService.updateSubscriptionSuccessPay(updateSub);
 					}
 				}
-				log.debug("result = {}", result);
+				log.debug("구독 완료 result = {}", result);
 			}
 		}
 	}
@@ -261,7 +258,6 @@ public class SubscribeController {
 		date = date.substring(2);
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder();
-		log.debug("date", date);
 		
 		final int len = 7;
 		for(int i = 0; i < len; i++) {

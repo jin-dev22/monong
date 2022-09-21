@@ -37,6 +37,7 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -227,8 +228,8 @@ public class AdminController {
 		param.put("limit", limit);
 		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
 		int totalContent = subscribeService.getTotalSubscriptionListAll();
-		log.debug(">> subscriptionList = {}", subscriptionList);
-		log.debug(">> totalContent = {}", totalContent);
+//		log.debug(">> subscriptionList = {}", subscriptionList);
+//		log.debug(">> totalContent = {}", totalContent);
 
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
@@ -237,21 +238,43 @@ public class AdminController {
 		model.addAttribute("pagebar", pagebar);
 	}
 	
+	@GetMapping("/findByQuitYn.do")
+	public ResponseEntity<?> findByQuitYnSubscriptionList(@RequestParam(defaultValue = "1") int cPage, @RequestParam String selectOption, Model model, HttpServletRequest request) {
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+//		log.debug("selectOption = {}", selectOption);
+		
+		List<Subscription> findSubscriptionList = subscribeService.findByQuitYnSubList(selectOption, param);
+		int findTotalContent = subscribeService.getTotalFindByQuitYnSubList(selectOption);
+//		log.debug(">> findSubscriptionList = {}", findSubscriptionList);
+//		log.debug(">> findTotalContent = {}", findTotalContent);
+		
+		Map<Object, Object> map = new HashMap<>();
+		map.put("findSubscriptionList",findSubscriptionList);
+		map.put("cPage", cPage);
+		map.put("findTotalContent", findTotalContent);
+		
+		return ResponseEntity.ok().body(map);
+	}
+	
 	@GetMapping("/subscriptionOrderList.do")
 	public void subscriptionOrderList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
-		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
-		int totalContent = subscribeService.getTotalSubscriptionListAll();
-		log.debug(">> subscriptionList = {}", subscriptionList);
+		
+		List<SubscriptionOrder> subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
+		int totalContent = subscribeService.getTotalSubscriptionOrderListAll();
+		log.debug(">> subscriptionOrderList = {}", subscriptionOrderList);
 		log.debug(">> totalContent = {}", totalContent);
 		
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		
-		model.addAttribute("subscriptionList",subscriptionList);
+		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
 		model.addAttribute("pagebar", pagebar);
 	}
 	

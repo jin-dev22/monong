@@ -6,9 +6,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-<jsp:param name="title" value="모농모농"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <section id="faq">
 	<h2>자주 묻는 질문&#128269;</h2>
 	<nav class="navbar">
@@ -114,5 +112,5 @@ const renderFaq = (response, id) => {
 	}
 	wrapper.innerHTML = html;
 };
-
 </script>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
