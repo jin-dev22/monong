@@ -29,6 +29,7 @@ import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.direct.model.service.DirectService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -228,9 +229,55 @@ public class DirectController {
 	
 	@PostMapping("/directProductUpdate.do")
 	public String updateProduct(DirectProduct directProduct, 
-			@RequestParam(name="upFile", required = false) MultipartFile upFile) {
+			@RequestParam(name="delFileNo", required = false) int[] delFiles,
+			@RequestParam(name="upFile", required = false) List<MultipartFile> upFileList) throws Exception {
 		log.debug("directProduct={}",directProduct);
-		log.debug("upFile ={}",upFile);
+		log.debug("upFile ={}",upFileList);
+		
+		int result = 0;
+		String saveDirectory = application.getRealPath("/resources/upload/product");
+		//파일삭제
+		if(delFiles != null) {
+			for(int attachNo : delFiles) {
+				DirectProductAttachment attach = directService.selectOneDPAttachment(attachNo);
+				File delFile = new File(saveDirectory, attach.getDProductRenamedFilename());
+				boolean isDeleted = delFile.delete();
+				log.debug("파일삭제? = {}", attach.getDProductOriginalFilename(), isDeleted);
+				
+				result = directService.deleteDPAttachment(attachNo);
+				log.debug("{}attach 행 삭제결과 = {}", attachNo, result);
+				
+			}
+		}
+		
+		//파일저장
+		for(MultipartFile upFile : upFileList) {
+			if(!upFile.isEmpty()) {
+				//업로드파일 저장
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				File destFile = new File(saveDirectory, renamedFilename);
+				upFile.transferTo(destFile);
+				
+				DirectProductAttachment attach = DirectProductAttachment.builder()
+												.dProductOriginalFilename(upFile.getOriginalFilename())
+												.dProductRenamedFilename(renamedFilename)
+												.dProductNo(directProduct.getDProductNo())
+												.build();
+				log.debug("attach ={}", attach);
+				//direct에 첨부파일 설정 
+				directProduct.add(attach);
+			}
+		}
+		//상품정보변경
+		List<DirectProductOption> options = directProduct.getDirectProductOptions();
+		String prodNo = directProduct.getDProductNo();
+		log.debug("prodNo={}",prodNo);
+		if(options != null && !options.isEmpty()) {
+			for(DirectProductOption opt : options) {
+				opt.setDProductNo(prodNo);
+			}
+		}
+		result = directService.updateDirectProduct(directProduct);
 		
 		return "redirect:/direct/directProductUpdate.do?prodNo=" + directProduct.getDProductNo();
 	}

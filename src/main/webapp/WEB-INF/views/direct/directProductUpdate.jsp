@@ -103,7 +103,7 @@ div.note-toolbar {
         		<span class="enroll-info-label">상품명<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DProductName-container">
-                    	<input type="text" class="form-control" name="DProductName" id="DProductName" value="${prod.DProductName}" required>
+                    	<input type="text" class="form-control" name="DProductName" id="DProductName" value="${prod.DProductName}" readonly required>
                     </span>
         		</span>
         	</div>
@@ -114,7 +114,7 @@ div.note-toolbar {
 						<label class="btn btn-outline-danger" title="삭제"> 
 							<img src="${pageContext.request.contextPath}/resources/upload/product/${attach.DProductRenamedFilename}" style="width:50px;" alt="" />
 							<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
-								value="${attach.DProductNo}">삭제
+								value="${attach.DProductAttachNo}">삭제
 						</label>
 	        		</c:forEach>
            		</span>
@@ -186,6 +186,7 @@ div.note-toolbar {
 								<option value="판매마감" ${opt.DSaleStatus eq '판매마감' ? 'selected' : ''}>판매마감</option>
 							</select>
 							<input type="hidden" name="directProductOptions[${vStatus.index}].dOptionNo" value="${opt.DOptionNo}" />
+							<%-- <input type="hidden" name="directProductOptions[${vStatus.index}].dProductNo" value="${prod.DProductNo}"/> --%>
 	     				</div>
 	    				<br />
 	    				<span class="vStatus" style="display: none">${vStatus.count}</span>

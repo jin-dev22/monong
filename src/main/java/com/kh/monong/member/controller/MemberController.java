@@ -258,7 +258,7 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
-	@GetMapping("/sellerMyPage.do")
+	//@GetMapping("/sellerMyPage.do")
 	public void sellerMypage() {
 	}
 	

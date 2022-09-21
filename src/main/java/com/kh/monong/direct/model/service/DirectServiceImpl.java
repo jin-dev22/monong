@@ -3,6 +3,7 @@ package com.kh.monong.direct.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -132,6 +134,46 @@ public class DirectServiceImpl implements DirectService {
 	@Override
 	public int getTotalProdCntByStatus(Map<String, Object> param) {
 		return directDao.getTotalProdCntByStatus(param);
+	}
+	
+	@Override
+	public DirectProductAttachment selectOneDPAttachment(int attachNo) {
+		return directDao.selectOneDPAttachment(attachNo);
+	}
+	
+	@Override
+	public int deleteDPAttachment(int attachNo) {
+		return directDao.deleteDPAttachment(attachNo);
+	}
+	
+	@Override
+	public int updateDirectProduct(DirectProduct directProduct) {
+		int result = directDao.updateDirectProduct(directProduct);
+		
+		List<DirectProductOption> options = directProduct.getDirectProductOptions();
+		if(options != null && !options.isEmpty()) {
+			for(DirectProductOption dOpt : options) {
+				result = mergeIntoDOption(dOpt);
+			}
+		}
+		
+		List<DirectProductAttachment> attachments = directProduct.getDirectProductAttachments();
+		if(attachments != null && !attachments.isEmpty()) {
+			for(DirectProductAttachment attach : attachments) {
+				result = insertDPAttachment(attach);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public int mergeIntoDOption(DirectProductOption dOpt) {
+		return directDao.mergeIntoDOption(dOpt);
+	}
+	
+	@Override
+	public int insertDPAttachment(DirectProductAttachment attach) {
+		return directDao.insertDPAttachment(attach);
 	}
 	//----------------- 수진 끝
 
