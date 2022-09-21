@@ -52,7 +52,10 @@ import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 import com.kh.security.model.service.MemberSecurityService;
@@ -692,7 +695,7 @@ public class MemberController {
 			model.addAttribute("recentSubProduct", recentSubProduct);
 		}
 		
-		List<SubscriptionOrder> subList = memberService.selectSubscriptionListById(memberId);
+		List<SubscriptionOrderExt> subList = memberService.selectSubscriptionListById(memberId);
 		if(subList != null) {
 			log.debug("subList={}",subList);
 			model.addAttribute("subList", subList);
@@ -713,7 +716,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/memberReviewList.do")
-	public void memberReviewList(Authentication authentication, Model model) {
+	public void memberReviewList(Authentication authentication, Model model, @RequestParam(defaultValue = "1") int cPage, HttpServletRequest request) {
 		String memberId = authentication.getName();
 		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
 		log.debug("recentSubscription={}",recentSubscription);
@@ -722,7 +725,25 @@ public class MemberController {
 			SubscriptionProduct recentSubProduct = memberService.selectRecentSubProduct(pCode);
 			model.addAttribute("recentSubscription", recentSubscription);
 			model.addAttribute("recentSubProduct", recentSubProduct);
-		}	
+		}
+		// 미송 코드 시작
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		log.debug("memberId = {}", memberId);
+		int totalContent = memberService.getTotalContent(memberId);
+		log.debug("totalContent = {}", totalContent);
+		
+		List<SubscriptionReview> sReviewList = memberService.selectSubscriptionReviewList(param, memberId);
+		log.debug("sReviewList = {}", sReviewList);
+		
+		String url = request.getRequestURI();
+		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("sReviewList", sReviewList);
+		model.addAttribute("pagebar", pagebar);
+		// 미송 코드 끝
 	}
 	
 	@GetMapping("/memberDirectInquire.do")
@@ -798,4 +819,54 @@ public class MemberController {
 	
 	
 	//----------------------수아 끝
+	
+	//----------------------미송 시작
+	@GetMapping("/memberSubscribeReviewForm.do")
+	public void memberSubscribeReviewForm(@RequestParam String sOrderNo, Model model) {
+		log.debug("sOrderNo={}",sOrderNo);
+		
+		SubscriptionOrder subOrder = memberService.selectOneSubscriptionOrder(sOrderNo);
+		SubscriptionProduct subProduct = memberService.selectRecentSubProduct(subOrder.getSoProductCode());
+		log.debug("subOrder={}",subOrder);
+		log.debug("subProduct={}",subProduct);
+		
+		model.addAttribute("subOrder",subOrder);
+		model.addAttribute("subProduct", subProduct);
+	}
+	
+	
+	@PostMapping("/memberSubscribeReview.do")
+	public ResponseEntity<?> memberWriteSubscribeReview(SubscriptionReview review, List<MultipartFile> upFiles) throws IllegalStateException, IOException {
+		log.debug("review={}", review);
+		log.debug("upFiles = {}", upFiles);
+		
+		for(MultipartFile upFile : upFiles) {
+			if(!upFile.isEmpty()) {
+				String saveDirectory = application.getRealPath("/resources/upload/subscribe/review");
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				File destFile = new File(saveDirectory, renamedFilename);
+				log.debug("destFile = {}", destFile);
+				upFile.transferTo(destFile);
+			
+				review.add(SubscriptionReviewAttachment.builder().sReviewOriginalFilename(upFile.getOriginalFilename()).sReviewRenamedFilename(renamedFilename).build());
+			}
+		}
+		
+		int result = memberService.insertSubscriptionReview(review);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/memberSubscribeReviewDetail.do")
+	public ResponseEntity<?> subscribeReviewDetail(@RequestParam String sReviewNo) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		SubscriptionReview sReview = subscribeService.selectOneSubscriptionReview(sReviewNo);
+		log.debug("sReview = {}", sReview);
+		
+		return ResponseEntity.ok(sReview);
+	}
+	
+	
+	//----------------------미송 끝
 }

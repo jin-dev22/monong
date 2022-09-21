@@ -10,7 +10,9 @@ import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
+import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 
 public interface MemberService {
 //-----------수진시작
@@ -92,10 +94,21 @@ public interface MemberService {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrder> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
 
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 //-----------수아 끝
+//-----------미송 시작
+	int insertSubscriptionReview(SubscriptionReview review);
+	
+	int getSubscriptionReviewYn(String sOrderNo);
+	
+	List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param, String memberId);
+	
+	int getTotalContent(String memberId);
+//-----------미송 끝
+
+
 
 
 	
