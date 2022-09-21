@@ -2,14 +2,16 @@ package com.kh.monong.direct.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -27,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DOrderStatus;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
@@ -118,7 +122,7 @@ public class DirectController {
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
-	
+
 	// 상품 상세 불러오기
 	@GetMapping("/directProductDetail.do")
 	public void directProductDetail(@RequestParam String dProductNo, Model model) {
@@ -128,7 +132,7 @@ public class DirectController {
 		model.addAttribute("directProduct", directProduct);
 	}
 	
-	// 장바구니 페이지
+	// 장바구니 조회
 	@GetMapping("/cart.do")
 	public void cart(Authentication authentication, Model model) {
 		// String sessionId = session.getId();
@@ -177,25 +181,18 @@ public class DirectController {
 	@PostMapping("/addCart.do")
 	public void addCart(@RequestBody List<Map<String,Object>> cartList, Model model) {
 		log.debug("cartList = {}", cartList);
-
+		int result = 0;
 		for(Map<String, Object> addList : cartList) {
-			int checkCount = directService.checkCountCartDuplicate(addList);
-			log.debug("checkCount = {}", checkCount);
-			if(checkCount > 0) {
-				int updateResult = directService.updateCart(addList);
-				log.debug("update = {}", updateResult);
-			}
-			else {
-				int insertResult = directService.insertCart(addList);
-				log.debug("insert = {}", insertResult);
-			}
-						
+			result = directService.addCart(addList);
+			log.debug("result = {}", result);
 		}
 	}
 	
+	// 주문 페이지 로드
 	@GetMapping("/directOrder.do")
 	public void directOrder() {}
 	
+	// 주문 처리
 	@PostMapping("/directOrder.do")
 	public void directOrder(@RequestParam(value="dOptionNo") List<String> dOptionNo, @RequestParam(value="productCount") List<Integer> productCount, @RequestParam(value="memberId") List<String> memberId, Model model) {
 		log.debug("dOptionNo = {}", dOptionNo);
@@ -216,6 +213,56 @@ public class DirectController {
 		
 		model.addAttribute("orderList", orderList);
 		
+	}
+	
+	// 결제 처리
+	@PostMapping("directPay.do")
+	public String directPay(DirectOrder directOrder, 
+						  @RequestParam(value="optionNoList[]") List<String> optionNoList,
+						  @RequestParam(value="productNoList[]") List<String> productNoList, 
+						  @RequestParam(value="productCountList[]") List<String> productCountList,
+						  Model model) {
+		log.debug("optionNoList = {}", optionNoList);
+		log.debug("productNoList = {}", productNoList);
+		log.debug("productCountList = {}", productCountList);
+		
+		
+		directOrder.setDOrderNo(makedirectOrderNo());
+		directOrder.setDOrderStatus(DOrderStatus.P);
+		
+		log.debug("directOrder = {}", directOrder);
+		
+		int result = directService.insertDirectOrder(directOrder);
+		String dOrderNo = directOrder.getDOrderNo();
+		
+		Map<String, Object> param = new HashMap<>();
+		
+		for(int i = 0; i < optionNoList.size(); i++) {
+			if(dOrderNo != null) {
+				param.put("dOrderNo", dOrderNo);
+				param.put("dOptionNo", optionNoList.get(i));
+				param.put("memberId", directOrder.getMemberId());
+				param.put("dProductNo", productNoList.get(i));
+				param.put("dOptionCount", productCountList.get(i));
+				log.debug("param = {}", param);
+				
+				result = directService.insertMemberDirectOrder(param);
+			}
+		}
+		
+		log.debug("dOrderNo = {}", dOrderNo);
+		
+		model.addAttribute("dOrderNo", dOrderNo);
+		return "jsonView";
+	}
+	
+	
+	
+	public String makedirectOrderNo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmm");
+		DecimalFormat df = new DecimalFormat("000");
+		
+		return "DO" + sdf.format(new Date()) + df.format(Math.random() * 1000);
 	}
 	//----------------- 민지 끝
 	

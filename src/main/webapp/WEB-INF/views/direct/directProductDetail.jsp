@@ -60,7 +60,7 @@
   	</div>
     <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
     <div class="dDeliveryFee-container">
-    	<span class="dDeliveryFee-title">배송비</span><span class="dDeliveryFee"><fmt:formatNumber value="${directProduct.DDeliveryFee}" pattern="#,###" />원</span><br>
+    	<span class="dDeliveryFee-title">배송비 <span style="font-size: 10px; color:#afb0b3;">(판매자별)</span></span><span class="dDeliveryFee"><fmt:formatNumber value="${directProduct.DDeliveryFee}" pattern="#,###" />원</span><br>
     </div>
     <div class="seller-container">
     	<span class="seller-title">판매자</span><span class="seller">${directProduct.member.memberName}</span>
@@ -76,12 +76,14 @@
 	    <div class="dropdown-content">
 		    <table class="tbl-dropdown">
 		      <c:forEach items="${directProduct.directProductOptions}" var="option">
+		      	<c:if test="${option.DSaleStatus ne '판매중단'}">
 			    <tr class="select_option" data-option-no="${option.DOptionNo}" onclick="showMenu(this.innerText)">
 			      	<td class="dPOName">${option.DOptionName}</td>
 			      	<td class="dPrice"><fmt:formatNumber value="${option.DPrice}" pattern="#,###" />원</td>
 			    </tr>
 			    <input type="hidden" class="dStock" name="dStock" value="${option.DStock}" />
 			    <input type="hidden" name="dSaleStatus" value="${option.DSaleStatus}" />
+		      	</c:if>
 		      </c:forEach>
 		    </table>
 	    </div>
