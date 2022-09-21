@@ -67,6 +67,18 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription where s_quit_yn = 'N'")
 	int getTotalSubscriptionListAll();
 	
+	@Select("select * from subscription where s_quit_yn = #{selectOption}")
+	List<Subscription> findByQuitYnSubList(String selectOption, RowBounds rowBounds);
+	
+	@Select("select count(*) from subscription where s_quit_yn = #{selectOption}")
+	int getTotalFindByQuitYnSubList(String selectOption);
+	
+	@Select("select * from subscription_order where s_order_status = '상품준비중'")
+	List<SubscriptionOrder> getSubscriptionOrderListAll(RowBounds rowBounds);
+	
+	@Select("select count(*) from subscription_order where s_order_status = '상품준비중'")
+	int getTotalSubscriptionOrderListAll();
+	
 	
 	
 	
@@ -107,6 +119,8 @@ public interface SubscribeDao {
 	// 추가
 	@Select("select s_no from subscription where member_id = #{memberId} and s_quit_yn = 'N'")
 	String getSubscriptionByMemberId(String memberId);
+
+
 
 	
 	

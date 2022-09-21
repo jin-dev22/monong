@@ -54,9 +54,8 @@ public class FaqController {
 	@GetMapping("/searchType.do")
 	public ResponseEntity<?> searchType(
 			@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request, 
-			String type){
+			@RequestParam String type){
 		List<Faq> searchFaqList = null;
-		
 		if("total".equals(type)) {
 			Map<String, Integer> param = new HashMap<>();
 			int limit = 10;
