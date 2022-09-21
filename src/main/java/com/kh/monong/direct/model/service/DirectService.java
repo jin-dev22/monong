@@ -6,6 +6,7 @@ import java.util.Map;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 
 public interface DirectService {
 	//----------------- 재경 시작
@@ -43,6 +44,16 @@ public interface DirectService {
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	
 	int getTotalProdCntByStatus(Map<String, Object> param);
+	
+	DirectProductAttachment selectOneDPAttachment(int attachNo);
+	
+	int deleteDPAttachment(int attachNo);
+	
+	int updateDirectProduct(DirectProduct directProduct);
+	
+	int insertDPAttachment(DirectProductAttachment attach);
+	
+	int mergeIntoDOption(DirectProductOption dOpt);
 	//----------------- 수진 끝
 
 

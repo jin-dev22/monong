@@ -3,6 +3,7 @@ package com.kh.monong.direct.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -13,6 +14,7 @@ import org.apache.ibatis.session.RowBounds;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
+import com.kh.monong.direct.model.dto.DirectProductOption;
 
 @Mapper
 public interface DirectDao {
@@ -73,6 +75,18 @@ public interface DirectDao {
 	@Select(" select count(*) from (select distinct d_product_no from direct_product left join direct_product_option using(d_product_no) where d_sale_status = #{dSaleStatus})")
 	int getTotalProdCntByStatus(Map<String, Object> param);
 
+	@Select("select * from direct_product_attachment where d_product_attach_no = #{attachNo}")
+	DirectProductAttachment selectOneDPAttachment(int attachNo);
+
+	@Delete("delete from direct_product_attachment where d_product_attach_no = #{attachNo}")
+	int deleteDPAttachment(int attachNo);
+
+	int updateDirectProduct(DirectProduct directProduct);
+
+	int mergeIntoDOption(DirectProductOption dOpt);
+
+	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
+	int insertDPAttachment(DirectProductAttachment attach);
 	
 	//----------------- 수진 시작
 
