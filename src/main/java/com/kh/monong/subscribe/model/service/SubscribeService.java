@@ -48,9 +48,14 @@ public interface SubscribeService {
 
 	int getTotalFindByQuitYnSubList(String selectOption);
 	
-	List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param);
+	List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Object> param);
 
-	int getTotalSubscriptionOrderListAll();
+	int getTotalSubscriptionOrderListAll(String deliveryStatus);
+	
+	int updateSubDelivery(Map<String, Object> param);
+
+	List<SubscriptionOrder> getSubOrderList(LocalDate today);
+	
 	
 	
 	
@@ -77,6 +82,9 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
 
 
 

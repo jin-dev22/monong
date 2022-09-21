@@ -40,7 +40,6 @@ public interface SubscribeDao {
 	SubscriptionProduct selectProductInfoByCode(String sProductCode);
 	
 	@Select("select s.* from subscription s where s.s_payment_date = #{today} and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and so.s_order_date >= #{today} and s_order_date < to_date(#{today}) + 0.99999)")
-//	@Select("select s.* from subscription s where s.s_payment_date = '22-09-21' and s_quit_yn = 'N' and not exists (select 1 from subscription_order so where s.s_no = so.s_no and so.s_order_status = '상품준비중' and s_order_date >= '22-09-20' and s_order_date < '22-09-21')")
 	List<Subscription> getPayList(LocalDate today);
 	
 	@Select("select * from subscription_product where s_product_code = #{sProductCode}")
@@ -73,13 +72,16 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription where s_quit_yn = #{selectOption}")
 	int getTotalFindByQuitYnSubList(String selectOption);
 	
-	@Select("select * from subscription_order where s_order_status = '상품준비중'")
-	List<SubscriptionOrder> getSubscriptionOrderListAll(RowBounds rowBounds);
+	@Select("select * from subscription_order where s_order_status = #{deliveryStatus}")
+	List<SubscriptionOrder> getSubscriptionOrderListAll(RowBounds rowBounds, String deliveryStatus);
 	
-	@Select("select count(*) from subscription_order where s_order_status = '상품준비중'")
-	int getTotalSubscriptionOrderListAll();
+	@Select("select count(*) from subscription_order where s_order_status = #{deliveryStatus}")
+	int getTotalSubscriptionOrderListAll(String deliveryStatus);
 	
+	int updateSubDelivery(Map<String, Object> param);
 	
+	@Select("select * from subscription_order where so_delivery_date = #{today}")
+	List<SubscriptionOrder> getSubOrderList(LocalDate today);
 	
 	
 	// 선아코드 끝
@@ -119,6 +121,8 @@ public interface SubscribeDao {
 	// 추가
 	@Select("select s_no from subscription where member_id = #{memberId} and s_quit_yn = 'N'")
 	String getSubscriptionByMemberId(String memberId);
+
+
 
 
 
