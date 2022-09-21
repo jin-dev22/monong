@@ -195,10 +195,9 @@ window.onload = () => {
 				}
 				else{
 					console.log('이미지 있음');
-					/* 구독 작성 기능 완료 후 이미지 경로 수정 진행 */
 					html += `
 						<div>
-							<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg">
+							<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}">
 						</div>
 						<div class="s-review-container with-img">`;
 				}
@@ -218,7 +217,7 @@ window.onload = () => {
 			    }
 				else{
 					html += `
-						<p class="s-review-content">\${sreviewContent.length > 35 ? sreviewContent.substr(0, 38) + '...': sreviewContent}</p>`;
+						<p class="s-review-content">\${sreviewContent.length > 38 ? sreviewContent.substr(0, 38) + '...': sreviewContent}</p>`;
 			    }
 			    
 			    const year = sreviewCreatedAt[0];
@@ -272,7 +271,7 @@ const reviewDetail = (obj, sReviewNo) =>{
 				
 			},
 			error : console.log
-		});;
+		});
 	}
 		
 	
@@ -289,10 +288,9 @@ const reviewDetail = (obj, sReviewNo) =>{
 			if(sAttach[0]){
 				document.querySelector(".modal-dialog").classList.remove("no-img");
 				document.querySelector(".modal-dialog").classList.add("with-img");
-				
-				/* 구독 작성 기능 완료 후 이미지 경로 수정 진행 */
-				const html = `
-			      	<img src="${pageContext.request.contextPath}/resources/images/subscribe/싱글.jpg" width="300px" class="modal-s-review-img"/>
+			
+				const html = `   
+			      	<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" width="300px" class="modal-s-review-img"/>
 			      `;
 		     	modalImg.innerHTML = html;
 			}
