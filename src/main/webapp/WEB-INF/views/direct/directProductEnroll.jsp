@@ -105,7 +105,7 @@ div#enroll-container{
         		<span class="enroll-info-label">상품 가격<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDefaultPrice-container">
-                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" required>
+                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" placeholder="목록에 표시될 가격을 입력해주세요"required>
                     </span>
         		</span>
         	</div>
@@ -118,6 +118,122 @@ div#enroll-container{
         		</span>
         	</div>
 		</div>
+		<div class="enroll-info-container">
+	   		<span class="enroll-info-label">상품 옵션1</span>
+    	 		<div class="opntion-list-container">
+     				<div class="option-one">
+	     				<div class="option-row">
+		      				<label for="DOptionName1" class="optName-label">옵션1 이름</label>
+		    	   			<input type="text" name="directProductOptions[0].dOptionName" id="dOptionName1"/> 
+	     				</div>
+	     				<div class="option-row">
+							<span>가격 </span>
+							<input type="text" name="directProductOptions[0].dPrice" maxlength="10" class="price"/>
+	     				</div>
+	     				<div class="option-row">
+							<label for="dStock1">수량</label>
+							<input type="number" min="0" name="directProductOptions[0].dStock" id="dStock1" class="insert-dStock1" />
+	     				</div>
+	     				<div class="option-row">
+	     					<span>판매상태</span>
+	     					<select name="directProductOptions[0].dSaleStatus" id="direct-saleStatus1">
+								<option value="판매중">판매중</option>
+								<option value="판매중단">판매중단</option>
+								<option value="판매마감">판매마감</option>
+							</select>
+							<input type="hidden" name="directProductOptions[0].dOptionNo"/>
+	     				</div>
+	    				<br />
+     			</div>
+     		</div>
+        </div>
+        <div class="enroll-info-container">
+	   		<span class="enroll-info-label">상품 옵션2</span>
+    	 		<div class="opntion-list-container">
+     				<div class="option-one">
+	     				<div class="option-row">
+		      				<label for="DOptionName2" class="optName-label">옵션2 이름</label>
+		    	   			<input type="text" name="directProductOptions[1].dOptionName" id="dOptionName2"/> 
+	     				</div>
+	     				<div class="option-row">
+							<span>가격 </span>
+							<input type="text" name="directProductOptions[1].dPrice" maxlength="10" class="price"/>
+	     				</div>
+	     				<div class="option-row">
+							<label for="dStock1">수량</label>
+							<input type="number" min="0" name="directProductOptions[1].dStock" id="dStock2" class="insert-dStock2" />
+	     				</div>
+	     				<div class="option-row">
+	     					<span>판매상태</span>
+	     					<select name="directProductOptions[1].dSaleStatus" id="direct-saleStatus2">
+								<option value="판매중">판매중</option>
+								<option value="판매중단">판매중단</option>
+								<option value="판매마감">판매마감</option>
+							</select>
+							<input type="hidden" name="directProductOptions[1].dOptionNo"/>
+	     				</div>
+	    				<br />
+     			</div>
+     		</div>
+        </div>
+        <div class="enroll-info-container">
+	   		<span class="enroll-info-label">상품 옵션3</span>
+    	 		<div class="opntion-list-container">
+     				<div class="option-one">
+	     				<div class="option-row">
+		      				<label for="DOptionName1" class="optName-label">옵션3 이름</label>
+		    	   			<input type="text" name="directProductOptions[2].dOptionName" id="dOptionName3"/> 
+	     				</div>
+	     				<div class="option-row">
+							<span>가격 </span>
+							<input type="text" name="directProductOptions[2].dPrice" maxlength="10" class="price"/>
+	     				</div>
+	     				<div class="option-row">
+							<label for="dStock1">수량</label>
+							<input type="number" min="0" name="directProductOptions[2].dStock" id="dStock2" class="insert-dStock2" />
+	     				</div>
+	     				<div class="option-row">
+	     					<span>판매상태</span>
+	     					<select name="directProductOptions[2].dSaleStatus" id="direct-saleStatus2">
+								<option value="판매중">판매중</option>
+								<option value="판매중단">판매중단</option>
+								<option value="판매마감">판매마감</option>
+							</select>
+							<input type="hidden" name="directProductOptions[2].dOptionNo"/>
+	     				</div>
+	    				<br />
+     			</div>
+     		</div>
+        </div>
+        <div class="enroll-info-container">
+	   		<span class="enroll-info-label">상품 옵션4</span>
+    	 		<div class="opntion-list-container">
+     				<div class="option-one">
+	     				<div class="option-row">
+		      				<label for="DOptionName1" class="optName-label">옵션4 이름</label>
+		    	   			<input type="text" name="directProductOptions[3].dOptionName" id="dOptionName4"/> 
+	     				</div>
+	     				<div class="option-row">
+							<span>가격 </span>
+							<input type="text" name="directProductOptions[3].dPrice" maxlength="10" class="price"/>
+	     				</div>
+	     				<div class="option-row">
+							<label for="dStock1">수량</label>
+							<input type="number" min="0" name="directProductOptions[3].dStock" id="dStock4" class="insert-dStock" />
+	     				</div>
+	     				<div class="option-row">
+	     					<span>판매상태</span>
+	     					<select name="directProductOptions[3].dSaleStatus" id="direct-saleStatus4">
+								<option value="판매중">판매중</option>
+								<option value="판매중단">판매중단</option>
+								<option value="판매마감">판매마감</option>
+							</select>
+							<input type="hidden" name="directProductOptions[3].dOptionNo"/>
+	     				</div>
+	    				<br />
+     			</div>
+     		</div>
+        </div>
 		<sec:csrfInput />
         <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
         <input type="reset" class="btn btn-116530" value="취소">
@@ -145,5 +261,7 @@ $(document).ready(function() {
 	        lang : 'ko-KR'
 	  });
 	});
+	
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

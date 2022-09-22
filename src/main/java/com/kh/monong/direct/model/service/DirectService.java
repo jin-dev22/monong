@@ -22,6 +22,8 @@ public interface DirectService {
 	
 	int insertDirectProductAttachment(DirectProductAttachment attachment);
 	
+	int insertDirectProductOption(DirectProductOption dopt);
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);

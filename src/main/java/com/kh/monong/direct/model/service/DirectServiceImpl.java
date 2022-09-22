@@ -56,6 +56,16 @@ public class DirectServiceImpl implements DirectService {
 		int result = directDao.insertDirectProduct(directProduct);
 		log.debug("directProduct#no = {}", directProduct.getDProductNo());
 		
+		// insert option
+		List<DirectProductOption> options = directProduct.getDirectProductOptions();
+		if(options != null && !options.isEmpty()) {
+			for(DirectProductOption dOpt : options) {
+				dOpt.setDProductNo(directProduct.getDProductNo());
+				log.debug("directProductOption#no = {}", dOpt.getDOptionNo());
+				result = insertDirectProductOption(dOpt);
+			}
+		}
+		
 		// insert attachment * 4
 		List<DirectProductAttachment> attachments = directProduct.getDirectProductAttachments();
 		if(!attachments.isEmpty()) {
@@ -70,6 +80,11 @@ public class DirectServiceImpl implements DirectService {
 	@Override
 	public int insertDirectProductAttachment(DirectProductAttachment attach) {
 		return directDao.insertDirectProductAttachment(attach);
+	}
+	
+	@Override
+	public int insertDirectProductOption(DirectProductOption opt) {
+		return directDao.insertDirectProductOption(opt);
 	}
 	
 	
