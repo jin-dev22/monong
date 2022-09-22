@@ -161,7 +161,7 @@ public interface MemberDao {
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
-	@Select("select * from direct_order where member_id = #{memberId}")
+	@Select("select * from direct_order where member_id = #{memberId} order by d_order_no desc")
 	List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param, RowBounds rowBounds);
 
 	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
@@ -194,8 +194,19 @@ public interface MemberDao {
 
 	List<SubscriptionReview> selectSubscriptionReviewList(RowBounds rowBounds, String memberId);
 
-	
 	int getTotalContent(String memberId);
+
+	@Select("select * from subscription_review_attachment where s_attach_no = #{attachNo}")
+	SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo);
+	
+	@Delete("delete from subscription_review_attachment where s_attach_no = #{attachNo}")
+	int deleteSubscriptionAttachment(int attachNo);
+
+	@Update("update subscription_review set s_review_content = #{sReviewContent}, s_review_star = #{sReviewStar}, s_review_updated_at = current_date where s_review_no = #{sReviewNo}")
+	int updateSubscriptionReview(SubscriptionReview review);
+
+	@Delete("delete from subscription_review where s_review_no = #{sReviewNo}")
+	int deleteSubscriptionReview(String sReviewNo);
 	//-----------미송 끝
 
 	//---------------수아시작
@@ -235,6 +246,8 @@ public interface MemberDao {
 	@Select("select count(*) from direct_order where member_id=#{memberId} and d_order_status='F'")
 	int getTotalDirectEnrollReviewByMemberId(String memberId);
 	//------------------수아끝
+
+	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
 
 	
 }

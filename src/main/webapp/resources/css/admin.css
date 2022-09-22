@@ -31,3 +31,10 @@ form[name="adminSellerUpdateFrm"]{
 #admin-mypage-container a:hover {
 	color: #EA5C2B;
 }
+
+
+/*주간 채소 공지 관련*/
+div#admin-notice-week-vegs-info-container img{
+	width:200px;
+	display: inline;
+}

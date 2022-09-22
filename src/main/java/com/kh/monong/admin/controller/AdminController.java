@@ -42,6 +42,7 @@ import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -375,4 +376,20 @@ public class AdminController {
 	
 	
 	//--------------------------------------------------------선아 끝
+	//------------------------------------------수아 시작
+	
+		@GetMapping("/noticeWeekVegs.do")
+		public void noticeWeekVegs(Model model) {
+			List<Vegetables> vegetables = subscribeService.getVegetables();
+			log.debug("vegetables = {}", vegetables);
+			model.addAttribute("vegetables", vegetables);
+			
+		}
+		
+		
+		
+		
+		
+		
+		//----------------------------------------수아 끝
 }

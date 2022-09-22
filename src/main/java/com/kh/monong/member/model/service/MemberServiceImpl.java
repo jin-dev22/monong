@@ -373,7 +373,6 @@ public class MemberServiceImpl implements MemberService {
 				result = insertSubscriptionReviewAttachment(attach);
 			}
 		}
-
 		return result;
 	}
 	
@@ -400,6 +399,34 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.getTotalContent(memberId);
 	}
 	
+	@Override
+	public SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo) {
+		return memberDao.selectOneSubscriptionAttachment(attachNo);
+	}
+	
+	@Override
+	public int deleteSubscriptionAttachment(int attachNo) {
+		return memberDao.deleteSubscriptionAttachment(attachNo);
+	}
+	
+	@Override
+	public int updateSubscriptionReview(SubscriptionReview review) {
+		int result = memberDao.updateSubscriptionReview(review);
+		List<SubscriptionReviewAttachment> attachments = review.getSAttachments();
+		
+		if(!attachments.isEmpty()) {
+			for(SubscriptionReviewAttachment attach : attachments) {
+				attach.setSReviewNo(review.getSReviewNo());
+				result = insertSubscriptionReviewAttachment(attach);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public int deleteSubscriptionReview(String sReviewNo) {
+		return memberDao.deleteSubscriptionReview(sReviewNo);
+	}
 	//-----------미송 끝
 
 	//----------수아 시작
@@ -478,6 +505,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int getTotalDirectEnrollReviewByMemberId(String memberId) {
 		return memberDao.getTotalDirectEnrollReviewByMemberId(memberId);
+	}
+	
+	@Override
+	public Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo) {
+		return memberDao.selectSubscriptionOrderBySOrderNo(sOrderNo);
 	}
 	//------------수아 끝
 }

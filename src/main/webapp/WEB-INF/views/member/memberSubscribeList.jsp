@@ -16,19 +16,20 @@
 	<h3>구독 히스토리가 없습니다.</h3>
 </c:if>
 <c:if test="${not empty subList}">
-		<table id="member-subScription-tbl" class="table table-borderless table-striped text-center">
+		<table id="member-subScription-tbl" class="table table-borderless text-center">
 	<c:forEach items="${subList}" var="subList">
 			<thead>
-			  <tr>
+			  <tr class="table-active">
 			    <th>${subList.SOrderDate}</th>
-			    <th><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
+			    <th colspan="2"><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
 			    <th class="s-order-status" data-review-no="${subList.SReviewNo}">${subList.SOrderStatus}</th>			    
 			  </tr>
 			</thead>
 			<tbody>
 			  <tr>
 			    <td>정기구독 ${subList.STimes}회차</td>
-			    <td>${subList.soProductCode}</td>
+			    <td>배송주기: ${subList.soDeliveryCycle}주 </td>
+			    <td>제외채소 : ${subList.soExcludeVegs != null ? subList.soExcludeVegs : '없음'}</td>
 			    <td>${subList.SPrice}원</td>
 			  </tr>
 			</tbody>
@@ -36,6 +37,10 @@
 	</c:forEach>
 		</table>
 </c:if>
+
+<nav id="pagebar">
+	${pagebar}
+</nav>
 </div>
 <form 
 	action="<%= request.getContextPath() %>/member/memberSubscribeReviewForm.do"
@@ -61,10 +66,19 @@ sOrderStatus.forEach(function(status){
 	if(status.innerHTML === "배송완료" && reviewNo === ""){
 		status.innerHTML += 
 				`<input type="button" class="btn btn-116530 btn-s-order-review" id="btnWriteReview" value="리뷰쓰기" />`;
-				
-		document.querySelector("#btnWriteReview").addEventListener('click', (e) => {
-			const sOrderNo = document.querySelector(".s-order-no").innerHTML;
+	}
+});
+
+const btnWriteReview = document.querySelectorAll("#btnWriteReview");
+console.log('btnWriteReview', btnWriteReview);
+
+if(btnWriteReview !== null){
+	btnWriteReview.forEach(function(btn, index){
+		btn.addEventListener('click', (e) => {
 			const frm = document.subscribeOrderReviewFrm;
+			const sOrderNo = btn.parentElement.dataset.orderNo;
+			console.log('sOrderNo', sOrderNo);
+			
 			frm.sOrderNo.value = sOrderNo;
 			
 			const title = "ReviewPopupFrm";
@@ -74,9 +88,8 @@ sOrderStatus.forEach(function(status){
 			frm.target = title;
 			frm.submit();
 		});
-
-	}
-});
+	})
+}
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

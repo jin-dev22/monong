@@ -39,6 +39,12 @@ public interface DirectDao {
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, 'DP'||#{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDirectProductAttachment(DirectProductAttachment attach);
 	
+	@Insert("insert into direct_product_option values ('DO'||seq_d_option_no.nextval, 'DP'||#{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})")
+	@SelectKey(statement = "select seq_d_option_no.currval from dual", before = false, keyProperty = "dOptionNo", resultType = String.class)
+	int insertDirectProductOption(DirectProductOption dOpt);
+	
+	
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
@@ -110,8 +116,9 @@ public interface DirectDao {
 
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
+
 	
-	//----------------- 수진 시작
+	//----------------- 수진 끝
 
 
 

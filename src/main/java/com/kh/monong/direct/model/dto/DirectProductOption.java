@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DirectProductOption {
-	@NonNull
+//	@NonNull
 	private String dOptionNo;
 	@NonNull
 	private String dProductNo;

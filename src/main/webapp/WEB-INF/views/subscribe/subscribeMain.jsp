@@ -117,8 +117,8 @@
 
 <div class="s-reviews-wrapper"></div>
 
-<nav class="s-review-page-bar">
-	${pagebar}
+<nav id="pagebar">
+
 </nav>
 
 <!-- Modal -->
@@ -171,16 +171,42 @@ if(gotoPlan != null){
 
 
 window.onload = () => {
+	sReviewList();
+}
+
+const sReviewList = (num) => {
+	
+	// 페이징용
+	let cPage = num;
+	const limit = 8;
+	let totalPages = 0;
+	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewList.do",
+		data: {cPage},
 		method : "GET",
 		success(result){
 			// console.log('result', result);
 			console.log('sReviewList', result['sReviewList']);
 			const reviews = result['sReviewList'];
-			// console.log('pagebar', result['pagebar']);
-			const pagebar = result['pagebar'];
+			const cPage = result['cPage'];
+			console.log('cPage', cPage);
+			const totalContent = result['totalContent'];
+			console.log('totalContent', totalContent);
 
+			// 페이징
+			if(totalContent == 0){
+				document.querySelector("#pagebar").innerHTML = "";
+				return;
+			}
+			else {
+				totalPages = Math.ceil(totalContent / limit);
+				// pageLink(현재페이지, 전체페이지, 호출할 함수 이름)
+				let htmlStr = pageLink(cPage, totalPages, "sReviewList");
+				document.querySelector("#pagebar").innerHTML = "";
+				document.querySelector("#pagebar").innerHTML = htmlStr;
+			};			
+			
 			let html = '';
 	
 			reviews.forEach((review, index) => {
@@ -239,13 +265,75 @@ window.onload = () => {
 			
 			});
 			document.querySelector(".s-reviews-wrapper").innerHTML = html;
-			document.querySelector(".s-review-page-bar").innerHTML = pagebar;
+			/* document.querySelector(".s-review-page-bar").innerHTML = pagebar; */
 				
 		},
 		error : console.log
 	});
+
+};
+
+function pageLink(cPage, totalPages, funName){
+	cPage = Number(cPage);
+	totalPages = Number(totalPages);
+	let pagebarTag = "";
+	const pagebarSize = 5;
+	let pagebarStart = (Math.floor((cPage - 1) / pagebarSize) * pagebarSize) + 1;
+	let pagebarEnd = pagebarStart + pagebarSize - 1;
+	let pageNo = pagebarStart;
 	
-}; 
+	pagebarTag += "<ul class=\"pagination justify-content-center\">\r\n";
+	
+	// 1. previous 
+	if(pageNo == 1) {
+		pagebarTag += "<li class=\"page-item disabled\">\r\n"
+				+ "	      <a class=\"page-link\" href=\"#\" aria-label=\"Previous\">\r\n"
+				+ "	        <span aria-hidden=\"true\">&laquo;</span>\r\n"
+				+ "	        <span class=\"sr-only\">Previous</span>\r\n"
+				+ "	      </a>\r\n"
+				+ "	    </li>\r\n";
+	}
+	else {
+		pagebarTag += "<li class=\"page-item\">\r\n"
+				+ "	      <a class=\"page-link\" href=\'javascript:" + funName + "(" + (pageNo - 1) + ");\' aria-label=\"Previous\">\r\n"
+				+ "	        <span aria-hidden=\"true\">&laquo;</span>\r\n"
+				+ "	        <span class=\"sr-only\">Previous</span>\r\n"
+				+ "	      </a>\r\n"
+				+ "	    </li>\r\n";
+	}
+	
+	// 2. pageNo
+	while(pageNo <= pagebarEnd && pageNo <= totalPages) {
+		if(pageNo == cPage) {
+			pagebarTag += "<li class=\"page-item active\"><a class=\"page-link\" href=\"#\">" + pageNo + "</a></li>\r\n";
+		}
+		else {
+			pagebarTag += "<li class=\"page-item\"><a class=\"page-link\" href=\'javascript:" + funName + "(" + pageNo + ");'>" + pageNo + "</a></li>\r\n";
+		}
+		pageNo++;
+	}
+	
+	// 3. next
+	if(pageNo > totalPages) {
+		pagebarTag += "<li class=\"page-item disabled\">\r\n"
+				+ "	      <a class=\"page-link\" href=\"#\" aria-label=\"Next\">\r\n"
+				+ "	        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+				+ "	        <span class=\"sr-only\">Next</span>\r\n"
+				+ "	      </a>\r\n"
+				+ "	    </li>\r\n";
+	}
+	else {
+		pagebarTag += "<li class=\"page-item\">\r\n"
+				+ "	      <a class=\"page-link\" href=\'javascript:" + funName + "(" + pageNo + ");\' aria-label=\"Next\">\r\n"
+				+ "	        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+				+ "	        <span class=\"sr-only\">Next</span>\r\n"
+				+ "	      </a>\r\n"
+				+ "	    </li>\r\n";
+	}
+	
+	pagebarTag += "</ul>";
+	return pagebarTag;
+};
 
 
 const reviewDetail = (obj, sReviewNo) =>{
@@ -276,7 +364,6 @@ const reviewDetail = (obj, sReviewNo) =>{
 			error : console.log
 		});
 	}
-		
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/subscribe/subscribeReviewDetail.do",
