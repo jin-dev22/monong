@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -298,16 +299,32 @@ public class AdminController {
 	public void subscriptionOrderList(
 			@RequestParam(defaultValue = "1") int cPage,
 			@RequestParam(defaultValue = "상품준비중") String deliveryStatus,
+			@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchStartDate,
+			@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchEndDate,
 			Model model, HttpServletRequest request) {
+		log.debug("searchStartDate, searchEndDate = {}, {}", searchStartDate, searchEndDate);
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("deliveryStatus", deliveryStatus);
 		
-		List<SubscriptionOrder> subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
-		int totalContent = subscribeService.getTotalSubscriptionOrderListAll(deliveryStatus);
+		List<SubscriptionOrder> subscriptionOrderList = null;
+		int totalContent = 0;
 		
+		if(searchStartDate == null && searchEndDate == null) {
+			subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
+			totalContent = subscribeService.getTotalSubscriptionOrderListAll(deliveryStatus);
+		}
+		if(searchStartDate != null && searchEndDate != null) {
+			param.put("searchStartDate", searchStartDate);
+			param.put("searchEndDate", searchEndDate);
+			subscriptionOrderList = subscribeService.searchPeriodData(param);
+			totalContent = subscribeService.getTotalsearchPeriodData(param);
+			
+			model.addAttribute("searchStartDate", searchStartDate);
+			model.addAttribute("searchEndDate", searchEndDate);
+		}
 		String url = request.getRequestURI();
 		url += "?deliveryStatus=" + deliveryStatus;
 		
@@ -356,6 +373,7 @@ public class AdminController {
 			}
 		}
 	}
+		
 	
 	
 	

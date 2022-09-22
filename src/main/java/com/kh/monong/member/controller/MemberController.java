@@ -817,7 +817,7 @@ public class MemberController {
 		return "redirect:/member/memberDirectList.do";
 	}
 	
-	@GetMapping("/memberReviewList.do")
+	@GetMapping("/memberSubscribeReviewList.do")
 	public void memberReviewList(Authentication authentication, Model model, @RequestParam(defaultValue = "1") int cPage, HttpServletRequest request) {
 		String memberId = authentication.getName();
 		Subscription recentSubscription = memberService.selectRecentSubById(memberId); 
@@ -949,6 +949,62 @@ public class MemberController {
 		return ResponseEntity.ok(sReview);
 	}
 	
+	@GetMapping("/memberSubscribeReviewUpdateForm.do")
+	public void memberSubscribeReviewUpdateForm(@RequestParam String sReviewNo, Model model) {
+		log.debug("sReviewNo = {}", sReviewNo);
+		
+		SubscriptionReview sReview = subscribeService.selectOneSubscriptionReview(sReviewNo);
+		log.debug("sReview = {}", sReview);
+
+		
+		model.addAttribute("sReview",sReview);
+	}
+	
+	@PostMapping("/memberSubscribeReviewUpdate.do")
+	public ResponseEntity<?> memberSubscribeReviewUpdate(SubscriptionReview review, int[] delFiles, List<MultipartFile> upFiles) throws IllegalStateException, IOException {
+		log.debug("review={}", review);
+		log.debug("upFiles = {}", upFiles);
+		log.debug("delFiles = {}", delFiles);
+		
+		String saveDirectory = application.getRealPath("/resources/upload/subscribe/review");
+		int result = 0;
+		
+		if(delFiles != null) {
+			for(int attachNo : delFiles) {
+				// 서버에 저장된 파일삭제
+				SubscriptionReviewAttachment attach = memberService.selectOneSubscriptionAttachment(attachNo);
+				File delFile = new File(saveDirectory, attach.getSReviewRenamedFilename());
+				boolean deleted = delFile.delete(); // 삭제 여부 boolean형으로 반환
+				log.debug("{} 파일 삭제 : {}", attach.getSReviewRenamedFilename(), deleted);
+				
+				// DB의 attachment row삭제
+				result = memberService.deleteSubscriptionAttachment(attachNo);
+				log.debug("{}번 subscriptionReviewAttachment record 삭제", attachNo);
+			}
+		}
+		for(MultipartFile upFile : upFiles) {
+			if(!upFile.isEmpty()) {
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				File destFile = new File(saveDirectory, renamedFilename);
+				log.debug("destFile = {}", destFile);
+				upFile.transferTo(destFile);
+				
+				review.add(SubscriptionReviewAttachment.builder().sReviewOriginalFilename(upFile.getOriginalFilename()).sReviewRenamedFilename(renamedFilename).sReviewNo(review.getSReviewNo()).build());
+			}
+		}
+		result = memberService.updateSubscriptionReview(review);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/memberSubscribeReviewDelete.do")
+	public ResponseEntity<?> memberSubscribeReviewDelete(@RequestParam String sReviewNo) {
+		log.debug("sReviewNo={}", sReviewNo);
+
+		int result = memberService.deleteSubscriptionReview(sReviewNo);
+		
+		return ResponseEntity.ok(result);
+	}
 	
 	//----------------------미송 끝
 	

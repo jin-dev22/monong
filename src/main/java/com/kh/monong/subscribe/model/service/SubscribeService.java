@@ -56,8 +56,9 @@ public interface SubscribeService {
 
 	List<SubscriptionOrder> getSubOrderList(LocalDate today);
 	
-	
-	
+	List<SubscriptionOrder> searchPeriodData(Map<String, Object> param);
+
+	int getTotalsearchPeriodData(Map<String, Object> param);
 	
 	// 선아코드 끝
 		
@@ -82,6 +83,9 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
+
+
+
 
 
 

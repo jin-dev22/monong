@@ -16,6 +16,16 @@
 		<button type="button" class="btn btn-116530-reverse" onclick="location.href=`${pageContext.request.contextPath}/admin/subscriptionList.do`;">전체 조회</button>
 		<button type="button" class="btn btn-116530" onclick="location.href=`${pageContext.request.contextPath}/admin/subscriptionOrderList.do`;">출고 관리</button>
 	</div>
+	<c:if test="${deliveryStatus eq '배송완료'}">
+		<form name="searchDataFrm" action="${pageContext.request.contextPath}/admin/subscriptionOrderList.do"" method="GET">
+			<label for="searchStartDate">기간조회: </label>
+			<input type="date" name="searchStartDate" id="searchStartDate" />
+			<label for="searchEndDate">-</label>
+			<input type="date" name="searchEndDate" id="searchEndDate" />
+			<input type="button" class="btn btn-EA5C2B-reverse" onclick="searchData()" value="검색" />
+			<input type="hidden" name="deliveryStatus" value="배송완료" />
+		</form>
+	</c:if>
 	<form name="subOrderDeliveryFilterFrm" class="btn-fillter-wrapper" action="${pageContext.request.contextPath}/admin/subscriptionOrderList.do" method="GET">
 		<select id="deliveryStatusFilter" name="deliveryStatus" class="form-select" aria-label="Default select example" onchange="this.form.submit()" >
 			<option value="상품준비중" ${deliveryStatus eq '상품준비중' ? 'selected' : ''}>상품준비중</option>
@@ -24,9 +34,12 @@
 		</select>
 	</form>
 </div>
+<c:if test="${searchEndDate ne null && searchStartDate ne null}">
+	<span>조회일자: ${searchStartDate} ~ ${searchEndDate}</span>
+</c:if>
 <div id="admin-subscriptionList-container" class="mt-5 mx-auto text-center">
 <c:if test="${empty subscriptionOrderList}">
-	<p>검색 결과가 없습니다.</p>
+	<span>검색 결과가 없습니다.</span>
 </c:if>
 <c:if test="${not empty subscriptionOrderList}">
 	<c:forEach items="${subscriptionOrderList}" var="subOrder" varStatus="vs">
@@ -34,7 +47,7 @@
 			<thead>
 				<tr class="admin-subscriptionList-table-header">
 					<c:set value="${subOrder.SOrderNo}" var="orderNo"/>
-					<th colspan="2">주문번호 - ${fn:substring(orderNo, 2, 14)} (${subOrder.STimes}회차)</th>
+					<th colspan="2">주문번호 - ${fn:substring(orderNo, 2, 15)} (${subOrder.STimes}회차)</th>
 					<th>결제일: ${subOrder.SOrderDate}</th>
 					<th>배송일: ${subOrder.soDeliveryDate}</th>
 				</tr>
@@ -59,6 +72,7 @@
 							<option value="배송중" ${subOrder.SOrderStatus eq '배송중' ? 'selected' : ''}>배송중</option>
 							<option value="배송완료" ${subOrder.SOrderStatus eq '배송완료' ? 'selected' : ''}>배송완료</option>
 						</select>
+						<span>: ${subOrder.soDeliveryCompletedDate}</span>
 					</td>
 				</tr>
 				<tr>
@@ -81,12 +95,30 @@
 	</nav>
 </c:if>
 <script>
+function searchData(){
+	const frm = document.searchDataFrm;
+	const startDate = frm.searchStartDate.value;
+	const endDate = frm.searchEndDate.value;
+	console.log(startDate);
+	console.log(endDate);
+	if(!startDate){
+		alert("기간을 입력해주세요.");
+		return;
+	}
+	frm.submit();
+};
 window.onload = function(){
 	const optionList = document.querySelectorAll("#sub-deliveryStatus option").forEach((option) => {
-		const isSelected = option.selected;		
+		const isSelected = option.selected;
 		// 배송완료된 주문건은 상태 수정 불가
 		if(isSelected && option.value == '배송완료'){
 			option.parentElement.disabled = 'true';
+			
+			// 배송완료시에만 기간 조회 가능
+			let today = new Date();
+			const endDate = document.querySelector("#searchEndDate");
+			endDate.valueAsDate = today;
+			
 		}
 		// 상품준비중인 상태에서는 배송완료 비활성화
 		if(isSelected && option.value == '상품준비중'){
