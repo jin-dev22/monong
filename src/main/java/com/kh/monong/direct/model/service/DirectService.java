@@ -12,8 +12,8 @@ import com.kh.monong.direct.model.dto.DirectProductOption;
 public interface DirectService {
 	//----------------- 재경 시작
 	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
-
-	List<DirectProductAttachment> selectDirectProductAttachmentList();
+	
+	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
 
 	int getTotalContent();
 	

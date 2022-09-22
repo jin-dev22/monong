@@ -17,7 +17,12 @@ public class HelloSpringUtils {
 	 */
 	public static String getPagebar(int cPage, int limit, int totalContent, String url) {
 		StringBuffer pagebar = new StringBuffer();
-		url += "?cPage="; // /monong/direct/directProductList.do?cPage=
+		if(url.contains("?")) {
+			url += "&cPage="; // /monong/direct/directProductList.do?aaa=bbb&cPage=
+		}
+		else {
+			url += "?cPage="; // /monong/direct/directProductList.do?cPage=
+		}
 		
 		final int pagebarSize = 5;
 		final int totalPage = (int) Math.ceil((double) totalContent / limit);
