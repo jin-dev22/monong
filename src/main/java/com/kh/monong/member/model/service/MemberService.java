@@ -21,6 +21,7 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
 public interface MemberService {
 //-----------수진시작
@@ -138,7 +139,15 @@ public interface MemberService {
 	List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param, String memberId);
 	
 	int getTotalContent(String memberId);
-//-----------미송 끝
+	
+	SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo);
+
+	int deleteSubscriptionAttachment(int attachNo);
+
+	int updateSubscriptionReview(SubscriptionReview review);
+
+	int deleteSubscriptionReview(String sReviewNo);
+
 
 //----------수아 시작
 	Map<String, Object> selectReviewDirectProduct(Map<String, Object> map);

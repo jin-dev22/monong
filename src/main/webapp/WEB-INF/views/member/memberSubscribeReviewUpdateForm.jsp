@@ -172,8 +172,8 @@ body {
 <div class="m-s-review-container">
 	<div class="m-s-review-times">정기구독 ${sReview.STimes}회차</div>
 </div>
-<form name="reviewEnrollFrm">
-    <input type="hidden" name="sOrderNo" value="${sReview.SOrderNo}"/>
+<form name="reviewUpdateFrm">
+    <input type="hidden" name="sReviewNo" value="${sReview.SReviewNo}"/>
     <div class="m-s-review-container">
         <p class="m-s-review-info">이번 구독에 만족하셨나요?</p>
         <div>
@@ -198,24 +198,74 @@ body {
 	        <p class="m-s-review-info attach-info">사진 첨부하기</p>
 	        <div class="m-s-review-attachs">
 		        <p>최대 3개까지 첨부 가능합니다.</p>
-		        <input type="file" class="m-s-review-attach" name="upFiles" id="upFile1" multiple>
-				<input type="file" class="m-s-review-attach" name="upFiles" id="upFile2" multiple>
-			 	<input type="file" class="m-s-review-attach" name="upFiles" id="upFile2" multiple>
+		        <c:forEach items="${sReview.SAttachments}" var="attach">
+		        	<div onclick="delImg(this)">
+		        	<input type="checkbox" id="delFile${vs.count}" class="attachTest" name="delFiles" value="${attach.SAttachNo}" style="display:none;">
+		        	<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/${attach.SReviewRenamedFilename}" alt="" width="300px"/>
+		        	</div>
+				
+		        </c:forEach>
+		        <input type="hidden" class="attach-cnt" name="" value="${fn:length(sReview.SAttachments)}"/>
+		        <div class="attach-container">
+		        
+			 	</div>
 		 	</div>
 		</div>
     </div>
     <button class="btn btn-EA5C2B-reverse btn-m-s-review-submit" disabled>후기 수정</button>
+
 </form>
 </section>
 <script>
+let attachCnt;
+window.onload = () => {
+	attachCnt = document.querySelector(".attach-cnt").value;
+	
+	for(let i = 1; i <= 3 - attachCnt; i++){
+		document.querySelector(".attach-container").innerHTML +=
+			`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" multiple>`;
+		
+	}
+	
+	
+}
+let cnt;
+const delImg = (img) => {
+	console.log('사진삭제!');
+	console.log(img.firstElementChild.checked);
+	if(img.firstElementChild.checked){
+		img.firstElementChild.checked = false;
+		img.lastElementChild.style.border = "none";
+		document.querySelector(".attach-container").innerHTML ='';
+		attachCnt++;
+		console.log(attachCnt);
+		for(let i = 1; i <= 3 - attachCnt; i++){
+			document.querySelector(".attach-container").innerHTML +=
+				`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" multiple>`;
+			
+		}
+	}
+	else{
+		img.firstElementChild.checked = true;
+		img.lastElementChild.style.border = "3px solid red";
+		cnt = 3 - attachCnt + 1
+		document.querySelector(".attach-container").innerHTML += `<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${cnt}" multiple>`;
+		attachCnt--;
+		
+	}
+	console.log(img.firstElementChild.checked);
+}
+
+
 
 document.querySelector(".attach-info").addEventListener('click', (e) => {	
 	document.querySelector(".m-s-review-attachs").classList.toggle('active');
 	document.querySelector(".attach-info").classList.toggle('active');
 });
 
-document.reviewEnrollFrm.addEventListener('submit', (e) => {
+document.reviewUpdateFrm.addEventListener('submit', (e) => {
 	e.preventDefault();
+	
 	
 	const frmData = new FormData(e.target); 
 	
@@ -224,7 +274,7 @@ document.reviewEnrollFrm.addEventListener('submit', (e) => {
 	}
 	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/member/memberSubscribeReview.do",
+		url : "${pageContext.request.contextPath}/member/memberSubscribeReviewUpdate.do",
 		data: frmData,
 		contentType: false,
         	processData: false,
