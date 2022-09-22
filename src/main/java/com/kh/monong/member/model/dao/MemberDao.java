@@ -62,14 +62,14 @@ public interface MemberDao {
 	@Select("select * from seller_info where member_id = #{memberId}")
 	SellerInfo selectSellerInfo(String memberId);
 	
-	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param, RowBounds rowBounds);
+	List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param);//, RowBounds rowBounds);
 	
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
 	
 	int getTotalProdCntBySeller(Map<String, Object> param);
 	
-	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param, RowBounds rowBounds);
+	List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param);//, RowBounds rowBounds);
 	
 	int getTotalOrderCntByProdNo(Map<String, Object> param);
 

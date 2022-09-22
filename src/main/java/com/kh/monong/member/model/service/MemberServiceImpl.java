@@ -1,5 +1,6 @@
 package com.kh.monong.member.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.monong.common.HelloSpringUtils;
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -103,16 +105,17 @@ public class MemberServiceImpl implements MemberService {
 	public List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
-		RowBounds rowBounds = new RowBounds(offset, limit);
+//		RowBounds rowBounds = new RowBounds(offset, limit);
 		log.debug("limit = {}, offset = {}", limit, offset);
-		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param, rowBounds);
-		for(DirectProduct prod : prodList) {
+		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);// rowBounds);
+		List<DirectProduct> subList = (List<DirectProduct>) HelloSpringUtils.customRowBounds(offset, limit, prodList);
+		for(DirectProduct prod : subList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
 			log.debug("prod={}",prod);
 		}
-		return prodList;
+		return subList;
 	}
-	
+
 	private List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
 		return memberDao.selectDirectAttachments(dProductNo);
 	}
@@ -126,8 +129,10 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		return memberDao.selectOrderListByProdNo(param, rowBounds);
+		//RowBounds rowBounds = new RowBounds(offset, limit);
+		List<Map<String, Object>> ordList = memberDao.selectOrderListByProdNo(param);//, rowBounds);
+		List<Map<String, Object>> subList = (List<Map<String, Object>>) HelloSpringUtils.customRowBounds(offset, limit, ordList);
+		return subList;
 	}
 	
 	@Override
@@ -144,7 +149,7 @@ public class MemberServiceImpl implements MemberService {
 	public int updateDOrderStatus(Map<String, Object> param) {
 		if("C".equals(param.get("newStatus"))) {
 			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
-		}//재고 복구시 판매상태 '판매중'으로 변경되도록 트리거 생성.
+		}//재고 복구시 판매상태 '판매중'으로 변경되도록 할것
 		return memberDao.updateDOrderStatus(param);
 	}
 	
