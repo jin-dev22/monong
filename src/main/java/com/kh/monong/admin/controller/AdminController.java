@@ -304,10 +304,10 @@ public class AdminController {
 		
 		List<SubscriptionOrder> subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
 		int totalContent = subscribeService.getTotalSubscriptionOrderListAll(deliveryStatus);
-		log.debug(">> subscriptionOrderList = {}", subscriptionOrderList);
-		log.debug(">> totalContent = {}", totalContent);
 		
-		String url = request.getRequestURI(); 
+		String url = request.getRequestURI();
+		url += "?deliveryStatus=" + deliveryStatus;
+		
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
