@@ -241,7 +241,9 @@ public class AdminController {
 		
 		int totalContent = directService.getTotalProdCntByStatus(param);
 		log.debug("totalContent = {}", totalContent);
+		
 		String url = request.getRequestURI(); 
+		url += "?dSaleStatus=" + dSaleStatus;
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		

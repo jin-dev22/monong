@@ -104,9 +104,11 @@ public class MemberServiceImpl implements MemberService {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
+		log.debug("limit = {}, offset = {}", limit, offset);
 		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param, rowBounds);
 		for(DirectProduct prod : prodList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
+			log.debug("prod={}",prod);
 		}
 		return prodList;
 	}

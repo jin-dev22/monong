@@ -288,6 +288,7 @@ public class MemberController {
 		int totalContent = memberService.getTotalProdCntBySeller(param);
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
+		url += "?dSaleStatus=" + dSaleStatus;
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		
@@ -316,7 +317,6 @@ public class MemberController {
 			LocalDate _endDate = LocalDate.parse(endDate, dtf);
 			_endDate = _endDate.plusDays(1);
 			endDate =  _endDate.toString();
-			log.debug("endDate={}",endDate);
 		}
 		param.put("startDate", startDate);
 		param.put("endDate",endDate);
@@ -341,6 +341,8 @@ public class MemberController {
 		int totalContent = memberService.getTotalOrderCntByProdNo(param);
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
+		url += "?prodNo=" + prodNo + "&startDate=" + startDate +"&endDate="+endDate; 
+		
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 	}
