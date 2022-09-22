@@ -32,13 +32,18 @@ public class DirectServiceImpl implements DirectService {
 		int limit = param.get("limit");
 		int offset = (param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return directDao.selectDirectProductList(rowBounds);
+		List<DirectProduct> list  = directDao.selectDirectProductList(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+		return list;
 	}
 	
 	@Override
-	public List<DirectProductAttachment> selectDirectProductAttachmentList() {
-		return directDao.selectDirectProductAttachmentList();
+	public List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo) {
+		return directDao.selectDirectProductAttachmentList(dProductNo);
 	}
+	
 	@Override
 	public int getTotalContent() {
 		return directDao.getTotalContent();
