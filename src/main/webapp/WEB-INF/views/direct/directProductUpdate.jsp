@@ -208,7 +208,11 @@ div.note-toolbar {
 	<h2>올바른 접근이 아닙니다.</h2><!-- 판매글 작성자가 아닌 다른 계정이 url로 접속할 경우 대비 -->
 </c:if>
 </div>
+
 <script>
+/**
+ * 제출 전 유효성 검사
+ */
 document.querySelector('[name="productUpdateFrm"]').addEventListener('submit', (e)=>{
 	e.preventDefault();
 	const frm = e.target;
@@ -218,16 +222,26 @@ document.querySelector('[name="productUpdateFrm"]').addEventListener('submit', (
 		elem.value = uncomma(str);
 		console.log(elem.value);	
 	});
-	frm.submit();
+	//frm.submit();
 });
 
-const vStatusCnt = parseInt(document.querySelector(".option-one:last-child").querySelector(".vStatus:last-child").innerText);
-let newOptCnt = 1;
+/**
+ * 재고 0 이상입력시 판매마감(품절) 상태인지 확인 후 변경처리.
+ */
 function checkStatus(stock){
-	
-	console.log(stock);
+//	console.log(stock.value);
+	const $select = $(stock).next();
+	const status = $select.val();
+	if(stock.value > 0 && status == "판매마감"){
+		alert("입력 수량이 0이상인 경우 자동으로 판매중 상태로 변경돼요. 꼭 판매상태를 확인해 주세요!");
+		$select.val("판매중");
+	}
+//	console.log($select.val());
 }
 
+/**
+ * 가격입력 세자리 콤마 텍스트 <-> 문자열 변환함수
+ */
 function comma(str) {
     str = String(str);
     return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
@@ -247,6 +261,11 @@ function onlynumber(str) {
     return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g,'$1');
 }
 
+const vStatusCnt = parseInt(document.querySelector(".option-one:last-child").querySelector(".vStatus:last-child").innerText);
+let newOptCnt = 1;
+/**
+ * 추가한 옵션 삭제 메소드
+ */
 function delOption(optList){
 	const lastOne = document.querySelector(".option-one:last-child");
 	const delCnt = parseInt(lastOne.querySelector(".vStatus").innerText);
@@ -258,7 +277,9 @@ function delOption(optList){
 		alert("기존 옵션은 삭제하실 수 없습니다.");
 	}
 }
-
+/**
+ * 옵션 추가 메소드
+ */
 function addOption (optList)  {
 	console.log(optList);
 	const lastOne = document.querySelector(".option-one:last-child");
@@ -272,11 +293,13 @@ function addOption (optList)  {
 		</div>
 		<div class="option-row">
 		<span>가격 </span>
-		<input type="text" name="directProductOptions[\${cnt-1}].dPrice" value=""/>
+		<input type="text" name="directProductOptions[\${cnt-1}].dPrice" 
+			 maxlength="10" onkeyup="inputNumberFormat(this);"
+			 class="price" value=""/>
 		</div>
 		<div class="option-row">
 		<label for="dStock\${cnt}">수량</label>
-		<input type="number" name="directProductOptions[\${cnt-1}].dStock" class="update-dStock" id="dStock\${cnt}" value=""/>
+		<input type="number" min="0" name="directProductOptions[\${cnt-1}].dStock" class="update-dStock" id="dStock\${cnt}" value=""/>
 			<select name="directProductOptions[\${cnt-1}].dSaleStatus" id="direct-saleStatus\${cnt}" onchange="checkStatus(this)">
 			<option value="판매중" selected>판매중</option>
 			<option value="판매중단">판매중단</option>
