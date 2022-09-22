@@ -19,6 +19,11 @@
 	<br />
 	<h5 id="date-container"></h5>
 </div>
+
+<form:form 
+	name="noticeVegsFrm"
+	action="${pageContext.request.contextPath}/admin/noticeWeekVegs.do"
+	method="post">
 <div id="admin-notice-week-vegs-container">
 <c:if test="${not empty vegetables}">
 			<div class="s-vegs-category-wrapper">
@@ -27,7 +32,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '과일류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="sExcludeVegs" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -41,7 +46,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '과채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="sExcludeVegs" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -55,7 +60,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '채소류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="sExcludeVegs" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -69,7 +74,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '엽/양채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="sExcludeVegs" type="checkbox" id="veg${vs.count}" value="${veg.vegName}">
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}">
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -83,18 +88,19 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '근채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="sExcludeVegs" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
 					</c:forEach>
 				</div>
 			</div>
-			
 		</c:if>
-  </div>
+	</div>
+</form:form>
+
   
-  <script>
+<script>
   
   window.onload = function(){
 	  const date = new Date();
@@ -105,5 +111,5 @@
 	  container.innerHTML = dateFormat; 
   }
   
-  </script>
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

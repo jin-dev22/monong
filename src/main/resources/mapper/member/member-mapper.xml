@@ -387,6 +387,8 @@
 		<result column="s_price" property="sPrice"/>
 		<result column="s_order_date" property="sOrderDate"/>
 		<result column="s_order_status" property="sOrderStatus"/>
+		<result column="so_delivery_cycle" property="soDeliveryCycle"/>
+		<result column="so_exclude_vegs" property="soExcludeVegs"/>
   	<association property="sReviewNo" javaType="string">
   		<result column="s_review_no" property="sReviewNo"/>
   	</association>
@@ -561,5 +563,54 @@
 		where
 		    dr.d_review_no= #{dReviewNo}
  	</select>
+ 	
+ 	<select id="selectSubscriptionOrderBySOrderNo" resultMap="subDetailMap">
+ 	select
+	    *
+	from
+	    subscription_order so
+	    left join subscription s
+	    on so.s_no = s.s_no
+	    left join subscription_product sp
+	    on s.s_product_code = sp.s_product_code
+	where   
+	    so.s_order_no = #{sOrderNo}
+	order by
+	    so.s_order_no desc
+ 	
+ 	</select>
+ 	
+ 	<resultMap type="map" id="subDetailMap">
+ 		<id column="s_order_no" property="sOrderNo"/>
+ 		<result column="s_no" property="sNo"/>
+ 		<result column="s_times" property="sTimes"/>
+ 		<result column="s_price" property="sPrice"/>
+ 		<result column="s_order_date" property="sOrderDate"/>
+ 		<result column="s_order_status" property="sOrderStatus"/>
+ 		<result column="so_product_code" property="soProductCode"/>
+ 		<result column="so_exclude_vegs" property="soExcludeVegs"/>
+ 		<result column="so_delivery_cycle" property="soDeliveryCycle"/>
+ 		<result column="so_delivery_date" property="soDeliveryDate"/>
+ 		<result column="so_delay_yn" property="soDelayYn"/>
+ 		<result column="so_recipient" property="soRecipient"/>
+ 		<result column="so_phone" property="soPhone"/>
+ 		<result column="so_address" property="soAddress"/>
+ 		<result column="so_address_ex" property="soAddressEx"/>
+ 		<result column="so_delivery_request" property="soDeliveryRequest"/>
+ 		<result column="so_delivery_completed_date" property="soDeliveryCompletedDate"/>
+ 		<association property="sub" javaType="subscription">
+ 			<id column="s_no" property="sNo"/>
+ 			<result column="member_id" property="memberId"/>
+ 			<result column="s_payment_date" property="sPaymentDate"/>
+ 			<result column="s_quit_yn" property="sQuitYn"/>
+ 		</association>
+ 		<association property="prod" javaType="subscriptionProduct">
+ 			<id column="s_product_code" property="sProductCode"/>
+ 			<result column="s_product_name" property="sProductName"/>
+ 			<result column="s_product_price" property="sProductPrice"/>
+ 			<result column="s_delivery_fee" property="sDeliveryFee"/>
+ 			<result column="s_product_info" property="sProductInfo"/>
+ 		</association>
+ 	</resultMap>
  <!--=================================수아 끝-->
 </mapper>

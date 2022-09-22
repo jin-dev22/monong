@@ -887,14 +887,8 @@ public class MemberController {
 	
 	@GetMapping("/memberSubscribeDetail.do")
 		public void memberSubscribeDetail(@RequestParam String sOrderNo, Model model) {
-			log.debug("sOrderNo={}",sOrderNo);
-			SubscriptionOrder subOrder = memberService.selectOneSubscriptionOrder(sOrderNo);
-			SubscriptionProduct subProduct = memberService.selectRecentSubProduct(subOrder.getSoProductCode());
-			log.debug("subOrder={}",subOrder);
-			log.debug("subProduct={}",subProduct);
-			model.addAttribute("subOrder",subOrder);
-			model.addAttribute("subProduct", subProduct);
-			
+			Map<String, Object> subDetail = memberService.selectSubscriptionOrderBySOrderNo(sOrderNo);
+			model.addAttribute("subDetail",subDetail);
 		}
 	
 	@PostMapping("/deleteMemberSubscribeOrder.do")

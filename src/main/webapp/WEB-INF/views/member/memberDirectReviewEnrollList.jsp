@@ -31,7 +31,8 @@
 			<thead>
 			  <tr class="table-active">
 			    <th>${oList.dOrderNo}</th>
-			    <th colspan="3"></th>
+			    <th colspan="2"></th>
+			    <th>배송완료</th>
 			  </tr>
 			</thead>
 			<tbody>
