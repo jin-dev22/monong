@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -108,7 +108,7 @@ public class MemberServiceImpl implements MemberService {
 //		RowBounds rowBounds = new RowBounds(offset, limit);
 		log.debug("limit = {}, offset = {}", limit, offset);
 		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);// rowBounds);
-		List<DirectProduct> subList = (List<DirectProduct>) HelloSpringUtils.customRowBounds(offset, limit, prodList);
+		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
 		for(DirectProduct prod : subList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
 			log.debug("prod={}",prod);
@@ -131,7 +131,7 @@ public class MemberServiceImpl implements MemberService {
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		//RowBounds rowBounds = new RowBounds(offset, limit);
 		List<Map<String, Object>> ordList = memberDao.selectOrderListByProdNo(param);//, rowBounds);
-		List<Map<String, Object>> subList = (List<Map<String, Object>>) HelloSpringUtils.customRowBounds(offset, limit, ordList);
+		List<Map<String, Object>> subList = (List<Map<String, Object>>) MonongUtils.customRowBounds(offset, limit, ordList);
 		return subList;
 	}
 	

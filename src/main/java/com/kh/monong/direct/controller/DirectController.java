@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DOrderStatus;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -76,7 +76,7 @@ public class DirectController {
 			int totalContent = directService.getTotalContent();
 			log.debug("totalContent = {}", totalContent);
 			String url = request.getRequestURI(); // /monong/direct/directProductList.do
-			String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 			model.addAttribute("pagebar", pagebar);
 			
 			log.debug("model = {}", model);
@@ -100,7 +100,7 @@ public class DirectController {
 				if(!upFile.isEmpty()) {
 					// a. 서버컴퓨터에 저장
 					String saveDirectory = application.getRealPath("/resources/upload/product");
-					String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename()); // 20220816_193012345_123.txt
+					String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename()); // 20220816_193012345_123.txt
 					File destFile = new File(saveDirectory, renamedFilename);
 					upFile.transferTo(destFile); // 해당경로에 파일을 저장
 					
@@ -312,7 +312,7 @@ public class DirectController {
 		for(MultipartFile upFile : upFileList) {
 			if(!upFile.isEmpty()) {
 				//업로드파일 저장
-				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename());
 				File destFile = new File(saveDirectory, renamedFilename);
 				upFile.transferTo(destFile);
 				

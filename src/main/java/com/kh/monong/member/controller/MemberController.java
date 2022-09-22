@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
@@ -213,7 +213,7 @@ public class MemberController {
 		
 		String saveDirectory = application.getRealPath(directoryPath);
 		log.debug("saveDirectory = {}",saveDirectory);
-		String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+		String renamedFilename = MonongUtils.getRenamedFilename(originalFilename);
 		File destFile = new File(saveDirectory, renamedFilename);
 		log.debug("destFile = {}",destFile);
 		sellerRegFile.transferTo(destFile);
@@ -289,7 +289,7 @@ public class MemberController {
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
 		url += "?dSaleStatus=" + dSaleStatus;
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		
 		log.debug("model = {}", model);
@@ -343,7 +343,7 @@ public class MemberController {
 		String url = request.getRequestURI(); 
 		url += "?prodNo=" + prodNo + "&startDate=" + startDate +"&endDate="+endDate; 
 		
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 	}
 	
@@ -476,7 +476,7 @@ public class MemberController {
 		
 		int totalContent = memberService.getTotalInqCntBymemberId(memberId);
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar",pagebar);
 		log.debug("model",model);
 	}
@@ -498,7 +498,7 @@ public class MemberController {
 
 		int totalContent = memberService.getTotalDirectInqCntBysellerId(sellerId);
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar",pagebar);
 		log.debug("model={}",model);
 	};
@@ -793,7 +793,7 @@ public class MemberController {
 			}
 		int totalContent = memberService.getTotalDirectList(memberId);
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		}
 	
@@ -841,7 +841,7 @@ public class MemberController {
 		log.debug("sReviewList = {}", sReviewList);
 		
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("sReviewList", sReviewList);
 		model.addAttribute("pagebar", pagebar);
@@ -925,7 +925,7 @@ public class MemberController {
 		for(MultipartFile upFile : upFiles) {
 			if(!upFile.isEmpty()) {
 				String saveDirectory = application.getRealPath("/resources/upload/subscribe/review");
-				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename());
 				File destFile = new File(saveDirectory, renamedFilename);
 				log.debug("destFile = {}", destFile);
 				upFile.transferTo(destFile);
@@ -984,7 +984,7 @@ public class MemberController {
 		}
 		for(MultipartFile upFile : upFiles) {
 			if(!upFile.isEmpty()) {
-				String renamedFilename = HelloSpringUtils.getRenamedFilename(upFile.getOriginalFilename());
+				String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename());
 				File destFile = new File(saveDirectory, renamedFilename);
 				log.debug("destFile = {}", destFile);
 				upFile.transferTo(destFile);
@@ -1021,7 +1021,7 @@ public class MemberController {
 		List<Map<String, Object>> orderProdList = memberService.selectDirectReviewProdList(param);
 		int totalContent = memberService.getTotalDirectEnrollReviewByMemberId(memberId);
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		model.addAttribute("orderProdList", orderProdList);
 	}
@@ -1038,7 +1038,7 @@ public class MemberController {
 		List<Map<String, Object>> directReviewList = memberService.selectDirectReviewList(param);
 		int totalContent = memberService.getTotalDirectReviewByMemberId(memberId);
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		model.addAttribute("directReviewList", directReviewList);
 	}
@@ -1064,7 +1064,7 @@ public class MemberController {
 				
 				if(!directReviewRegFile.isEmpty()) {
 					String saveDirectory = application.getRealPath("/resources/upload/directReviewAttach");
-					String renamedFilename = HelloSpringUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
+					String renamedFilename = MonongUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
 					File destFile = new File(saveDirectory, renamedFilename);
 					directReviewRegFile.transferTo(destFile);
 					
@@ -1147,7 +1147,7 @@ public class MemberController {
 				
 					if(!directReviewRegFile.isEmpty()) {
 						//새로운 파일 저장
-						String renamedFilename = HelloSpringUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
+						String renamedFilename = MonongUtils.getRenamedFilename(directReviewRegFile.getOriginalFilename());
 						File destFile = new File(saveDirectory, renamedFilename);
 						directReviewRegFile.transferTo(destFile);
 						
