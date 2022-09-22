@@ -96,7 +96,7 @@ public interface DirectDao {
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
-	List<DirectProduct> adminSelectProdList(Map<String, Object> param, RowBounds rowBounds);
+	List<DirectProduct> adminSelectProdList(Map<String, Object> param);
 
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectAttachments(String dProductNo);
