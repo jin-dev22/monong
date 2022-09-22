@@ -6,9 +6,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8"/>
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param name="title" value="모농모농-주문 페이지" />
-</jsp:include>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <h2 class="pay-title">결제 &#128179;</h2>
@@ -42,6 +40,7 @@
 			<div class="dOrder-addr-info">
 				<sec:authentication property="principal" var="loginMember"/>
 				<input type="hidden" id="memberId" name="memberId" value="${loginMember.memberId}" />
+				<input type="hidden" id="memberEmail" name="memberEmail" value="${loginMember.memberEmail}" />
 				<h4>배송지 정보</h4>
 				<div class="dOrder-addr-info-content">
 					<label for="dRecipient">수령인</label><br/>
@@ -244,7 +243,7 @@ window.addEventListener('load', (e) => {
 	const productPrice = document.querySelectorAll(".dOrder-price");
 	const productTotalPrice = document.querySelector("[name=dProductPrice]");
 	
-	const price = [...productPrice].map((p) => parseInt(p.innerHTML.replace(",", ""))).reduce((total, price) => total + price);
+	const price = [...productPrice].map((p) => parseInt(p.innerHTML.replace(",", ""))).reduce((total, price) => total + price, 0);
 	console.log(price);
 	
 	productTotalPrice.value = price.toLocaleString('ko-KR');
@@ -258,7 +257,7 @@ window.addEventListener('load', (e) => {
 		allSeller.add(seller.value);
 	})
 	
-	const totalDeliveryFee = allSeller.size * 3000
+	const totalDeliveryFee = allSeller.size * 3000;
 		
 	deliveryFee.value = totalDeliveryFee.toLocaleString('ko-KR');
 	
@@ -441,6 +440,7 @@ document.querySelector("#requestPay").addEventListener('click', (e) => {
 	let pg = document.querySelector("[name=d-card]:checked").value;
 	const memberName = frm.dRecipient.value;
 	const memberTel =  frm.dOrderPhone.value;
+	const memberEmail = frm.memberEmail.value;
 	const payAmount = frm.dTotalPrice.value;
 	
 	let optionNoList = [];
@@ -469,16 +469,16 @@ document.querySelector("#requestPay").addEventListener('click', (e) => {
 	}	
 	
 	// 재고 확인
-	const targetStock = document.querySelectorAll("[name=dStock]");
+	let targetStock = document.querySelectorAll("[name=dStock]");
 	let targetProductList = [];
 	let available = true;
 	targetStock.forEach((stock) => {
 		console.dir(stock);
-		const targetCount = stock.previousElementSibling.value;
+		const targetCount = parseInt(stock.previousElementSibling.value);
 		const targetProductName = stock.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.firstElementChild.innerHTML;
 		const targetOptionName = stock.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.lastElementChild.innerHTML;
 		const targetProduct = targetProductName + ' ' + targetOptionName;
-		if(targetCount > stock.value) {
+		if(targetCount > parseInt(stock.value)) {
 			targetProductList.push(' ' + targetProduct);
 			available = false;
 			return;
@@ -503,7 +503,7 @@ document.querySelector("#requestPay").addEventListener('click', (e) => {
 		}
 		
 	 	var IMP = window.IMP; // 생략가능  
-	 	IMP.init("imp83181016"); // 가맹점식별코드 (제 아이디로 등록된 거라 그대로 사용하시면 돼요)
+	 	IMP.init("imp83181016"); // 가맹점식별코드 
 	 	IMP.request_pay({
 			pg: pg,
 			pay_method: 'card',
@@ -512,8 +512,9 @@ document.querySelector("#requestPay").addEventListener('click', (e) => {
 			amount: payAmount,
 			buyer_name: memberName,
 			buyer_tel: memberTel,
+			buyer_email: memberEmail,
 		}, function (rsp) {
-			console.log(rsp); // 이 아래 부분은 입맛대로 바꾸셔도 무방합니다
+			console.log(rsp); 
    			if (rsp.success) {
 				$.ajax({
 					url : "${pageContext.request.contextPath}/direct/directPay.do",

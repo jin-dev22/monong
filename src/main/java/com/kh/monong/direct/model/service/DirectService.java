@@ -34,6 +34,14 @@ public interface DirectService {
 	
 	int addCart(Map<String, Object> addList);
 
+	int deleteCartAll(String memberId);
+	
+	int deleteCartTarget(int cartNo);
+	
+	int deleteCartChecked(int checked);
+	
+	int updateCartProductCount(Map<String, Object> param);
+
 	DirectProduct buyIt(Map<String, Object> param);
 	
 	int insertDirectOrder(DirectOrder directOrder);
@@ -58,9 +66,6 @@ public interface DirectService {
 	
 	int mergeIntoDOption(DirectProductOption dOpt);
 	//----------------- 수진 끝
-
-
-
 }
 
 

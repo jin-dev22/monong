@@ -124,6 +124,26 @@ public class DirectServiceImpl implements DirectService {
 		}
 		return result;
 	}
+	
+	@Override
+	public int deleteCartAll(String memberId) {
+		return directDao.deleteCartAll(memberId);
+	}
+	
+	@Override
+	public int deleteCartTarget(int cartNo) {
+		return directDao.deleteCartTarget(cartNo);
+	}
+	
+	@Override
+	public int deleteCartChecked(int checked) {
+		return directDao.deleteCartChecked(checked);
+	}
+	
+	@Override
+	public int updateCartProductCount(Map<String, Object> param) {
+		return directDao.updateCartProductCount(param);
+	}
 		
 	@Override
 	public DirectProduct buyIt(Map<String, Object> param) {
