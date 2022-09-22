@@ -13,21 +13,26 @@
 </jsp:include>
 <div id="member-direct-detail-container">
 <c:if test="${not empty directOptList}">
+	<c:set var="totalPrice" value="0"/>
 	<c:forEach items="${directOptList}" var="dOList">
 		<table id="member-orderList-tbl" class="table table-borderless table-striped text-center">
 		<thead>
 		  <tr>
 		    <td class="tg-0lax" rowspan="2">
-		    	<c:if test="${doList.directattachs eq not null}">
-		    		<img src="${pageContext.request.contextPath}/resources/upload/product/${doList.directattachs.DProductRenamedFilename}" alt="상품이미지"/>
+		    	<c:if test="${dOList.directattachs.DProductRenamedFilename != null}">
+		    		<img src="${pageContext.request.contextPath}/resources/upload/product/${dOList.directattachs.DProductRenamedFilename}" alt="상품이미지"/>
 		    	</c:if>
-		    	<c:if test="${doList.directattachs eq null}">
+		    	<c:if test="${dOList.directattachs.DProductRenamedFilename == null}">
 		    		<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="로고"/>
 		    	</c:if>
 		    </td>
-		    <td class="tg-0pky">${dOList.directProds.DProductName} - ${dOList.directOptions.DOptionName}</td>
+		    <td class="tg-0pky">
+		   <a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${dOList.directOptions.DProductNo}">${dOList.directProds.DProductName} - ${dOList.directOptions.DOptionName}</a></td>
 		    <td class="tg-0lax" rowspan="2">${dOList.directOptions.DPrice * dOList.dOptionCount} 원</td>
-		    <td class="tg-0lax" rowspan="2">리뷰쓰기</td>
+		    
+		    <td class="tg-0lax" rowspan="2"></td>
+		    <c:if test="${directOrder.DOrderStatus eq 'F' }">
+		    </c:if>
 		  </tr>
 		  <tr>
 		   	 <td class="tg-0pky">수량 : ${dOList.dOptionCount}</td>
@@ -35,6 +40,7 @@
 		</thead>
 		</table>
 		<hr />
+		<c:set var="totalPrice" value="${totalPrice + (dOList.directOptions.DPrice * dOList.dOptionCount)}"/>
 	</c:forEach>
 </c:if>
 	<br /><br />
@@ -43,17 +49,17 @@
 		<thead>
 		  <tr>
 		    <td>상품금액</td>
-		    <td colspan="2">${directOrder.DTotalPrice}원</td>
+		    	<td colspan="2">${totalPrice} 원</td>
 		  </tr>
 		</thead>
 		<tbody>
 		  <tr>
 		    <td>배송비</td>
-		    <td colspan="2">3000 원</td>
+		    <td colspan="2">${directOrder.DTotalPrice-totalPrice} 원</td>
 		  </tr>
 		  <tr>
 		    <td>결제금액</td>
-		    <td colspan="2">${directOrder.DTotalPrice + 3000} 원</td>
+		    <td colspan="2">${directOrder.DTotalPrice} 원</td>
 		  </tr>
 		  <tr>
 		    <td>결제일시</td>
@@ -74,7 +80,7 @@
 		<thead>
 		  <tr>
 		    <td>수령인</td>
-		    <td colspan="2">${directOrder.DRecipient}원</td>
+		    <td colspan="2">${directOrder.DRecipient}</td>
 		  </tr>
 		</thead>
 		<tbody>

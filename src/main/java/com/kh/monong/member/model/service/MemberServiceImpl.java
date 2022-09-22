@@ -14,6 +14,8 @@ import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
+import com.kh.monong.direct.model.dto.DirectReview;
+import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
@@ -321,8 +323,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public List<DirectOrder> selectDirectListByMemberId(String memberId) {
-		return memberDao.selectDirectListByMemberId(memberId);
+	public List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectDirectListByMemberId(param, rowBounds);
 	}
 	
 	@Override
@@ -424,4 +429,87 @@ public class MemberServiceImpl implements MemberService {
 	}
 	//-----------미송 끝
 
+	//----------수아 시작
+	@Override
+	public Map<String, Object> selectReviewDirectProduct(Map<String, Object> map) {
+		return memberDao.selectReviewDirectProduct(map);
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectDirectReviewProdList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectDirectReviewProdList(param, rowBounds);
+	}
+	
+	@Override
+	public int insertDirectReview(DirectReview directReview) {
+		int result = memberDao.insertDirectReview(directReview);
+		log.debug("directReview#dReviewNo={}", directReview.getDReviewNo());
+		if(directReview.getDirectReviewAttach() != null) {
+			directReview.getDirectReviewAttach().setDReviewNo(directReview.getDReviewNo());
+			result = memberDao.insertDirectReviewAttachment(directReview.getDirectReviewAttach());
+		}
+		return result;
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectDirectReviewList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectDirectReviewList(param, rowBounds);
+	}
+	@Override
+	public int getTotalDirectList(String memberId) {
+		return memberDao.getTotalDirectList(memberId);
+	}
+	
+	@Override
+	public int getTotalDirectReviewByMemberId(String memberId) {
+		return memberDao.getTotalDirectReviewByMemberId(memberId);
+	}
+	
+	@Override
+	public int deleteDirectReview(String dReviewNo) {
+		return memberDao.deleteDirectReview(dReviewNo);
+	}
+	
+	@Override
+	public Map<String, Object> selectDirectReview(String dReviewNo) {
+		return memberDao.selectDirectReview(dReviewNo);
+	}
+	
+	@Override
+	public int deleteDirectReviewAttachment(int delFileNo) {
+		return memberDao.deleteDirectReviewAttachment(delFileNo);
+	}
+	
+	@Override
+	public int updateDirectReview(DirectReview directReview) {
+		int result = memberDao.updateDirectReview(directReview);
+		log.debug("directReviewUpdate#dReviewNo={}", directReview.getDReviewNo());
+		
+		if(directReview.getDirectReviewAttach() != null) {
+			result = memberDao.insertDirectReviewAttachment(directReview.getDirectReviewAttach());
+			}
+			return result;
+	}
+	
+	@Override
+	public DirectReviewAttachment selectDirectReviewAttach(int dReviewAttachNo) {
+		return memberDao.selectDirectReviewAttach(dReviewAttachNo);
+	}
+	
+	@Override
+	public int getTotalDirectEnrollReviewByMemberId(String memberId) {
+		return memberDao.getTotalDirectEnrollReviewByMemberId(memberId);
+	}
+	
+	@Override
+	public Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo) {
+		return memberDao.selectSubscriptionOrderBySOrderNo(sOrderNo);
+	}
+	//------------수아 끝
 }

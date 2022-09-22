@@ -2,6 +2,7 @@ package com.kh.monong.admin.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -247,6 +249,9 @@ public class AdminController {
 	}
 	//--------------------------------------------------------수진끝
 	//--------------------------------------------------------선아 시작
+	/**
+	 * 구독 신청 리스트
+	 */
 	@GetMapping("/subscriptionList.do")
 	public void subscriptionList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();
@@ -255,8 +260,6 @@ public class AdminController {
 		param.put("limit", limit);
 		List<Subscription> subscriptionList = subscribeService.getSubscriptionListAll(param);
 		int totalContent = subscribeService.getTotalSubscriptionListAll();
-//		log.debug(">> subscriptionList = {}", subscriptionList);
-//		log.debug(">> totalContent = {}", totalContent);
 
 		String url = request.getRequestURI(); 
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
@@ -265,18 +268,18 @@ public class AdminController {
 		model.addAttribute("pagebar", pagebar);
 	}
 	
+	/**
+	 * 구독 여부 조회
+	 */
 	@GetMapping("/findByQuitYn.do")
 	public ResponseEntity<?> findByQuitYnSubscriptionList(@RequestParam(defaultValue = "1") int cPage, @RequestParam String selectOption, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
-//		log.debug("selectOption = {}", selectOption);
 		
 		List<Subscription> findSubscriptionList = subscribeService.findByQuitYnSubList(selectOption, param);
 		int findTotalContent = subscribeService.getTotalFindByQuitYnSubList(selectOption);
-//		log.debug(">> findSubscriptionList = {}", findSubscriptionList);
-//		log.debug(">> findTotalContent = {}", findTotalContent);
 		
 		Map<Object, Object> map = new HashMap<>();
 		map.put("findSubscriptionList",findSubscriptionList);
@@ -286,27 +289,89 @@ public class AdminController {
 		return ResponseEntity.ok().body(map);
 	}
 	
+	/**
+	 * 구독 결제 완료 리스트
+	 */
 	@GetMapping("/subscriptionOrderList.do")
-	public void subscriptionOrderList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
-		Map<String, Integer> param = new HashMap<>();
+	public void subscriptionOrderList(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(defaultValue = "상품준비중") String deliveryStatus,
+			Model model, HttpServletRequest request) {
+		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
+		param.put("deliveryStatus", deliveryStatus);
 		
 		List<SubscriptionOrder> subscriptionOrderList = subscribeService.getSubscriptionOrderListAll(param);
-		int totalContent = subscribeService.getTotalSubscriptionOrderListAll();
-		log.debug(">> subscriptionOrderList = {}", subscriptionOrderList);
-		log.debug(">> totalContent = {}", totalContent);
+		int totalContent = subscribeService.getTotalSubscriptionOrderListAll(deliveryStatus);
 		
-		String url = request.getRequestURI(); 
+		String url = request.getRequestURI();
+		url += "?deliveryStatus=" + deliveryStatus;
+		
 		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
 		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("deliveryStatus", deliveryStatus);
+	}
+	
+	/**
+	 * 구독 배송상태 변경
+	 */
+	@PostMapping("/subDeliveryUpdate.do")
+	public ResponseEntity<?> subDeliveryUpdate(@RequestParam String changeDStatus, @RequestParam String subOrderNo) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("subOrderNo", subOrderNo);
+		param.put("changeDStatus", changeDStatus);
+		int result = subscribeService.updateSubDelivery(param);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	/**
+	 * 구독 배송상태 스케쥴(상품준비중 -> 배송중) 매주 금요일 진행
+	 */
+	public void dStatusschedule(){
+		LocalDate today = LocalDate.now();
+		int todayDay = today.getDayOfWeek().getValue();
+		// 오늘이 금요일 경우 스케쥴 진행되며 한 번 더 확인
+		if(todayDay == 5) {
+			// 현재 날짜와 배송예정일이 일치하는 주문건 조회
+			List<SubscriptionOrder> orderLists = subscribeService.getSubOrderList(today);
+			if(orderLists != null) {
+				for(SubscriptionOrder orderList : orderLists) {
+					String status = orderList.getSOrderStatus();
+					log.debug("status = {}", status);
+					// 혹시라도 상품준비중이 아닐 경우
+					if(!"상품준비중".equals(status)) return;
+					
+					Map<String, Object> param = new HashMap<>();
+					param.put("subOrderNo", orderList.getSOrderNo());
+					param.put("changeDStatus", "배송중");
+					int result = subscribeService.updateSubDelivery(param);
+					log.debug("상태변경 result = {}", result);
+				}
+			}
+		}
 	}
 	
 	
 	
-	
 	//--------------------------------------------------------선아 끝
+	//------------------------------------------수아 시작
+	
+		@GetMapping("/noticeWeekVegs.do")
+		public void noticeWeekVegs(Model model) {
+			List<Vegetables> vegetables = subscribeService.getVegetables();
+			log.debug("vegetables = {}", vegetables);
+			model.addAttribute("vegetables", vegetables);
+			
+		}
+		
+		
+		
+		
+		
+		
+		//----------------------------------------수아 끝
 }

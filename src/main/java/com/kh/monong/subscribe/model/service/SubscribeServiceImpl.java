@@ -114,16 +114,27 @@ public class SubscribeServiceImpl implements SubscribeService {
 	}
 	
 	@Override
-	public List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Integer> param) {
-		int limit = param.get("limit");
-		int offset = (param.get("cPage") - 1) * limit;
+	public List<SubscriptionOrder> getSubscriptionOrderListAll(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		return subscribeDao.getSubscriptionOrderListAll(rowBounds);
+		String deliveryStatus = (String) param.get("deliveryStatus");
+		return subscribeDao.getSubscriptionOrderListAll(rowBounds, deliveryStatus);
 	}
 	
 	@Override
-	public int getTotalSubscriptionOrderListAll() {
-		return subscribeDao.getTotalSubscriptionOrderListAll();
+	public int getTotalSubscriptionOrderListAll(String deliveryStatus) {
+		return subscribeDao.getTotalSubscriptionOrderListAll(deliveryStatus);
+	}
+	
+	@Override
+	public int updateSubDelivery(Map<String, Object> param) {
+		return subscribeDao.updateSubDelivery(param);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> getSubOrderList(LocalDate today) {
+		return subscribeDao.getSubOrderList(today);
 	}
 	
 	

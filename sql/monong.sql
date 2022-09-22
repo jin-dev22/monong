@@ -373,17 +373,8 @@ CREATE TABLE direct_order (
 	constraint ck_direct_order_status check(d_order_status in ('P', 'R', 'C', 'D', 'F'))
 );
 
---주문취소로 재고 복구처리시 판매상태 변경하는 트리거
-create trigger trigger_stock_update_by_cancel 
-    after
-    update on direct_product_option
-    for each row
-begin
-    if :new.d_stock > 0 and :new.d_sale_status not like '판매중단' then
-        update direct_product_option set d_sale_status = '판매중';
-    end if;
-end;
-/
+-- 카카오페이 최소 15사이즈 이상이라서 20으로 늘렸습니다.
+ALTER TABLE direct_order MODIFY d_payments VARCHAR2(20);
 
 CREATE TABLE member_direct_order (
 	d_option_no	varchar2(100)		NOT NULL,
@@ -450,6 +441,10 @@ CREATE TABLE direct_review_attachment (
 	constraint pk_direct_review_attachment_no primary key(d_review_attach_no),
 	constraint fk_direct_review_no foreign key(d_review_no) references direct_review(d_review_no)
 );
+--0922 수아 - fk 삭제 후, 다시 추가 (on delete cascade)
+alter table direct_review_attachment drop constraint fk_direct_review_no;
+alter table direct_review_attachment add constraint fk_direct_review_no foreign key(d_review_no) 
+references direct_review(d_review_no) on delete cascade;
 
 create sequence seq_d_product_no;
 create sequence seq_d_product_attach_no;

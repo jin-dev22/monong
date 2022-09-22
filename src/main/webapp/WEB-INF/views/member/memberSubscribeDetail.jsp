@@ -17,18 +17,24 @@
 		<thead>
 		  <tr>
 		    <th>
-			    <fmt:parseDate value="${subOrder.SOrderDate}" pattern="yyyy-MM-dd'T'HH:mm" var="orderDate"/>
-			    <fmt:formatDate value="${orderDate}" pattern="yyyy-MM-dd"/>
+			    ${subDetail.SOrderDate}
 		    </th>
-		    <th>${subOrder.SOrderNo}</th>
-		    <th>${subOrder.SOrderStatus}</th>
+		    <th>${subDetail.SOrderNo}</th>
+		    <th>${subDetail.SOrderStatus}</th>
 		  </tr>
 		</thead>
 		<tbody>
 		  <tr>
-		    <td>정기구독 ${subOrder.STimes}회차</td>
-		    <td>${subProduct.SProductName} ${subProduct.SProductInfo}</td>
-		    <td>${subOrder.SPrice}원</td>
+		    <td>정기구독 ${subDetail.sTimes}회차</td>
+		    <td>${subDetail.prod.SProductName} ${subDetail.prod.SProductInfo}</td>
+		    <td>제외채소 : 
+		    <c:if test="${subDetail.soExcludeVegs == null}">
+		    없음
+		    </c:if>
+		    <c:if test="${subDetail.soExcludeVegs != null}">
+		    ${subDetail.soExcludeVegs}
+		    </c:if>
+		    </td>
 		  </tr>
 		</tbody>
 	</table>
@@ -46,11 +52,10 @@
 			</thead>
 			<tbody>
 			  <tr>
-			    <td>${subOrder.SOrderNo}</td>
+			    <td>${subDetail.sOrderNo}</td>
 			    <td></td>
 			    <td>
-			    	<fmt:parseDate value="${subOrder.SOrderDate}" pattern="yyyy-MM-dd'T'HH:mm" var="orderDate"/>
-				    <fmt:formatDate value="${orderDate}" pattern="yyyy-MM-dd"/>
+			    ${fn:substring(subDetail.sOrderDate,0,16)}
 			    </td>
 			  </tr>
 			  <tr>
@@ -64,16 +69,24 @@
 			    <td>배송상태</td>
 			  </tr>
 			  <tr>
-			    <td>수령인 : ${subOrder.soRecipient}</td>
-			    <td>연락처 : ${subOrder.soPhone}</td>
-			    <td><strong>${subOrder.SOrderStatus}</strong></td>
+			    <td>수령인 : ${subDetail.soRecipient}</td>
+			    <td></td>
+			    <td><strong>${subDetail.sOrderStatus}</strong></td>
 			  </tr>
 			  <tr>
-			    <td colspan="2">배송지 : ${subOrder.soAddress} ${subOrder.soAddressEx}</td>
+			  	<td colspan="2">연락처 : ${subDetail.soPhone}</td>
+			  	<td class="text-success">
+			  	<c:if test="${subDetail.sOrderStatus eq '배송완료'}">
+			  	<strong>(배송완료일 : ${fn:substring(subDetail.soDeliveryCompletedDate,0,10)})</strong>
+			    </c:if>
+			  	</td>
+			  </tr>
+			  <tr>
+			    <td colspan="2">배송지 : ${subDetail.soAddress} ${subDetail.soAddressEx}</td>
 			    <td></td>
 			  </tr>
 			  <tr>
-			    <td colspan="2">요청사항 : ${subOrder.soDeliveryRequest}</td>
+			    <td colspan="2">요청사항 : ${subDetail.soDeliveryRequest}</td>
 			    <td></td>
 			  </tr>
 			  <tr>
@@ -84,7 +97,7 @@
 			  <tr>
 			    <th>결제정보</th>
 			    <td></td>
-			    <td>결제일자</td>
+			    <td>결제일자 : ${subDetail.sub.SPaymentDate}</td>
 			  </tr>
 			  <tr>
 			    <td>카드</td>
@@ -95,10 +108,11 @@
 		</table>
 	</div>
 	<hr />
-	<h4>구독금액 : ${subOrder.SPrice} 원</h4>
-	<h4>배송비 :  ${subProduct.SDeliveryFee} 원</h4><br />
+	<h4>구독금액 : ${subDetail.sPrice} 원</h4>
+	<h4>+</h4>
+	<h4>배송비 :  ${subDetail.prod.SDeliveryFee} 원</h4><br />
 	<hr />
-	<h2>합계 : ${subOrder.SPrice + subProduct.SDeliveryFee} 원</h2>
+	<h2>합계 : ${subDetail.sPrice + subDetail.prod.SDeliveryFee} 원</h2>
 	
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
