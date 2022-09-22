@@ -137,6 +137,19 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getSubOrderList(today);
 	}
 	
+	@Override
+	public List<SubscriptionOrder> searchPeriodData(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.searchPeriodData(rowBounds, param);
+	}
+	
+	@Override
+	public int getTotalsearchPeriodData(Map<String, Object> param) {
+		return subscribeDao.getTotalsearchPeriodData(param);
+	}
+	
 	
 	// 선아코드 끝
 		
