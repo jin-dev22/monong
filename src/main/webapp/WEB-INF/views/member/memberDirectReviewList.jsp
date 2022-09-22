@@ -19,6 +19,7 @@
 			<span>후기는 상품이 배송완료된 후에 작성할 수 있어요!</span>
 		</div>
 	</c:if>
+	<c:if test="${not empty directReviewList}">
 	<div class="mx-auto mt-5 mb-5 text-center">
 		<h3>작성 완료 후기</h3>
 		
@@ -78,6 +79,6 @@
 		<nav>
 			${pagebar}
 		</nav>
-		
+	</c:if>
 </div>	
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

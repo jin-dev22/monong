@@ -321,6 +321,8 @@
 		    where 
 		        member_id = #{memberId}
 	    	)	
+	    order by
+	    	so.s_order_no desc
   </select>
   
    <select id="selectProdListBydOrderNo" resultType="directProductEntity">
@@ -485,6 +487,8 @@
 	    where
 	        member_id=#{memberId}
 	    )
+	 order by
+	 	mdo.d_order_no desc
  	
  	</select>
  
@@ -505,6 +509,8 @@
 	    on dpo.d_product_no = dp.d_product_no
 	where
 	    dr.member_id= #{memberId}
+	order by
+		dr.d_review_created_at desc
  	</select>
  	
  	<resultMap type="map" id="directReviewMap">
