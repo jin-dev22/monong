@@ -236,5 +236,7 @@ public interface MemberDao {
 	int getTotalDirectEnrollReviewByMemberId(String memberId);
 	//------------------수아끝
 
+	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
+
 	
 }

@@ -479,5 +479,10 @@ public class MemberServiceImpl implements MemberService {
 	public int getTotalDirectEnrollReviewByMemberId(String memberId) {
 		return memberDao.getTotalDirectEnrollReviewByMemberId(memberId);
 	}
+	
+	@Override
+	public Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo) {
+		return memberDao.selectSubscriptionOrderBySOrderNo(sOrderNo);
+	}
 	//------------수아 끝
 }

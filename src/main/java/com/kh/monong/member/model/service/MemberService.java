@@ -166,6 +166,8 @@ public interface MemberService {
 	int getTotalDirectEnrollReviewByMemberId(String memberId);
 //-----------수아 끝
 
+	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
+
 
 	
 
