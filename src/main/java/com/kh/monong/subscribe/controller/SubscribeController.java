@@ -317,7 +317,7 @@ public class SubscribeController {
 	@GetMapping("/subscribeReviewList.do")
 	public ResponseEntity<?> subscribeReviewList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();
-		int limit = 10;
+		int limit = 8;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		List<SubscriptionReview> sReviewList = subscribeService.selectSubscriptionReviewList(param);
@@ -325,12 +325,10 @@ public class SubscribeController {
 		
 		int totalContent = subscribeService.getTotalContent();
 		
-		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
-		
 		Map<String, Object> returnVal = new HashMap<>();
 		returnVal.put("sReviewList", sReviewList);
-		returnVal.put("pagebar", pagebar);
+		returnVal.put("cPage", cPage);
+		returnVal.put("totalContent", totalContent);
 		
 		return ResponseEntity.ok(returnVal);
 	}
