@@ -113,7 +113,7 @@ div.note-toolbar {
 	        		<c:forEach items="${prod.directProductAttachments}" var="attach" varStatus="vs">
 						<label class="btn btn-outline-danger" title="삭제"> 
 							<img src="${pageContext.request.contextPath}/resources/upload/product/${attach.DProductRenamedFilename}" style="width:50px;" alt="" />
-							<input type="checkbox" name="delFileNo" class="btn btn-outline-danger" id="delFileNo"
+							<input type="checkbox" name="delFileNo" class="btn btn-outline-danger chk-delfile" id="delFileNo${vs.count}"
 								value="${attach.DProductAttachNo}">삭제
 						</label>
 	        		</c:forEach>
@@ -123,10 +123,10 @@ div.note-toolbar {
         		<span class="enroll-info-label"><label for="upFile">상품 사진</label></span>
         		<span class="enroll-info">
         			<span id="file-container">
-           			<input class="form-control" name="upFile" type="file" id="upFile1" multiple>
-           			<input class="form-control" name="upFile" type="file" id="upFile2" multiple>
-           			<input class="form-control" name="upFile" type="file" id="upFile3" multiple>
-           			<input class="form-control" name="upFile" type="file" id="upFile4" multiple>
+           			<input class="form-control" name="upFile" type="file" id="upFile1">
+           			<input class="form-control" name="upFile" type="file" id="upFile2">
+           			<input class="form-control" name="upFile" type="file" id="upFile3">
+           			<input class="form-control" name="upFile" type="file" id="upFile4">
            			</span>
            		</span>
            </div>
@@ -211,7 +211,7 @@ div.note-toolbar {
 
 <script>
 /**
- * 제출 전 유효성 검사
+ * 제출 전 검사
  */
 document.querySelector('[name="productUpdateFrm"]').addEventListener('submit', (e)=>{
 	e.preventDefault();
@@ -220,13 +220,38 @@ document.querySelector('[name="productUpdateFrm"]').addEventListener('submit', (
 	price.forEach((elem)=>{
 		let str = elem.value;
 		elem.value = uncomma(str);
-		console.log(elem.value);	
+		//console.log(elem.value);	
 	});
-	//frm.submit();
+	
+	const oldFileCnt = frm.querySelectorAll(".chk-delfile").length;
+	const delChkdCnt = frm.querySelectorAll(".chk-delfile:checked").length;
+	const upFiles = Array.from(frm.querySelectorAll("[name=upFile]"));
+	const upFileCnt = upFiles.reduce((cnt, elem) => {
+		console.log(elem.value);
+		if(elem.value){
+			cnt++;
+		}
+		return cnt;
+	}, 0);
+	const allcnt = upFileCnt + oldFileCnt - delChkdCnt;
+
+	if(allcnt == 0){
+		alert("상품사진 파일은 하나이상 있어야 해요.");
+		window.scrollTo(0,0);
+		return;
+	}	
+	if(allcnt > 4){
+		alert("상품사진은 최대 4개까지 등록할 수 있어요.");
+		window.scrollTo(0,0);
+		return;
+	}
+	
+	frm.submit();
 });
 
 /**
  * 재고 0 이상입력시 판매마감(품절) 상태인지 확인 후 변경처리.
+ * 재고 0 입력시 판매마감 상태로 자동변경
  */
 function checkStatus(stock){
 //	console.log(stock.value);
@@ -235,6 +260,10 @@ function checkStatus(stock){
 	if(stock.value > 0 && status == "판매마감"){
 		alert("입력 수량이 0이상인 경우 자동으로 판매중 상태로 변경돼요. 꼭 판매상태를 확인해 주세요!");
 		$select.val("판매중");
+	}else if(stock.value == 0 && status != "판매마감"){
+		alert("입력 수량이 0인 경우 자동으로 판매마감 상태로 변경돼요. 꼭 수량을 확인해 주세요!");
+		$select.val("판매마감");
+		
 	}
 //	console.log($select.val());
 }
@@ -299,8 +328,9 @@ function addOption (optList)  {
 		</div>
 		<div class="option-row">
 		<label for="dStock\${cnt}">수량</label>
-		<input type="number" min="0" name="directProductOptions[\${cnt-1}].dStock" class="update-dStock" id="dStock\${cnt}" value=""/>
-			<select name="directProductOptions[\${cnt-1}].dSaleStatus" id="direct-saleStatus\${cnt}" onchange="checkStatus(this)">
+		<input type="number" min="0" name="directProductOptions[\${cnt-1}].dStock" class="update-dStock" id="dStock\${cnt}"  
+				onchange="checkStatus(this)" value=""/>
+			<select name="directProductOptions[\${cnt-1}].dSaleStatus" id="direct-saleStatus\${cnt}">
 			<option value="판매중" selected>판매중</option>
 			<option value="판매중단">판매중단</option>
 			<option value="판매마감">판매마감</option>
