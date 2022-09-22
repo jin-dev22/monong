@@ -66,7 +66,23 @@ public interface DirectDao {
 	
 	@Insert("insert into cart values (seq_cart_no.nextval, #{dOptionNo}, #{memberId}, #{productCount})")
 	int insertCart(Map<String, Object> addList);
+	
+	// 장바구니 전체 삭제
+	@Delete("delete from cart where member_id = #{memberId}")
+	int deleteCartAll(String memberId);
+	
+	// 장바구니 단건 삭제
+	@Delete("delete from cart where cart_no = #{cartNo}")
+	int deleteCartTarget(int cartNo);
 
+	// 장바구니 선택 삭제
+	@Delete("delete from cart where cart_no = #{cartNo}")
+	int deleteCartChecked(int checked);
+	
+	// 장바구니 수량 컨트롤러
+	@Update("update cart set product_count = #{productCount} where cart_no = #{cartNo}")
+	int updateCartProductCount(Map<String, Object> param);
+	
 	// 장바구니(주문) 추가
 	@Update("update cart set product_count = #{productCount}, cart_no = seq_cart_no.nextval where d_option_no = #{dOptionNo} and member_id = #{memberId}")
 	@SelectKey(statement = "select seq_cart_no.currval from dual", before = false, keyProperty = "cartNo", resultType = int.class)
@@ -116,10 +132,5 @@ public interface DirectDao {
 
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
-
-	
 	//----------------- 수진 끝
-
-
-
 }

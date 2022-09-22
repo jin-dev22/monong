@@ -734,7 +734,8 @@
 
 .dCart-img {
 	display: block;
-    height: 100%;
+    height: 90px;
+    width: 90px;
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -839,7 +840,8 @@
 .tbl-dCartProduct-pay tbody {
 	border-bottom: 1px solid rgb(51, 51, 51);
 	height: 125px;
-    font-size: 19px;
+    font-size: 23px;
+    font-weight: bold;
 }
 
 .tbl-dCartProduct-pay th, td {
