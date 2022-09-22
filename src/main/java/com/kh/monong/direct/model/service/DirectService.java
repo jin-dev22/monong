@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
@@ -11,8 +12,8 @@ import com.kh.monong.direct.model.dto.DirectProductOption;
 public interface DirectService {
 	//----------------- 재경 시작
 	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
-
-	List<DirectProductAttachment> selectDirectProductAttachmentList();
+	
+	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
 
 	int getTotalContent();
 	
@@ -29,13 +30,13 @@ public interface DirectService {
 	
 	Cart checkCartDuplicate(Map<String, Object> cart);
 	
-	int checkCountCartDuplicate(Map<String, Object> addList);
-	
-	int updateCart(Map<String, Object> addList);
-	
-	int insertCart(Map<String, Object> addList);
+	int addCart(Map<String, Object> addList);
 
 	DirectProduct buyIt(Map<String, Object> param);
+	
+	int insertDirectOrder(DirectOrder directOrder);
+		
+	int insertMemberDirectOrder(Map<String, Object> param);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작

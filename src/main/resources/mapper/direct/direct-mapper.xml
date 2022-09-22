@@ -38,7 +38,7 @@ values
 	where
 	    dp.d_product_no = #{dProductNo}
 	order by
-		d_option_name, d_price, no
+		d_sale_status desc, d_option_name, d_price, no, d_product_attach_no
   </select>
   
   <resultMap type="directProduct" id="directProductMap">
@@ -90,6 +90,8 @@ values
         		on dp.d_product_no = dpa.d_product_no
 	where
 	    c.cart_no = #{cartNo}
+	order by
+		d_product_attach_no
   </select>
   
   <select id="selectCartListByMemberId" resultMap="cartListMap">
@@ -113,7 +115,7 @@ values
 	where
 	    c.member_id = #{memberId}
 	order by
-	    cart_no
+	    cart_no, d_product_attach_no
   </select>
   
   <resultMap type="directProduct" id="orderListMap">

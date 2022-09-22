@@ -373,6 +373,9 @@ CREATE TABLE direct_order (
 	constraint ck_direct_order_status check(d_order_status in ('P', 'R', 'C', 'D', 'F'))
 );
 
+-- 카카오페이 최소 15사이즈 이상이라서 20으로 늘렸습니다.
+ALTER TABLE direct_order MODIFY d_payments VARCHAR2(20);
+
 CREATE TABLE member_direct_order (
 	d_option_no	varchar2(100)		NOT NULL,
 	d_order_no	varchar2(100)		NOT NULL,
