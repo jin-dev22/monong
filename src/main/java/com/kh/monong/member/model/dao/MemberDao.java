@@ -192,8 +192,19 @@ public interface MemberDao {
 
 	List<SubscriptionReview> selectSubscriptionReviewList(RowBounds rowBounds, String memberId);
 
-	
 	int getTotalContent(String memberId);
+
+	@Select("select * from subscription_review_attachment where s_attach_no = #{attachNo}")
+	SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo);
+	
+	@Delete("delete from subscription_review_attachment where s_attach_no = #{attachNo}")
+	int deleteSubscriptionAttachment(int attachNo);
+
+	@Update("update subscription_review set s_review_content = #{sReviewContent}, s_review_star = #{sReviewStar}, s_review_updated_at = current_date where s_review_no = #{sReviewNo}")
+	int updateSubscriptionReview(SubscriptionReview review);
+
+	@Delete("delete from subscription_review where s_review_no = #{sReviewNo}")
+	int deleteSubscriptionReview(String sReviewNo);
 	//-----------미송 끝
 
 
