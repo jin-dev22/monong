@@ -4,20 +4,18 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.monong.direct.model.dao.DirectDao">
 <!-- 재경 시작 -->
-<!-- 상품 등록 -->
-<insert id = "directProductEnroll">
-insert into
-	direct_product
-values
-	('DP' || seq_d_product_no.nextval,
-  	#{memberId},
-  	#{dProductName},
-  	#{dProductContent},
-  	default,
-  	default,
-  	#{dPrice},
-  	#{dDeliveryFee})
-</insert>
+<!-- 옵션 등록 -->
+<update id="mergeOption">
+  	merge into direct_product_option
+    using dual
+    on (d_option_no = #{dOptionNo})
+        when matched then
+            update set d_sale_status = #{dSaleStatus},
+                            d_price = #{dPrice},
+                            d_stock = #{dStock}
+        when not matched then
+            insert (d_option_no, d_product_no, d_option_name, d_sale_status, d_price, d_stock) values ('DO'||seq_d_option_no.nextval, #{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})
+  </update>
 <!-- 재경 끝 -->
 <!-- 민지 시작 -->
   <select id="selectOneDirectProductCollection" resultMap="directProductMap">

@@ -112,6 +112,16 @@ public class DirectController {
 			
 			log.debug("directProduct = {}", directProduct);
 			
+			//상품옵션등록
+			List<DirectProductOption> options = directProduct.getDirectProductOptions();
+			String prodNo = directProduct.getDProductNo();
+			log.debug("prodNo={}", prodNo);
+			if(options != null && !options.isEmpty()) {
+				for(DirectProductOption option : options) {
+					option.setDOptionNo(prodNo);
+				}
+			}
+			
 			// db저장
 			int result = directService.insertDirectProduct(directProduct);
 			
