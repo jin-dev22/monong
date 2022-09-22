@@ -412,6 +412,7 @@
 	        left join subscription s 
 	            on so.s_no = s.s_no
 	where s.member_id = #{memberId}
+	order by s_review_created_at desc
   </select>
   
   <resultMap type="subscriptionReview" id="subscriptionReviewMap">
