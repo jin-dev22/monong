@@ -32,7 +32,7 @@
 	    <li><a href="${pageContext.request.contextPath}/admin/adminInquireList.do?memberType=seller">판매자</a></li>
 	  </ul>
 	</div>
-	<a href="#">주간채소</a>
+	<a href="${pageContext.request.contextPath}/admin/noticeWeekVegs.do">주간채소</a>
 </nav>
 
 </div>

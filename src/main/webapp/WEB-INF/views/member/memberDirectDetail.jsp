@@ -13,6 +13,7 @@
 </jsp:include>
 <div id="member-direct-detail-container">
 <c:if test="${not empty directOptList}">
+	<c:set var="totalPrice" value="0"/>
 	<c:forEach items="${directOptList}" var="dOList">
 		<table id="member-orderList-tbl" class="table table-borderless table-striped text-center">
 		<thead>
@@ -39,6 +40,7 @@
 		</thead>
 		</table>
 		<hr />
+		<c:set var="totalPrice" value="${totalPrice + (dOList.directOptions.DPrice * dOList.dOptionCount)}"/>
 	</c:forEach>
 </c:if>
 	<br /><br />
@@ -47,17 +49,17 @@
 		<thead>
 		  <tr>
 		    <td>상품금액</td>
-		    <td colspan="2">${directOrder.DTotalPrice}원</td>
+		    	<td colspan="2">${totalPrice} 원</td>
 		  </tr>
 		</thead>
 		<tbody>
 		  <tr>
 		    <td>배송비</td>
-		    <td colspan="2">3000 원</td>
+		    <td colspan="2">${directOrder.DTotalPrice-totalPrice} 원</td>
 		  </tr>
 		  <tr>
 		    <td>결제금액</td>
-		    <td colspan="2">${directOrder.DTotalPrice + 3000} 원</td>
+		    <td colspan="2">${directOrder.DTotalPrice} 원</td>
 		  </tr>
 		  <tr>
 		    <td>결제일시</td>
@@ -78,7 +80,7 @@
 		<thead>
 		  <tr>
 		    <td>수령인</td>
-		    <td colspan="2">${directOrder.DRecipient}원</td>
+		    <td colspan="2">${directOrder.DRecipient}</td>
 		  </tr>
 		</thead>
 		<tbody>

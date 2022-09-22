@@ -54,7 +54,8 @@
 		</table>
 		<hr />
 	</c:forEach>
-	</c:if>
+	
 	<nav>${pagebar}</nav>
+	</c:if>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
