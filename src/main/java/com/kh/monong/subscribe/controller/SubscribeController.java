@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.enums.YN;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.service.MemberService;

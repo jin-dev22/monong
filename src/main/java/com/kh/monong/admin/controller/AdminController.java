@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.service.DirectService;
@@ -81,7 +81,7 @@ public class AdminController {
 		log.debug("list={}", memberList);
 				
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute(memberList);
 		model.addAttribute("pagebar", pagebar);
@@ -101,7 +101,7 @@ public class AdminController {
 		log.debug("totalWaitSeller={}", totalWaitSeller);
 
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("totalWaitSeller",totalWaitSeller);
 		model.addAttribute("sellerList",sellerList);
@@ -122,7 +122,7 @@ public class AdminController {
 		log.debug("totalWaitSeller={}", totalWaitSeller);
 		String totalSellerEnroll = Integer.toString(memberService.getTotalSellerEnrollByMonth());
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("totalSellerEnroll",totalSellerEnroll);
 		model.addAttribute("totalWaitSeller",totalWaitSeller);
@@ -207,7 +207,7 @@ public class AdminController {
 		
 		int totalContent = inquireService.getTotalInqureContent(param);
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar",pagebar);
 	};
 	
@@ -245,7 +245,7 @@ public class AdminController {
 		
 		String url = request.getRequestURI(); 
 		url += "?dSaleStatus=" + dSaleStatus;
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		
 		log.debug("model = {}", model);
@@ -265,7 +265,7 @@ public class AdminController {
 		int totalContent = subscribeService.getTotalSubscriptionListAll();
 
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionList",subscriptionList);
 		model.addAttribute("pagebar", pagebar);
@@ -328,7 +328,7 @@ public class AdminController {
 		String url = request.getRequestURI();
 		url += "?deliveryStatus=" + deliveryStatus;
 		
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
 		model.addAttribute("pagebar", pagebar);

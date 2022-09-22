@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.faq.model.dto.Faq;
 import com.kh.monong.common.faq.model.service.FaqService;
 
@@ -38,7 +38,7 @@ public class FaqController {
 		
 		int totalContent = faqService.getTotalContent();
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("faqList", faqList);
 		model.addAttribute("pagebar", pagebar);
@@ -65,7 +65,7 @@ public class FaqController {
 			
 			int totalContent = faqService.getTotalContent();
 			String url = request.getRequestURI();
-			String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 			
 			Map<Object, Object> faqMap = new HashMap<>();
 			faqMap.put("searchFaqList", searchFaqList);

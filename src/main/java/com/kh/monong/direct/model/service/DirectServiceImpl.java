@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -176,7 +176,7 @@ public class DirectServiceImpl implements DirectService {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		List<DirectProduct> prodList  = directDao.adminSelectProdList(param);
-		List<DirectProduct> subList = (List<DirectProduct>) HelloSpringUtils.customRowBounds(offset, limit, prodList);
+		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
 		for(DirectProduct prod : prodList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
 		}
