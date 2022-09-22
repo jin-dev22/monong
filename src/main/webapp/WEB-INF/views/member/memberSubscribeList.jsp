@@ -22,7 +22,7 @@
 			  <tr>
 			    <th>${subList.SOrderDate}</th>
 			    <th><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
-			    <th class="s-order-status" data-review-no="${subList.SReviewNo}">${subList.SOrderStatus}</th>			    
+			    <th class="s-order-status" data-review-no="${subList.SReviewNo}" data-order-no="${subList.SOrderNo}">${subList.SOrderStatus}</th>			    
 			  </tr>
 			</thead>
 			<tbody>
@@ -36,6 +36,10 @@
 	</c:forEach>
 		</table>
 </c:if>
+
+<nav id="pagebar">
+	${pagebar}
+</nav>
 </div>
 <form 
 	action="<%= request.getContextPath() %>/member/memberSubscribeReviewForm.do"
@@ -61,10 +65,19 @@ sOrderStatus.forEach(function(status){
 	if(status.innerHTML === "배송완료" && reviewNo === ""){
 		status.innerHTML += 
 				`<input type="button" class="btn btn-116530 btn-s-order-review" id="btnWriteReview" value="리뷰쓰기" />`;
-				
-		document.querySelector("#btnWriteReview").addEventListener('click', (e) => {
-			const sOrderNo = document.querySelector(".s-order-no").innerHTML;
+	}
+});
+
+const btnWriteReview = document.querySelectorAll("#btnWriteReview");
+console.log('btnWriteReview', btnWriteReview);
+
+if(btnWriteReview !== null){
+	btnWriteReview.forEach(function(btn, index){
+		btn.addEventListener('click', (e) => {
 			const frm = document.subscribeOrderReviewFrm;
+			const sOrderNo = btn.parentElement.dataset.orderNo;
+			console.log('sOrderNo', sOrderNo);
+			
 			frm.sOrderNo.value = sOrderNo;
 			
 			const title = "ReviewPopupFrm";
@@ -74,9 +87,8 @@ sOrderStatus.forEach(function(status){
 			frm.target = title;
 			frm.submit();
 		});
-
-	}
-});
+	})
+}
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
