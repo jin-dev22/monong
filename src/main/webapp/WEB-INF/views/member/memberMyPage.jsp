@@ -53,7 +53,7 @@
 		    <td><h4>배송주기: ${recentSubscription.SDeliveryCycle}주</h4></td>
 		  </tr>
 		  <tr>
-		    <td><h4>제외채소 : ${recentSubscription.SExcludeVegs}</h4></td>
+		    <td><h4>제외채소 : ${recentSubscription.SExcludeVegs != null ? recentSubscription.SExcludeVegs : '없음'}</h4></td>
 		    <td>
 		    <button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button>
 		    </td>
@@ -78,20 +78,15 @@
 			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberDirectList.do">직거래주문내역</a>
 		</li>
 		
-		<li class="nav-item">	
-			<a class="nav-link" href="${pageContext.request.contextPath}/member/memberReviewList.do">작성후기</a>
-		</li>
-		
 		<li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            직거래작성후기
+            작성후기
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewEnrollList.do">직거래작성가능후기</a></li>
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewList.do">직거래작성완료후기</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">구독작성후기</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberReviewList.do">구독작성후기</a></li>
           </ul>
 		</li>
 		
