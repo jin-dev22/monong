@@ -113,7 +113,7 @@ div#enroll-container{
         		<span class="enroll-info-label">배송비<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDeliveryFee-container">
-                    	<input type="text" class="form-control" name="DDeliveryFee" id="DDeliveryFee" required>
+                    	<input type="text" class="form-control" name="DDeliveryFee" id="DDeliveryFee" value="3000" readonly/>
                     </span>
         		</span>
         	</div>
@@ -143,11 +143,13 @@ div#enroll-container{
 							</select>
 							<input type="hidden" name="directProductOptions[0].dOptionNo"/>
 	     				</div>
-	    				<br />
-     			</div>
+	    				<span class="vStatus" style="display: none">${vStatus.count}</span>
+     				</div>
      		</div>
         </div>
-        <div class="enroll-info-container">
+        	<button type="button" onclick="addOption(this.form)">옵션추가</button>
+   			<button type="button" onclick="delOption(this.form)">옵션삭제</button>
+        <!-- <div class="enroll-info-container">
 	   		<span class="enroll-info-label">상품 옵션2</span>
     	 		<div class="opntion-list-container">
      				<div class="option-one">
@@ -233,13 +235,57 @@ div#enroll-container{
 	    				<br />
      			</div>
      		</div>
-        </div>
+        </div> -->
+        <br/>
 		<sec:csrfInput />
         <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
         <input type="reset" class="btn btn-116530" value="취소">
 	</form>
 </div>
 <script>
+let newOptCnt = 1;
+/**
+ * 추가한 옵션 삭제 메소드
+ */
+function delOption(optList){
+	const lastOne = document.querySelector(".option-one:last-child");
+		lastOne.remove();
+		newOptCnt--;
+}
+
+/**
+ * 옵션 추가 메소드
+ */
+function addOption (optList)  {
+	console.log(optList);
+	const lastOne = document.querySelector(".option-one:last-child");
+	let cnt = newOptCnt;
+	newOptCnt++;
+	
+	html= ` <div class="option-one">
+			<div class="option-row">
+				<label for="dOptionName\${cnt+1}" class="optName-label">옵션\${cnt+1}이름</label>
+				<input type="text" name="directProductOptions[\${cnt}].dOptionName" id="dOptionName\${cnt+1}" value=""/> 
+			</div>
+			<div class="option-row">
+				<span>가격 </span>
+				<input type="text" name="directProductOptions[\${cnt}].dPrice" maxlength="10" class="price" value=""/>
+			</div>
+			<div class="option-row">
+				<label for="dStock\${cnt}">수량</label>
+				<input type="number" name="directProductOptions[\${cnt}].dStock" class="update-dStock" id="dStock\${cnt+1}" value=""/>
+					<select name="directProductOptions[\${cnt}].dSaleStatus" id="direct-saleStatus\${cnt+1}">
+						<option value="판매중" selected>판매중</option>
+						<option value="판매중단">판매중단</option>
+						<option value="판매마감">판매마감</option>
+					</select>
+			</div>
+			<br />
+			<span class="vStatus" style="display: none">\${cnt+1}</span>
+			</div>`;
+	$(lastOne).after(html);
+}
+
 document.querySelectorAll("[name=upFile]").forEach((input) => {
 	input.addEventListener("change", (e) => {
 		const {files} = e.target;
