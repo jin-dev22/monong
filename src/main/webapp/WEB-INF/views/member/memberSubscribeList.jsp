@@ -16,19 +16,20 @@
 	<h3>구독 히스토리가 없습니다.</h3>
 </c:if>
 <c:if test="${not empty subList}">
-		<table id="member-subScription-tbl" class="table table-borderless table-striped text-center">
+		<table id="member-subScription-tbl" class="table table-borderless text-center">
 	<c:forEach items="${subList}" var="subList">
 			<thead>
-			  <tr>
+			  <tr class="table-active">
 			    <th>${subList.SOrderDate}</th>
-			    <th><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
+			    <th colspan="2"><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
 			    <th class="s-order-status" data-review-no="${subList.SReviewNo}">${subList.SOrderStatus}</th>			    
 			  </tr>
 			</thead>
 			<tbody>
 			  <tr>
 			    <td>정기구독 ${subList.STimes}회차</td>
-			    <td>${subList.soProductCode}</td>
+			    <td>배송주기: ${subList.soDeliveryCycle}주 </td>
+			    <td>제외채소 : ${subList.soExcludeVegs != null ? subList.soExcludeVegs : '없음'}</td>
 			    <td>${subList.SPrice}원</td>
 			  </tr>
 			</tbody>
