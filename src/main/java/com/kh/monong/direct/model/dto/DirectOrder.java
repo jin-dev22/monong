@@ -2,6 +2,7 @@ package com.kh.monong.direct.model.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class DirectOrder {
 	private String dRecipient;
 	@NonNull
 	private String dOrderPhone;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@NonNull
 	private LocalDateTime dOrderDate;
 	@NonNull

@@ -50,8 +50,9 @@
 .dDeliveryFee-title {
 	display: inline-block;
     font-size: 14px;
+    width: 125px;
     color: rgba(107,114,128);
-    padding: 15px 30px 5px 2px;
+    padding: 15px 25px 5px 2px;
 }
 .dDeliveryFee {
 	display: inline-block;
@@ -61,8 +62,9 @@
 .seller-title {
 	display: inline-block;
     font-size: 14px;
+    width: 125px;
     color: rgba(107,114,128);
-    padding: 0 30px 15px 2px;
+    padding: 0 25px 15px 2px;
 }
 .seller {
 	display: inline-block;
@@ -498,8 +500,12 @@
 	justify-content: space-between;
 }
 
-.dOrder-addr-info, .dPay-info {
-	width: calc(( 100% - 50px)/2);
+.dOrder-addr-info {
+	width: 100%;
+}
+
+.dPay-info {
+	width: calc(( 100% - 94px)/2);
 }
 
 .dOrder-addr-info>h4, .dPay-info>h4 {
@@ -547,47 +553,52 @@
 .dPay-info-content input[type=text]:focus-visible {
 	outline: none;
 }
-#dOrder-card {
+
+#d-order-card {
 	display: flex;
 	margin: 20px 0;
 	align-items: center;
 	justify-content: space-between;
 }
 
-#dOrder-card>p {
+#d-order-card>p {
 	width: 150px;
-	display: inline-block;
 }
 
-.dCard {
-	width: 200px;
+.d-card {
+	display: flex;
+	width: calc(100% - 140px);
+}
+
+.d-card div {
+	position: relative;
+	width: calc(100% / 2);
 	height: 160px;
-	margin-right: 40px;
-	border: 1px solid #EA5C2B;
+	margin-right: 20px;
 	border-radius: 10px;
 	text-align: center;
-	position: relative;
 	background-color: #f6d8601c;
 }
 
-.dCard>label {
-	width: 100%;
-}
-
-.dCard>input {
+.d-card #d-card-kg,
+.d-card #d-card-kakao {
 	position: absolute;
 	top: 20px;
-	left: 20px;
+	right: 140px;
 	accent-color: #EA5C2B;
 }
 
-.dCard img, .s-card>span {
+.d-card .payCheck {
+	border: 1px solid #EA5C2B;
+}
+
+.d-card img, .d-card>span {
 	display: block;
 }
 
-.dCard img {
+.d-card img {
 	width: 120px;
-	margin: auto;
+	margin: auto 10px;
 }
 
 .dOrder-totle-price {
@@ -603,14 +614,7 @@
 	font-weight: 700;
 }
 
-.dOrder-totle-price .s-cycle {
-	padding: 5px;
-	background-color: #116530;
-	border-radius: 10px;
-	color: #fff;
-}
-
-.dOrder-totle-price .s-price {
+.dOrder-totle-price .d-price {
 	margin: 0 40px 0 0;
 	text-align: right;
 	list-style: none;
@@ -623,6 +627,20 @@
 .dOrder-totle-price span:last-child {
 	font-size: 20px;
 	color: #333;
+}
+
+.privacyAgree {
+	margin-top: 60px;
+	width: 528px;
+}
+
+.privacyAgree input {
+	accent-color: #EA5C2B;
+}
+
+.privacyAgree textarea {
+	color: #666;
+	display: none;
 }
 
 .btn-d-pay {

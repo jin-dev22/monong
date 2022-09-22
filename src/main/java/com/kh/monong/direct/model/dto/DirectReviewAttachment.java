@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DirectReviewAttachment {
-	@NonNull
+	
 	private int dReviewAttachNo;
-	@NonNull
+	
 	private String dReviewNo;
 	@NonNull
 	private String dReviewOriginalFilename;

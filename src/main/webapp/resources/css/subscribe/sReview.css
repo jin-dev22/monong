@@ -45,7 +45,8 @@
 }
 
 .s-review-wrapper img {
-	width: 298px;
+	width: 299px;
+	height: 298px;
     object-fit: cover;
 }
 
@@ -125,6 +126,10 @@
 }
 
 /* ---------- 모달창 ----------- */
+.modal.show {
+	padding-right: 0px !important;
+}
+
 .modal-body{
 	display: flex;
 }
@@ -136,19 +141,22 @@
 }
 
 .modal-dialog.with-img {
-	width: 800px;
+	width: 700px;
 }
 
 .modal-dialog.no-img {
 	width: 500px;
 }
 
-.modal.show {
-	padding-right: 0px !important;
+.modal-img img {
+    width: 299px;
+    height: 298px;
+    object-fit: cover;
 }
 
 .modal-s-review-container{
 	margin: auto 0 auto 10px;
+	width: 500px;
 }
 
 .modal-s-times{

@@ -34,11 +34,10 @@
 			<tbody>
 			  <tr>
 			  <c:if test="${not empty prodAttachList}">
-				  <c:forEach items="${prodAttachList}" var="aList">
+				  <c:set var="aList" value="${prodAttachList[0]}"/>
 				    <td rowspan="3">
 				    	<img src="${pageContext.request.contextPath}/resources/upload/product/${aList.DProductRenamedFilename}" alt="" />
 				    </td>
-				  </c:forEach>
 			  </c:if>
 			  <c:if test="${empty prodAttachList}">
 				  <td rowspan="3">
@@ -94,7 +93,10 @@
 		 
 		</c:forEach> 
 	</c:forEach> 
-	
+	<nav>
+	${pagebar}
+	</nav>
 </c:if>
 </div>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
