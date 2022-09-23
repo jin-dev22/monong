@@ -11,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class NotificationController {
 	
 	//---------------------------------- 선아 시작
 	/**
-	 * 주간채소 팝업
+	 * 로드 시 주간채소 팝업
 	 */
 	@GetMapping("/popup/{weekCriterion}.do")
 	public String getWeekVegsNotice(
@@ -51,5 +52,16 @@ public class NotificationController {
 		model.addAttribute("noticeWeekVegs", noticeWeekVegs);
 		return "/admin/popup";
 	}
+	/**
+	 * 배너 클릭 시 주간채소 팝업
+	 */
+	@GetMapping("/popup/recent.do")
+	public ResponseEntity<?> getRecentWeekVegsNotice(
+			Model model, HttpServletRequest request) {
+		SubscriptionWeekVegs recentNoticeWeekVegs = subscribeService.getRecentWeekVegsNotice();
+		return ResponseEntity.ok().body(recentNoticeWeekVegs);
+	}
+	
+	
 	//---------------------------------- 선아 끝
 }

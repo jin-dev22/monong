@@ -18,14 +18,14 @@
     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
   </div>
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="${pageContext.request.contextPath}/resources/images/sample1.jpg" class="d-block w-100" alt="주간채소공지">
+    <div class="carousel-item active banner1">
+      <img src="${pageContext.request.contextPath}/resources/images/banner_1.jpg" class="d-block w-100" alt="주간채소공지">
     </div>
-    <div class="carousel-item">
-      <img src="${pageContext.request.contextPath}/resources/images/sample2.jpg" class="d-block w-100" alt="이벤트1">
+    <div class="carousel-item banner2" id="showkModal" data-toggle="modal" data-target="#checkModal" data-backdrop="static" data-keyboard="false">
+      <img src="${pageContext.request.contextPath}/resources/images/banner_2.jpg" class="d-block w-100" alt="채소구성">
     </div>
-    <div class="carousel-item">
-      <img src="${pageContext.request.contextPath}/resources/images/sample1.jpg" class="d-block w-100" alt="이벤트2">
+    <div class="carousel-item banner3">
+      <img src="${pageContext.request.contextPath}/resources/images/banner_3.jpg" class="d-block w-100" alt="브랜드스토리">
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -44,13 +44,54 @@
 	<tbody></tbody>
 </table>
 
+<!-- Modal -->
+<div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="checkModalCenterTitle"><span class="onceTitle"></span></h5>
+				<button type="button" class="close closeModalBtn" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body"><span class="onceContent"></span></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary closeModalBtn" data-dismiss="modal">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
 window.onload = function(){
 	const weekCriterion = findMon();
 	let url = `${pageContext.request.contextPath}/notification/popup/\${weekCriterion}.do`;
-	console.log(url);
-	window.open(url, '채소공지팝업', 'top=0, width=550, height=550, resizable=no');
+	window.open(url, '채소공지팝업', 'top=0, width=550, height=550, resizable=no, location=no');
 }
+// 배너 클릭 시 주간채소 모달창으로 공지
+document.querySelector("#showkModal").addEventListener('click', () => {
+	$.ajax({
+		url: `${pageContext.request.contextPath}/notification/popup/recent.do`
+	})
+	.done(function(data, textStatus, xhr) {
+		const {weekCriterion, vegComposition} = data;
+		
+		$('#checkModal').modal('show');
+		const onceTitle = document.querySelector(".onceTitle");
+		const onceContent = document.querySelector(".onceContent");
+		onceTitle.innerText = '';
+		onceTitle.innerText = weekCriterion + ' 주간채소공지';
+		onceContent.innerText = '';
+		onceContent.innerText = "  이번주에는 '" + vegComposition  + "' 제품들이 발송됩니다.";
+		
+		// 모달창 닫기
+		$('.closeModalBtn').on('click', () => {
+			$('#checkModal').modal('hide');
+		});
+	})
+	.fail(function(xhr, textStatus, errorThrown) {
+		console.log(textStatus, errorThrown);
+	});
+});
 
 // 금주 월요일 날짜 계산
 const findMon = () => {
@@ -74,7 +115,6 @@ const findMon = () => {
 	date = date < 10 ? '0' + date : date;
 	
 	return yy + month + date;
-	
 };
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

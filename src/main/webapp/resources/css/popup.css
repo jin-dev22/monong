@@ -9,7 +9,6 @@
 	font-weight: normal;
 	font-style: normal;
 }
-
 body {
 	width: 550px;
 	height: 550px;
@@ -18,16 +17,17 @@ body {
 	font-size: 16px;
 	color: #333;
 }
+a {display: block; color: #333; text-decoration: none;}
 #popup {
-	width: 100%;
-	height: 100%;
+	width: 95%;
+	height: 93%;
 	background-image: url("../images/noticeWeekBG.jpg");
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
 .popupWrapper {
 	width: 90%;
-	height: 90%;
+	height: 100%;
 	margin: auto;
 	position: relative;
 }
@@ -41,6 +41,7 @@ body {
 	font-weight: 700;
 	left: 0;
 	top: 40px;
+	color: #116531;
 }
 .popupWrapper img {
 	left: 0;
@@ -50,11 +51,11 @@ body {
 }
 .popup_content {
 	width: 450px;
-	height: 250px;
+	height: 280px;
 	left: 0;
 	right: 0;
 	margin: auto;
-	top: 150px;
+	top: 120px;
 	font-size: 30px;
 	font-weight: 700;
 	text-align: center;
@@ -68,6 +69,21 @@ body {
 	margin-bottom: 20px;
 }
 .popup_notice {
-	font-size: 18px;
+	font-size: 16px;
 	padding-top: 20px;
 }
+.popup_btn {
+	width: 90%;
+	margin: auto;
+	display: flex;
+}
+#chk_today, #chk_sunday {
+	padding: 10px;
+	text-align: center;
+	width: calc((100% - 10px) / 2);
+}
+#chk_today:hover, #chk_sunday:hover {
+	background-color: #116531;
+	color: #fff;
+}
+

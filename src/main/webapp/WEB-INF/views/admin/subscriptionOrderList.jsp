@@ -99,9 +99,7 @@ function searchData(){
 	const frm = document.searchDataFrm;
 	const startDate = frm.searchStartDate.value;
 	const endDate = frm.searchEndDate.value;
-	console.log(startDate);
-	console.log(endDate);
-	if(!startDate){
+	if(!startDate || !endDate){
 		alert("기간을 입력해주세요.");
 		return;
 	}
@@ -113,12 +111,6 @@ window.onload = function(){
 		// 배송완료된 주문건은 상태 수정 불가
 		if(isSelected && option.value == '배송완료'){
 			option.parentElement.disabled = 'true';
-			
-			// 배송완료시에만 기간 조회 가능
-			let today = new Date();
-			const endDate = document.querySelector("#searchEndDate");
-			endDate.valueAsDate = today;
-			
 		}
 		// 상품준비중인 상태에서는 배송완료 비활성화
 		if(isSelected && option.value == '상품준비중'){
@@ -146,7 +138,6 @@ const inputSelectors = document.querySelectorAll("#sub-deliveryStatus").forEach(
 			headers,
 			method: 'POST',
 			success(response){
-				console.log(response);
 				if(response == 1){
 					window.location.reload();
 				}
