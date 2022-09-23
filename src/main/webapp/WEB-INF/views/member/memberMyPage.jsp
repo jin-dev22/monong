@@ -86,7 +86,7 @@
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewEnrollList.do">직거래작성가능후기</a></li>
             <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberDirectReviewList.do">직거래작성완료후기</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberReviewList.do">구독작성후기</a></li>
+            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/member/memberSubscribeReviewList.do">구독작성후기</a></li>
           </ul>
 		</li>
 		
@@ -104,6 +104,4 @@
 
 </div>
 <hr />
-<script>
 
-</script>

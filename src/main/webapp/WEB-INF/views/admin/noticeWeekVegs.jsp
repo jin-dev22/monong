@@ -25,6 +25,15 @@
 	action="${pageContext.request.contextPath}/admin/noticeWeekVegs.do"
 	method="post">
 <div id="admin-notice-week-vegs-container">
+	<div class="s-form-part-container">
+        <h2 class="s-form-part-title">제외 채소 선택</h2>
+        <span>공지할 채소 5가지를 선택해주세요</span>
+        <div class="notice-vegs-cnt-info">
+	        <span class="notice-vegs-cnt"></span>
+	        <span>/&nbsp5개</span>
+        </div>
+     </div>
+<input type="hidden" name="weekCriterion" id="weekCriterion" value=""/>
 <c:if test="${not empty vegetables}">
 			<div class="s-vegs-category-wrapper">
 	            <h5 class="s-vegs-category-title">과일류</h5>
@@ -96,20 +105,60 @@
 				</div>
 			</div>
 		</c:if>
+		<br /><br />
+		<button type="submit" class="btn btn-EA5C2B" id="notice-week-vegs-btn" onclick="return confirm('이번주 정기구독박스 채소목록을 업데이트하시겠습니까?')">공지하기</button>
 	</div>
 </form:form>
 
   
 <script>
-  
-  window.onload = function(){
-	  const date = new Date();
-	  date.setDate(date.getDate() + date.getDay());
-	  console.log(date);
-	  let dateFormat = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+"&nbsp&nbsp"+"월요일";
+const date = new Date();
+date.setDate(date.getDate() + date.getDay());
+console.log(date);
+
+let year = date.toISOString().substr(2,2);
+let month = date.toISOString().substr(5,2);
+let day = date.toISOString().substr(8,2);
+
+const newDay = year+month+day;
+
+window.onload = function(){
+	 
+	  
 	  const container = document.querySelector("#date-container");
-	  container.innerHTML = dateFormat; 
-  }
+	  container.innerHTML = newDay; 
+	  const criterion = document.querySelector("#weekCriterion");
+	  criterion.value = newDay;
+}
+
+const vegs = document.querySelectorAll(".s-vegs-category [name=vegComposition]")
+const noticeVegCntInfo = document.querySelector(".notice-vegs-cnt-info");
+const noticeVegNum = document.queyrSelector(".notice-vegs-cnt");
+let noticeVegsCnt = 0;
+vegs.forEach((veg)=>{
+    veg.addEventListener('change', (e) => {
+        if(e.target.checked === true){
+      
+            if(noticeVegsCnt < 5){
+            	noticeVegsCnt++;
+            	noticeVegCntInfo.style.color = "black";
+                noticeVegNum.innerHTML = noticeVegsCnt;
+            }
+            else{
+            	noticeVegCntInfo.style.color = "red";
+                alert('최대 5개까지만 선택 가능합니다.');
+                e.target.checked = false;
+            }
+        }
+        else{
+        	noticeVegsCnt--;
+        	noticeVegCntInfo.style.color = "black";
+            noticeVegNum.innerHTML = noticeVegsCnt;
+        }
+        
+    });
+});
+  
   
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -122,6 +122,9 @@ public interface DirectDao {
 	
 	@Update("update direct_product_option set d_sale_status = '판매마감' where d_stock = 0 and d_sale_status = '판매중'")
 	int updateStatusByStock();
+	
+	@Select("select to_char(round(avg(review_rating), 1), 'FM0.0') from direct_review left join direct_product_option using (d_option_no) group by d_product_no having d_product_no = #{dProductNo}")
+	String selectReviewAvgScoreByProductNo(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -146,6 +149,5 @@ public interface DirectDao {
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
 	//----------------- 수진 끝
-
 
 }

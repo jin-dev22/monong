@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <main class="main-container">
+  <input type="hidden" id="dProductNo" name="dProductNo" value="${directProduct.DProductNo}" />
   <div class="slider-container">
     <div class="slider-1">
         <div class="slides">
@@ -56,7 +57,7 @@
     	<span class="dProductName">${directProduct.DProductName}</span><br>
   	</div>
   	<div class="dPrice-review-container">
-    	<span class="dDefaultPrice"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><div class="review-wrap"><span class="review">여기에 별</span><span class="review">별점</span></div>
+    	<span class="dDefaultPrice"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><div class="review-wrap"><span class="reviewStar"></span><span class="reviewAvgScore"></span></div>
   	</div>
     <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
     <div class="dDeliveryFee-container">
@@ -593,6 +594,66 @@ order.addEventListener('click', (e) => {
 	
 	frm.action = "${pageContext.request.contextPath}/direct/directOrder.do";
 	frm.submit();
+});
+
+// 리뷰 점수
+window.addEventListener('load', (e) => {
+	$.ajax({
+		url : "${pageContext.request.contextPath}/direct/reviewAvgScore.do",
+		method : "GET",
+		data : {dProductNo : dProductNo.value},
+		success(response) {
+			const reviewAvgScore = response.reviewAvgScore;
+			console.log(reviewAvgScore);
+			document.querySelector('.reviewAvgScore').innerHTML = reviewAvgScore;
+			
+			const reviewStar = document.querySelector('.reviewStar');
+			
+			if(Number(reviewAvgScore) >= 0 && Number(reviewAvgScore) < 1) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 1 && Number(reviewAvgScore) < 2) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 2 && Number(reviewAvgScore) < 3) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 3 && Number(reviewAvgScore) < 4) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 4 && Number(reviewAvgScore) < 5) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) = 5) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />`).split("\n").join("");
+			}
+		},
+		error : console.log
+	});
 });
 
 // 네비게이션

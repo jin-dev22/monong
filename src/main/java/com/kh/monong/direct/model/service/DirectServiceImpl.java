@@ -235,6 +235,11 @@ public class DirectServiceImpl implements DirectService {
 		
 		return result;
 	}
+	
+	@Override
+	public String selectReviewAvgScoreByProductNo(String dProductNo) {
+		return directDao.selectReviewAvgScoreByProductNo(dProductNo);
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작
