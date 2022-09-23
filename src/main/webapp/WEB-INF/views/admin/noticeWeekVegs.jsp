@@ -114,7 +114,7 @@
   
 <script>
 const todaydate = new Date();
-todaydate.setDate(todaydate.getDate() + todaydate.getDay());
+todaydate.setDate(((todaydate.getDate() - todaydate.getDay())+1)+7);
 console.log(todaydate);
 
 let newYear = todaydate.toISOString().substr(2,2);

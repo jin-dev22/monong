@@ -71,8 +71,9 @@
 		<sec:authorize access="isAuthenticated()">
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
-					<a class="nav-link" href="#">&#128276;</a>
-					<sec:authorize access="!hasRole('ROLE_SELLER')">
+				<sec:authorize access="!hasRole('ROLE_SELLER')">
+					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberNotificationList.do">&#128276;</a>
+					
 						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
                 	</sec:authorize>
 				</nav>
