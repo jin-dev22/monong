@@ -18,6 +18,7 @@ import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
+import com.kh.monong.direct.model.dto.MemberDirectOrder;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dao.MemberDao;
 import com.kh.monong.member.model.dto.Member;
@@ -105,15 +106,17 @@ public class MemberServiceImpl implements MemberService {
 	public List<DirectProduct> selectDirectListBySellerId(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
-//		RowBounds rowBounds = new RowBounds(offset, limit);
 		log.debug("limit = {}, offset = {}", limit, offset);
-		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);// rowBounds);
-		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
-		for(DirectProduct prod : subList) {
-			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
-			log.debug("prod={}",prod);
+		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);
+		if(!prodList.isEmpty()) {
+			List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
+			for(DirectProduct prod : subList) {
+				prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
+				log.debug("prod={}",prod);
+			}			
+			return subList;
 		}
-		return subList;
+		return prodList;
 	}
 
 	private List<DirectProductAttachment> selectDirectAttachments(String dProductNo) {
@@ -143,6 +146,26 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.getTotalOrderCntByProdNo(param);
 	}
 	
+	@Override//기간별 판매자의 상품 주문내역
+	public List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		List<Map<String, Object>> ordList = memberDao.selectOrderListBySeller(param);
+		log.debug("ordList={}",ordList);
+		if(!ordList.isEmpty()) {
+			List<Map<String, Object>> subList = (List<Map<String, Object>>) MonongUtils.customRowBounds(offset, limit, ordList);
+			return subList;
+		}
+		return ordList;
+	}
+	
+	@Override//기간별 판매자 주문내역 총 개수
+	public int getTotalOrderCntBySeller(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		return memberDao.getTotalOrderCntBySeller(param);
+	}
+	
 	@Override
 	public String selectProdNameByNo(String prodNo) {
 		return memberDao.selectProdNameByNo(prodNo);
@@ -151,13 +174,17 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateDOrderStatus(Map<String, Object> param) {
 		if("C".equals(param.get("newStatus"))) {
-			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
-		}//재고 복구시 판매상태 '판매중'으로 변경되도록 할것
+			Integer result = 0;
+			for(MemberDirectOrder mDO : (List<MemberDirectOrder>)param.get("orderOptionCnts")) {
+				result = reStoreDirectProductStock(mDO);
+			}
+		}
 		return memberDao.updateDOrderStatus(param);
 	}
 	
-	private int reStoreDirectProductStock(String dOrderNo) {
-		return memberDao.reStoreDirectProductStock(dOrderNo);
+	@Override
+	public Integer reStoreDirectProductStock(MemberDirectOrder mDO) {
+		return memberDao.reStoreDirectProductStock(mDO);
 	}
 
 	@Override
@@ -219,9 +246,10 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	};
 	
-	private int updateDirectInquireAnswered(@NonNull String dInquireNo) {
+	private int updateDirectInquireAnswered(@NonNull long dInquireNo) {
 		return memberDao.updateDirectInquireAnswered(dInquireNo);
 	}
+
 
 	//------------------수진 끝
 	

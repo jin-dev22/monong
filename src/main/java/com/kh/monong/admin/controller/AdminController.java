@@ -40,6 +40,9 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
+import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
@@ -70,6 +73,9 @@ public class AdminController {
 
 	@Autowired
 	SubscribeService subscribeService;
+	
+	@Autowired
+	NotificationService notificationService;
 	//--------------------------------------------------------수아시작
 	@GetMapping("/memberList.do")
 	public void memberList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
@@ -212,17 +218,25 @@ public class AdminController {
 		model.addAttribute("pagebar",pagebar);
 	};
 	
+	/**
+	 * 관리자 -> 회원 답변
+	 */
 	@PostMapping("/inquireAnswer.do")
-	public ResponseEntity<?> insertInquireAnswer(@RequestParam String inquireAContent, @RequestParam String inquireNo) {
-		log.debug("inquireAContent = {}",inquireAContent);
-		log.debug("inquireNo = {}", inquireNo);
+	public ResponseEntity<?> insertInquireAnswer(InquireAnswer inqAnswer, MemberNotification notice) {
+		log.debug("inqAnswer = {}",inqAnswer);
+		log.debug("notice = {}", notice);
 		
-		InquireAnswer inqAnswer = InquireAnswer.builder().inquireAContent(inquireAContent).inquireNo(inquireNo).build();
-		//주문내역 상태변경
+		//답변저장
 		int result = inquireService.insertInquireAnswer(inqAnswer);
 		
 		//알림정보저장
-		
+		notice.setMessageType(MessageType.INQ_ANSWERD);
+		//컨텐츠 글자수 제한 걸기
+		String _content = notice.getNotiContent();
+		String substrContent = _content.length() > 10? _content.substring(0, 9)+"...": _content;
+		String content = "["+substrContent +"]에 답변이 달렸습니다.";
+		notice.setNotiContent(content);
+		result = notificationService.insertNotification(notice);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}

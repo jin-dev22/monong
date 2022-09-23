@@ -22,6 +22,12 @@ public class InquireController {
 	@GetMapping("/inquireAdmin.do")
 	public void inquireAdmin() {};
 	
+	/**
+	 * 회원 -> 관리자 문의
+	 * @param inquire
+	 * @param redirectAttr
+	 * @return
+	 */
 	@PostMapping("/inquireAdmin.do")
 	public String insertInquire(Inquire inquire, RedirectAttributes redirectAttr) {
 		log.debug("inquire = {}", inquire);

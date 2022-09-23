@@ -18,20 +18,26 @@ COMMENT ON COLUMN member.member_birthday IS '0000-00-00';
 COMMENT ON COLUMN member.member_enroll_date IS '0000-00-00';
 
 CREATE TABLE member_notification (
-	noti_no	varchar2(100)		NOT NULL,
+	noti_no	number		NOT NULL,
 	member_id	varchar2(100)		NOT NULL,
 	noti_content	varchar2(2000)		NOT NULL,
 	noti_created_at	date	DEFAULT current_date	NULL,
 	noti_is_read 	varchar2(1)	DEFAULT 'N'	NULL,
-	d_inquire_no	number		NULL,
-	d_order_no	number		NULL,
-	s_order_no	number		NULL
+    inquire_no number NULL,
+	d_inquire_no	varchar2(100)		NULL,
+	d_order_no	varchar2(100)		NULL,
+	s_order_no	varchar2(100)		NULL
 );
-COMMENT ON COLUMN member_notification.d_inquire_no IS '답변완료시 알림';
+--수진 : 알림테이블 메세지타입 추가
+alter table member_notification add message_type varchar2(30) not null;
 
-COMMENT ON COLUMN member_notification.d_order_no IS '주문관련 알림';
+COMMENT ON COLUMN member_notification.d_inquire_no IS '판매자 답변완료시 알림';
 
-COMMENT ON COLUMN member_notification.s_order_no IS '주문상태 변경시 알림';
+COMMENT ON COLUMN member_notification.inquire_no IS '관리자 답변완료시 알림';
+
+COMMENT ON COLUMN member_notification.d_order_no IS '직거래 주문관련 알림';
+
+COMMENT ON COLUMN member_notification.s_order_no IS '정기구독 주문상태 변경시 알림';
 
 CREATE TABLE inquire (
 	inquire_no	number		NOT NULL,
