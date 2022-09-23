@@ -26,6 +26,7 @@ public class DirectServiceImpl implements DirectService {
 	@Autowired
 	private DirectDao directDao;
 	//----------------- 재경 시작
+	// 상품 목록
 	@Override
 	public List<DirectProduct> selectDirectProductList(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
@@ -44,6 +45,52 @@ public class DirectServiceImpl implements DirectService {
 	public List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo) {
 		return directDao.selectDirectProductAttachmentList(dProductNo);
 	}
+	
+	// 최근 등록순 정렬
+	@Override
+	public List<DirectProduct> orderByCreatedAt(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByCreatedAt(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+	
+	// 가격 높은순 정렬
+	@Override
+	public List<DirectProduct> orderByPriceDesc(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByPriceDesc(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+	
+	@Override
+	public List<DirectProduct> orderByPriceAsc(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByPriceAsc(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+	
+	
 	
 	@Override
 	public int getTotalContent() {

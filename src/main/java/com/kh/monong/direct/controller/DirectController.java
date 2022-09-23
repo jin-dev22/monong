@@ -81,6 +81,77 @@ public class DirectController {
 			
 			log.debug("model = {}", model);
 		}
+		// 최근 등록순
+		@GetMapping("/orderByCreatedAt.do")
+		public void orderByCreatedAt(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+			// 1. content영역
+			Map<String, Integer> param = new HashMap<>();
+			int limit = 10;
+			param.put("cPage", cPage);
+			param.put("limit", limit);
+			log.debug("param = {}", param);
+			List<DirectProduct> list = directService.orderByCreatedAt(param);
+			log.debug("list = {}", list);
+			
+			model.addAttribute("list", list);
+				
+			// 2. pagebar영역
+			int totalContent = directService.getTotalContent();
+			log.debug("totalContent = {}", totalContent);
+			String url = request.getRequestURI(); // /monong/direct/directProductList.do
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+			model.addAttribute("pagebar", pagebar);
+			
+			log.debug("model = {}", model);
+		}
+		
+		// 상품 가격 높은순
+		@GetMapping("/orderByPriceDesc.do")
+		public void orderByPriceDesc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		// 1. content영역
+			Map<String, Integer> param = new HashMap<>();
+			int limit = 10;
+			param.put("cPage", cPage);
+			param.put("limit", limit);
+			log.debug("param = {}", param);
+			List<DirectProduct> list = directService.orderByPriceDesc(param);
+			log.debug("list = {}", list);
+					
+			model.addAttribute("list", list);
+						
+			// 2. pagebar영역
+			int totalContent = directService.getTotalContent();
+			log.debug("totalContent = {}", totalContent);
+			String url = request.getRequestURI(); // /monong/direct/directProductList.do
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+			model.addAttribute("pagebar", pagebar);
+					
+			log.debug("model = {}", model);
+		}
+		
+		// 상품 가격 낮은순
+		@GetMapping("/orderByPriceAsc.do")
+		public void orderByPriceAsc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		// 1. content영역
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		log.debug("param = {}", param);
+		List<DirectProduct> list = directService.orderByPriceAsc(param);
+		log.debug("list = {}", list);
+							
+		model.addAttribute("list", list);
+								
+		// 2. pagebar영역
+		int totalContent = directService.getTotalContent();
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); // /monong/direct/directProductList.do
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+							
+		log.debug("model = {}", model);
+		}
 		
 		// 상품 등록
 		@GetMapping("/directProductEnroll.do")
@@ -130,6 +201,7 @@ public class DirectController {
 			return "redirect:/direct/directProductList.do";
 		
 		}
+		
 		
 		//----------------- 재경 끝
 	//----------------- 민지 시작

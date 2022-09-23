@@ -20,15 +20,28 @@ import com.kh.monong.direct.model.dto.DirectProductOption;
 @Mapper
 public interface DirectDao {
 	//----------------- 재경 시작
-	
+	// 상품 목록
 	@Select("select d.* from direct_product d order by d_product_created_at desc")
 	List<DirectProduct> selectDirectProductList(Map<String, Integer> param, RowBounds rowBounds);
 		
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
-
+	
 	@Select("select count(*) from direct_product")
 	int getTotalContent();
+	
+	// 최근 등록순 정렬
+	@Select("select d.* from direct_product d order by d_product_created_at desc")
+	List<DirectProduct> orderByCreatedAt(Map<String, Integer> param, RowBounds rowBounds);
+
+	// 가격 높은순 정렬
+	@Select("select d.* from direct_product d order by d_default_price desc")
+	List<DirectProduct> orderByPriceDesc(Map<String, Integer> param, RowBounds rowBounds);
+	
+	// 가격 낮은순 정렬
+	@Select("select d.* from direct_product d order by d_default_price asc")
+	List<DirectProduct> orderByPriceAsc(Map<String, Integer> param, RowBounds rowBounds);
+	
 		
 	// 상품 등록
 	@Insert("insert into direct_product values('DP'||seq_d_product_no.nextval, #{memberId}, #{dProductName}, #{dProductContent}, default, default, #{dDefaultPrice}, #{dDeliveryFee})")
@@ -133,4 +146,6 @@ public interface DirectDao {
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
 	//----------------- 수진 끝
+
+
 }
