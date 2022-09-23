@@ -66,6 +66,7 @@ public interface SubscribeService {
 	 */
 	SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion);
 	
+	SubscriptionWeekVegs getRecentWeekVegsNotice();
 	
 	
 	
@@ -109,5 +110,6 @@ public interface SubscribeService {
 	
 	int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
 	//수아코드 끝
+
 
 }
