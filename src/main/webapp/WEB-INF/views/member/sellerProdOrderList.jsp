@@ -14,6 +14,7 @@
 		<input type="date" name="startDate" id="startDate" value="${startDate}"/>
 		<label for="endDate" class="date-label" >종료일</label>
 		<input type="date" name="endDate" id="endDate" value="${endDate}" />
+		&nbsp;&nbsp;&nbsp;
 		<input type="submit" value="검색" />
 	</form>
 	<script>

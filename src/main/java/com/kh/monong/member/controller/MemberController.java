@@ -334,6 +334,7 @@ public class MemberController {
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
 		model.addAttribute("orderList", orderList);
 		log.debug("orderList={}", orderList);
+		log.debug("ListSize={}",orderList.size());
 		
 		String prodName = memberService.selectProdNameByNo(prodNo);
 		model.addAttribute("prodName",prodName);

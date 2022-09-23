@@ -116,12 +116,10 @@ public class MonongUtils {
 		log.debug("size={}",size);
 		int paramTwo = offset + limit;
 		if(offset == size-1) {
-			List<Object> subList = new ArrayList<>();
-			subList.add(list.get(offset));
-			return subList;
+			return new ArrayList<>(list.subList(offset, size));
 		}
 		else if(paramTwo > size) {
-			return new ArrayList<>(list.subList(offset, size-1));			
+			return new ArrayList<>(list.subList(offset, size));
 		}
 		else {
 			return new ArrayList<>(list.subList(offset, paramTwo));
