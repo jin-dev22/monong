@@ -113,23 +113,23 @@
 
   
 <script>
-const date = new Date();
-date.setDate(date.getDate() + date.getDay());
-console.log(date);
+const todaydate = new Date();
+todaydate.setDate(todaydate.getDate() + todaydate.getDay());
+console.log(todaydate);
 
-let year = date.toISOString().substr(2,2);
-let month = date.toISOString().substr(5,2);
-let day = date.toISOString().substr(8,2);
+let newYear = todaydate.toISOString().substr(2,2);
+let newMonth = todaydate.toISOString().substr(5,2);
+let newDate = todaydate.toISOString().substr(8,2);
 
-const newDay = year+month+day;
+const noticeDay = newYear+newMonth+newDate;
 
 window.onload = function(){
 	 
 	  
 	  const container = document.querySelector("#date-container");
-	  container.innerHTML = newDay; 
+	  container.innerHTML = noticeDay; 
 	  const criterion = document.querySelector("#weekCriterion");
-	  criterion.value = newDay;
+	  criterion.value = noticeDay;
 }
 
 const vegs = document.querySelectorAll(".s-vegs-category [name=vegComposition]")

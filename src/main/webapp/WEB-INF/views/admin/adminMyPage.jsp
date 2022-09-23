@@ -37,7 +37,7 @@
 	    주간채소공지
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-	    <li><a href="${pageContext.request.contextPath}/admin/noticeWeekVegs.do">주간채소공지하기</a></li>
+	    <li><a id="noticeWeekVegs" href="#" onclick="buildUrl();">주간채소공지하기</a></li>
 	    <li><a href="${pageContext.request.contextPath}/admin/noticeWeekVegsList.do">주간채소히스토리</a></li>
 	  </ul>
 	</div>
@@ -49,5 +49,20 @@
 <hr />
 
 <script>
+const date = new Date();
+date.setDate(date.getDate() + date.getDay());
+console.log(date);
 
+let year = date.toISOString().substr(2,2);
+let month = date.toISOString().substr(5,2);
+let day = date.toISOString().substr(8,2);
+
+const newDay = year+month+day;
+
+function buildUrl(){
+	let url = "<c:out value='${pageContext.request.contextPath}/admin/noticeVegs.do?weekCriterion='/>";
+	let newUrl = url + newDay;
+	console.log(newUrl);
+	$("#noticeWeekVegs").attr("href",newUrl);
+};
 </script>
