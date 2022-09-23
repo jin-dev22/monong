@@ -57,6 +57,8 @@ public interface DirectService {
 	int insertDirectOrder(DirectOrder directOrder);
 		
 	int insertMemberDirectOrder(Map<String, Object> param);
+	
+	String selectReviewAvgScoreByProductNo(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -76,10 +78,6 @@ public interface DirectService {
 	
 	int mergeIntoDOption(DirectProductOption dOpt);
 	//----------------- 수진 끝
-
-
-
-	
 }
 
 
