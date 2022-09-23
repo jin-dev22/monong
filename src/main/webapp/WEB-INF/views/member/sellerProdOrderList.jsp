@@ -36,7 +36,7 @@
 			frm.submit();
 		});
 	</script>
-	<span>해당 기간의 총 주문 건수는 ${orderList.size()}건 입니다.</span>
+	<span>해당 기간의 총 주문 건수는 ${totalContent}건 입니다.</span>
 	<c:if test="${empty orderList}">	
 		<div>해당상품의 주문내역이 없습니다.</div>
 	</c:if>
@@ -69,10 +69,6 @@
 							<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
 							<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
 						</select>
-						<input type="hidden" name="dOrderNo" value="${order.dOrderNo}"/>
-						<input type="hidden" name="dOrderMember" value="${order.customerId}"/>
-						<input type="hidden" name="dProdNo" value="${param.prodNo }" />
-						<input type="hidden" name="dProdName" value="${prodName}" />
 						<c:forEach items="${order.dProdOptions}" var="opt">
 							<input type="hidden" name="dOptionNo" value="${opt.dOptionNo}" />
 							<input type="hidden" name="dOptionCount" value="${opt.dOptionCount}" />

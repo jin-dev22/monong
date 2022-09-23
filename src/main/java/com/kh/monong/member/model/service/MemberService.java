@@ -11,6 +11,7 @@ import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
+import com.kh.monong.direct.model.dto.MemberDirectOrder;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -60,6 +61,8 @@ public interface MemberService {
 	String selectProdNameByNo(String prodNo);
 
 	int updateDOrderStatus(Map<String, Object> param);
+	
+	Integer reStoreDirectProductStock(MemberDirectOrder mDO);
 	
 	SellerInfoAttachment selectSellerInfoAttachment(long delFileNo);
 	

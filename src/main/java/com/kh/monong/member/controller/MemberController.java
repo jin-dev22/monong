@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,14 +52,13 @@ import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
+import com.kh.monong.direct.model.dto.MemberDirectOrder;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
-import com.kh.monong.notice.model.dto.MemberNotification;
-import com.kh.monong.notice.model.dto.MessageType;
 import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
@@ -302,6 +301,9 @@ public class MemberController {
 		log.debug("model = {}", model);
 	};
 	
+	/**
+	 * 상품별 주문내역 조회
+	 */
 	@GetMapping("/sellerProdOrderList.do")
 	public void sellerProdOrderList(@RequestParam String prodNo, 
 									@RequestParam(required = false) String startDate, 
@@ -313,30 +315,31 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("prodNo", prodNo);
-		//검색기간 설정시 빈 문자열 전달 방지
-		if(startDate == "" || endDate == "") {
-			startDate = null;
-			endDate = null;
+		//검색기간 미설정시 자동 1달로 설정
+		LocalDate _startDate = null;
+		LocalDate _endDate = null;
+		if(startDate == null || endDate == null) {
+			LocalDate today = LocalDate.now(); 
+			_startDate = today.plusMonths(-1);
+			_endDate = today;
 		}
+		else{
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+			_endDate = LocalDate.parse(endDate, dtf);
+			_startDate = LocalDate.parse(startDate, dtf);		
+		}
+		
 		//endDate +1 해서 db조회
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
-		if(endDate != null && endDate != "") {
-			LocalDate _endDate = LocalDate.parse(endDate, dtf);
-			_endDate = _endDate.plusDays(1);
-			endDate =  _endDate.toString();
-		}
-		param.put("startDate", startDate);
-		param.put("endDate",endDate);
+		_endDate = _endDate.plusDays(1);
+		param.put("startDate", _startDate);
+		param.put("endDate",_endDate);
 		log.debug("param = {}",param);
 		
 		//endDate 다시 -1해서 view에 전달
-		if(endDate != null && endDate != "") {
-			LocalDate _endDate = LocalDate.parse(endDate, dtf);
-			_endDate = _endDate.plusDays(-1);
-			endDate =  _endDate.toString();
-		}
-		model.addAttribute("startDate",startDate);
-		model.addAttribute("endDate",endDate);
+		_endDate = _endDate.plusDays(-1);
+		
+		model.addAttribute("startDate",_startDate);
+		model.addAttribute("endDate",_endDate);
 		
 		List<Map<String, Object>> orderList = memberService.selectOrderListByProdNo(param);
 		model.addAttribute("orderList", orderList);
@@ -347,102 +350,126 @@ public class MemberController {
 		model.addAttribute("prodName",prodName);
 		
 		int totalContent = memberService.getTotalOrderCntByProdNo(param);
+		model.addAttribute("totalContent",totalContent);
 		log.debug("totalContent = {}", totalContent);
+		
 		String url = request.getRequestURI(); 
-		url += "?prodNo=" + prodNo + "&startDate=" + startDate +"&endDate="+endDate; 
+		url += "?prodNo=" + prodNo + "&startDate=" + _startDate +"&endDate="+_endDate; 
 		
 		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 	}
 	
+	/**
+	 * 판매자별 주문내역 조회, 상태변경페이지
+	 */
 	@GetMapping("/sellerDirectOrderList.do")
 	public void sellerDirectOrderList(@RequestParam(required = false) String startDate, 
 			@RequestParam(required = false) String endDate,
 			@RequestParam(defaultValue = "1") int cPage,
 			Authentication authentication,
 			Model model, HttpServletRequest request) {
+		log.debug("startDate={}",startDate);
+		log.debug("endDate={}",endDate);
 		
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("memberId", authentication.getName());
-		//검색기간 설정시 빈 문자열 전달 방지
-		if(startDate == "" || endDate == "") {
-			startDate = null;
-			endDate = null;
+
+		//검색기간 미설정시 자동 1달로 설정
+		LocalDate _startDate = null;
+		LocalDate _endDate = null;
+		if(startDate == null || endDate == null) {
+			LocalDate today = LocalDate.now(); 
+			_startDate = today.plusMonths(-1);
+			_endDate = today;
 		}
+		else{
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+			_endDate = LocalDate.parse(endDate, dtf);
+			_startDate = LocalDate.parse(startDate, dtf);		
+		}
+		
 		//endDate +1 해서 db조회
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
-		if(endDate != null && endDate != "") {
-			LocalDate _endDate = LocalDate.parse(endDate, dtf);
-			_endDate = _endDate.plusDays(1);
-			endDate =  _endDate.toString();
-		}
-		param.put("startDate", startDate);
-		param.put("endDate",endDate);
+		_endDate = _endDate.plusDays(1);
+		param.put("startDate", _startDate);
+		param.put("endDate",_endDate);
 		log.debug("param = {}",param);
 		
 		//endDate 다시 -1해서 view에 전달
-		if(endDate != null && endDate != "") {
-			LocalDate _endDate = LocalDate.parse(endDate, dtf);
-			_endDate = _endDate.plusDays(-1);
-			endDate =  _endDate.toString();
-		}
-		model.addAttribute("startDate",startDate);
-		model.addAttribute("endDate",endDate);
+		_endDate = _endDate.plusDays(-1);
+		
+		model.addAttribute("startDate",_startDate);
+		model.addAttribute("endDate",_endDate);
 		
 		List<Map<String, Object>> orderList = memberService.selectOrderListBySeller(param);
 		model.addAttribute("orderList", orderList);
 		log.debug("orderList={}", orderList);
 		log.debug("ListSize={}",orderList.size());
 		
-		//int totalContent = memberService.getTotalOrderCntBySeller(param);
+		int totalContent = memberService.getTotalOrderCntBySeller(param);
+		model.addAttribute("totalContent",totalContent);
 		
-		//log.debug("totalContent = {}", totalContent);
+		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); 
-		url += "&startDate=" + startDate +"&endDate="+endDate; 
+		url += "?startDate=" + _startDate +"&endDate="+_endDate; 
 		
-		//String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
-		//model.addAttribute("pagebar", pagebar);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
 	}
 	
 	@PostMapping("/updateDOrderStatus.do")
 	public ResponseEntity<?> updateDOrderStatus(@RequestParam String orderStatus, @RequestParam String dOrderNo,
-												@RequestParam String dOrderMember, @RequestParam String dProdNo,
-												@RequestParam String dProdName) {
+												@RequestParam String memberId, 
+												@RequestParam(value="dOptionNo[]") List<String> dOptionNoList,
+												@RequestParam(value="dOptionCount[]") List<Integer> dOptionCountList
+												) {
 		log.debug("newStatus = {}",orderStatus);
 		log.debug("dOrderNo = {}", dOrderNo);
-		log.debug("dOrderMember = {}",dOrderMember);
-		log.debug("dProdNo = {}",dProdNo);
-		log.debug("dProdName = {}",dProdName);
+		log.debug("memberId = {}",memberId);
+		log.debug("optionNoList = {}",dOptionNoList);
+		log.debug("dOptionCountList = {}",dOptionCountList);
+		
+		//옵션별 수량 객체에 담기
+		List<MemberDirectOrder> orderOptionCnts = new ArrayList<>();
+		for(int i = 0; i < dOptionNoList.size(); i++) {
+			MemberDirectOrder mDO = MemberDirectOrder.builder()
+												.dOptionNo(dOptionNoList.get(i))
+												.dOptionCount(dOptionCountList.get(i))
+												.build();
+			
+			orderOptionCnts.add(mDO);
+		}
 		
 		Map<String, Object> param = new HashMap<>();
 		param.put("newStatus", orderStatus);
 		param.put("dOrderNo", dOrderNo);	
+		param.put("orderOptionCnts", orderOptionCnts);
 		//주문내역 상태변경
 		int result = memberService.updateDOrderStatus(param);
 		
 		//알림정보저장
 		String stat = "";
-//		switch(orderStatus) {
-//		case "R" : stat = "상품준비중입니다."; break;
-//		case "C" : stat = "주문취소 되었습니다."; 
-//		     		break;
-//		case "D" : stat = "배송중입니다."; break;
-//		case "F" : stat = "배송완료되었습니다."; break;
-//		}
-//		
-//		String content = "주문하신 ["+subStrContent(dProdName)+"]이(가) " +stat;	
-//		MemberNotification notice = MemberNotification.builder()
-//				.memberId(dOrderMember)
-//				.notiContent(content)
-//				.dOrderNo(dOrderNo)
-//				.messageType(MessageType.DO_STATUS)
-//				.build();
-//		
-//		result = notificationService.insertNotification(notice);
-//		
+		switch(orderStatus) {
+		case "R" : stat = "상품준비중입니다."; break;
+		case "C" : stat = "주문취소 되었습니다."; 
+		     		break;
+		case "D" : stat = "배송중입니다."; break;
+		case "F" : stat = "배송완료되었습니다."; break;
+		}
+		
+		String content = "주문하신 ["+subStrContent(dOrderNo)+"]이(가) " +stat;	
+		MemberNotification notice = MemberNotification.builder()
+				.memberId(dOrderMember)
+				.notiContent(content)
+				.dOrderNo(dOrderNo)
+				.messageType(MessageType.DO_STATUS)
+				.build();
+		
+		result = notificationService.insertNotification(notice);
+		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}

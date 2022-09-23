@@ -19,6 +19,7 @@ import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
+import com.kh.monong.direct.model.dto.MemberDirectOrder;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -90,8 +91,8 @@ public interface MemberDao {
 	@Select("select count(*) from inquire where member_id = #{memberId}")
 	int getTotalInqCntBymemberId(String memberId);
 
-	@Select("update direct_product_option  set d_stock = d_stock + 1 where d_option_no in(select d_option_no  from member_direct_order where d_order_no = #{dOrderNo})")
-	int reStoreDirectProductStock(String dOrderNo);
+	@Select("update direct_product_option set d_stock = d_stock + #{dOptionCount}, d_sale_status = '판매중' where d_option_no = #{dOptionNo}")
+	Integer reStoreDirectProductStock(MemberDirectOrder mDO);
 
 	List<DirectInquire> selectDirectInqList(Map<String, Object> param, RowBounds rowBounds);
 	

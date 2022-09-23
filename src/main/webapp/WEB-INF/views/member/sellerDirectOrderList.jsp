@@ -36,7 +36,7 @@
 			frm.submit();
 		});
 	</script>
-	<span>해당 기간의 총 주문 건수는 ${orderList.size()}건 입니다.</span>
+	<span>해당 기간의 총 주문 건수는 ${totalContent}건 입니다.</span>
 	<c:if test="${empty orderList}">	
 		<div>해당상품의 주문내역이 없습니다.</div>
 	</c:if>
@@ -58,12 +58,13 @@
 							<c:forEach items="${prod.orderOptions}" var="opt">
 								<span>선택옵션 : ${opt.dOptionName}</span>&nbsp;&nbsp;
 								<span>수량 : ${opt.dOptionCnt}</span>
+								<span>주문금액 :<fmt:formatNumber value="${opt.dOptPrice * opt.dOptionCnt}" pattern="#,###" /> </span>
 								<br />
 							</c:forEach>
 						</div>
 					</div>
 				</c:forEach>
-						<div>주문금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
+						<div>총 결제금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
 					<div class="order-customer">주문자 아이디 : <br />${order.customerId}</div>
 					<div class="order-status">
 						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
@@ -78,12 +79,12 @@
 							</select>
 							<input type="hidden" name="dOrderNo" value="${order.dOrderNo}"/>
 							<input type="hidden" name="dOrderMember" value="${order.customerId}"/>
-							<input type="hidden" name="dProdNo" value="${param.prodNo }" />
-							<input type="hidden" name="dProdName" value="${prodName}" />
-							<c:forEach items="${order.dProdOptions}" var="opt">
-								<input type="hidden" name="dOptionNo" value="${opt.dOptionNo}" />
-								<input type="hidden" name="dOptionCount" value="${opt.dOptionCount}" />
-						</c:forEach>
+							<c:forEach items="${order.orderProducts}" var="prod">
+								<c:forEach items="${prod.orderOptions}" var="opt">
+									<input type="hidden" name="dOptionNo"  value="${opt.dOptionNo}" />
+									<input type="hidden" name="dOptionCount" value="${opt.dOptionCnt}" />
+								</c:forEach>
+							</c:forEach>
 							<sec:csrfInput />
 						</form>
 					</div>
@@ -111,9 +112,18 @@
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	const chkSubmit = (frm) =>{
 		console.log(frm);
-		const {orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName, dOptionNo, dOptionCount} = frm;
-		console.log(orderStatus, dOrderNo, dOrderMember, dProdNo, dProdName);
-		console.log("이거 나오냐: ",dOptionNo, dOptionCount);
+		const {orderStatus, dOrderNo, dOrderMember} = frm;
+		const dOptionNoList = Array.from(frm.querySelectorAll("[name=dOptionNo]"));
+		const dOptionCountList = Array.from(frm.querySelectorAll("[name=dOptionCount]"));
+		const dOptionNo = dOptionNoList.reduce((arr, input)=>{
+			arr.push(input.value);
+			return arr;
+		},[]);
+		const dOptionCount = dOptionCountList.reduce((arr, input)=>{
+			arr.push(input.value);
+			return arr;
+		},[]);
+		console.log(dOptionNo, dOptionCount);
 		let StatusforAlert = "";
 		let cnt = 0;
 		switch(orderStatus.value){
@@ -127,16 +137,13 @@
 		if(confirm("진행상태는 변경 후 이전단계로 돌릴 수 없어요.\n주문번호["+dOrderNo.value+"]의 진행상태를 ["+StatusforAlert+"](으)로 변경하시겠어요?")){
 			const opts =  Array.from(orderStatus.getElementsByTagName("option"));
 			console.log(opts);
-			console.log(typeof opts);
 			//return;
 			$.ajax({
 				url : "${pageContext.request.contextPath}/member/updateDOrderStatus.do",
 				headers,
 				method : "POST",
 				data : {orderStatus:orderStatus.value, dOrderNo:dOrderNo.value, 
-						memberId:dOrderMember.value, dProdNo:dProdNo.value, 
-						dProdName:dProdName.value, dOptionNo:dOptionNo.value, 
-						dOptionCount:dOptionCount.value},
+						memberId:dOrderMember.value, dOptionNo, dOptionCount},
 				success(result){
 					console.log(result);
 					if(result>0){

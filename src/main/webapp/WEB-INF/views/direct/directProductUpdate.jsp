@@ -153,9 +153,8 @@ div.note-toolbar {
         		<span class="enroll-info-label">배송비<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDeliveryFee-container">
-                    	<input type="text" maxlength="10" onkeyup="inputNumberFormat(this);"
-                    			class="form-control price" name="DDeliveryFee" id="DDeliveryFee" 
-                    			value="<fmt:formatNumber value="${prod.DDeliveryFee}" pattern="#,###" />" required>
+                    	<input type="text" maxlength="10" class="form-control price" name="DDeliveryFee" id="DDeliveryFee" 
+                    			value="<fmt:formatNumber value="${prod.DDeliveryFee}" pattern="#,###" />" readOnly required>
                     </span>
         		</span>
         	</div>
