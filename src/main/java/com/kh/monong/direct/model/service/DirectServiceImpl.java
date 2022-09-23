@@ -76,6 +76,7 @@ public class DirectServiceImpl implements DirectService {
 			return list;
 	}
 	
+	// 가격 낮은순 정렬
 	@Override
 	public List<DirectProduct> orderByPriceAsc(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
@@ -89,9 +90,7 @@ public class DirectServiceImpl implements DirectService {
 		}
 			return list;
 	}
-	
-	
-	
+
 	@Override
 	public int getTotalContent() {
 		return directDao.getTotalContent();
@@ -135,8 +134,11 @@ public class DirectServiceImpl implements DirectService {
 		return directDao.insertDirectProductOption(opt);
 	}
 	
-	
-	
+	@Override
+	public int reviewGetTotalContentByDProNo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override
