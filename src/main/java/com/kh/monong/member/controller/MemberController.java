@@ -59,6 +59,8 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
 import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
@@ -454,15 +456,14 @@ public class MemberController {
 		String stat = "";
 		switch(orderStatus) {
 		case "R" : stat = "상품준비중입니다."; break;
-		case "C" : stat = "주문취소 되었습니다."; 
-		     		break;
+		case "C" : stat = "주문취소 되었습니다."; break;
 		case "D" : stat = "배송중입니다."; break;
 		case "F" : stat = "배송완료되었습니다."; break;
 		}
 		
-		String content = "주문하신 ["+subStrContent(dOrderNo)+"]이(가) " +stat;	
+		String content = "주문번호 ["+subStrContent(dOrderNo)+"]이(가) " +stat;	
 		MemberNotification notice = MemberNotification.builder()
-				.memberId(dOrderMember)
+				.memberId(memberId)
 				.notiContent(content)
 				.dOrderNo(dOrderNo)
 				.messageType(MessageType.DO_STATUS)
@@ -614,7 +615,7 @@ public class MemberController {
 	};
 	
 	@PostMapping("/sellerProductQnAList.do")
-	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, @RequestParam String dInquireNo){
+	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, @RequestParam long dInquireNo){
 		log.debug("dInquireAContent={}",dInquireAContent);
 		log.debug("dInquireNo={}",dInquireNo);
 

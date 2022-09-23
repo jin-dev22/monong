@@ -11,6 +11,7 @@ import com.kh.monong.notice.model.dto.MemberNotification;
 @Mapper
 public interface NotificationDao {
 	//---------------------------------------------수진시작
+	@Insert("insert into ")
 	int insertNotification(MemberNotification notice);
 	//---------------------------------------------수진끝
 	

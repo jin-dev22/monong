@@ -246,7 +246,7 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	};
 	
-	private int updateDirectInquireAnswered(@NonNull String dInquireNo) {
+	private int updateDirectInquireAnswered(@NonNull long dInquireNo) {
 		return memberDao.updateDirectInquireAnswered(dInquireNo);
 	}
 

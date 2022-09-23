@@ -32,6 +32,8 @@ import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
 
+import lombok.NonNull;
+
 @Mapper
 public interface MemberDao {
 
@@ -103,7 +105,7 @@ public interface MemberDao {
 	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
 
 	@Update("update direct_inquire set has_answer = 'Y' where d_inquire_no = #{dInquireNo}")
-	int updateDirectInquireAnswered(String dInquireNo);
+	int updateDirectInquireAnswered(@NonNull long dInquireNo);
 
 	List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param);
 

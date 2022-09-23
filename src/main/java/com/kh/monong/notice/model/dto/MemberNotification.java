@@ -22,7 +22,7 @@ public class MemberNotification {
 	private LocalDate notiCreadtedAt;
 	private YN notiIsRead;
 	private long inquireNo;//관리자문의
-	private String dInquireNo;//직거래 판매자문의
+	private long dInquireNo;//직거래 판매자문의
 	private String dOrderNo;
 	private String sOrderNo;//정기구독번호
 	private MessageType messageType; 

@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DirectInquireEntity {
-	private String dInquireNo;
+	private long dInquireNo;
 	@NonNull
 	private String dProductNo;
 	@NonNull
