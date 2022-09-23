@@ -90,6 +90,13 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription_order where so_delivery_completed_date between to_date(#{searchStartDate}) and to_date(#{searchEndDate})+ 0.99999 and s_order_status = #{deliveryStatus}")
 	int getTotalsearchPeriodData(Map<String, Object> param);
 	
+	/**
+	 * 주간채소 팝업
+	 */
+	@Select("select * from subscription_week_vegs where week_criterion = #{weekCriterion}")
+	SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion);
+	
+	
 	// 선아코드 끝
 	
 	// 미송코드 시작
@@ -127,6 +134,7 @@ public interface SubscribeDao {
 	// 추가
 	@Select("select s_no from subscription where member_id = #{memberId} and s_quit_yn = 'N'")
 	String getSubscriptionByMemberId(String memberId);
+
 
 
 

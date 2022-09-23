@@ -151,6 +151,13 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getTotalsearchPeriodData(param);
 	}
 	
+	/**
+	 * 주간채소 팝업
+	 */
+	@Override
+	public SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion) {
+		return subscribeDao.getWeekVegsNotice(weekCriterion);
+	}
 	
 	// 선아코드 끝
 		

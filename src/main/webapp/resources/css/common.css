@@ -310,3 +310,12 @@ footer {
 .page-link:hover {
 	color: #F6D860;
 }
+
+/*
+----------------------슬라이드 영역 -----------------------
+*/
+#carouselExampleIndicators {
+	width: 80%;
+	margin: auto;
+}
+
