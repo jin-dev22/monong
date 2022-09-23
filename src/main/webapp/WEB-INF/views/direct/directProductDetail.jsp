@@ -1,4 +1,4 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 <main class="main-container">
+  <input type="hidden" id="dProductNo" name="dProductNo" value="${directProduct.DProductNo}" />
   <div class="slider-container">
     <div class="slider-1">
         <div class="slides">
@@ -56,7 +57,7 @@
     	<span class="dProductName">${directProduct.DProductName}</span><br>
   	</div>
   	<div class="dPrice-review-container">
-    	<span class="dDefaultPrice"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><div class="review-wrap"><span class="review">여기에 별</span><span class="review">별점</span></div>
+    	<span class="dDefaultPrice"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,###" />원</span><div class="review-wrap"><span class="reviewStar"></span><span class="reviewAvgScore"></span></div>
   	</div>
     <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
     <div class="dDeliveryFee-container">
@@ -120,15 +121,96 @@
   	  <nav class="direct-detail-nav">
 		  <div class="direct-detail-nav-item is-active">상품 정보</div>
 		  <a href="#" class="direct-detail-nav-item">상품 문의</a>
-		  <a href="#" class="direct-detail-nav-item">이용 후기</a>
+		  <!-- 재경 시작 -->
+		  <button type = "button" class="direct-detail-nav-item" id = "direct-detail-nav-item">이용 후기</button>
 	  </nav>
 	  <div style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
-	  <div class="dProductContent">
+	  <div class="dProductContent" id="dProductContent">
 	  	${directProduct.DProductContent}
 	  </div>
   </div>
 </main>
 <script>
+document.querySelector("#direct-detail-nav-item").addEventListener('click', (e) => {
+	$.ajax({
+		url : "${pageContext.request.contextPath}/direct/directProductList.do",
+		success(data){
+			console.log(data);
+			const {dReviewTitle, dOptionName, reviewRating, dReviewCreatedAt, dReviewContent} = data;
+			
+			const wrapper = document.querySelector("#dProductContent");
+			wrapper.innerHTML = `
+			
+			<c:if test="${empty dReviewList}">
+				<div class="mx-auto mt-5 text-center">
+					<h3>작성한 후기가 없어요 :(</h3>
+				</div>
+			</c:if>
+			<c:if test="${not empty dReviewList}">	
+				<table id="direct-reviewList-tbl" class="table" style="undefined;table-layout: fixed; width: 1100px">
+					<colgroup>
+						<col style="width: 300px">
+						<col style="width: 400px">
+						<col style="width: 200px">
+						<col style="width: 200px">
+					</colgroup>
+					<thead>
+					  <tr>
+					    <th>제목</th>
+					    <th>옵션</th>
+					    <th>별점</th>
+					    <th>작성일</th>
+					  </tr>
+					</thead>
+					<tbody>
+					<c:forEach items="${dReviewList}" var="dReviewList">
+					  <tr class="table-active">
+					    <td><a class="member-mypage-color-a" href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${reviewList.reviewProd.DProductNo}">${reviewList.reviewProd.DProductName}-${reviewList.reviewOpt.DOptionName}</a></td>
+					    <td>${dReviewList.dReviewTitle}</td>
+					    <td>⭐ ${dReviewList.reviewRating}</td>
+					    <td>
+					    	<fmt:parseDate value="${reviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
+							<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
+					    </td>
+					  </tr>
+					  <tr>
+					    <td rowspan="2">
+					    	<c:if test="${reviewList.reviewAttach.DReviewRenamedFilename == null}">
+					    		
+					    	</c:if>
+					    	<c:if test="${reviewList.reviewAttach.DReviewRenamedFilename != null}">
+					    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
+					    	</c:if>
+					    </td>
+					    <td colspan="2" rowspan="2">${reviewList.dReviewContent}</td>
+					    <td>
+							<button class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/memberDirectReviewUpdateForm.do?dReviewNo=${reviewList.dReviewNo}'">수정</button>
+					    </td>
+					  </tr>
+					  <tr>
+					    <td>
+					    <form:form
+					    	action="${pageContext.request.contextPath}/member/deleteDirectReview.do">
+					    	<input type="hidden" name="dReviewNo" value="${reviewList.dReviewNo}" />
+						    <button type="submit" class="btn btn-danger" onclick="return confirm('리뷰를 삭제하시겠습니까?')">삭제</button>
+					    </form:form>
+					    </td>
+					  </tr>
+					 </c:forEach>
+					</tbody>
+					</table>
+					<nav>
+						${pagebar}
+					</nav>
+				</c:if>
+			</div>	
+			`;
+			
+		},
+		error : console.log
+	});
+});
+// 재경 끝
 //기존 버튼형 슬라이더
 $('.slider-1 > .page-btns > div').click(function(){
     var $this = $(this);
@@ -593,6 +675,66 @@ order.addEventListener('click', (e) => {
 	
 	frm.action = "${pageContext.request.contextPath}/direct/directOrder.do";
 	frm.submit();
+});
+
+// 리뷰 점수
+window.addEventListener('load', (e) => {
+	$.ajax({
+		url : "${pageContext.request.contextPath}/direct/reviewAvgScore.do",
+		method : "GET",
+		data : {dProductNo : dProductNo.value},
+		success(response) {
+			const reviewAvgScore = response.reviewAvgScore;
+			console.log(reviewAvgScore);
+			document.querySelector('.reviewAvgScore').innerHTML = reviewAvgScore;
+			
+			const reviewStar = document.querySelector('.reviewStar');
+			
+			if(Number(reviewAvgScore) >= 0 && Number(reviewAvgScore) < 1) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 1 && Number(reviewAvgScore) < 2) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 2 && Number(reviewAvgScore) < 3) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 3 && Number(reviewAvgScore) < 4) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) >= 4 && Number(reviewAvgScore) < 5) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
+			}
+			else if(Number(reviewAvgScore) = 5) {
+				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
+<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />`).split("\n").join("");
+			}
+		},
+		error : console.log
+	});
 });
 
 // 네비게이션

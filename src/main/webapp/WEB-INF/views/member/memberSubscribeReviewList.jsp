@@ -65,7 +65,13 @@
     width: 150px;
 }
 </style>
-
+<c:if test="${empty orderProdList}">
+		<br /><br />
+		<div class="mx-auto text-center">
+			<h3>구독 히스토리가 없어요 :(</h3>
+			<span>결제가 완료된 후에 히스토리를 확인하실 수 있어요!</span>
+		</div>
+	</c:if>
 <c:if test="${not empty sReviewList}">
 	<table class="table table-borderless m-s-review-table">
 		<thead>
@@ -107,10 +113,11 @@
 		</c:forEach>
 		</tbody>
 	</table>
-</c:if>
-<nav class="m-s-review-page-bar">
+	<nav class="m-s-review-page-bar">
 	${pagebar}
-</nav>
+	</nav>
+</c:if>
+
 
 <form 
 	action="<%= request.getContextPath() %>/member/memberSubscribeReviewUpdateForm.do"

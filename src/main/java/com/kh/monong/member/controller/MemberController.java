@@ -63,6 +63,7 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
+import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 import com.kh.security.model.service.MemberSecurityService;
@@ -1169,5 +1170,7 @@ public class MemberController {
 			redirectAttr.addFlashAttribute("msg", "리뷰를 성공적으로 수정했습니다.");
 		return "redirect:/member/memberDirectReviewList.do";
 	}
+	
+
 	//-------------------수아 끝
 }

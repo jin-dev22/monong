@@ -27,7 +27,13 @@
 		<span>후기는 상품 당, 한 건만 작성하실 수 있습니다 :)</span>
 	</div>
 	<c:forEach items="${orderProdList}" var="oList">
-		<table class="table table-borderless">
+		<table class="table table-borderless text-center">
+		<colgroup>
+				<col style="width:200px;" />
+				<col style="width:500px;"/>
+				<col style="width:500px;"/>
+				<col style="width:150px;"/>
+		</colgroup>
 			<thead>
 			  <tr class="table-active">
 			    <th>${oList.dOrderNo}</th>

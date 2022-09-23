@@ -45,6 +45,7 @@ import com.kh.monong.notice.model.dto.MessageType;
 import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
@@ -404,7 +405,47 @@ public class AdminController {
 			
 		}
 		
+		@PostMapping("/noticeWeekVegs.do")
+		public String noticeWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs, RedirectAttributes redirectAttr) {
+			int result = subscribeService.insertSubscriptionWeekVegs(subscriptionWeekVegs);
+			
+			redirectAttr.addFlashAttribute("msg", "채소 공지가 등록되었습니다.");
+			return "redirect:/admin/noticeWeekVegsList.do";
+		}
 		
+		@GetMapping("/noticeWeekVegsList.do")
+		public void noticeWeekVegsList(Model model, @RequestParam(defaultValue = "1") int cPage, HttpServletRequest request) {
+			Map<String, Integer> param = new HashMap<>();
+			int limit = 10;
+			param.put("cPage", cPage);
+			param.put("limit", limit);
+			int totalContent = subscribeService.getTotalSubscriptionWeekVegsContent();
+			log.debug("totalContent = {}", totalContent);
+			List<SubscriptionWeekVegs> noticeVegsList = subscribeService.selectSubscriptionWeekVegsList(param);
+			String url = request.getRequestURI();
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+			model.addAttribute("noticeVegsList", noticeVegsList);
+			model.addAttribute("pagebar", pagebar);
+		}
+		
+		@GetMapping("/noticeWeekVegsUpdateForm.do")
+		public void noticeWeekVegsUpdateForm(@RequestParam String weekCriterion, Model model) {
+			List<Vegetables> vegetables = subscribeService.getVegetables();
+			log.debug("vegetables = {}", vegetables);
+			model.addAttribute("vegetables", vegetables);
+			SubscriptionWeekVegs subscriptionWeekVegs = subscribeService.selectOneSubscriptionWeekVegs(weekCriterion);
+			model.addAttribute("subscriptionWeekVegs", subscriptionWeekVegs);
+		}
+		
+		@PostMapping("/noticeWeekVegsUpdate.do")
+		public String noticeWeekVegsUpdate(SubscriptionWeekVegs subscriptionWeekVegs, RedirectAttributes redirectAttr) {
+			int result = subscribeService.updateSubscriptionWeekVegs(subscriptionWeekVegs);
+			if(result != 0) {
+				
+				redirectAttr.addFlashAttribute("msg", "주간채소 공지가 수정되었습니다.");	
+			}
+			return "redirect:/admin/noticeWeekVegsList.do";
+		}
 		
 		
 		

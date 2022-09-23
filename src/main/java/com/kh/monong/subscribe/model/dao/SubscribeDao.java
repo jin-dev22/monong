@@ -17,6 +17,7 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
 
@@ -139,5 +140,24 @@ public interface SubscribeDao {
 	
 	
 	// 미송코드 끝
+	
+	//수아코드 시작
+	@Insert("insert into subscription_week_vegs values(#{weekCriterion}, #{vegComposition})")
+	int insertSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
+
+	@Select("select count(*) from subscription_week_vegs")
+	int getTotalSubscriptionWeekVegsContent();
+
+	@Select("select * from subscription_week_vegs order by week_criterion desc")
+	List<SubscriptionWeekVegs> selectSubscriptionWeekVegsList(RowBounds rowBounds);
+
+	@Select("select * from subscription_week_vegs where week_criterion = #{weekCriterion}")
+	SubscriptionWeekVegs selectOneSubscriptionWeekVegs(String weekCriterion);
+
+	@Update("update subscription_week_vegs set veg_composition= #{vegComposition} where week_criterion=#{weekCriterion}")
+	int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
+
+	
+	//수아코드 끝
 
 }
