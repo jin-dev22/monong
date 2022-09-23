@@ -54,7 +54,7 @@
 			and
 	   		d_order_date between #{startDate} and #{endDate}
 		</if>
-	    
+	 order by d_order_no desc  
   </select>
   <resultMap type="map" id="orderMap">
   	<id column="d_order_no" property="dOrderNo"/>

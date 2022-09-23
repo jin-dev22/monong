@@ -2,9 +2,14 @@ package com.kh.monong.common;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class HelloSpringUtils {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MonongUtils {
 	
 	
 	/**
@@ -99,26 +104,25 @@ public class HelloSpringUtils {
 		return sdf.format(new Date()) + df.format(Math.random() * 1000) + ext;
 	}
 	
-	/*
-	 
-	  <ul class="pagination">
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
-	        <span aria-hidden="true">&laquo;</span>
-	        <span class="sr-only">Previous</span>
-	      </a>
-	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li>
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
-	        <span aria-hidden="true">&raquo;</span>
-	        <span class="sr-only">Next</span>
-	      </a>
-	    </li>
-	  </ul>
-	  
+	/**
+	 * Mybatis Collection - rowBounds 오류 해결용 커스텀 bounds
+	 * @param offset
+	 * @param limit
+	 * @param prodList
+	 * @return 
 	 */
-
+	public static List<?> customRowBounds(int offset, int limit, List<?> list) {
+		int size = list.size();
+		log.debug("size={}",size);
+		int paramTwo = offset + limit;
+		if(offset == size-1) {
+			return new ArrayList<>(list.subList(offset, size));
+		}
+		else if(paramTwo > size) {
+			return new ArrayList<>(list.subList(offset, size));
+		}
+		else {
+			return new ArrayList<>(list.subList(offset, paramTwo));
+		}
+	}
 }

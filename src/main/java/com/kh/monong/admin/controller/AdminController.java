@@ -24,13 +24,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.HelloSpringUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.MailUtils;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.service.DirectService;
@@ -83,7 +82,7 @@ public class AdminController {
 		log.debug("list={}", memberList);
 				
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute(memberList);
 		model.addAttribute("pagebar", pagebar);
@@ -103,7 +102,7 @@ public class AdminController {
 		log.debug("totalWaitSeller={}", totalWaitSeller);
 
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("totalWaitSeller",totalWaitSeller);
 		model.addAttribute("sellerList",sellerList);
@@ -124,7 +123,7 @@ public class AdminController {
 		log.debug("totalWaitSeller={}", totalWaitSeller);
 		String totalSellerEnroll = Integer.toString(memberService.getTotalSellerEnrollByMonth());
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("totalSellerEnroll",totalSellerEnroll);
 		model.addAttribute("totalWaitSeller",totalWaitSeller);
@@ -209,7 +208,7 @@ public class AdminController {
 		
 		int totalContent = inquireService.getTotalInqureContent(param);
 		String url = request.getRequestURI();
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar",pagebar);
 	};
 	
@@ -244,8 +243,10 @@ public class AdminController {
 		
 		int totalContent = directService.getTotalProdCntByStatus(param);
 		log.debug("totalContent = {}", totalContent);
+		
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		url += "?dSaleStatus=" + dSaleStatus;
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
 		
 		log.debug("model = {}", model);
@@ -265,7 +266,7 @@ public class AdminController {
 		int totalContent = subscribeService.getTotalSubscriptionListAll();
 
 		String url = request.getRequestURI(); 
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionList",subscriptionList);
 		model.addAttribute("pagebar", pagebar);
@@ -328,7 +329,7 @@ public class AdminController {
 		String url = request.getRequestURI();
 		url += "?deliveryStatus=" + deliveryStatus;
 		
-		String pagebar = HelloSpringUtils.getPagebar(cPage, limit, totalContent, url);
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
 		model.addAttribute("pagebar", pagebar);
@@ -374,18 +375,6 @@ public class AdminController {
 		}
 	}
 	
-	/**
-	 * 주간채소 팝업
-	 */
-	@GetMapping("/popup/{weekCriterion}.do")
-	public String getWeekVegsNotice(
-			@PathVariable String weekCriterion,
-			Model model, HttpServletRequest request) {
-		SubscriptionWeekVegs noticeWeekVegs = subscribeService.getWeekVegsNotice(weekCriterion);
-		model.addAttribute("noticeWeekVegs", noticeWeekVegs);
-		//return ResponseEntity.ok().body(noticeWeekVegs);
-		return "/admin/popup";
-	}
 	
 	
 	//--------------------------------------------------------선아 끝
@@ -399,7 +388,55 @@ public class AdminController {
 			
 		}
 		
+		@PostMapping("/noticeWeekVegs.do")
+		public String noticeWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs, RedirectAttributes redirectAttr) {
+			int result = subscribeService.insertSubscriptionWeekVegs(subscriptionWeekVegs);
+			
+			redirectAttr.addFlashAttribute("msg", "채소 공지가 등록되었습니다.");
+			return "redirect:/admin/noticeWeekVegsList.do";
+		}
 		
+		@GetMapping("/noticeWeekVegsList.do")
+		public void noticeWeekVegsList(Model model, @RequestParam(defaultValue = "1") int cPage, HttpServletRequest request) {
+			Map<String, Integer> param = new HashMap<>();
+			int limit = 10;
+			param.put("cPage", cPage);
+			param.put("limit", limit);
+			int totalContent = subscribeService.getTotalSubscriptionWeekVegsContent();
+			log.debug("totalContent = {}", totalContent);
+			List<SubscriptionWeekVegs> noticeVegsList = subscribeService.selectSubscriptionWeekVegsList(param);
+			String url = request.getRequestURI();
+			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+			model.addAttribute("noticeVegsList", noticeVegsList);
+			model.addAttribute("pagebar", pagebar);
+		}
+		
+		@GetMapping("/noticeVegs.do")
+		public String noticeVegs(@RequestParam String weekCriterion) {
+			SubscriptionWeekVegs subscriptionWeekVegs = subscribeService.selectOneSubscriptionWeekVegs(weekCriterion);
+			if(subscriptionWeekVegs == null) {
+				return "redirect:/admin/noticeWeekVegs.do";
+			}
+			return "redirect:/admin/noticeWeekVegsUpdateForm.do?weekCriterion="+weekCriterion;
+		}
+		@GetMapping("/noticeWeekVegsUpdateForm.do")
+		public void noticeWeekVegsUpdateForm(@RequestParam String weekCriterion, Model model) {
+			List<Vegetables> vegetables = subscribeService.getVegetables();
+			log.debug("vegetables = {}", vegetables);
+			model.addAttribute("vegetables", vegetables);
+			SubscriptionWeekVegs subscriptionWeekVegs = subscribeService.selectOneSubscriptionWeekVegs(weekCriterion);
+			model.addAttribute("subscriptionWeekVegs", subscriptionWeekVegs);
+		}
+		
+		@PostMapping("/noticeWeekVegsUpdate.do")
+		public String noticeWeekVegsUpdate(SubscriptionWeekVegs subscriptionWeekVegs, RedirectAttributes redirectAttr) {
+			int result = subscribeService.updateSubscriptionWeekVegs(subscriptionWeekVegs);
+			if(result != 0) {
+				
+				redirectAttr.addFlashAttribute("msg", "주간채소 공지가 수정되었습니다.");	
+			}
+			return "redirect:/admin/noticeWeekVegsList.do";
+		}
 		
 		
 		

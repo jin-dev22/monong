@@ -18,23 +18,26 @@
 	<h3>모농모농 주간채소 공지</h3>
 	<br />
 	<h5>공지 날짜</h5>
-	<h5 id="date-container"></h5>
+	<h5 id="date-container">${subscriptionWeekVegs.weekCriterion}</h5>
 </div>
 
 <form:form 
-	name="noticeVegsFrm"
-	action="${pageContext.request.contextPath}/admin/noticeWeekVegs.do"
+	name="noticeVegsUpdateFrm"
+	action="${pageContext.request.contextPath}/admin/noticeWeekVegsUpdate.do"
 	method="post">
 <div id="admin-notice-week-vegs-container">
 	<div class="s-form-part-container">
-        <h2 class="s-form-part-title">제외 채소 선택</h2>
         <span>공지할 채소 5가지를 선택해주세요</span>
+		<br />
+        <button class="btn btn-danger mt-3 mb-3" type="button" id="weekCriterionCheckReset">다시 선택하기</button>
         <div class="notice-vegs-cnt-info">
-	        <span class="notice-vegs-cnt"></span>
+	        <span class="notice-vegs-cnt">5</span>
 	        <span>/&nbsp5개</span>
         </div>
+        <br />
+        
      </div>
-<input type="hidden" name="weekCriterion" id="weekCriterion" value=""/>
+<input type="hidden" name="weekCriterion" id="weekCriterion" value="${subscriptionWeekVegs.weekCriterion}" readonly/>
 <c:if test="${not empty vegetables}">
 			<div class="s-vegs-category-wrapper">
 	            <h5 class="s-vegs-category-title">과일류</h5>
@@ -42,7 +45,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '과일류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" ${subscriptionWeekVegs.vegComposition.contains(veg.vegName) ? 'checked' : ''}>
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -56,7 +59,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '과채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" ${subscriptionWeekVegs.vegComposition.contains(veg.vegName) ? 'checked' : ''}>
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -70,7 +73,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '채소류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" ${subscriptionWeekVegs.vegComposition.contains(veg.vegName) ? 'checked' : ''} >
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -84,7 +87,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '엽/양채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}">
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" ${subscriptionWeekVegs.vegComposition.contains(veg.vegName) ? 'checked' : ''}>
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -98,7 +101,7 @@
 					<c:forEach items="${vegetables}" var="veg" varStatus="vs">
 						<c:if test="${veg.vegCategory eq '근채류'}">
 			         		<div class="form-check form-check-inline">
-			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" >
+			                    <input class="form-check-input" name="vegComposition" type="checkbox" id="veg${vs.count}" value="${veg.vegName}" ${subscriptionWeekVegs.vegComposition.contains(veg.vegName) ? 'checked' : ''}>
 			                    <label class="form-check-label" for="veg${vs.count}">${veg.vegName}</label>
 			                </div>
 						</c:if>
@@ -107,44 +110,51 @@
 			</div>
 		</c:if>
 		<br /><br />
-		<button type="submit" class="btn btn-EA5C2B" id="notice-week-vegs-btn" onclick="return confirm('이번주 정기구독박스 채소목록을 업데이트하시겠습니까?')">공지하기</button>
+		<button type="submit" class="btn btn-EA5C2B" id="notice-week-vegs-btn" onclick="return confirm('정기구독박스 채소목록을 수정하시겠습니까?')">수정하기</button>
 	</div>
 </form:form>
 
   
 <script>
-const todaydate = new Date();
-todaydate.setDate(((todaydate.getDate() - todaydate.getDay())+1)+7);
-console.log(todaydate);
-
-let newYear = todaydate.toISOString().substr(2,2);
-let newMonth = todaydate.toISOString().substr(5,2);
-let newDate = todaydate.toISOString().substr(8,2);
-
-const noticeDay = newYear+newMonth+newDate;
-
-window.onload = function(){
-	 
-	  
-	  const container = document.querySelector("#date-container");
-	  container.innerHTML = noticeDay; 
-	  const criterion = document.querySelector("#weekCriterion");
-	  criterion.value = noticeDay;
-}
 
 const vegs = document.querySelectorAll(".s-vegs-category [name=vegComposition]")
 const noticeVegCntInfo = document.querySelector(".notice-vegs-cnt-info");
+const checkReset = document.querySelector("#weekCriterionCheckReset");
 const noticeVegNum = document.querySelector(".notice-vegs-cnt");
 let noticeVegsCnt = 0;
 
+window.onload = vegs.forEach((veg)=>{
+    	
+        if(veg.checked === true){
+      
+        	noticeVegsCnt++;
+        	noticeVegCntInfo.style.color = "black";
+          $(".notice-vegs-cnt").text(noticeVegsCnt);
+        }
+        
+});
+
+
+checkReset.addEventListener('click', (e) => {
+	noticeVegsCnt = 0;
+	vegs.forEach((veg)=>{
+        veg.checked = false; // 선택한 제외채소 체크 제거
+    });
+	
+	$(".notice-vegs-cnt").text(noticeVegsCnt);
+			
+              
+});
+
 vegs.forEach((veg)=>{
     veg.addEventListener('change', (e) => {
+    	
         if(e.target.checked === true){
       
             if(noticeVegsCnt < 5){
             	noticeVegsCnt++;
             	noticeVegCntInfo.style.color = "black";
-                noticeVegNum.innerHTML = noticeVegsCnt;
+            	 $(".notice-vegs-cnt").text(noticeVegsCnt);
             }
             else{
             	noticeVegCntInfo.style.color = "red";
@@ -155,14 +165,14 @@ vegs.forEach((veg)=>{
         else{
         	noticeVegsCnt--;
         	noticeVegCntInfo.style.color = "black";
-            noticeVegNum.innerHTML = noticeVegsCnt;
+        	 $(".notice-vegs-cnt").text(noticeVegsCnt);
         }
         
     });
 });
 
 
-noticeVegsFrm.addEventListener('submit', (e)=>{
+noticeVegsUpdateFrm.addEventListener('submit', (e)=>{
 	if(noticeVegsCnt < 5){
 		e.preventDefault();
 		alert('공지 할 채소 5개를 선택해주세요');

@@ -11,6 +11,7 @@ import com.kh.monong.direct.model.dto.DirectProductOption;
 
 public interface DirectService {
 	//----------------- 재경 시작
+	// 상품 목록
 	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
 	
 	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
@@ -24,6 +25,17 @@ public interface DirectService {
 	
 	int insertDirectProductOption(DirectProductOption dopt);
 	
+	// 최근 등록순 정렬
+	List<DirectProduct> orderByCreatedAt(Map<String, Integer> param);
+	
+	// 가격 높은순 정렬
+	List<DirectProduct> orderByPriceDesc(Map<String, Integer> param);
+	
+	// 가격 낮은순 정렬
+	List<DirectProduct> orderByPriceAsc(Map<String, Integer> param);
+
+	int reviewGetTotalContentByDProNo();
+
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);
@@ -34,11 +46,21 @@ public interface DirectService {
 	
 	int addCart(Map<String, Object> addList);
 
+	int deleteCartAll(String memberId);
+	
+	int deleteCartTarget(int cartNo);
+	
+	int deleteCartChecked(int checked);
+	
+	int updateCartProductCount(Map<String, Object> param);
+
 	DirectProduct buyIt(Map<String, Object> param);
 	
 	int insertDirectOrder(DirectOrder directOrder);
 		
 	int insertMemberDirectOrder(Map<String, Object> param);
+	
+	String selectReviewAvgScoreByProductNo(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -58,9 +80,6 @@ public interface DirectService {
 	
 	int mergeIntoDOption(DirectProductOption dOpt);
 	//----------------- 수진 끝
-
-
-
 }
 
 

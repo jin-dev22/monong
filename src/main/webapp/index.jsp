@@ -47,7 +47,7 @@
 <script>
 window.onload = function(){
 	const weekCriterion = findMon();
-	let url = `${pageContext.request.contextPath}/admin/popup/\${weekCriterion}.do`;
+	let url = `${pageContext.request.contextPath}/notification/popup/\${weekCriterion}.do`;
 	console.log(url);
 	window.open(url, '채소공지팝업', 'top=0, width=550, height=550, resizable=no');
 }

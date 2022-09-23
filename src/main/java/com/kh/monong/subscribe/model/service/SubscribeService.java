@@ -92,17 +92,22 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
-
-
-
-
-
-
-
-
-
+	
+	
+	
 	
 	// 미송코드 끝
 
+	//수아코드 시작
+	int insertSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
+	
+	int getTotalSubscriptionWeekVegsContent();
+	
+	List<SubscriptionWeekVegs> selectSubscriptionWeekVegsList(Map<String, Integer> param);
+	
+	SubscriptionWeekVegs selectOneSubscriptionWeekVegs(String weekCriterion);
+	
+	int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
+	//수아코드 끝
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -25,6 +26,7 @@ public class DirectServiceImpl implements DirectService {
 	@Autowired
 	private DirectDao directDao;
 	//----------------- 재경 시작
+	// 상품 목록
 	@Override
 	public List<DirectProduct> selectDirectProductList(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
@@ -44,6 +46,51 @@ public class DirectServiceImpl implements DirectService {
 		return directDao.selectDirectProductAttachmentList(dProductNo);
 	}
 	
+	// 최근 등록순 정렬
+	@Override
+	public List<DirectProduct> orderByCreatedAt(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByCreatedAt(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+	
+	// 가격 높은순 정렬
+	@Override
+	public List<DirectProduct> orderByPriceDesc(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByPriceDesc(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+	
+	// 가격 낮은순 정렬
+	@Override
+	public List<DirectProduct> orderByPriceAsc(Map<String, Integer> param) {
+		// mybatis에서 제공하는 페이징처리객체 RowBounds
+		// offset limit
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.orderByPriceAsc(param, rowBounds);
+		for(DirectProduct directProduct : list) {
+			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
+		}
+			return list;
+	}
+
 	@Override
 	public int getTotalContent() {
 		return directDao.getTotalContent();
@@ -87,8 +134,11 @@ public class DirectServiceImpl implements DirectService {
 		return directDao.insertDirectProductOption(opt);
 	}
 	
-	
-	
+	@Override
+	public int reviewGetTotalContentByDProNo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override
@@ -122,6 +172,26 @@ public class DirectServiceImpl implements DirectService {
 			result = directDao.insertCart(addList);
 		}
 		return result;
+	}
+	
+	@Override
+	public int deleteCartAll(String memberId) {
+		return directDao.deleteCartAll(memberId);
+	}
+	
+	@Override
+	public int deleteCartTarget(int cartNo) {
+		return directDao.deleteCartTarget(cartNo);
+	}
+	
+	@Override
+	public int deleteCartChecked(int checked) {
+		return directDao.deleteCartChecked(checked);
+	}
+	
+	@Override
+	public int updateCartProductCount(Map<String, Object> param) {
+		return directDao.updateCartProductCount(param);
 	}
 		
 	@Override
@@ -167,6 +237,11 @@ public class DirectServiceImpl implements DirectService {
 		
 		return result;
 	}
+	
+	@Override
+	public String selectReviewAvgScoreByProductNo(String dProductNo) {
+		return directDao.selectReviewAvgScoreByProductNo(dProductNo);
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작
@@ -174,12 +249,12 @@ public class DirectServiceImpl implements DirectService {
 	public List<DirectProduct> adminSelectPordList(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		List<DirectProduct> prodList  = directDao.adminSelectProdList(param, rowBounds);
+		List<DirectProduct> prodList  = directDao.adminSelectProdList(param);
+		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
 		for(DirectProduct prod : prodList) {
 			prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
 		}
-		return prodList;
+		return subList;
 	}
 
 	@Override

@@ -220,4 +220,35 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getSubscriptionByMemberId(memberId);
 	}
 	// 미송코드 끝
+	
+	//수아코드 시작
+	@Override
+	public int insertSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs) {
+		return subscribeDao.insertSubscriptionWeekVegs(subscriptionWeekVegs);
+	}
+	
+	@Override
+	public int getTotalSubscriptionWeekVegsContent() {
+		return subscribeDao.getTotalSubscriptionWeekVegsContent();
+	}
+	
+	@Override
+	public List<SubscriptionWeekVegs> selectSubscriptionWeekVegsList(Map<String, Integer> param) {
+		int limit = param.get("limit");
+		int offset = (param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return subscribeDao.selectSubscriptionWeekVegsList(rowBounds);
+	}
+	
+	@Override
+	public SubscriptionWeekVegs selectOneSubscriptionWeekVegs(String weekCriterion) {
+		return subscribeDao.selectOneSubscriptionWeekVegs(weekCriterion);
+	}
+	
+	@Override
+	public int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs) {
+		return subscribeDao.updateSubscriptionWeekVegs(subscriptionWeekVegs);
+	}
+	//수아코드 끝
 }
