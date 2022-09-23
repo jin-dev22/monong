@@ -12,10 +12,23 @@
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/direct.css" />
 <h1 class="d-list" style="padding-bottom: 10px;color: #EA5C2B;border-bottom: 1px solid #EA5C2B;">농산물 직거래 장터</h1>
 <div class="d-flex flex-wrap justify-content-between">
+	    	<div class="align">
+	       	 <form action="${ pageContext.request.contextPath }/direct/directProductAlign.do" method="get">
+	             <select class="form-select" aria-label="Default select example" name="align" onchange="this.form.submit()">
+				  <option value="#" selected>정렬기준</option>
+				  <option value="#">최근 등록순</option>
+				  <option value="#">가격 높은순</option>
+				  <option value="#">가격 낮은순</option>
+				  <option value="#">후기 많은순</option>
+				 </select>
+	         </form>
+	       	</div>
+</div>
+<div class="d-flex flex-wrap justify-content-between">
 		<div class="productEnroll">
 			<input type="button" class="btn btn-EA5C2B float-right" onclick="location.href='directProductEnroll.do' "value="상품 등록" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
 		</div>
-	</div>
+</div>
 	<c:if test="${empty list}">
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">조회된 상품이 없습니다.</li>
