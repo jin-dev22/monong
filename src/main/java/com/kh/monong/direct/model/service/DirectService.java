@@ -33,7 +33,9 @@ public interface DirectService {
 	
 	// 가격 낮은순 정렬
 	List<DirectProduct> orderByPriceAsc(Map<String, Integer> param);
-	
+
+	int reviewGetTotalContentByDProNo();
+
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);

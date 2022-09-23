@@ -47,163 +47,167 @@ public class DirectController {
 	private DirectService directService;
 	
 	//----------------- 재경 시작
-		// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
-		@Autowired
-		ServletContext application;
-				
-		@Autowired
-		ResourceLoader resourceLoader;
+	// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
+	@Autowired
+	ServletContext application;
+			
+	@Autowired
+	ResourceLoader resourceLoader;
+	
+	@Autowired
+    private ServletContext servletContext;
+	
 		
-		@Autowired
-	    private ServletContext servletContext;
-		
-			
-		// 직거래 상품 리스트 출력
-		@GetMapping("/directProductList.do")
-		public void directProductList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
-			// 1. content영역
-			Map<String, Integer> param = new HashMap<>();
-			int limit = 10;
-			param.put("cPage", cPage);
-			param.put("limit", limit);
-			log.debug("param = {}", param);
-			List<DirectProduct> list = directService.selectDirectProductList(param);
-			log.debug("list = {}", list);
-			
-			model.addAttribute("list", list);
-				
-			// 2. pagebar영역
-			int totalContent = directService.getTotalContent();
-			log.debug("totalContent = {}", totalContent);
-			String url = request.getRequestURI(); // /monong/direct/directProductList.do
-			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
-			model.addAttribute("pagebar", pagebar);
-			
-			log.debug("model = {}", model);
-		}
-		// 최근 등록순
-		@GetMapping("/orderByCreatedAt.do")
-		public void orderByCreatedAt(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
-			// 1. content영역
-			Map<String, Integer> param = new HashMap<>();
-			int limit = 10;
-			param.put("cPage", cPage);
-			param.put("limit", limit);
-			log.debug("param = {}", param);
-			List<DirectProduct> list = directService.orderByCreatedAt(param);
-			log.debug("list = {}", list);
-			
-			model.addAttribute("list", list);
-				
-			// 2. pagebar영역
-			int totalContent = directService.getTotalContent();
-			log.debug("totalContent = {}", totalContent);
-			String url = request.getRequestURI(); // /monong/direct/directProductList.do
-			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
-			model.addAttribute("pagebar", pagebar);
-			
-			log.debug("model = {}", model);
-		}
-		
-		// 상품 가격 높은순
-		@GetMapping("/orderByPriceDesc.do")
-		public void orderByPriceDesc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
-		// 1. content영역
-			Map<String, Integer> param = new HashMap<>();
-			int limit = 10;
-			param.put("cPage", cPage);
-			param.put("limit", limit);
-			log.debug("param = {}", param);
-			List<DirectProduct> list = directService.orderByPriceDesc(param);
-			log.debug("list = {}", list);
-					
-			model.addAttribute("list", list);
-						
-			// 2. pagebar영역
-			int totalContent = directService.getTotalContent();
-			log.debug("totalContent = {}", totalContent);
-			String url = request.getRequestURI(); // /monong/direct/directProductList.do
-			String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
-			model.addAttribute("pagebar", pagebar);
-					
-			log.debug("model = {}", model);
-		}
-		
-		// 상품 가격 낮은순
-		@GetMapping("/orderByPriceAsc.do")
-		public void orderByPriceAsc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+	// 직거래 상품 리스트 출력
+	@GetMapping("/directProductList.do")
+	public void directProductList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		// 1. content영역
 		Map<String, Integer> param = new HashMap<>();
 		int limit = 10;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		log.debug("param = {}", param);
-		List<DirectProduct> list = directService.orderByPriceAsc(param);
+		List<DirectProduct> list = directService.selectDirectProductList(param);
 		log.debug("list = {}", list);
-							
+		
 		model.addAttribute("list", list);
-								
+			
 		// 2. pagebar영역
 		int totalContent = directService.getTotalContent();
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI(); // /monong/direct/directProductList.do
 		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		model.addAttribute("pagebar", pagebar);
-							
+		
 		log.debug("model = {}", model);
-		}
+	}
+	// 최근 등록순
+	@GetMapping("/orderByCreatedAt.do")
+	public void orderByCreatedAt(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		// 1. content영역
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		log.debug("param = {}", param);
+		List<DirectProduct> list = directService.orderByCreatedAt(param);
+		log.debug("list = {}", list);
 		
-		// 상품 등록
-		@GetMapping("/directProductEnroll.do")
-		public void directProductEnroll() {
+		model.addAttribute("list", list);
 			
-		}
+		// 2. pagebar영역
+		int totalContent = directService.getTotalContent();
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); // /monong/direct/directProductList.do
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
 		
-		
-		@PostMapping("/directProductEnroll.do")
-		public String directProductEnroll(
-				DirectProduct directProduct,
-				@RequestParam(name = "upFile") List<MultipartFile> upFileList,
-				RedirectAttributes redirectAttr) 
-						throws IllegalStateException, IOException {
-			
-			for(MultipartFile upFile : upFileList){
-				if(!upFile.isEmpty()) {
-					// a. 서버컴퓨터에 저장
-					String saveDirectory = application.getRealPath("/resources/upload/product");
-					String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename()); // 20220816_193012345_123.txt
-					File destFile = new File(saveDirectory, renamedFilename);
-					upFile.transferTo(destFile); // 해당경로에 파일을 저장
+		log.debug("model = {}", model);
+	}
+	
+	// 상품 가격 높은순
+	@GetMapping("/orderByPriceDesc.do")
+	public void orderByPriceDesc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+	// 1. content영역
+		Map<String, Integer> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		log.debug("param = {}", param);
+		List<DirectProduct> list = directService.orderByPriceDesc(param);
+		log.debug("list = {}", list);
+				
+		model.addAttribute("list", list);
 					
-					// b. DB저장을 위해 Attachment객체 생성
-					DirectProductAttachment attach = new DirectProductAttachment(upFile.getOriginalFilename(), renamedFilename);
-					directProduct.add(attach);
-				}
-			}
-			
-			log.debug("directProduct = {}", directProduct);
-			
-			//상품옵션등록
-			List<DirectProductOption> options = directProduct.getDirectProductOptions();
-			String prodNo = directProduct.getDProductNo();
-			log.debug("prodNo={}", prodNo);
-			if(options != null && !options.isEmpty()) {
-				for(DirectProductOption option : options) {
-					option.setDOptionNo(prodNo);
-				}
-			}
-			
-			// db저장
-			int result = directService.insertDirectProduct(directProduct);
-			
-			redirectAttr.addFlashAttribute("msg", "상품을 성공적으로 등록했습니다.");
-			
-			return "redirect:/direct/directProductList.do";
+		// 2. pagebar영역
+		int totalContent = directService.getTotalContent();
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); // /monong/direct/directProductList.do
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+				
+		log.debug("model = {}", model);
+	}
+	
+	// 상품 가격 낮은순
+	@GetMapping("/orderByPriceAsc.do")
+	public void orderByPriceAsc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+	// 1. content영역
+	Map<String, Integer> param = new HashMap<>();
+	int limit = 10;
+	param.put("cPage", cPage);
+	param.put("limit", limit);
+	log.debug("param = {}", param);
+	List<DirectProduct> list = directService.orderByPriceAsc(param);
+	log.debug("list = {}", list);
+						
+	model.addAttribute("list", list);
+							
+	// 2. pagebar영역
+	int totalContent = directService.getTotalContent();
+	log.debug("totalContent = {}", totalContent);
+	String url = request.getRequestURI(); // /monong/direct/directProductList.do
+	String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+	model.addAttribute("pagebar", pagebar);
+						
+	log.debug("model = {}", model);
+	}
+	
+	// 상품 등록
+	@GetMapping("/directProductEnroll.do")
+	public void directProductEnroll() {
 		
+	}
+	
+	
+	@PostMapping("/directProductEnroll.do")
+	public String directProductEnroll(
+			DirectProduct directProduct,
+			@RequestParam(name = "upFile") List<MultipartFile> upFileList,
+			RedirectAttributes redirectAttr) 
+					throws IllegalStateException, IOException {
+		
+		for(MultipartFile upFile : upFileList){
+			if(!upFile.isEmpty()) {
+				// a. 서버컴퓨터에 저장
+				String saveDirectory = application.getRealPath("/resources/upload/product");
+				String renamedFilename = MonongUtils.getRenamedFilename(upFile.getOriginalFilename()); // 20220816_193012345_123.txt
+				File destFile = new File(saveDirectory, renamedFilename);
+				upFile.transferTo(destFile); // 해당경로에 파일을 저장
+				
+				// b. DB저장을 위해 Attachment객체 생성
+				DirectProductAttachment attach = new DirectProductAttachment(upFile.getOriginalFilename(), renamedFilename);
+				directProduct.add(attach);
+			}
 		}
 		
+		log.debug("directProduct = {}", directProduct);
 		
-		//----------------- 재경 끝
+		//상품옵션등록
+		List<DirectProductOption> options = directProduct.getDirectProductOptions();
+		String prodNo = directProduct.getDProductNo();
+		log.debug("prodNo={}", prodNo);
+		if(options != null && !options.isEmpty()) {
+			for(DirectProductOption option : options) {
+				option.setDOptionNo(prodNo);
+			}
+		}
+		
+		// db저장
+		int result = directService.insertDirectProduct(directProduct);
+		
+		redirectAttr.addFlashAttribute("msg", "상품을 성공적으로 등록했습니다.");
+		
+		return "redirect:/direct/directProductList.do";
+	
+	}
+	
+	// 상품 이용 후기
+	@GetMapping("/directProductReview.do")
+	public void directProductReview() {
+	}
+	
+	//----------------- 재경 끝
 	//----------------- 민지 시작
 
 	// 상품 상세 불러오기
