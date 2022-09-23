@@ -235,9 +235,7 @@ public class AdminController {
 		String _content = notice.getNotiContent();
 		String substrContent = _content.length() > 10? _content.substring(0, 9)+"...": _content;
 		String content = "["+substrContent +"]에 답변이 달렸습니다.";
-		
 		notice.setNotiContent(content);
-		
 		result = notificationService.insertNotification(notice);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);

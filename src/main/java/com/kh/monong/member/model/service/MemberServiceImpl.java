@@ -151,6 +151,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateDOrderStatus(Map<String, Object> param) {
 		if("C".equals(param.get("newStatus"))) {
+			
+			
 			int result = reStoreDirectProductStock((String)param.get("dOrderNo"));
 		}//재고 복구시 판매상태 '판매중'으로 변경되도록 할것
 		return memberDao.updateDOrderStatus(param);
@@ -223,6 +225,16 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateDirectInquireAnswered(dInquireNo);
 	}
 
+	
+	@Override//기간별 판매자의 상품 주문내역
+	public List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param) {
+		return memberDao.selectOrderListBySeller(param);
+	}
+	
+	@Override//기간별 판매자 주문내역 총 개수
+	public int getTotalOrderCntBySeller(Map<String, Object> param) {
+		return memberDao.getTotalOrderCntBySeller(param);
+	}
 	//------------------수진 끝
 	
 	//------------------수아 시작

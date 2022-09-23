@@ -8,9 +8,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <fmt:requestEncoding value="utf-8" />
-<jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp">
-	<jsp:param name="title" value="모농모농-관리자페이지"></jsp:param>
-</jsp:include>
+<jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
 <h4>관리자 1:1 문의</h4>
 <div id="member-inquire-container">

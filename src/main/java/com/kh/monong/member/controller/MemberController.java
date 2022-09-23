@@ -32,6 +32,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,8 +42,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.monong.common.MonongUtils;
 import com.kh.monong.common.MailUtils;
+import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectOrder;
@@ -57,13 +58,15 @@ import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfo;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
+import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
-import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 import com.kh.security.model.service.MemberSecurityService;
@@ -88,6 +91,9 @@ public class MemberController {
 	
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@GetMapping("/selectEnrollType.do")
 	public void selectEnrollType() {		
@@ -349,6 +355,58 @@ public class MemberController {
 		model.addAttribute("pagebar", pagebar);
 	}
 	
+	@GetMapping("/sellerDirectOrderList.do")
+	public void sellerDirectOrderList(@RequestParam(required = false) String startDate, 
+			@RequestParam(required = false) String endDate,
+			@RequestParam(defaultValue = "1") int cPage,
+			Authentication authentication,
+			Model model, HttpServletRequest request) {
+		
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", authentication.getName());
+		//검색기간 설정시 빈 문자열 전달 방지
+		if(startDate == "" || endDate == "") {
+			startDate = null;
+			endDate = null;
+		}
+		//endDate +1 해서 db조회
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(1);
+			endDate =  _endDate.toString();
+		}
+		param.put("startDate", startDate);
+		param.put("endDate",endDate);
+		log.debug("param = {}",param);
+		
+		//endDate 다시 -1해서 view에 전달
+		if(endDate != null && endDate != "") {
+			LocalDate _endDate = LocalDate.parse(endDate, dtf);
+			_endDate = _endDate.plusDays(-1);
+			endDate =  _endDate.toString();
+		}
+		model.addAttribute("startDate",startDate);
+		model.addAttribute("endDate",endDate);
+		
+		List<Map<String, Object>> orderList = memberService.selectOrderListBySeller(param);
+		model.addAttribute("orderList", orderList);
+		log.debug("orderList={}", orderList);
+		log.debug("ListSize={}",orderList.size());
+		
+		//int totalContent = memberService.getTotalOrderCntBySeller(param);
+		
+		//log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI(); 
+		url += "&startDate=" + startDate +"&endDate="+endDate; 
+		
+		//String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		//model.addAttribute("pagebar", pagebar);
+	}
+	
 	@PostMapping("/updateDOrderStatus.do")
 	public ResponseEntity<?> updateDOrderStatus(@RequestParam String orderStatus, @RequestParam String dOrderNo,
 												@RequestParam String dOrderMember, @RequestParam String dProdNo,
@@ -366,9 +424,32 @@ public class MemberController {
 		int result = memberService.updateDOrderStatus(param);
 		
 		//알림정보저장
-		
+		String stat = "";
+//		switch(orderStatus) {
+//		case "R" : stat = "상품준비중입니다."; break;
+//		case "C" : stat = "주문취소 되었습니다."; 
+//		     		break;
+//		case "D" : stat = "배송중입니다."; break;
+//		case "F" : stat = "배송완료되었습니다."; break;
+//		}
+//		
+//		String content = "주문하신 ["+subStrContent(dProdName)+"]이(가) " +stat;	
+//		MemberNotification notice = MemberNotification.builder()
+//				.memberId(dOrderMember)
+//				.notiContent(content)
+//				.dOrderNo(dOrderNo)
+//				.messageType(MessageType.DO_STATUS)
+//				.build();
+//		
+//		result = notificationService.insertNotification(notice);
+//		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	private String subStrContent(String content) {
+		String substrContent = content.length() > 10? content.substring(0, 9)+"...": content;
+		return substrContent;
 	}
 	
 	@GetMapping("/sellerUpdate.do")

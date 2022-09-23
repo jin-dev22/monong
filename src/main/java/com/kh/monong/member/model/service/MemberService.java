@@ -77,6 +77,10 @@ public interface MemberService {
 	
 	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
 
+	List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param);
+
+	int getTotalOrderCntBySeller(Map<String, Object> param);
+
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);

@@ -104,6 +104,10 @@ public interface MemberDao {
 	@Update("update direct_inquire set has_answer = 'Y' where d_inquire_no = #{dInquireNo}")
 	int updateDirectInquireAnswered(String dInquireNo);
 
+	List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param);
+
+	int getTotalOrderCntBySeller(Map<String, Object> param);
+
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
