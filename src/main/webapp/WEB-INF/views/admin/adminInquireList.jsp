@@ -52,6 +52,8 @@
 									<div class="px-2 d-flex flex-column justify-content-space-between">
 							        	<span>${inq.inquireAnswer.inquireAnsweredAt}</span>
 							        	<input type="hidden" name="inquireNo" value="${inq.inquireNo}"/>
+						        		<input type="hidden" name="memberId" value="${inq.memberId}" />
+						        		<input type="hidden" name="notiContent" value="${inq.inquireTitle}" />
 							        	<sec:csrfInput />
 							        	<br />
 							        	<button type="button" name="bntSubmitAns" class="btn btn-EA5C2B-reverse inquire-answer-btn" onclick="submitAnswer(this.form);" ${inq.hasAnswer eq 'Y' ? 'disabled' : ''}>답변등록</button>
@@ -68,7 +70,7 @@
 		const headers = {};
 		headers['${_csrf.headerName}'] = '${_csrf.token}';
 		const submitAnswer = (frm) =>{
-			const {inquireAContent, inquireNo, bntSubmitAns} = frm;
+			const {inquireAContent, inquireNo, memberId, notiContent, bntSubmitAns} = frm;
 			console.log(inquireAContent.value, inquireNo.value, bntSubmitAns);
 			
 			if(confirm("답변을 등록하시겠습니까?")){
@@ -76,7 +78,7 @@
 					url : "${pageContext.request.contextPath}/admin/inquireAnswer.do",
 					headers,
 					method : "POST",
-					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value},
+					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value, memberId:memberId.value, notiContent:notiContent.value},
 					success(result){
 						console.log(result);
 						if(result > 0){
