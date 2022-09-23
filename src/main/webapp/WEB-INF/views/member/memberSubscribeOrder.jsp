@@ -349,6 +349,18 @@ const excludeVegsNum = document.querySelector(".exclude-vegs-cnt");
 const excludeVegsCntInfo = document.querySelector(".exclude-vegs-cnt-info");
 
 let excludeVegsCnt = 0;
+
+window.onload = vegs.forEach((veg)=>{
+	
+    if(veg.checked === true){
+    	excludeVegsCntInfo.style.display = "initial";
+    	excludeVegsCnt++;
+    	excludeVegsCntInfo.style.color = "black";
+      $(".exclude-vegs-cnt").text(excludeVegsCnt);
+    }
+    
+});
+
 noExcludeVegsCheck.addEventListener('change', (e) => {
 	// '제외 채소 선택 안함' 체크 시
     if(noExcludeVegsCheck.checked === true){
@@ -370,8 +382,9 @@ vegs.forEach((veg)=>{
             if(excludeVegsCnt < 5){
                 excludeVegsCnt++;
                 excludeVegsCntInfo.style.color = "black";
-                excludeVegsNum.innerHTML = excludeVegsCnt;
+               // excludeVegsNum.innerHTML = excludeVegsCnt;
                 noExcludeVegsCheck.checked= false;
+                $(".exclude-vegs-cnt").text(excludeVegsCnt);
             }
             else{
             	excludeVegsCntInfo.style.color = "red";
@@ -382,7 +395,8 @@ vegs.forEach((veg)=>{
         else{
             excludeVegsCnt--;
             excludeVegsCntInfo.style.color = "black";
-            excludeVegsNum.innerHTML = excludeVegsCnt;
+            $(".exclude-vegs-cnt").text(excludeVegsCnt);
+           // excludeVegsNum.innerHTML = excludeVegsCnt;
         }
         // console.log(excludeVegsCnt);
         
