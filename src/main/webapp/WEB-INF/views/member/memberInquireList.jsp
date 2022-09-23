@@ -27,9 +27,13 @@
 		margin-right: 400px;
 	}
 </style>
+
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
-		<div>문의 내역이 없습니다.</div>
+		<div class="mx-auto mt-5 text-center">
+			<h3>문의하신 내역이 없어요 :(</h3>
+			<span>아래 '문의하기' 에서 관리자에게 문의하실 수 있습니다</span>
+		</div>
 	</c:if>
 	<c:if test="${not empty inqList}">
 		<div class="inquireList-header">

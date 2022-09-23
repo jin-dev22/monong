@@ -15,10 +15,15 @@
 <c:if test="${not empty directOptList}">
 	<c:set var="totalPrice" value="0"/>
 	<c:forEach items="${directOptList}" var="dOList">
-		<table id="member-orderList-tbl" class="table table-borderless table-striped text-center">
+		<table id="member-orderList-tbl" class="table table-borderless text-center">
+		<colgroup>
+				<col style="width:200px;" />
+				<col style="width:600px;"/>
+				<col style="width:400px;"/>
+		</colgroup>
 		<thead>
 		  <tr>
-		    <td class="tg-0lax" rowspan="2">
+		    <td rowspan="2">
 		    	<c:if test="${dOList.directattachs.DProductRenamedFilename != null}">
 		    		<img src="${pageContext.request.contextPath}/resources/upload/product/${dOList.directattachs.DProductRenamedFilename}" alt="상품이미지"/>
 		    	</c:if>
@@ -26,16 +31,12 @@
 		    		<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="로고"/>
 		    	</c:if>
 		    </td>
-		    <td class="tg-0pky">
+		    <td>
 		   <a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${dOList.directOptions.DProductNo}">${dOList.directProds.DProductName} - ${dOList.directOptions.DOptionName}</a></td>
-		    <td class="tg-0lax" rowspan="2">${dOList.directOptions.DPrice * dOList.dOptionCount} 원</td>
-		    
-		    <td class="tg-0lax" rowspan="2"></td>
-		    <c:if test="${directOrder.DOrderStatus eq 'F' }">
-		    </c:if>
+		    <td rowspan="2">${dOList.directOptions.DPrice * dOList.dOptionCount} 원</td>
 		  </tr>
 		  <tr>
-		   	 <td class="tg-0pky">수량 : ${dOList.dOptionCount}</td>
+		   	 <td>수량 : ${dOList.dOptionCount}</td>
 		  </tr>
 		</thead>
 		</table>
@@ -46,6 +47,10 @@
 	<br /><br />
 	<h3>결제정보</h3>
 	<table class="table table-borderless table-striped">
+		<colgroup>
+			<col style="width:400px;" />
+			<col style="width:auto"/>
+		</colgroup>
 		<thead>
 		  <tr>
 		    <td>상품금액</td>
@@ -77,6 +82,10 @@
 	<br /><br />
 	<h3>배송정보</h3>
 	<table class="table table-borderless table-striped">
+		<colgroup>
+			<col style="width:400px;" />
+			<col style="width:auto"/>
+		</colgroup>
 		<thead>
 		  <tr>
 		    <td>수령인</td>
