@@ -129,10 +129,13 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, Object>> selectOrderListByProdNo(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
-		//RowBounds rowBounds = new RowBounds(offset, limit);
-		List<Map<String, Object>> ordList = memberDao.selectOrderListByProdNo(param);//, rowBounds);
-		List<Map<String, Object>> subList = (List<Map<String, Object>>) MonongUtils.customRowBounds(offset, limit, ordList);
-		return subList;
+		List<Map<String, Object>> ordList = memberDao.selectOrderListByProdNo(param);
+		log.debug("ordList={}",ordList);
+		if(!ordList.isEmpty()) {
+			List<Map<String, Object>> subList = (List<Map<String, Object>>) MonongUtils.customRowBounds(offset, limit, ordList);
+			return subList;
+		}
+		return ordList;
 	}
 	
 	@Override
