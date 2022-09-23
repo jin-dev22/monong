@@ -124,16 +124,14 @@
 		  <div id="review" class="direct-detail-nav-item">이용 후기</div>
 	  </nav>
 	  <div style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
-	  <div class="dProductContent" id="dProductContent">
+	  <div class="dProductContent">
 	  	${directProduct.DProductContent}
 	  </div>
 	  <div class="dProductInquire">
 	  야호야호야호야 이건 문의
 	  </div>
 	  <!-- 재경 시작 -->
-	  <div class="dProductReview">
-	  야호야호야호야이건 리뷰얌
-	  </div>
+	  <div class="dProductReview"></div>
 	  <!-- 재경 끝 -->
 	  
   </div>
@@ -147,7 +145,7 @@ document.querySelector("#review").addEventListener('click', (e) => {
 			console.log(data);
 			const {dReviewTitle, dOptionName, reviewRating, dReviewCreatedAt, dReviewContent} = data;
 			
-			const wrapper = document.querySelector("#dProductContent");
+			const wrapper = document.querySelector(".dProductReview");
 			wrapper.innerHTML = `
 			
 			<c:if test="${empty dReviewList}">
