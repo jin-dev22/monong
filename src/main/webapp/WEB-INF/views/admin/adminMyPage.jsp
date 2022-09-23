@@ -50,7 +50,7 @@
 
 <script>
 const date = new Date();
-date.setDate(((todaydate.getDate() - todaydate.getDay())+1)+7);
+date.setDate(((date.getDate() - date.getDay())+1)+7);
 console.log(date);
 
 
