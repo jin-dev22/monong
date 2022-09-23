@@ -39,9 +39,7 @@
 	  <tr>
 	    <td>${noticeList.weekCriterion}</td>
 	    <td>${noticeList.vegComposition}</td>
-	    <td>
-	    <button class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/admin/noticeWeekVegsUpdateForm.do?weekCriterion=${noticeList.weekCriterion}'">수정</button>
-	    </td>
+	    <td></td>
 	  </tr>
 	 </c:forEach>
 	</tbody>

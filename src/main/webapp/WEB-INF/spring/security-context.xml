@@ -18,6 +18,8 @@
 	<http auto-config="true">
 		<intercept-url pattern="/" access="permitAll"/>
 		<intercept-url pattern="/index.jsp" access="permitAll"/>
+		<intercept-url pattern="/notification/popup.jsp" access="permitAll"/> <!-- 주간채소공지 팝업 -->
+		<intercept-url pattern="/notification/popup/**" access="permitAll"/> <!-- 주간채소공지 팝업 -->
 		<intercept-url pattern="/member/memberEnroll.do" access="permitAll"/>
 		<intercept-url pattern="/member/selectEnrollType.do" access="permitAll"/>
 		<intercept-url pattern="/direct/directProductDetail" access="permitAll"/>
@@ -33,8 +35,8 @@
 		<intercept-url pattern="/subscribe/subscribeReviewList.do" access="permitAll"/>
 		<intercept-url pattern="/subscribe/subscribeReviewDetail.do" access="permitAll"/>
 		<intercept-url pattern="/common/**" access="permitAll"/>
-		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		
 		<form-login 
 			login-page="/member/memberLogin.do" 

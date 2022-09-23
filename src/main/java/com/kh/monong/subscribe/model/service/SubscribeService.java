@@ -61,6 +61,14 @@ public interface SubscribeService {
 
 	int getTotalsearchPeriodData(Map<String, Object> param);
 	
+	/**
+	 * 주간채소 팝업
+	 */
+	SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion);
+	
+	
+	
+	
 	// 선아코드 끝
 		
 	// 미송코드 시작
@@ -84,23 +92,9 @@ public interface SubscribeService {
 	
 	// 추가
 	String getSubscriptionByMemberId(String memberId);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
 	
 	// 미송코드 끝
 
@@ -115,10 +109,5 @@ public interface SubscribeService {
 	
 	int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
 	//수아코드 끝
-
-
-
-
-	
 
 }

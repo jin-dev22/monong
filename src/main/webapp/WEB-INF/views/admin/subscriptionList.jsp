@@ -62,7 +62,7 @@
 	</table>
 </c:forEach>
 </div> 
-<nav id="pagebar">
+<nav class="pagebar">
 	${pagebar}
 </nav>
 <script>
@@ -93,7 +93,7 @@ const findByQuitYn = (num) => {
 			// 페이징
 			if(findTotalContent == 0){
 				container.innerHTML = '조회결과가 없습니다.';
-				$("#pagebar").html("");
+				$(".pagebar").html("");
 				spinner.innerHTML = '';
 				return;
 			}
@@ -101,8 +101,8 @@ const findByQuitYn = (num) => {
 				totalPages = Math.ceil(findTotalContent / limit);
 				// pageLink(현재페이지, 전체페이지, 호출할 함수 이름)
 				let htmlStr = pageLink(cPage, totalPages, "findByQuitYn");
-				$("#pagebar").html("");
-				$("#pagebar").html(htmlStr);
+				$(".pagebar").html("");
+				$(".pagebar").html(htmlStr);
 			};
 			
 			container.innerHTML = findSubscriptionList.reduce((html, list, index) => {

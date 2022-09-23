@@ -388,7 +388,6 @@ public class AdminController {
 			}
 		}
 	}
-		
 	
 	
 	
@@ -426,6 +425,14 @@ public class AdminController {
 			model.addAttribute("pagebar", pagebar);
 		}
 		
+		@GetMapping("/noticeVegs.do")
+		public String noticeVegs(@RequestParam String weekCriterion) {
+			SubscriptionWeekVegs subscriptionWeekVegs = subscribeService.selectOneSubscriptionWeekVegs(weekCriterion);
+			if(subscriptionWeekVegs == null) {
+				return "redirect:/admin/noticeWeekVegs.do";
+			}
+			return "redirect:/admin/noticeWeekVegsUpdateForm.do?weekCriterion="+weekCriterion;
+		}
 		@GetMapping("/noticeWeekVegsUpdateForm.do")
 		public void noticeWeekVegsUpdateForm(@RequestParam String weekCriterion, Model model) {
 			List<Vegetables> vegetables = subscribeService.getVegetables();

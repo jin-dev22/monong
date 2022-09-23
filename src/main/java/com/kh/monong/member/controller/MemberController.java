@@ -1253,5 +1253,6 @@ public class MemberController {
 	}
 	
 
+
 	//-------------------수아 끝
 }
