@@ -44,8 +44,15 @@
 	padding-right: 2px;
 	padding-bottom: 15px;
 }
-.review {
+.reviewStar img {
 	display: inline-block;
+	width: 15px;
+	vertical-align: text-top;
+	margin: 0 2px;
+}
+.reviewAvgScore {
+	font-size: 18px;
+	padding: 0 2px 0 4px;
 }
 .dDeliveryFee-title {
 	display: inline-block;

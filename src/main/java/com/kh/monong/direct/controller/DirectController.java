@@ -390,6 +390,24 @@ public class DirectController {
 		
 		return "DO" + sdf.format(new Date()) + df.format(Math.random() * 1000);
 	}
+	
+	// 리뷰 점수 띄우기
+	@GetMapping("/reviewAvgScore.do")
+	public String reviewAvgScore(@RequestParam String dProductNo, Model model) {
+		log.debug("dProductNo = {}", dProductNo);
+		
+		String reviewAvgScore = null; 
+				
+		reviewAvgScore = directService.selectReviewAvgScoreByProductNo(dProductNo);
+		
+		if(reviewAvgScore == null) {
+			reviewAvgScore = "0.0";
+		}
+				
+		model.addAttribute("reviewAvgScore", reviewAvgScore);
+		
+		return "jsonView";
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작
