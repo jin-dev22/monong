@@ -24,6 +24,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +43,7 @@ import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
+import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 import com.kh.monong.subscribe.model.service.SubscribeService;
 
@@ -371,8 +373,19 @@ public class AdminController {
 			}
 		}
 	}
-		
 	
+	/**
+	 * 주간채소 팝업
+	 */
+	@GetMapping("/popup/{weekCriterion}.do")
+	public String getWeekVegsNotice(
+			@PathVariable String weekCriterion,
+			Model model, HttpServletRequest request) {
+		SubscriptionWeekVegs noticeWeekVegs = subscribeService.getWeekVegsNotice(weekCriterion);
+		model.addAttribute("noticeWeekVegs", noticeWeekVegs);
+		//return ResponseEntity.ok().body(noticeWeekVegs);
+		return "/admin/popup";
+	}
 	
 	
 	//--------------------------------------------------------선아 끝

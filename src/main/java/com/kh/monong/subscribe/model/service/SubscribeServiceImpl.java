@@ -16,6 +16,7 @@ import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
+import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
 import lombok.extern.slf4j.Slf4j;
@@ -150,6 +151,13 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getTotalsearchPeriodData(param);
 	}
 	
+	/**
+	 * 주간채소 팝업
+	 */
+	@Override
+	public SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion) {
+		return subscribeDao.getWeekVegsNotice(weekCriterion);
+	}
 	
 	// 선아코드 끝
 		
