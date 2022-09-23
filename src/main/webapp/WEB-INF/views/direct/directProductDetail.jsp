@@ -1,4 +1,4 @@
-﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -119,19 +119,28 @@
   <div class="direct-footer-container">
   	  <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
   	  <nav class="direct-detail-nav">
-		  <div class="direct-detail-nav-item is-active">상품 정보</div>
-		  <a href="#" class="direct-detail-nav-item">상품 문의</a>
-		  <!-- 재경 시작 -->
-		  <button type = "button" class="direct-detail-nav-item" id = "direct-detail-nav-item">이용 후기</button>
+		  <div id="info" class="direct-detail-nav-item is-active">상품 정보</div>
+		  <div id="inquire" class="direct-detail-nav-item">상품 문의</div>
+		  <div id="review" class="direct-detail-nav-item">이용 후기</div>
 	  </nav>
 	  <div style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
 	  <div class="dProductContent" id="dProductContent">
 	  	${directProduct.DProductContent}
 	  </div>
+	  <div class="dProductInquire">
+	  야호야호야호야 이건 문의
+	  </div>
+	  <!-- 재경 시작 -->
+	  <div class="dProductReview">
+	  야호야호야호야이건 리뷰얌
+	  </div>
+	  <!-- 재경 끝 -->
+	  
   </div>
 </main>
 <script>
-document.querySelector("#direct-detail-nav-item").addEventListener('click', (e) => {
+// 재경 시작
+document.querySelector("#review").addEventListener('click', (e) => {
 	$.ajax({
 		url : "${pageContext.request.contextPath}/direct/directProductList.do",
 		success(data){
@@ -211,6 +220,7 @@ document.querySelector("#direct-detail-nav-item").addEventListener('click', (e) 
 	});
 });
 // 재경 끝
+
 //기존 버튼형 슬라이더
 $('.slider-1 > .page-btns > div').click(function(){
     var $this = $(this);
@@ -737,7 +747,7 @@ window.addEventListener('load', (e) => {
 	});
 });
 
-// 네비게이션
+// 하단 네비게이션
 const items = document.querySelectorAll('.direct-detail-nav-item');
 
 function handleIndicator(el) {
@@ -756,6 +766,32 @@ function handleIndicator(el) {
 items.forEach((item, index) => {
   item.addEventListener('click', (e) => { handleIndicator(e.target)});
   item.classList.contains('is-active') && handleIndicator(item);
+});
+
+
+const detailNav= document.querySelectorAll(".direct-detail-nav-item");
+detailNav.forEach((nav) => {
+	nav.addEventListener('click', (e) => {
+		const info = document.querySelector('.dProductContent');
+		const inquire = document.querySelector('.dProductInquire');
+		const review = document.querySelector('.dProductReview');
+		
+		if(e.target.id == "info") {
+			info.style.display = 'block';
+			inquire.style.display = 'none';
+			review.style.display = 'none';
+		}
+		if(e.target.id == "inquire") {
+			info.style.display = 'none';
+			inquire.style.display = 'block';
+			review.style.display = 'none';
+		}
+		if(e.target.id == "review") {
+			info.style.display = 'none';
+			inquire.style.display = 'none';
+			review.style.display = 'block';
+		}
+	});
 });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -904,6 +904,16 @@
 	padding: 30px 2px 20px 2px;
 	text-align: center;
 }
+.dProductInquire {
+	padding: 30px 2px 20px 2px;
+	text-align: center;
+	display: none;
+}
+.dProductReview {
+	padding: 30px 2px 20px 2px;
+	text-align: center;
+	display: none;
+}
 
 /* 민지 끝 */
 
