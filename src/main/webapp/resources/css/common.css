@@ -318,4 +318,8 @@ footer {
 	width: 80%;
 	margin: auto;
 }
+.carousel-inner {
+	cursor: pointer;
+}
+
 

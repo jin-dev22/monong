@@ -38,7 +38,7 @@
 <c:if test="${noticeWeekVegs ne null}">
 <div id="popup">
 	<div class="popupWrapper">
-		<div class="popup_title">
+		<div>
 			<h1 class="popup_date">${noticeWeekVegs.weekCriterion}</h1>
 			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</div>
@@ -48,9 +48,75 @@
 			<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
 		</div>
 	</div>
-	
-	
+	<div class="popup_btn">
+		<!-- 하루동안 보지않기 -->
+		<a href="javascript:closeToday();" id="chk_today">&#128581; 오늘 하루 안보기</a>
+		<!-- 일요일까지 보지않기 -->
+		<a href="javascript:closeToSunday();" id="chk_sunday">&#128581; 일요일까지 안보기</a>
+	</div>
 </div>
 </c:if>
 </body>
+<script>
+// 쿠키 저장
+function setCookie(name, value, expiredays){
+	let todayDate = new Date();
+	todayDate.setDate(todayDate.getDate() + expiredays);
+	document.cookie = name + "=" + value + "; path=/; expires=" + todayDate.toUTCString() + ";";
+}
+$(function(){
+	if(document.cookie.indexOf("popToday=close") < 0){ // 쿠키 저장여부 체크
+		document.getElementById("popup").style.display = 'block';
+	} else {
+		document.getElementById("popup").style.display = 'none';
+	}
+})
+// 오늘 하루 안보기 버튼
+function closeToSunday(){
+	setCookie("popToday", "close", 1);
+	document.getElementById("popup").style.display = 'none';
+}
+// 일주일 안보기 버튼
+function closeToday(){
+	let today = new Date();
+	let todayDay = new Date().getDay();
+	if(todayDay == 0){
+		setCookie("popToday", "close", 1);
+		document.getElementById("popup").style.display = 'none';
+	}
+	else {
+		setCookie("popToday", "close", (7 - todayDay));
+		document.getElementById("popup").style.display = 'none';
+	}
+	window.close();
+}
+
+//쿠키 불러오기
+function getCookie(name){
+	let obj = name + "=";
+	let x = 0;
+	while(x <= document.cookie.length){
+		let y = (x + obj.length);
+		if(document.cookie.substring(x, y) == obj ){
+			if((endOfCookie = document.cookie.indexOf(";", y)) == -1)
+				endOfCookie = document.cookie.length;
+			value = document.cookie.substring(y, endOfCookie);
+			return unescape(value);
+		}
+		x = document.cookie.indexOf(" ", x) + 1;
+		if ( x == 0 ) break; 
+	};
+    return "";
+};
+
+$(function(){    
+	if(getCookie("popToday") != "close"){
+		$("#popup").show();
+	}
+	else {
+		window.close();
+	}
+});
+
+</script>
 </html>
