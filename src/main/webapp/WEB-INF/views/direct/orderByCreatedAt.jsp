@@ -14,8 +14,8 @@
 <div class="d-flex flex-wrap justify-content-between">
 	<div class="align">
 		<select class="form-select" aria-label="Default select example" onchange="if(this.value) location.href=(this.value);">
-			<option value="${pageContext.request.contextPath}/direct/directProductList.do" selected>정렬기준</option>
-			<option value="${pageContext.request.contextPath}/direct/orderByCreatedAt.do">최근 등록순</option>
+			<option value="${pageContext.request.contextPath}/direct/directProductList.do">정렬기준</option>
+			<option value="${pageContext.request.contextPath}/direct/orderByCreatedAt.do" selected>최근 등록순</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByPriceDesc.do">가격 높은순</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByPriceAsc.do">가격 낮은순</option>
 		</select>
