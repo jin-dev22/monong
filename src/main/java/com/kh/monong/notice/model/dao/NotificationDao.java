@@ -10,7 +10,7 @@ import com.kh.monong.notice.model.dto.MemberNotification;
 @Mapper
 public interface NotificationDao {
 
-	@Select("select * from member_notification where member_id = #{memberId} where noti_created_at desc")
+	@Select("select * from member_notification where member_id = #{memberId} order by noti_created_at desc")
 	List<MemberNotification> selectNotificationListByMemberId(String memberId);
 
 }
