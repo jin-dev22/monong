@@ -50,8 +50,9 @@
 
 <script>
 const date = new Date();
-date.setDate(date.getDate() + date.getDay());
+date.setDate(((todaydate.getDate() - todaydate.getDay())+1)+7);
 console.log(date);
+
 
 let year = date.toISOString().substr(2,2);
 let month = date.toISOString().substr(5,2);
