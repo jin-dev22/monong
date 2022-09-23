@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MonongUtils {
 	
 	
@@ -110,14 +113,13 @@ public class MonongUtils {
 	 */
 	public static List<?> customRowBounds(int offset, int limit, List<?> list) {
 		int size = list.size();
+		log.debug("size={}",size);
 		int paramTwo = offset + limit;
 		if(offset == size-1) {
-			List<Object> subList = new ArrayList<>();
-			subList.add(list.get(offset));
-			return subList;
+			return new ArrayList<>(list.subList(offset, size));
 		}
 		else if(paramTwo > size) {
-			return new ArrayList<>(list.subList(offset, list.size()-1));			
+			return new ArrayList<>(list.subList(offset, size));
 		}
 		else {
 			return new ArrayList<>(list.subList(offset, paramTwo));
