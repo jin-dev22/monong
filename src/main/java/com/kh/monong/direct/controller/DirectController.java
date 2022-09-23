@@ -199,6 +199,51 @@ public class DirectController {
 		}
 	}
 	
+	// 장바구니 전체 삭제
+	@GetMapping("/deleteCartAll.do")
+	public String deleteCartAll(@RequestParam String memberId) {
+		log.debug("memberId = {}", memberId);
+		
+		int result = directService.deleteCartAll(memberId);
+		return "jsonView";
+	}
+	
+	// 장바구니 단건 삭제
+	@GetMapping("/deleteCartTarget.do")
+	public String deleteCartTarget(@RequestParam int cartNo) {
+		log.debug("cartNo = {}", cartNo);
+		
+		int result = directService.deleteCartTarget(cartNo);
+		
+		return "jsonView";
+	}
+	
+	// 장바구니 선택 삭제
+	@GetMapping("/deleteCartChecked.do")
+	public String deleteCartChecked(@RequestParam(value="checkedArr[]") List<Integer> checkedArr) {
+		log.debug("checkedArr = {}", checkedArr);
+		
+		for(int checked : checkedArr) {
+			int result = directService.deleteCartChecked(checked);
+		}
+		
+		return "jsonView";
+	}
+	
+	// 장바구니 수량 컨트롤러
+	@GetMapping("/updateCartProductCount.do")
+	public String updateCartProductCount(@RequestParam int cartNo, @RequestParam int productCount) {
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("cartNo", cartNo);
+		param.put("productCount", productCount);
+		
+		int result = directService.updateCartProductCount(param);
+				
+		return "jsonView";
+	}
+	
+	
 	// 주문 페이지 로드
 	@GetMapping("/directOrder.do")
 	public void directOrder() {}
@@ -266,8 +311,6 @@ public class DirectController {
 		model.addAttribute("dOrderNo", dOrderNo);
 		return "jsonView";
 	}
-	
-	
 	
 	public String makedirectOrderNo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmm");
