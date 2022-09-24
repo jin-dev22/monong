@@ -29,20 +29,6 @@ table.tbl-notification th{
 table.tbl-notification tr>td{
 	text-align:center;
 }
-/* div.member-notification-list-container{
-	text-align:center;
-	margin: 0 auto;
-	width: 900px;
-}
-
-div.noticeList-header{
-	display: gird;
-	grid-template-columns: 200px 200px 500px;
-}
-div.noticeList-header span{
-	display: inline-block;
-	width: 100px;
-} */
 </style>
 <div id="member-notification-list-container">
 	<table class="table tbl-notification">
@@ -56,54 +42,56 @@ div.noticeList-header span{
 		</thead>
 		<tbody>
 			<c:if test="${not empty notificationList}">
-				<c:forEach items="${notificationList}" var="notice">
-				<form name="noticeFrm" accept-charset="UTF-8" enctype="multipart/form-data">
+				<c:forEach items="${notificationList}" var="notice" varStatus="vs">
 					<tr>
 						<td>
-							<c:choose>
-								<c:when test="${notice.messageType eq MessageType.SO_STATUS}">
-									정기구독
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberSubscribeList.do"/>
-								</c:when>
-								<c:when test="${notice.messageType eq MessageType.DO_STATUS}">
-									직거래
-									<sec:authorize access="hasRole('ROLE_MEMBER')">
-										<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberDirectDetail.do?dOrderNo=${notice.DOrderNo}"/>
-									</sec:authorize>
-									<sec:authorize access="hasRole('ROLE_SELLER')">
-										<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/sellerDirectOrderList.do"/>
-									</sec:authorize>
-								</c:when>
-								<c:when test="${notice.messageType eq MessageType.INQ_ANSWERD}">
-									관리자문의
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberInquireList.do"/>
-								</c:when>
-								<c:when test="${notice.messageType eq MessageType.D_INQ_ANSWERED}">
-									판매자문의
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberDirectInquireList.do"/>
-								</c:when>
-								<c:when test="${notice.messageType eq MessageType.NEW_D_INQ}">
-									상품문의
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/sellerProductQnAList.do"/>
-								</c:when>
-							</c:choose>
+							<div class="notice-url${vs.count}">
+								<c:choose>
+									<c:when test="${notice.messageType eq MessageType.SO_STATUS}">
+										정기구독
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberSubscribeList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.DO_STATUS}">
+										직거래
+										<sec:authorize access="hasRole('ROLE_MEMBER')">
+											<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberDirectDetail.do?dOrderNo=${notice.DOrderNo}"/>
+										</sec:authorize>
+										<sec:authorize access="hasRole('ROLE_SELLER')">
+											<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/sellerDirectOrderList.do"/>
+										</sec:authorize>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.INQ_ANSWERD}">
+										관리자문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberInquireList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.D_INQ_ANSWERED}">
+										판매자문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberDirectInquireList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.NEW_D_INQ}">
+										상품문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/sellerProductQnAList.do"/>
+									</c:when>
+								</c:choose>
+							</div>
 						</td>
 						<td>
-	 						<input type="button" class="btn-notice-moveTo" value="${notice.notiContent}" onclick="moveTo(this.form)"/>
+						<div class="btn-notice${vs.count}">
+	 						<input type="button" name="notiContent${vs.count}" class="btn-notice-moveTo" value="${notice.notiContent}" onclick="moveTo(${vs.count})"/>
+							<input type="hidden" name="notiNo${vs.count}" value="${notice.notiNo}" />
+						</div>
 						</td>
 						<td>
 							<fmt:parseDate value="${notice.notiCreatedAt}" pattern="yyyy-MM-dd" var="createdAt"/>
 							<fmt:formatDate value="${createdAt}" pattern="yyyy-MM-dd"/>
 						</td>
 						<td>
-							<span class="notice-isRead">
+							<span class="notice-isRead${vs.count}">
 								${notice.notiIsRead eq YN.N ? "미확인" : "확인"}
-								<input type="hidden" name="notiNo" value="${notice.notiNo}" />
-								<sec:csrfInput />
 							</span>
+							<sec:csrfInput />
 						</td>
 					</tr>
-				</form>
 				</c:forEach>
 			</c:if>
 		</tbody>
@@ -115,12 +103,11 @@ const headers = {};
 headers['${_csrf.headerName}'] = '${_csrf.token}';
 console.log(headers);
 
-function moveTo(frm){
-	const {url, notiNo} = frm;
-	console.log(frm)
-	
-	const hasRead = frm.querySelector(".notice-isRead");
-	console.log(url, notiNo, hasRead.innerText);
+function moveTo(cnt){
+	const notiNo = document.querySelector(`[name=notiNo\${cnt}]`);
+	const url = document.querySelector(`[name=url\${cnt}]`);
+	const hasRead = document.querySelector(`.notice-isRead\${cnt}`);
+	console.log(notiNo.value, url.value);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/notification/memberNotificationList.do",
