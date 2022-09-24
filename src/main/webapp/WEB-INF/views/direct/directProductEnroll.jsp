@@ -63,9 +63,9 @@ div#enroll-container{
 }
 </style>
 <div id="enroll-container" class="mx-auto text-center">
-<sec:authentication property="principal" var="loginMember"/>
-<c:if test="${loginMember.memberId eq prod.memberId}">
-	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+	<sec:authentication property="principal" var="loginMember"/>
+	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductEnroll.do"
+	method="POST" accept-charset="UTF-8" enctype="multipart/form-data" onsubmit="return checkForm();">
         <div class="mx-auto">
         	<div class="enroll-info-container">
         		<span class="enroll-info-label">판매자</span>
@@ -106,7 +106,8 @@ div#enroll-container{
         		<span class="enroll-info-label">상품 가격<span class="enroll-form-required">*</span></span>
         		<span class="enroll-info">
         			<span id="DDefaultPrice-container">
-                    	<input type="text" class="form-control" name="DDefaultPrice" id="DDefaultPrice" placeholder="목록에 표시될 가격을 입력해주세요"required>
+                    	<input type="text" maxlength="10" onkeyup="inputNumberFormat(this);" class="price"
+                    	name="DDefaultPrice" id="DDefaultPrice" placeholder="목록에 표시될 가격을 입력해주세요" required>
                     </span>
         		</span>
         	</div>
@@ -124,20 +125,22 @@ div#enroll-container{
     	 		<div class="opntion-list-container">
      				<div class="option-one">
 	     				<div class="option-row">
-		      				<label for="DOptionName1" class="optName-label">옵션1 이름</label>
-		    	   			<input type="text" name="directProductOptions[0].dOptionName" id="dOptionName1"/> 
+		      				<label for="DOptionName1" class="optName-label">옵션1</label>
+		    	   			<input type="text" name="directProductOptions[0].dOptionName" id="dOptionName1" required/> 
 	     				</div>
 	     				<div class="option-row">
 							<span>가격 </span>
-							<input type="text" name="directProductOptions[0].dPrice" maxlength="10" class="price"/>
+							<input type="text" name="directProductOptions[0].dPrice" maxlength="10"
+							class="price" onkeyup="inputNumberFormat(this)" required/>
 	     				</div>
 	     				<div class="option-row">
 							<label for="dStock1">수량</label>
-							<input type="number" min="0" name="directProductOptions[0].dStock" id="dStock1" class="insert-dStock1" />
+							<input type="number" min="0" name="directProductOptions[0].dStock"
+							id="dStock1" class="insert-dStock1" onchange="checkStatus(this)" required/>
 	     				</div>
 	     				<div class="option-row">
 	     					<span>판매상태</span>
-	     					<select name="directProductOptions[0].dSaleStatus" id="direct-saleStatus1">
+	     					<select name="directProductOptions[0].dSaleStatus" id="direct-saleStatus1" required>
 								<option value="판매중">판매중</option>
 								<option value="판매중단">판매중단</option>
 								<option value="판매마감">판매마감</option>
@@ -148,31 +151,104 @@ div#enroll-container{
      				</div>
      		</div>
         </div>
-        <div class = "option-add">
-        	<button type="button" onclick="addOption(this.form)">옵션추가</button>
-   			<button type="button" onclick="delOption(this.form)">옵션삭제</button>
+        <div class="enroll-info-container">
+        	<button type="button" class="btn btn-116530" onclick="addOption(this.form)">옵션추가</button>
+   			<button type="button" class="btn btn-116530-reverse" onclick="delOption(this.form)">옵션삭제</button>
    		</div>
         <br/>
 		<sec:csrfInput />
-		<div class = "direct-add">
+		<div class="enroll-info-container">
 	        <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
-	        <input type="reset" class="btn btn-116530" value="취소">
+	        <input type="reset" class="btn btn-EA5C2B-reverse" onclick="location.href='directProductList.do'" value="취소">
         </div>
 	</form>
-</c:if>
-<c:if test="${not(loginMember.memberId eq prod.memberId)}">
-	<h2>올바른 접근이 아닙니다.</h2><!-- 판매글 작성자가 아닌 다른 계정이 url로 접속할 경우 대비 -->
-</c:if>
 </div>
 <script>
+/**
+ * 제출 전 검사
+ */
+document.querySelector('[name="productEnrollFrm"]').addEventListener('submit', (e)=>{
+	e.preventDefault();
+	const frm = e.target;
+	const price = frm.querySelectorAll(".price");
+	price.forEach((elem)=>{
+		let str = elem.value;
+		elem.value = uncomma(str);
+		//console.log(elem.value);	
+	});
+	
+	const upFiles = Array.from(frm.querySelectorAll("[name=upFile]"));
+	const upFileCnt = upFiles.reduce((cnt, elem) => {
+		console.log(elem.value);
+		if(elem.value){
+			cnt++;
+		}
+		return cnt;
+	}, 0);
+	const allcnt = upFileCnt;
+
+	if(allcnt == 0){
+		alert("상품사진 파일은 하나이상 있어야 해요.");
+		window.scrollTo(0,0);
+		return;
+	}	
+	if(allcnt > 4){
+		alert("상품사진은 최대 4개까지 등록할 수 있어요.");
+		window.scrollTo(0,0);
+		return;
+	}
+	
+	frm.submit();
+});
+
+/**
+ * 재고 0 이상입력시 판매마감(품절) 상태인지 확인 후 변경처리.
+ * 재고 0 입력시 판매마감 상태로 자동변경
+ */
+function checkStatus(stock){
+//	console.log(stock.value);
+	const $select = $(stock).next();
+	const status = $select.val();
+	if(stock.value > 0 && status == "판매마감"){
+		alert("입력 수량이 0이상인 경우 자동으로 판매중 상태로 변경돼요. 꼭 판매상태를 확인해 주세요!");
+		$select.val("판매중");
+	}else if(stock.value == 0 && status != "판매마감"){
+		alert("입력 수량이 0인 경우 자동으로 판매마감 상태로 변경돼요. 꼭 수량을 확인해 주세요!");
+		$select.val("판매마감");
+		
+	}
+//	console.log($select.val());
+}
+
+/**
+ * 가격입력 세자리 콤마 텍스트 <-> 문자열 변환함수
+ */
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+} 
+
+function inputNumberFormat(obj) {
+    obj.value = comma(uncomma(obj.value));
+}
+
+function onlynumber(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g,'$1');
+}
 let newOptCnt = 1;
 /**
- * 옵션 삭제 메소드
+ * 추가한 옵션 삭제 메소드
  */
 function delOption(optList){
 	const lastOne = document.querySelector(".option-one:last-child");
-			lastOne.remove();
-			newOptCnt--;
+		lastOne.remove();
+		newOptCnt--;
 }
 
 /**
@@ -186,21 +262,23 @@ function addOption (optList)  {
 	
 	html= ` <div class="option-one">
 			<div class="option-row">
-				<label for="dOptionName\${cnt+1}" class="optName-label">옵션\${cnt+1}이름</label>
-				<input type="text" name="directProductOptions[\${cnt}].dOptionName" id="dOptionName\${cnt+1}" value=""/> 
+				<label for="dOptionName\${cnt+1}" class="optName-label">옵션\${cnt+1}</label>
+				<input type="text" name="directProductOptions[\${cnt}].dOptionName" id="dOptionName\${cnt+1}" value="" required/> 
 			</div>
 			<div class="option-row">
 				<span>가격 </span>
-				<input type="text" name="directProductOptions[\${cnt}].dPrice" maxlength="10" class="price" value=""/>
+				<input type="text" name="directProductOptions[\${cnt}].dPrice" maxlength="10"
+				onkeyup="inputNumberFormat(this);" class="price" value="" required/>
 			</div>
 			<div class="option-row">
-				<label for="dStock1">수량</label>
-				<input type="number" min="0" name="directProductOptions[0].dStock" id="dStock1" class="insert-dStock1" />
+				<label for="dStock\${cnt}">수량</label>
+				<input type="number" name="directProductOptions[\${cnt}].dStock" class="update-dStock"
+				onchange="checkStatus(this)" id="dStock\${cnt+1}" value="" required/>
 			</div>
 			<div class="option-row">
 				<span>판매상태</span>
-					<select name="directProductOptions[0].dSaleStatus" id="direct-saleStatus1">
-						<option value="판매중">판매중</option>
+					<select name="directProductOptions[\${cnt}].dSaleStatus" id="direct-saleStatus\${cnt+1}" required>
+						<option value="판매중" selected>판매중</option>
 						<option value="판매중단">판매중단</option>
 						<option value="판매마감">판매마감</option>
 					</select>
@@ -223,8 +301,6 @@ document.querySelectorAll("[name=upFile]").forEach((input) => {
 		}
 	});
 });
-
-// 서머노트 세팅
 $(document).ready(function() {
 	  $('#summernote').summernote({
  	    	placeholder: 'content',
