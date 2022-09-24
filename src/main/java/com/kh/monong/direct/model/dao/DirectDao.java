@@ -22,7 +22,7 @@ public interface DirectDao {
 	//----------------- 재경 시작
 	// 상품 목록
 	@Select("select d.* from direct_product d order by d_product_created_at desc")
-	List<DirectProduct> selectDirectProductList(Map<String, Integer> param, RowBounds rowBounds);
+	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
 		
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
@@ -54,6 +54,11 @@ public interface DirectDao {
 	@Insert("insert into direct_product_option values ('DO'||seq_d_option_no.nextval, 'DP'||#{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})")
 	@SelectKey(statement = "select seq_d_option_no.currval from dual", before = false, keyProperty = "dOptionNo", resultType = String.class)
 	int insertDirectProductOption(DirectProductOption dOpt);
+	
+	// 상품 후기
+	List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param, RowBounds rowBounds);
+
+	int getTotalDirectReviewByDProductNo(String dProductNo);
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
