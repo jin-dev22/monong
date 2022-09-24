@@ -42,9 +42,11 @@ const faq = () => {
 };
 </script>
 <script>
-document.querySelector('#enrollHeader').addEventListener('click', (e) => {
-    clickEnrollModal();
-});
+if(document.querySelector('#enrollHeader')) {
+	document.querySelector('#enrollHeader').addEventListener('click', (e) => {
+	    clickEnrollModal();
+	});
+}
 
  function clickEnrollModal(){
 		const container = document.querySelector("#enrollType-modal-container");
@@ -59,8 +61,8 @@ document.querySelector('#enrollHeader').addEventListener('click', (e) => {
  							</div>
  						</div>
  						<div class="modal-footer" style="justify-content: center; align-content: center; border-top: none; height: 185px;">
- 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" data-bs-dismiss="modal" onclick="">일반회원 가입</button>
- 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;"  data-bs-dismiss="modal" onclick="">판매자회원 가입</button>
+ 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">일반회원 가입</button>
+ 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;"  data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/member/sellerEnroll.do'">판매자회원 가입</button>
  						</div>
  					</div>
  				</div>
