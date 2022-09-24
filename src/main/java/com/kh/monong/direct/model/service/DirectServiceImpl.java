@@ -15,6 +15,8 @@ import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
+import com.kh.monong.notice.model.dao.NotificationDao;
+import com.kh.monong.notice.model.dto.MemberNotification;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,9 @@ public class DirectServiceImpl implements DirectService {
 
 	@Autowired
 	private DirectDao directDao;
+	
+	@Autowired
+	private NotificationDao notificationDao;
 	//----------------- 재경 시작
 	// 상품 목록
 	@Override
@@ -33,12 +38,13 @@ public class DirectServiceImpl implements DirectService {
 		// offset limit
 		int limit = param.get("limit");
 		int offset = (param.get("cPage") - 1) * limit;
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		List<DirectProduct> list  = directDao.selectDirectProductList(param, rowBounds);
-		for(DirectProduct directProduct : list) {
+//		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.selectDirectProductList(param);
+		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, list);
+		for(DirectProduct directProduct : subList) {
 			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
 		}
-		return list;
+		return subList;
 	}
 	
 	@Override
@@ -76,7 +82,6 @@ public class DirectServiceImpl implements DirectService {
 			return list;
 	}
 	
-	// 가격 낮은순 정렬
 	@Override
 	public List<DirectProduct> orderByPriceAsc(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
@@ -135,10 +140,15 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
-	public int reviewGetTotalContentByDProNo() {
-		// TODO Auto-generated method stub
+	public List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param) {
+		return null;
+	}
+	
+	@Override
+	public int getTotalDirectReviewByDProductNo(String dProductNo) {
 		return 0;
 	}
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override
@@ -242,9 +252,29 @@ public class DirectServiceImpl implements DirectService {
 	public String selectReviewAvgScoreByProductNo(String dProductNo) {
 		return directDao.selectReviewAvgScoreByProductNo(dProductNo);
 	}
+	
+	@Override
+	public int enrollInquire(Map<String, Object> param) {
+		int result = directDao.enrollInquire(param);
+		log.debug("dInqNo={}", param.get("dInquireNo"));
+		result = insertNotice(param);
+		return result;
+	}
+
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작
+	
+	private int insertNotice(Map<String, Object> param) {
+		int result = 0;
+		Integer no = (Integer) param.get("dInquireNo");
+		MemberNotification noti = (MemberNotification) param.get("notice");
+		noti.setDInquireNo(no);
+		log.debug("noti={}", noti);
+		result = notificationDao.insertNotification(noti);
+		return result;
+	}
+	
 	@Override
 	public List<DirectProduct> adminSelectPordList(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
@@ -305,6 +335,11 @@ public class DirectServiceImpl implements DirectService {
 	@Override
 	public int insertDPAttachment(DirectProductAttachment attach) {
 		return directDao.insertDPAttachment(attach);
+	}
+	
+	@Override
+	public String selectSellerIdByProdNo(String no) {
+		return directDao.selectSellerIdByProdNo(no);
 	}
 	//----------------- 수진 끝
 

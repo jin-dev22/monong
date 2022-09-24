@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class DirectInquireAnswer {
 	@NonNull
-	private String dInquireNo;
+	private long dInquireNo;
 	private String dInquireAContent;
 	private LocalDate dInquireAnsweredAt;
 }

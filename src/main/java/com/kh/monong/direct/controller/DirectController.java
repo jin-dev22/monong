@@ -35,6 +35,9 @@ import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.direct.model.service.DirectService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
+import com.kh.monong.notice.model.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +49,8 @@ public class DirectController {
 	@Autowired
 	private DirectService directService;
 	
+	@Autowired 
+	NotificationService notificationService;
 	//----------------- 재경 시작
 	// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
 	@Autowired
@@ -203,8 +208,24 @@ public class DirectController {
 	}
 	
 	// 상품 이용 후기
-	@GetMapping("/directProductReview.do")
-	public void directProductReview() {
+	@GetMapping("/directProductReviewList.do")
+	public void directProductReviewList(@RequestParam(defaultValue = "1") int cPage,
+										Model model, HttpServletRequest request,
+										DirectProduct dp, DirectProductOption dpo) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		String dProductNo = dp.getDProductNo();
+		String dOptionName = dpo.getDOptionName();
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("dOptionName", dOptionName);
+		
+		List<Map<String, Object>> dReviewList = directService.selectdirectProductReviewList(param);
+		int totalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
+		String url = request.getRequestURI(); 
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("dReviewList", dReviewList);
 	}
 	
 	//----------------- 재경 끝
@@ -381,7 +402,20 @@ public class DirectController {
 				result = directService.insertMemberDirectOrder(param);
 			}
 		}
-		
+		//수진코드시작
+		for(String no : productNoList) {
+			String content = "상품번호 ["+no+"]에 신규주문이 있습니다.";	
+			String sellerId = directService.selectSellerIdByProdNo(no);
+			MemberNotification notice = MemberNotification.builder()
+										.dOrderNo(dOrderNo)
+										.memberId(sellerId)
+										.notiContent(content)
+										.messageType(MessageType.DO_STATUS)
+										.build();
+			
+			result = notificationService.insertNotification(notice);
+		}
+		//수진코드 끝
 		log.debug("dOrderNo = {}", dOrderNo);
 		
 		model.addAttribute("dOrderNo", dOrderNo);
@@ -409,6 +443,36 @@ public class DirectController {
 		}
 				
 		model.addAttribute("reviewAvgScore", reviewAvgScore);
+		
+		return "jsonView";
+	}
+	
+	// 상품 문의 등록
+	@PostMapping("/enrollInquire.do")
+	public String enrollInquire(@RequestParam String dProductNo, @RequestParam String memberId, @RequestParam String inquireTitle, @RequestParam String content) {
+		log.debug("dProductNo = {}", dProductNo);
+		log.debug("memberId = {}", memberId);
+		log.debug("inquireTitle = {}", inquireTitle);
+		log.debug("content = {}", content);
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("dProductNo", dProductNo);
+		param.put("memberId", memberId);
+		param.put("inquireTitle", inquireTitle);
+		param.put("content", content);
+		
+		//수진시작
+		String notiContent = "상품["+dProductNo+"]에 문의가 등록되었습니다.";
+		String sellerId = directService.selectSellerIdByProdNo(dProductNo);
+		MemberNotification notice = MemberNotification.builder()
+				.memberId(memberId)
+				.notiContent(notiContent)
+				.messageType(MessageType.NEW_D_INQ)
+				.build();
+		param.put("notice", notice);
+		//수진끝
+		
+		int result = directService.enrollInquire(param);
 		
 		return "jsonView";
 	}

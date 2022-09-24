@@ -33,8 +33,11 @@ public interface DirectService {
 	
 	// 가격 낮은순 정렬
 	List<DirectProduct> orderByPriceAsc(Map<String, Integer> param);
+	
+	// 상품 후기
+	List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param);
 
-	int reviewGetTotalContentByDProNo();
+	int getTotalDirectReviewByDProductNo(String dProductNo);
 
 	//----------------- 재경 끝
 	//----------------- 민지 시작
@@ -61,6 +64,8 @@ public interface DirectService {
 	int insertMemberDirectOrder(Map<String, Object> param);
 	
 	String selectReviewAvgScoreByProductNo(String dProductNo);
+	
+	int enrollInquire(Map<String, Object> param);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -79,7 +84,10 @@ public interface DirectService {
 	int insertDPAttachment(DirectProductAttachment attach);
 	
 	int mergeIntoDOption(DirectProductOption dOpt);
+
+	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
+
 }
 
 

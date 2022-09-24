@@ -40,6 +40,9 @@ import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
 import com.kh.monong.member.model.dto.SellerInfoAttachment;
 import com.kh.monong.member.model.service.MemberService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
+import com.kh.monong.notice.model.service.NotificationService;
 import com.kh.monong.subscribe.model.dto.Subscription;
 import com.kh.monong.subscribe.model.dto.SubscriptionOrder;
 import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
@@ -70,6 +73,9 @@ public class AdminController {
 
 	@Autowired
 	SubscribeService subscribeService;
+	
+	@Autowired
+	NotificationService notificationService;
 	//--------------------------------------------------------수아시작
 	@GetMapping("/memberList.do")
 	public void memberList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
@@ -212,18 +218,24 @@ public class AdminController {
 		model.addAttribute("pagebar",pagebar);
 	};
 	
+	/**
+	 * 관리자 -> 회원 답변
+	 */
 	@PostMapping("/inquireAnswer.do")
-	public ResponseEntity<?> insertInquireAnswer(@RequestParam String inquireAContent, @RequestParam String inquireNo) {
-		log.debug("inquireAContent = {}",inquireAContent);
-		log.debug("inquireNo = {}", inquireNo);
+	public ResponseEntity<?> insertInquireAnswer(InquireAnswer inqAnswer, MemberNotification notice) {
+		log.debug("inqAnswer = {}",inqAnswer);
+		log.debug("notice = {}", notice);
 		
-		InquireAnswer inqAnswer = InquireAnswer.builder().inquireAContent(inquireAContent).inquireNo(inquireNo).build();
-		//주문내역 상태변경
+		//답변저장
 		int result = inquireService.insertInquireAnswer(inqAnswer);
 		
-		//알림정보저장
+		//알림정보 저장
+		String content = "문의글 ["+MonongUtils.subStrContent(notice.getNotiContent())+"]에 관리자가 답변을 달았습니다.";	
+		notice.setNotiContent(content);
+		notice.setMessageType(MessageType.INQ_ANSWERD);
 		
-		
+		result = notificationService.insertNotification(notice);
+				
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
@@ -345,6 +357,19 @@ public class AdminController {
 		param.put("subOrderNo", subOrderNo);
 		param.put("changeDStatus", changeDStatus);
 		int result = subscribeService.updateSubDelivery(param);
+		
+		//수진 코드시작
+		String content = "정기구독상품이 " +changeDStatus + ("배송완료".equals(changeDStatus) ? "되었습니다." : "입니다.");
+		String memberId = subscribeService.selectMemberIdBySoNo(subOrderNo);
+		MemberNotification notice = MemberNotification.builder()
+				.memberId(memberId)
+				.notiContent(content)
+				.dOrderNo(subOrderNo)
+				.messageType(MessageType.SO_STATUS)
+				.build();	
+		result = notificationService.insertNotification(notice);
+		//수진코드 끝
+		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	

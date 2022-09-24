@@ -285,7 +285,7 @@
   width: 289px;
   text-align: left;
   padding: 12px 0px 12px 12px;
-/*   font-size: 13px; */
+  font-size: 13px;
 }
 
 .dPrice{
@@ -905,7 +905,7 @@
 	text-align: center;
 }
 .dProductInquire {
-	padding: 30px 2px 20px 2px;
+	padding: 30px 2px 30px 2px;
 	text-align: center;
 	display: none;
 }
@@ -913,6 +913,107 @@
 	padding: 30px 2px 20px 2px;
 	text-align: center;
 	display: none;
+}
+
+/***** 상품 문의 *****/
+.tbl-inquire-container {
+	display: flex;
+    justify-content: center;
+    padding: 12px 20px 0 20px;
+}
+.tbl-inquire {
+	width: 100%;
+}
+.tbl-inquire thead {
+	height: 58px;
+	font-size: 14px;
+	border-top: 2px solid rgb(94, 94, 94);
+    border-bottom: 1px solid rgb(94, 94, 94);
+}
+.tbl-inquire tbody {
+	font-size: 14px;
+}
+.tbl-inquire th {
+	text-align: center;
+	padding: 0 10px;
+}
+.tbl-inquire td {
+	text-align: center;
+	padding: 0 10px;
+	border-bottom: 1px solid #e5e7eb;
+}
+.btn-dProductInquire {
+	display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 20px;
+}
+.enrollInquire {
+	font-size: 13px;
+	width: 120px;
+    padding: 7px;
+	margin: 0 5px 0 0;
+}
+.findInquire {
+	font-size: 13px;
+	width: 120px;
+    padding: 7px;
+}
+.inquire-author {
+	width: 110px;
+}
+.inquire-created-date {
+	width: 110px;
+}
+.inquire-status {
+	width: 82px;
+}
+.inquire-content {
+	min-height:	58px;
+	padding: 18px 0 10px;
+	display: flex;
+    justify-content: flex-start;
+}
+.inquire-answer {
+	min-height:	58px;
+	padding: 10px 0 18px;
+	display: flex;
+    justify-content: flex-start;
+}
+.Q, .A {
+	display: inline-flex;
+	border: 2px solid #F6D860;
+    border-radius: 50%;
+	width: 28px;
+    height: 28px;
+    align-items: center;
+    font-size: 14px;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+}
+.Q {
+	background-color: #F6D860;
+	color: white;
+}
+.A {
+	color: #F6D860;
+	background-color: white;
+}
+.inquire-q {
+	position: relative;
+	padding: 12px 10px;
+}
+.inquire-a {
+	position: relative;
+	padding: 9px 10px;
+}
+
+.modal-body input::placeholder {
+	font-size: 13px;
+}
+.modal-body textarea::placeholder {
+	font-size: 13px;
 }
 
 /* 민지 끝 */

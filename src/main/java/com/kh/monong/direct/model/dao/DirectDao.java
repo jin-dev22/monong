@@ -22,7 +22,7 @@ public interface DirectDao {
 	//----------------- 재경 시작
 	// 상품 목록
 	@Select("select d.* from direct_product d order by d_product_created_at desc")
-	List<DirectProduct> selectDirectProductList(Map<String, Integer> param, RowBounds rowBounds);
+	List<DirectProduct> selectDirectProductList(Map<String, Integer> param);
 		
 	@Select("select * from direct_product_attachment where d_product_no = #{dProductNo}")
 	List<DirectProductAttachment> selectDirectProductAttachmentList(String dProductNo);
@@ -54,6 +54,11 @@ public interface DirectDao {
 	@Insert("insert into direct_product_option values ('DO'||seq_d_option_no.nextval, 'DP'||#{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})")
 	@SelectKey(statement = "select seq_d_option_no.currval from dual", before = false, keyProperty = "dOptionNo", resultType = String.class)
 	int insertDirectProductOption(DirectProductOption dOpt);
+	
+	// 상품 후기
+	List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param, RowBounds rowBounds);
+
+	int getTotalDirectReviewByDProductNo(String dProductNo);
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
@@ -119,8 +124,14 @@ public interface DirectDao {
 	@Update("update direct_product_option set d_sale_status = '판매마감' where d_stock = 0 and d_sale_status = '판매중'")
 	int updateStatusByStock();
 	
+	// 리뷰 점수 띄우기
 	@Select("select to_char(round(avg(review_rating), 1), 'FM0.0') from direct_review left join direct_product_option using (d_option_no) group by d_product_no having d_product_no = #{dProductNo}")
 	String selectReviewAvgScoreByProductNo(String dProductNo);
+	
+	// 상품 문의 등록
+	@Insert("insert into direct_inquire values (seq_d_inquire_no.nextval, #{dProductNo}, #{memberId}, #{inquireTitle}, #{content}, default, default)")
+	@SelectKey(statement = "select seq_d_inquire_no.currval from dual", before = false, keyProperty = "dInquireNo", resultType = int.class)
+	int enrollInquire(Map<String, Object> param);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -144,6 +155,9 @@ public interface DirectDao {
 
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
+	
+	@Select("select member_id from direct_product where d_product_no = #{no}")
+	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
 
 }

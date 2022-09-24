@@ -10,6 +10,16 @@
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/direct.css" />
+<style>
+div.container{
+display: flex;
+flex-wrap: wrap;
+}
+.directproductlist-wrapper {
+width: 200px;
+margin: 50px 20px;
+}
+</style>
 <h1 class="d-list" style="padding-bottom: 10px;color: #EA5C2B;border-bottom: 1px solid #EA5C2B;">농산물 직거래 장터</h1>
 <div class="d-flex flex-wrap justify-content-between">
 	<div class="align">
@@ -34,28 +44,25 @@
 	</ul>
 </c:if>
 <c:if test="${not empty list}">
+	<div class="container">
 	<c:forEach items="${list}" var="directProduct">
-		<div class="container">
-			<div class="row justify-content-center row-cols-3 row-cols-lg-3 align-items-stretch g-5 py-5">
-				<div class="col">
-					<div class="card card-cover h-100 overflow-hidden bg-warning mb-3 border-success mb-3 rounded-5 shadow-lg">
-						<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="card-img-top">
-								<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none">
-					  				<h6>${directProduct.DProductName}</h6>
-					  			</a>
-					  	<ul class="d-flex list-unstyled mt-auto">
-					    	<li class="me-auto">
-					    		<fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,### 원" />
-					    	</li>
-					    	<li class="list-group-item">판매자 : ${directProduct.memberId}</li>
-					  	</ul>
-					</div>
+			<div class="directproductlist-wrapper row justify-content-center align-items-stretch">
+				<div class="card">
+					<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="card-img-top">
+					<div class="card-body">
+						<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none">
+				  			${directProduct.DProductName}
+				  		</a>
+				  		<p class="card-text"><fmt:formatNumber value="${directProduct.DDefaultPrice}" pattern="#,### 원" /></p>
+				  		<p>판매자 : ${directProduct.memberId}</p>
+				  	</div>
 				</div>
 			</div>
-		</div>
+	</c:forEach>
+	</div>
+</c:if>
 <nav>
 	${pagebar}
 </nav>
-	</c:forEach>
-</c:if>
+	
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

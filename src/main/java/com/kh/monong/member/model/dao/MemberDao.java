@@ -19,6 +19,7 @@ import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
+import com.kh.monong.direct.model.dto.MemberDirectOrder;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -30,6 +31,8 @@ import com.kh.monong.subscribe.model.dto.SubscriptionOrderExt;
 import com.kh.monong.subscribe.model.dto.SubscriptionProduct;
 import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionReviewAttachment;
+
+import lombok.NonNull;
 
 @Mapper
 public interface MemberDao {
@@ -90,8 +93,8 @@ public interface MemberDao {
 	@Select("select count(*) from inquire where member_id = #{memberId}")
 	int getTotalInqCntBymemberId(String memberId);
 
-	@Select("update direct_product_option  set d_stock = d_stock + 1 where d_option_no in(select d_option_no  from member_direct_order where d_order_no = #{dOrderNo})")
-	int reStoreDirectProductStock(String dOrderNo);
+	@Select("update direct_product_option set d_stock = d_stock + #{dOptionCount}, d_sale_status = '판매중' where d_option_no = #{dOptionNo}")
+	Integer reStoreDirectProductStock(MemberDirectOrder mDO);
 
 	List<DirectInquire> selectDirectInqList(Map<String, Object> param, RowBounds rowBounds);
 	
@@ -102,7 +105,11 @@ public interface MemberDao {
 	int insertDirectInquireAnswer(DirectInquireAnswer directInqAnswer);
 
 	@Update("update direct_inquire set has_answer = 'Y' where d_inquire_no = #{dInquireNo}")
-	int updateDirectInquireAnswered(String dInquireNo);
+	int updateDirectInquireAnswered(@NonNull long dInquireNo);
+
+	List<Map<String,Object>> selectOrderListBySeller(Map<String, Object> param);
+
+	int getTotalOrderCntBySeller(Map<String, Object> param);
 
 	//------------------------수진 끝 
 	

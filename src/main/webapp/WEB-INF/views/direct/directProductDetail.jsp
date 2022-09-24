@@ -9,7 +9,9 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
+<sec:authorize access="isAuthenticated()">
+	<input type="hidden" id="memberId" value="<sec:authentication property='principal.username'/>" />
+</sec:authorize>
 <main class="main-container">
   <input type="hidden" id="dProductNo" name="dProductNo" value="${directProduct.DProductNo}" />
   <div class="slider-container">
@@ -128,14 +130,49 @@
 	  	${directProduct.DProductContent}
 	  </div>
 	  <div class="dProductInquire">
-	  야호야호야호야 이건 문의
+	  	<span style="font-size: 20px; display: block; position: relative; padding: 20px 0;">Q & A</span>
+	  	<sec:authorize access="isAuthenticated()">
+		  	<div class="btn-dProductInquire">
+			  	<button type="button" id="enrollInquire" class="btn enrollInquire btn-116530">상품 문의하기</button>
+			  	<button type="button" id="findInquire" class="btn findInquire btn-116530-reverse" onclick="location.href = '${pageContext.request.contextPath}/member/memberDirectInquireList.do'">내 문의내역 조회</button>
+		  	</div>
+	  	</sec:authorize>
+	  	<div class="tbl-inquire-container">
+	  	  <table class="tbl-inquire">
+	  	  	  <thead>
+	  	  		<tr>
+	  	  			<th class="inquire-title">제목</th>
+	  	  			<th class="inquire-author">작성자</th>
+	  	  			<th class="inquire-created-date">작성일</th>
+	  	  			<th class="inquire-status">답변상태</th>
+	  	  		</tr>
+	  	  	  </thead>
+  	  	  	  <tbody>
+	  	  	  	<tr>
+	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">제목이다아아아아아아아아아아아</td>
+	  	  	  		<td>콜라볼랄라라</td>
+	  	  	  		<td>2022.08.08</td>
+	  	  	  		<td>답변완료</td>
+	  	  	  	</tr>
+	  	  	  	<tr>
+	  	  	  		<td colspan="4" style="background-color: rgb(250, 250, 250);">
+		  	  	  		<div class="inquire-content-container">
+		  	  	  			<div class="inquire-content"><div class="Q">Q</div><span class="inquire-q">또잉</span></div>
+		  	  	  			<div class="inquire-answer"><div class="A">A</div><span class="inquire-a">답변이얌 ㅎㅎ</span></div>
+		  	  	  		</div>
+	  	  	  		</td>
+	  	  	  	</tr>
+	  	  	  </tbody>
+	  	  </table>
+	  	</div>
 	  </div>
 	  <!-- 재경 시작 -->
 	  <div class="dProductReview"></div>
 	  <!-- 재경 끝 -->
-	  
   </div>
 </main>
+<div class="enroll-inquire-modal-container"></div>
+<div class="enroll-inquire-complete-container"></div>
 <script>
 // 재경 시작
 document.querySelector("#review").addEventListener('click', (e) => {
@@ -659,7 +696,7 @@ const addCart = (cartList) => {
 			  </div>
 			</div>`;
 			
-			container.insertAdjacentHTML('beforeend', modal);
+			container.innerHTML = modal;
 			
 			$('#complete-modal').modal("show");
 			
@@ -767,7 +804,7 @@ items.forEach((item, index) => {
 });
 
 
-const detailNav= document.querySelectorAll(".direct-detail-nav-item");
+const detailNav = document.querySelectorAll(".direct-detail-nav-item");
 detailNav.forEach((nav) => {
 	nav.addEventListener('click', (e) => {
 		const info = document.querySelector('.dProductContent');
@@ -791,5 +828,166 @@ detailNav.forEach((nav) => {
 		}
 	});
 });
+
+// 상품문의 등록하기 폼
+document.querySelector('#enrollInquire').addEventListener('click', (e) => {
+	const container = document.querySelector(".enroll-inquire-modal-container");
+	const modal = `
+	<div class="modal fade" id="enroll-inquire-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+	  <div style="max-width: 680px;" class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+		  <div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
+		  	<div style="width: 100%; display: flex; padding-bottom: 4px; border-bottom: 1px solid #dee2e6; justify-content: space-between; align-items: center;">
+		        <h5 class="modal-title" id="exampleModalLabel">상품 문의하기</h5>
+		        <button style="border: none; background-color: transparent; font-size: 30px; color: #333;" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		  	</div>
+	      </div>
+	      <div style="padding: 12px 20px; 0">
+	        <div style="width: 100%; display: flex; padding-bottom: 12px; align-items: center; justify-content: flex-start; border-bottom: 1px solid #dee2e6;">
+		        <div style="display: inline-flex; width: 100px;">
+		       	  <img style="width: 70px; height: 70px; display: inline-block;" src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" alt="" /> 
+		        </div>
+		        <div style="display: inline;">
+		        	<span>${directProduct.DProductName}</span>
+		        </div>
+	        </div>
+	      </div>
+	      <div style="padding: 0 20px 0; border-bottom: none;" class="modal-body">
+	      	<div style="width: 100%; padding-bottom: 12px; border-bottom: 1px solid #dee2e6;">
+		        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
+		          <div style="width: 100px;">
+		        	<span style="padding-right: 65px; top: 8px; position: relative; display: inline;">제목</span>
+		          </div>
+		          <div style="width: 538px;">
+		        	<input type="text" name="inquire_title" placeholder="제목을 입력해 주세요. (최대 30자)" style="height: 38px; width: 100%; padding: 0 5px;" maxlength="30" onkeyup="handleInputLength(this, 30)" required />
+		          </div>
+		        </div>
+		        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
+		          <div style="width: 100px;">
+			        <span style="padding-right: 65px; top: 8px; position: relative; display: inline;">내용</span>
+			      </div>
+		          <textarea name="inquire_content" style="width: 538px; height: 200px; padding: 9px 7px; resize: none;" maxlength="300" placeholder="내용을 입력해 주세요. (최대 300자)&#13;&#10;&#13;&#10; - Q&A는 상품에 대해 판매자에게 문의하는 게시판입니다.&#13;&#10; - 상품과 관련 없는 비방/욕설/명예훼손성 게시글 및 상품과 관련 없는 광고글 등&#13;&#10;   부적절한 게시글 등록 시 글쓰기 제한 및 게시글이 삭제 조치될 수 있습니다." onkeyup="handleInputLength(this, 300)" required></textarea>
+		        </div>
+	      	</div>
+	      </div>
+	      <div class="modal-footer" style="justify-content: center; border-top: none; padding: 16px 20px;">
+	        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; border: 1px solid #dee2e6;">취소</button>
+	        <button type="button" id="sbmEnroll" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; background-color: #dee2e6; color: #fff; border: 1px solid #dee2e6; cursor: default;">등록</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>`;
+	
+	container.innerHTML = modal;
+	
+	$('#enroll-inquire-modal').modal("show");
+	
+	// 문의 등록
+	document.querySelector("#sbmEnroll").addEventListener('click', (sbm) => {
+	 	const headers = {};
+	 	headers['${_csrf.headerName}'] = '${_csrf.token}';
+	 	console.log(headers);
+	 	const dProductNo = document.querySelector('#dProductNo');
+	 	const memberId = document.querySelector("#memberId");
+	 	const inquireTitle = document.querySelector("[name=inquire_title]");
+	 	const inquireContent = document.querySelector("[name=inquire_content]");
+		
+	 	// 유효성 검사
+	 	if(inquireTitle.value.length == 0 || inquireContent.value.length == 0) {
+	 		e.preventDefault();
+	 	}
+	 	else {
+	 		$.ajax({
+		 		url : "${pageContext.request.contextPath}/direct/enrollInquire.do",
+		 		method : "POST",
+		 		headers,
+		 		data : {dProductNo : dProductNo.value,
+		 				memberId : memberId.value,
+		 				inquireTitle : inquireTitle.value,
+		 				content : inquireContent.value},
+		 		success(response) {
+ 					const containerCom = document.querySelector('.enroll-inquire-complete-container');
+ 					const modal = `
+ 					<div class="modal fade" id="inquire-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+ 					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+ 					    <div class="modal-content">
+ 					      <div class="modal-body" style="display: flex; justify-content: center;">
+ 					        <p style="margin: 34px 0 12px;">상품 문의가 등록되었습니다.</p>
+ 					      </div>
+ 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
+ 					        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;">확인</button>
+ 					      </div>
+ 					    </div>
+ 					  </div>
+ 					</div>`;
+ 					
+ 					containerCom.innerHTML = modal;
+ 					
+ 					inquireTitle.value = "";
+ 					inquireContent.value = "";
+ 					
+ 					$('#inquire-complete-modal').modal("show");
+		 		},
+		 		error : console.log
+		 	});
+	 	}
+	});
+});
+
+// 등록 글자수 체크
+function handleInputLength(el, max) {
+	const targetBtn = document.querySelector('#sbmEnroll');
+	
+	if(el.name == "inquire_title") {
+		const targetTextarea = el.parentElement.parentElement.nextElementSibling.lastElementChild;
+		if(el.value.length > 0) {
+			if(targetTextarea.value.length > 0) {
+				targetBtn.style.border = '1px solid #F6D860';
+				targetBtn.style.backgroundColor = '#F6D860';
+				targetBtn.style.cursor = 'pointer';
+				targetBtn.disabled = false;
+			}
+			if(el.value.length >= max) {
+			 	el.value = el.value.substr(0, max);
+			 	setTimeout(() => {
+			    alert(`\${max}자 이상 작성할 수 없습니다.`);
+			 	}, 50);
+			}
+		}
+		else {
+			targetBtn.style.backgroundColor = '#dee2e6';
+			targetBtn.style.border = '1px solid #dee2e6';
+			targetBtn.style.cursor = 'default';
+			targetBtn.disabled = false;
+			return false;
+		}
+	}
+	else if(el.name == "inquire_content") {
+		const targetInput = el.parentElement.previousElementSibling.lastElementChild.firstElementChild;
+		if(el.value.length > 0) {
+			if(targetInput.value.length > 0) {
+				targetBtn.style.border = '1px solid #F6D860';
+				targetBtn.style.backgroundColor = '#F6D860';
+				targetBtn.style.cursor = 'pointer';
+				targetBtn.disabled = false;
+			}
+			if(el.value.length >= max) {
+			 	el.value = el.value.substr(0, max);
+			 	setTimeout(() => {
+			    alert(`\${max}자 이상 작성할 수 없습니다.`);
+			 	}, 50);
+			}
+		}
+		else {
+			targetBtn.style.backgroundColor = '#dee2e6';
+			targetBtn.style.border = '1px solid #dee2e6';
+			targetBtn.style.cursor = 'default';
+			targetBtn.disabled = false;
+			return false;
+		}
+	}
+}
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

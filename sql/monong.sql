@@ -18,20 +18,26 @@ COMMENT ON COLUMN member.member_birthday IS '0000-00-00';
 COMMENT ON COLUMN member.member_enroll_date IS '0000-00-00';
 
 CREATE TABLE member_notification (
-	noti_no	varchar2(100)		NOT NULL,
+	noti_no	number		NOT NULL,
 	member_id	varchar2(100)		NOT NULL,
 	noti_content	varchar2(2000)		NOT NULL,
 	noti_created_at	date	DEFAULT current_date	NULL,
 	noti_is_read 	varchar2(1)	DEFAULT 'N'	NULL,
-	d_inquire_no	number		NULL,
-	d_order_no	number		NULL,
-	s_order_no	number		NULL
+    inquire_no number NULL,
+	d_inquire_no	varchar2(100)		NULL,
+	d_order_no	varchar2(100)		NULL,
+	s_order_no	varchar2(100)		NULL
 );
-COMMENT ON COLUMN member_notification.d_inquire_no IS '답변완료시 알림';
+--수진 : 알림테이블 메세지타입 추가
+alter table member_notification add message_type varchar2(30) not null;
 
-COMMENT ON COLUMN member_notification.d_order_no IS '주문관련 알림';
+COMMENT ON COLUMN member_notification.d_inquire_no IS '판매자 답변완료시 알림';
 
-COMMENT ON COLUMN member_notification.s_order_no IS '주문상태 변경시 알림';
+COMMENT ON COLUMN member_notification.inquire_no IS '관리자 답변완료시 알림';
+
+COMMENT ON COLUMN member_notification.d_order_no IS '직거래 주문관련 알림';
+
+COMMENT ON COLUMN member_notification.s_order_no IS '정기구독 주문상태 변경시 알림';
 
 CREATE TABLE inquire (
 	inquire_no	number		NOT NULL,
@@ -415,6 +421,32 @@ CREATE TABLE direct_inquire_answer (
 	d_inquire_answered_at	date	DEFAULT current_date	NULL,
 	constraint fk_d_inquire_no_01 foreign key(d_inquire_no) references direct_inquire(d_inquire_no)
 );
+
+-- direct_inquire, direct_inquire_answer의 d_inquire_no 컬럼 타입 number로 변경 (테이블 삭제 후 재생성)
+CREATE TABLE direct_inquire (
+	d_inquire_no	number		NOT NULL,
+	d_product_no	varchar2(100)		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	inquire_title	varchar2(255)		NULL,
+	content	 varchar2(2000)		NOT NULL,
+	created_at	date	DEFAULT current_date	NULL,
+	has_answer	varchar2(1)	DEFAULT 'N'	NULL,--컬럼명, 값 YN타입으로 변경
+    
+	constraint pk_direct_inquire  primary key(d_inquire_no),
+	constraint fk_d_product_no_01 foreign key(d_product_no) references direct_product(d_product_no),
+	constraint fk_member_id_02 foreign key(member_id) references member(member_id)
+);
+
+CREATE TABLE direct_inquire_answer (
+	d_inquire_no	number		NOT NULL,
+	d_inquire_a_content	varchar2(2000)		NOT NULL,
+	d_inquire_answered_at	date	DEFAULT current_date	NULL
+);
+
+ALTER TABLE direct_inquire_answer
+ADD constraint fk_d_inquire_no_01 FOREIGN KEY (d_inquire_no) 
+REFERENCES direct_inquire (d_inquire_no)
+ON DELETE CASCADE;
 
 CREATE TABLE direct_review (
 	d_review_no	varchar2(100)	NOT NULL,

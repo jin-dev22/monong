@@ -44,7 +44,7 @@
 					</div>
 					<div class="prod-no">상품번호 : ${prod.DProductNo}</div>
 					<div class="button-wrapper">
-						<input class="prod-orderList" type="button" value="주문관리" onclick="location.href='${pageContext.request.contextPath}/member/sellerProdOrderList.do?prodNo=${prod.DProductNo}';">
+						<input class="prod-orderList" type="button" value="주문내역조회" onclick="location.href='${pageContext.request.contextPath}/member/sellerProdOrderList.do?prodNo=${prod.DProductNo}';">
 						<input class="prod-update" type="button" value="판매글 수정" onclick="location.href='${pageContext.request.contextPath}/direct/directProductUpdate.do?prodNo=${prod.DProductNo}';"/>
 					</div>
 				</div>

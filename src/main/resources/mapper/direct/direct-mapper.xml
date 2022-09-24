@@ -16,6 +16,26 @@
         when not matched then
             insert (d_option_no, d_product_no, d_option_name, d_sale_status, d_price, d_stock) values ('DO'||seq_d_option_no.nextval, #{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})
   </update>
+<!-- 리뷰 조회 -->
+<select id="selectdirectProductReviewList">
+	select
+		dr.*,
+		dra.d_review_renamed_filename,
+		dra.d_review_original_filename,
+		dra.d_review_attach_no,
+		dpo.d_option_name,
+		dp.d_product_no
+	from
+		direct_review dr
+		left join direct_review_attachment dra
+		on dr.d_review_no = dra.d_review_no
+		left join direct_product_option dpo
+		on dr.d_option_no = dpo.d_option_no
+		left join direct_product dp
+		on dpo.d_product_no = dp.d_product_no
+	where
+		dr.d_review_no= #{dReviewNo}
+</select>
 <!-- 재경 끝 -->
 <!-- 민지 시작 -->
   <select id="selectOneDirectProductCollection" resultMap="directProductMap">
