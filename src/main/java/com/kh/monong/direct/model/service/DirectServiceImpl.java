@@ -140,13 +140,16 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
-	public List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param) {
-		return null;
+	public List<Map<String, Object>> selectDirectProductReviewList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return directDao.selectDirectProductReviewList(param, rowBounds);
 	}
 	
 	@Override
 	public int getTotalDirectReviewByDProductNo(String dProductNo) {
-		return 0;
+		return directDao.getTotalDirectReviewByDProductNo(dProductNo);
 	}
 	
 	//----------------- 재경 끝

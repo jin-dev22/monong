@@ -56,9 +56,10 @@ public interface DirectDao {
 	int insertDirectProductOption(DirectProductOption dOpt);
 	
 	// 상품 후기
-	List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param, RowBounds rowBounds);
+	List<Map<String, Object>> selectDirectProductReviewList(Map<String, Object> param, RowBounds rowBounds);
 
 	int getTotalDirectReviewByDProductNo(String dProductNo);
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회
