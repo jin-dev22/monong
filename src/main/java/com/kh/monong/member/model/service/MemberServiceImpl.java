@@ -372,7 +372,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param) {
+	public List<Map<String, Object>> selectDirectListByMemberId(Map<String, Object> param) {
 		int limit = (int) param.get("limit");
 		int offset = ((int)param.get("cPage") - 1) * limit;
 		RowBounds rowBounds = new RowBounds(offset, limit);
