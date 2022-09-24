@@ -47,7 +47,7 @@
 			<div class="col-sm-9">
 				<label for="memberId">아이디</label> 
 				<input type="text" name="memberId" class="form-control" id="memberId"
-					value="<sec:authentication property="principal.username"/>" readonly required>
+					value="<sec:authentication property="principal.username" var="memberId"/>" readonly required>
 			</div>
 		</div>
 		<div class="row mb-2 col-md-13 justify-content-center">
@@ -165,8 +165,15 @@
 			<input type="reset" class="btn btn-outline-success" value="취소">
 		</div>
 	</form>
+	<button type="button" id="btn-memberQuit">회원탈퇴</button>
+	<div class="quit-gide" style="display:none;">판매자 회원 탈퇴는 관리자1:1 문의로 신청하시면 확인 후 탈퇴처리가 진행됩니다.</div>
 </div>
 <script>
+document.querySelector("#btn-memberQuit").addEventListener('click', (e)=>{
+	const guideText = document.querySelector(".quit-gide");
+	guideText.style.display = "block";
+})
+
 //삭제 체크시 파일업로드 required처리
 document.querySelector("#delFileNo").addEventListener('change',(e)=>{
 	const upload = document.querySelector("#sellerRegFile");

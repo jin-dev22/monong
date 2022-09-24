@@ -34,7 +34,8 @@
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
 				<label for="memberId">아이디</label>
-				<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='<sec:authentication property="principal.username"/>'readonly required/>
+				<sec:authentication property="principal.username"  var="memberId"/>
+				<input type="text" class="form-control" placeholder="아이디 (4글자이상)" name="memberId" id="memberId" value='${memberId}'readonly required/>
 				<br />
 			</div>
 		</div>
@@ -111,9 +112,53 @@
 			<input type="reset" class="btn btn-outline-success" value="취소">
 		</div>
 	</form:form>
-	
+	<form name="memberQuitFrm" action="${pageContext.request.contextPath}/member/memberQuit.do" method="POST">
+		<button type="button" id="btn-memberQuit">회원탈퇴</button>
+		<div class="quit-gide" style="display:none;">탈퇴하시려면 아래 문장을 똑같이 작성해 주세요.</div>
+		<div>
+			<input type="hidden" name="chkQuitGuide" style="width: 500px;" class="quit-gide" value="회원 ${memberId}는 모농모농 회원 탈퇴를 신청합니다." readOnly>
+		</div>
+		<div>
+			<input type="hidden" name="chkQuit" style="width: 500px;"/>
+		</div>
+		<button type="submit" class="bnt-quit-submit" style="display:none;">탈퇴신청</button>
+		<sec:csrfInput />
+	</form>
 </div>
 <script>
+/**
+ * 탈퇴확인 폼
+ */
+document.memberQuitFrm.addEventListener('submit', (e)=>{
+	e.preventDefault();
+	console.log("핸들러 작동")
+	const {chkQuit, chkQuitGuide} = e.target;
+	if(chkQuit.value != chkQuitGuide.value){
+		console.log("글자틀림")
+		return;
+	}
+	else{
+		if(confirm("정말로 탈퇴하시겠습니까?")){
+			console.log("탈퇴처리하기")
+			e.target.submit();			
+		}
+	}
+});
+
+document.querySelector("#btn-memberQuit").addEventListener('click', (e)=>{
+	const frm = document.memberQuitFrm;
+	const {chkQuit, chkQuitGuide} = frm;
+	const guideText = frm.querySelector(".quit-gide");
+	const btnSubmit = frm.querySelector(".bnt-quit-submit");
+	console.log(guideText, chkQuit, chkQuitGuide)
+	
+	guideText.style.display = "block";
+	btnSubmit.style.display = "block";
+	chkQuit.type = "text";
+	chkQuitGuide.type = "text";
+})
+
+
 /**
  * 제출 전 입력값 valid확인
  */

@@ -111,6 +111,11 @@ public interface MemberDao {
 
 	int getTotalOrderCntBySeller(Map<String, Object> param);
 
+	@Update("update member set member_del = 'Y', member_quit_date = current_date where member_id =#{memberId}")
+	int memberQuit(String memberId);
+	
+	@Delete("delete from member_authority where member_id =#{memberId}")
+	int deleteMemberAuth(String memberId);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작

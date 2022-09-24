@@ -274,8 +274,14 @@ public class MemberController {
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
 	
-	//@GetMapping("/sellerMyPage.do")
-	public void sellerMypage() {
+	@PostMapping("/memberQuit.do")
+	public String memberQuit(Authentication authentication) {
+		String memberId = authentication.getName();
+		int result = memberService.memberQuit(memberId);
+		if(result>0) {
+			SecurityContextHolder.clearContext();			
+		}
+		return "redirect:/";
 	}
 	
 	@GetMapping("/sellerProdList.do")
