@@ -91,32 +91,5 @@ function closeToday(){
 	window.close();
 }
 
-//쿠키 불러오기
-function getCookie(name){
-	let obj = name + "=";
-	let x = 0;
-	while(x <= document.cookie.length){
-		let y = (x + obj.length);
-		if(document.cookie.substring(x, y) == obj ){
-			if((endOfCookie = document.cookie.indexOf(";", y)) == -1)
-				endOfCookie = document.cookie.length;
-			value = document.cookie.substring(y, endOfCookie);
-			return unescape(value);
-		}
-		x = document.cookie.indexOf(" ", x) + 1;
-		if ( x == 0 ) break; 
-	};
-    return "";
-};
-
-$(function(){    
-	if(getCookie("popToday") != "close"){
-		$("#popup").show();
-	}
-	else {
-		window.close();
-	}
-});
-
 </script>
 </html>
