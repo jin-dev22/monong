@@ -665,5 +665,19 @@
  			<result column="s_product_info" property="sProductInfo"/>
  		</association>
  	</resultMap>
+ 	
+ 	<select id="selectMemberDirectInqList" resultMap="directInqMap">
+ 	select 
+	    * 
+	from 
+		direct_inquire di
+		left join direct_inquire_answer da
+		on di.d_inquire_no = da.d_inquire_no
+	where 
+		di.member_id = #{memberId}
+	order by 
+		di.created_at
+ 	
+ 	</select>
  <!--=================================수아 끝-->
 </mapper>

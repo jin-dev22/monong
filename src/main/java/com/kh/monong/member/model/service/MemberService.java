@@ -184,6 +184,10 @@ public interface MemberService {
 
 	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
 
+	List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param);
+
+	int getTotalMemberDirectInqList(String memberId);
+
 
 	
 
