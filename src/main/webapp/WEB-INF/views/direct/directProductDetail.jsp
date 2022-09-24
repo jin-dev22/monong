@@ -696,7 +696,7 @@ const addCart = (cartList) => {
 			  </div>
 			</div>`;
 			
-			container.insertAdjacentHTML('beforeend', modal);
+			container.innerHTML = modal;
 			
 			$('#complete-modal').modal("show");
 			
@@ -880,12 +880,12 @@ document.querySelector('#enrollInquire').addEventListener('click', (e) => {
 	  </div>
 	</div>`;
 	
-	container.insertAdjacentHTML('afterbegin', modal);
+	container.innerHTML = modal;
 	
 	$('#enroll-inquire-modal').modal("show");
 	
 	// 문의 등록
-	document.querySelector("#sbmEnroll").addEventListener('click', (e) => {
+	document.querySelector("#sbmEnroll").addEventListener('click', (sbm) => {
 	 	const headers = {};
 	 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	 	console.log(headers);
@@ -908,7 +908,7 @@ document.querySelector('#enrollInquire').addEventListener('click', (e) => {
 		 				inquireTitle : inquireTitle.value,
 		 				content : inquireContent.value},
 		 		success(response) {
- 					const container = document.querySelector('.enroll-inquire-complete-container');
+ 					const containerCom = document.querySelector('.enroll-inquire-complete-container');
  					const modal = `
  					<div class="modal fade" id="inquire-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
  					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
@@ -923,7 +923,10 @@ document.querySelector('#enrollInquire').addEventListener('click', (e) => {
  					  </div>
  					</div>`;
  					
- 					container.insertAdjacentHTML('afterbegin', modal);
+ 					containerCom.innerHTML = modal;
+ 					
+ 					inquireTitle.value = "";
+ 					inquireContent.value = "";
  					
  					$('#inquire-complete-modal').modal("show");
 		 		},
