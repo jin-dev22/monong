@@ -210,5 +210,8 @@ const btnDeleteReview = (btn) => {
 	
 	}
 };
+
+$("#navbarDropdown").css("color","EA5C2B");
+$("#lnik-sReviewList").css("color","EA5C2B");
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -91,5 +91,6 @@ if(btnWriteReview !== null){
 	})
 }
 
+$("#lnik-sOList").css("color","EA5C2B")
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

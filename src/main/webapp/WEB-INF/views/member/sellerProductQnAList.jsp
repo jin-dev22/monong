@@ -92,6 +92,8 @@
 				});
 			}
 		};
+		
+		$("#lnik-dInqList").css("color","EA5C2B");
 		</script>
 	</c:if>
 </div>

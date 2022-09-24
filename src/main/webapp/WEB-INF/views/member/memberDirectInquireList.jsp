@@ -69,4 +69,7 @@
 	 </c:if>
 	 
 </div>
+<script>
+$("#lnik-dInqList").css("color","EA5C2B");
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
