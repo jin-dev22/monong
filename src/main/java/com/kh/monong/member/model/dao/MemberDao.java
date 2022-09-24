@@ -256,5 +256,10 @@ public interface MemberDao {
 
 	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
 
+	List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param, RowBounds rowBounds);
+
+	@Select("select count(*) from direct_inquire where member_id= #{memberId}")
+	int getTotalMemberDirectInqList(String memberId);
+
 	
 }

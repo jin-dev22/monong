@@ -991,8 +991,19 @@ public class MemberController {
 	}
 	
 	@GetMapping("/memberDirectInquireList.do")
-	public void memberDirectInquireList() {
-	
+	public void memberDirectInquireList(@RequestParam(defaultValue = "1") int cPage, Authentication authentication, Model model, HttpServletRequest request) {
+		String memberId = authentication.getName();
+		Map<String, Object> param = new HashMap<>();
+		int limit = 10;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		List<DirectInquire> directInqList = memberService.selectMemberDirectInqList(param);
+		int totalContent = memberService.getTotalMemberDirectInqList(memberId);
+		String url = request.getRequestURI();
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("directInqList", directInqList);
+		model.addAttribute("pagebar", pagebar);
 	}
 	
 	@Autowired
