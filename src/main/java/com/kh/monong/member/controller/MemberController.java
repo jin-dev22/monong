@@ -904,20 +904,10 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("memberId", memberId);
-		List<DirectOrder> directOrderList = memberService.selectDirectListByMemberId(param);
-		if(directOrderList != null) {
-			model.addAttribute("directOrderList", directOrderList);
-				for(DirectOrder order : directOrderList) {
-					List<DirectProductEntity> prodList = memberService.selectProdListBydOrderNo(order.getDOrderNo());
-					model.addAttribute("prodList", prodList);
-					for(DirectProductEntity d : prodList) {
-						List<DirectProductAttachment> prodAttachList = memberService.selectProdAttach(d.getDProductNo());
-						if(prodAttachList != null) {
-							model.addAttribute("prodAttachList", prodAttachList);
-						}
-					}
-				}
-			}
+		
+		List<Map<String, Object>> directOrderList = memberService.selectDirectListByMemberId(param);
+		model.addAttribute("directOrderList", directOrderList);
+		
 		int totalContent = memberService.getTotalDirectList(memberId);
 		String url = request.getRequestURI();
 		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
