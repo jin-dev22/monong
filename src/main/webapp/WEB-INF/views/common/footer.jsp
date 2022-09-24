@@ -42,6 +42,10 @@ const faq = () => {
 };
 </script>
 <script>
+document.querySelector('#enrollHeader').addEventListener('click', (e) => {
+    clickEnrollModal();
+});
+
  function clickEnrollModal(){
 		const container = document.querySelector("#enrollType-modal-container");
 		const modal = `<div class="modal fade" id="inquire-complete-modal" data-bs-keyboard="false" tabindex="-1" role="dialog">

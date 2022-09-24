@@ -64,7 +64,7 @@
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
-					<a class="nav-link" onclick="clickErollModal();">회원가입</a>
+					<a class="nav-link" style="cursor: pointer" id="enrollHeader" href="#">회원가입</a>
 				</nav>
 			</nav>
 		 </sec:authorize>
