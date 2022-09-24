@@ -41,7 +41,7 @@
 			</div>
 			<div class="mt-5 mb-3">
 				<button type="submit" class="btn btn-EA5C2B">&nbsp;로그인&nbsp;</button>
-				<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
+				<button type="button" class="btn btn-116530" id="enroll" onclick="clickEnrollModal();">회원가입</button>
 			</div>
 		</form:form>
 		
