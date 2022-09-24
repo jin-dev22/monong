@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.monong.notice.model.dto.MemberNotification;
 
@@ -11,10 +12,13 @@ import com.kh.monong.notice.model.dto.MemberNotification;
 public interface NotificationDao {
 	//---------------------------------------------수진시작
 	int insertNotification(MemberNotification notice);
+	
+	@Update("update member_notification set noti_is_read = 'Y' where noti_no = #{notiNo}")
+	int notificationHasRead(long notiNo);
 	//---------------------------------------------수진끝
 	
 	//---------------------------------- 선아 시작
-	@Select("select * from member_notification where member_id = #{memberId} order by noti_created_at desc")
+	@Select("select * from member_notification where member_id = #{memberId} order by noti_is_read, noti_created_at desc")
 	List<MemberNotification> selectNotificationListByMemberId(String memberId);
 	//---------------------------------- 선아 끝
 

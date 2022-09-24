@@ -2,6 +2,7 @@ package com.kh.monong.notice.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.monong.admin.controller.AdminController;
 
@@ -11,11 +12,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.monong.notice.model.dto.MemberNotification;
 import com.kh.monong.notice.model.service.NotificationService;
@@ -35,8 +38,16 @@ public class NotificationController {
 	@GetMapping("/memberNotificationList.do")
 	public void memberNotificationList(Authentication authentication, Model model){
 		String memberId = authentication.getName();
-		List<MemberNotification> notification = notificationService.selectNotificationListByMemberId(memberId);
-		model.addAttribute("notification", notification);
+		List<MemberNotification> notificationList = notificationService.selectNotificationListByMemberId(memberId);
+		log.debug("notificationList={}",notificationList);
+		model.addAttribute("notificationList", notificationList);
+	}
+	
+	@PostMapping("/memberNotificationList.do")
+	public ResponseEntity<?> notificationHasRead(@RequestParam long notiNo){
+		int result = notificationService.notificationHasRead(notiNo);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	//---------------------------------------------수진끝
 	
