@@ -56,6 +56,22 @@
 	</div>
 </div>
 </c:if>
+
+<c:if test="${recentNoticeWeekVegs ne null}">
+<div id="popup">
+	<div class="popupWrapper">
+		<div>
+			<h1 class="popup_date">${recentNoticeWeekVegs.weekCriterion}</h1>
+			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
+		</div>
+		<div class="popup_content">
+			<span>&#128226;</span>
+			<span>${recentNoticeWeekVegs.vegComposition}</span>
+			<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
+		</div>
+	</div>
+</div>
+</c:if>
 </body>
 <script>
 // 쿠키 저장
