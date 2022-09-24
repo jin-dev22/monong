@@ -18,7 +18,7 @@
 		<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
 	</div>
 	<div class="carousel-inner">
-		<div class="carousel-item active banner1" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do'">
+		<div class="carousel-item active banner1" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">
 			<img src="${pageContext.request.contextPath}/resources/images/banner_1.jpg" class="d-block w-100" alt="주간채소공지">
 		</div>
 		<div class="carousel-item banner2" id="show_popup">

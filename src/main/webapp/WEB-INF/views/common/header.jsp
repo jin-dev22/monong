@@ -21,11 +21,12 @@
 <!-- 모농모농css/js -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css" />
 
-<!-- sockjs cdn -->
+<%--  sockjs cdn 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- stompjs cdn -->
+--%>
+<%-- stompjs cdn 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+--%>
 
 <sec:authorize access="isAuthenticated()">
 	<script>
@@ -63,7 +64,7 @@
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
-					<a class="nav-link" onclick="clickErollModal();">회원가입</a>
+					<a class="nav-link" style="cursor: pointer" id="enrollHeader" href="#">회원가입</a>
 				</nav>
 			</nav>
 		 </sec:authorize>
@@ -97,7 +98,6 @@
 				</nav>
 	  		</nav>
 	  	</sec:authorize>
-	  	
 	</header>
-<!-- 	<div id="enrollType-modal-container"></div> -->
+	<div id="enrollType-modal-container"></div>
 	<section id="content">

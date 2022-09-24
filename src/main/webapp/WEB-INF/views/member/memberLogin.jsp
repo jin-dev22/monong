@@ -10,6 +10,7 @@
 	<jsp:param name="title" value="모농모농-로그인"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+
 <div id="login-container" class="mx-auto mt-10 text-center">
 	<div class="mb-5">
 		<h1>로그인</h1>
@@ -51,4 +52,5 @@
 			
 		</div>
 	</div>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

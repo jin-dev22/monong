@@ -99,10 +99,6 @@ public class MemberController {
 	@Autowired
 	NotificationService notificationService;
 	
-	@GetMapping("/selectEnrollType.do")
-	public void selectEnrollType() {		
-	}
-	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {
 	}
