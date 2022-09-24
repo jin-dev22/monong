@@ -111,5 +111,9 @@ public interface SubscribeService {
 	int updateSubscriptionWeekVegs(SubscriptionWeekVegs subscriptionWeekVegs);
 	//수아코드 끝
 
+	//수진코드 시작
+	String selectMemberIdBySoNo(String subOrderNo);
+	//수진코드 끝
+
 
 }

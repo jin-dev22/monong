@@ -229,15 +229,13 @@ public class AdminController {
 		//답변저장
 		int result = inquireService.insertInquireAnswer(inqAnswer);
 		
-		//알림정보저장
-		notice.setMessageType(MessageType.INQ_ANSWERD);
-		//컨텐츠 글자수 제한 걸기
-		String _content = notice.getNotiContent();
-		String substrContent = _content.length() > 10? _content.substring(0, 9)+"...": _content;
-		String content = "["+substrContent +"]에 답변이 달렸습니다.";
+		//알림정보 저장
+		String content = "문의글 ["+MonongUtils.subStrContent(notice.getNotiContent())+"]에 관리자가 답변을 달았습니다.";	
 		notice.setNotiContent(content);
-		result = notificationService.insertNotification(notice);
+		notice.setMessageType(MessageType.INQ_ANSWERD);
 		
+		result = notificationService.insertNotification(notice);
+				
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
@@ -359,6 +357,19 @@ public class AdminController {
 		param.put("subOrderNo", subOrderNo);
 		param.put("changeDStatus", changeDStatus);
 		int result = subscribeService.updateSubDelivery(param);
+		
+		//수진 코드시작
+		String content = "정기구독상품이 " +changeDStatus + ("배송완료".equals(changeDStatus) ? "되었습니다." : "입니다.");
+		String memberId = subscribeService.selectMemberIdBySoNo(subOrderNo);
+		MemberNotification notice = MemberNotification.builder()
+				.memberId(memberId)
+				.notiContent(content)
+				.dOrderNo(subOrderNo)
+				.messageType(MessageType.SO_STATUS)
+				.build();	
+		result = notificationService.insertNotification(notice);
+		//수진코드 끝
+		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	

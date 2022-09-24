@@ -79,7 +79,10 @@ public interface DirectService {
 	int insertDPAttachment(DirectProductAttachment attach);
 	
 	int mergeIntoDOption(DirectProductOption dOpt);
+
+	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
+
 }
 
 

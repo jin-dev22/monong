@@ -53,6 +53,7 @@ import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.direct.model.dto.MemberDirectOrder;
+import com.kh.monong.direct.model.service.DirectService;
 import com.kh.monong.inquire.model.dto.Inquire;
 import com.kh.monong.member.model.dto.Member;
 import com.kh.monong.member.model.dto.Seller;
@@ -87,6 +88,8 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	//-------------수진 시작		
+	@Autowired
+	DirectService directService;
 	@Autowired
 	ServletContext application;
 	
@@ -453,15 +456,15 @@ public class MemberController {
 		int result = memberService.updateDOrderStatus(param);
 		
 		//알림정보저장
-		String stat = "";
+		String status = "";
 		switch(orderStatus) {
-		case "R" : stat = "상품준비중입니다."; break;
-		case "C" : stat = "주문취소 되었습니다."; break;
-		case "D" : stat = "배송중입니다."; break;
-		case "F" : stat = "배송완료되었습니다."; break;
+		case "R" : status = "상품준비중입니다."; break;
+		case "C" : status = "주문취소 되었습니다."; break;
+		case "D" : status = "배송중입니다."; break;
+		case "F" : status = "배송완료되었습니다."; break;
 		}
 		
-		String content = "주문번호 ["+subStrContent(dOrderNo)+"]이(가) " +stat;	
+		String content = "주문번호 ["+dOrderNo+"]이(가) " +status;	
 		MemberNotification notice = MemberNotification.builder()
 				.memberId(memberId)
 				.notiContent(content)
@@ -473,11 +476,6 @@ public class MemberController {
 		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
-	}
-	
-	private String subStrContent(String content) {
-		String substrContent = content.length() > 10? content.substring(0, 9)+"...": content;
-		return substrContent;
 	}
 	
 	@GetMapping("/sellerUpdate.do")
@@ -557,12 +555,11 @@ public class MemberController {
 		
 		String saveDirectory = application.getRealPath("/resources/upload/sellerRegFiles");
 		File downFile = new File(saveDirectory, attach.getRenamedFilename());
-		String location = "file:" + downFile; // File#toString은 파일의 절대경로 반환
+		String location = "file:" + downFile; 
 		Resource resource = resourceLoader.getResource(location);
 		log.debug("resource = {}", resource);
 		log.debug("resource#file = {}", resource.getFile());
 		
-		// 응답헤더 작성
 		response.setContentType("application/octet-stream; charset=utf-8");
 		String filename = new String(attach.getOriginalFilename().getBytes("utf-8"), "iso-8859-1");
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
@@ -570,6 +567,9 @@ public class MemberController {
 		return resource;
 	}
 	
+	/**
+	 * 관리자 페이지 문의내역조회
+	 */
 	@GetMapping("/memberInquireList.do")
 	public void memberInqurieList(Authentication authentication,
 								@RequestParam(defaultValue = "1") int cPage,
@@ -592,6 +592,9 @@ public class MemberController {
 		log.debug("model",model);
 	}
 	
+	/**
+	 * 판매자 페이지 문의내역 조회
+	 */
 	@GetMapping("/sellerProductQnAList.do")
 	public void sellerDirectProductInquireList(Authentication authentication,
 			@RequestParam(defaultValue = "1") int cPage,
@@ -614,15 +617,26 @@ public class MemberController {
 		log.debug("model={}",model);
 	};
 	
+	/**
+	 * 판매자 답변
+	 */
 	@PostMapping("/sellerProductQnAList.do")
-	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, @RequestParam long dInquireNo){
+	public ResponseEntity<?> insertDirectInquireAnswer(@RequestParam String dInquireAContent, 
+														@RequestParam long dInquireNo, MemberNotification notice){
 		log.debug("dInquireAContent={}",dInquireAContent);
 		log.debug("dInquireNo={}",dInquireNo);
-
+		log.debug("notice={}", notice);
+		
 		DirectInquireAnswer directInqAnswer = DirectInquireAnswer.builder().dInquireAContent(dInquireAContent).dInquireNo(dInquireNo).build();
-		//주문내역변경
+		//답변저장
 		int result = memberService.insertDirectInquireAnswer(directInqAnswer);
+		
 		//알림정보 저장
+		String content = "상품문의글 ["+MonongUtils.subStrContent(notice.getNotiContent())+"]에 판매자가 답변을 달았습니다.";	
+		notice.setNotiContent(content);
+		notice.setMessageType(MessageType.D_INQ_ANSWERED);
+		
+		result = notificationService.insertNotification(notice);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
@@ -922,8 +936,25 @@ public class MemberController {
 	}
 	
 	@PostMapping("/deleteMemberDirectOrder.do")
-	public String deleteMemberDirectOrder(@RequestParam String dOrderNo, RedirectAttributes redirectAttr) {
+	public String deleteMemberDirectOrder(@RequestParam String dOrderNo, 
+										@RequestParam List<String> productNoList, 	
+										RedirectAttributes redirectAttr) {
 		int result = memberService.deleteMemberDirectOrder(dOrderNo);
+		//수진코드시작
+		for(String no : productNoList) {
+			String content = "주문번호 ["+dOrderNo+"]의 주문이 취소 되었습니다.";	
+			String sellerId = directService.selectSellerIdByProdNo(no);
+			MemberNotification notice = MemberNotification.builder()
+					.dOrderNo(dOrderNo)
+					.memberId(sellerId)
+					.notiContent(content)
+					.messageType(MessageType.DO_STATUS)
+					.build();
+			
+			result = notificationService.insertNotification(notice);
+		}
+		//수진코드 끝
+		
 		redirectAttr.addFlashAttribute("msg", "주문이 취소되었습니다!");
 		return "redirect:/member/memberDirectList.do";
 	}

@@ -306,6 +306,11 @@ public class DirectServiceImpl implements DirectService {
 	public int insertDPAttachment(DirectProductAttachment attach) {
 		return directDao.insertDPAttachment(attach);
 	}
+	
+	@Override
+	public String selectSellerIdByProdNo(String no) {
+		return directDao.selectSellerIdByProdNo(no);
+	}
 	//----------------- 수진 끝
 
 }

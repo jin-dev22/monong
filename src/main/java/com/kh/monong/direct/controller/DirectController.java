@@ -35,6 +35,9 @@ import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
 import com.kh.monong.direct.model.dto.DirectProductOption;
 import com.kh.monong.direct.model.service.DirectService;
+import com.kh.monong.notice.model.dto.MemberNotification;
+import com.kh.monong.notice.model.dto.MessageType;
+import com.kh.monong.notice.model.service.NotificationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +49,8 @@ public class DirectController {
 	@Autowired
 	private DirectService directService;
 	
+	@Autowired 
+	NotificationService notificationService;
 	//----------------- 재경 시작
 	// 생명주기가 가장 긴 scope객체 ServletContext : 스프링빈을 관리하는 servlet-context와 무관하다.
 	@Autowired
@@ -381,7 +386,20 @@ public class DirectController {
 				result = directService.insertMemberDirectOrder(param);
 			}
 		}
-		
+		//수진코드시작
+		for(String no : productNoList) {
+			String content = "상품번호 ["+no+"]에 신규주문이 있습니다.";	
+			String sellerId = directService.selectSellerIdByProdNo(no);
+			MemberNotification notice = MemberNotification.builder()
+										.dOrderNo(dOrderNo)
+										.memberId(sellerId)
+										.notiContent(content)
+										.messageType(MessageType.DO_STATUS)
+										.build();
+			
+			result = notificationService.insertNotification(notice);
+		}
+		//수진코드 끝
 		log.debug("dOrderNo = {}", dOrderNo);
 		
 		model.addAttribute("dOrderNo", dOrderNo);
