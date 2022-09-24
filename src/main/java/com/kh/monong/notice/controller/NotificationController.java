@@ -56,12 +56,12 @@ public class NotificationController {
 	 * 배너 클릭 시 주간채소 팝업
 	 */
 	@GetMapping("/popup/recent.do")
-	public ResponseEntity<?> getRecentWeekVegsNotice(
+	public String getRecentWeekVegsNotice(
 			Model model, HttpServletRequest request) {
 		SubscriptionWeekVegs recentNoticeWeekVegs = subscribeService.getRecentWeekVegsNotice();
-		return ResponseEntity.ok().body(recentNoticeWeekVegs);
+		model.addAttribute("recentNoticeWeekVegs", recentNoticeWeekVegs);
+		return "/admin/popup";
 	}
-	
 	
 	//---------------------------------- 선아 끝
 }
