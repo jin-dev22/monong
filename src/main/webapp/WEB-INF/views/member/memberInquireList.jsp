@@ -12,22 +12,7 @@
 <sec:authorize access="hasRole('ROLE_SELLER')">
 	<jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
 </sec:authorize>
-<style>
-	div.inq-form-align{
-		display: flex;
-	}
-	div.inq-title-align{
-		display: flex;
-		justify-content: space-aound;
-	}	
-	button.inquire-answer-btn{
-		margin-top: 180%;
-	}
-	div.inquireList-header:first-child{
-		margin-right: 400px;
-	}
-</style>
-
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
 		<div class="mx-auto mt-5 text-center">
