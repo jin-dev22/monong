@@ -64,6 +64,9 @@
 				    </div>			
 				</div>
 			</c:forEach>
+			<nav>
+			${pagebar}
+			</nav>
 		</div>
 		<script>
 		const headers = {};
