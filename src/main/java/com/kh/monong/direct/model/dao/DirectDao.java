@@ -125,6 +125,7 @@ public interface DirectDao {
 	
 	// 상품 문의 등록
 	@Insert("insert into direct_inquire values (seq_d_inquire_no.nextval, #{dProductNo}, #{memberId}, #{inquireTitle}, #{content}, default, default)")
+	@SelectKey(statement = "select seq_d_inquire_no.currval from dual", before = false, keyProperty = "dInquireNo", resultType = int.class)
 	int enrollInquire(Map<String, Object> param);
 	//----------------- 민지 끝
 
