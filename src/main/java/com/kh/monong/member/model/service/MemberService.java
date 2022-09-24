@@ -84,6 +84,9 @@ public interface MemberService {
 
 	int getTotalOrderCntBySeller(Map<String, Object> param);
 
+	int memberQuit(String memberId);
+
+	int deleteMemberAuth(String memberId);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);

@@ -250,6 +250,17 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateDirectInquireAnswered(dInquireNo);
 	}
 
+	@Override
+	public int memberQuit(String memberId) {
+		int result = memberDao.memberQuit(memberId);
+		result = deleteMemberAuth(memberId);
+		return result;
+	}
+	
+	@Override
+	public int deleteMemberAuth(String memberId) {
+		return memberDao.deleteMemberAuth(memberId);
+	}
 
 	//------------------수진 끝
 	
