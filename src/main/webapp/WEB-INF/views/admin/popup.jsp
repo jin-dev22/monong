@@ -91,6 +91,7 @@ $(function(){
 function closeToSunday(){
 	setCookie("popToday", "close", 1);
 	document.getElementById("popup").style.display = 'none';
+	window.close();
 }
 // 일주일 안보기 버튼
 function closeToday(){
@@ -99,12 +100,13 @@ function closeToday(){
 	if(todayDay == 0){
 		setCookie("popToday", "close", 1);
 		document.getElementById("popup").style.display = 'none';
+		window.close();
 	}
 	else {
 		setCookie("popToday", "close", (7 - todayDay));
 		document.getElementById("popup").style.display = 'none';
+		window.close();
 	}
-	window.close();
 }
 
 </script>

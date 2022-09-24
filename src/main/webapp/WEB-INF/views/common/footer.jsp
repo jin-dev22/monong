@@ -41,6 +41,32 @@ const faq = () => {
 	location.href = `${pageContext.request.contextPath}/common/faqList.do`;
 };
 </script>
+<script>
+ function clickEnrollModal(){
+		const container = document.querySelector("#enrollType-modal-container");
+		const modal = `<div class="modal fade" id="inquire-complete-modal" data-bs-keyboard="false" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-dialog-centered" role="document" style="width: 390px;">
+ 					<div class="modal-content">
+ 						<div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
+ 							<div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
+ 								<button style="border: none; background-color: transparent; font-size: 30px; color: #333; height: 40px; width: 30px;" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+ 									<span aria-hidden="true">&times;</span>
+ 								</button>
+ 							</div>
+ 						</div>
+ 						<div class="modal-footer" style="justify-content: center; align-content: center; border-top: none; height: 185px;">
+ 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" data-bs-dismiss="modal" onclick="">일반회원 가입</button>
+ 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;"  data-bs-dismiss="modal" onclick="">판매자회원 가입</button>
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>`;
+	 
+	 
+ 		 container.innerHTML = modal;
+ 		$('#inquire-complete-modal').modal('show');
+ }
+</script>
 <!-- footer 끝 -->
 </body>
 </html>
