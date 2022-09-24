@@ -70,4 +70,7 @@
 		</nav>
 	</c:if>
 </div>
+<script>	
+	$("#lnik-inqList").css("color","EA5C2B")
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

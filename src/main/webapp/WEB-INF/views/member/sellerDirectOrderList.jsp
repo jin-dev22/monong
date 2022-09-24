@@ -108,6 +108,8 @@
 	</c:if>
 </div>
 <script>
+$("#lnik-orderList").css("color","EA5C2B")
+
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	const chkSubmit = (frm) =>{

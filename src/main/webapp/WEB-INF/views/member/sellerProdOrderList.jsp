@@ -82,4 +82,7 @@
 		</nav>
 	</c:if>
 </div>
+<script>	
+	$("#lnik-prodList").css("color","EA5C2B");
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
