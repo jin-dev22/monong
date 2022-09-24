@@ -445,6 +445,17 @@ public class DirectController {
 		param.put("inquireTitle", inquireTitle);
 		param.put("content", content);
 		
+		//수진시작
+		String notiContent = "상품["+dProductNo+"]에 문의가 등록되었습니다.";
+		String sellerId = directService.selectSellerIdByProdNo(dProductNo);
+		MemberNotification notice = MemberNotification.builder()
+				.memberId(memberId)
+				.notiContent(notiContent)
+				.messageType(MessageType.NEW_D_INQ)
+				.build();
+		param.put("notice", notice);
+		//수진끝
+		
 		int result = directService.enrollInquire(param);
 		
 		return "jsonView";
