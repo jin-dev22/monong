@@ -84,6 +84,9 @@ public interface MemberService {
 
 	int getTotalOrderCntBySeller(Map<String, Object> param);
 
+	int memberQuit(String memberId);
+
+	int deleteMemberAuth(String memberId);
 //-----------수진 끝
 //-----------수아 시작
 	Member findMemberId(Map<String, Object> map);
@@ -183,6 +186,10 @@ public interface MemberService {
 //-----------수아 끝
 
 	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
+
+	List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param);
+
+	int getTotalMemberDirectInqList(String memberId);
 
 
 	

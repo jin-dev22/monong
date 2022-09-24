@@ -22,19 +22,19 @@
 		<c:forEach items="${prodList}" var="prod">
 			<div class="prod-container">
 				<div class="prod-container-column prod-col-1">
+				<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${prod.DProductNo}" class="seller-product-link">
 					<img src="${pageContext.request.contextPath}/resources/upload/product/${prod.directProductAttachments[0].DProductRenamedFilename}" alt="" style="width: 100px;"/>
+				</a>
 				</div>
 				<div class="prod-container-column prod-col-2">
 					<div class="prod-name">${prod.DProductName}</div>
 					<div class="prod-option-container">
-						<%-- <c:if test="${not empty prod.directProductOptions}"> --%>
-							<c:forEach items="${prod.directProductOptions}" var="option" varStatus="vs">
-								<div>옵션 
-									<c:if test="${not empty  option.DOptionName}">${vs.count} : ${option.DOptionName} - ${option.DSaleStatus}</c:if>
-									<c:if test="${empty option.DOptionName}">정보 없음</c:if>
-								</div>
-							</c:forEach>
-						<%-- </c:if> --%>
+						<c:forEach items="${prod.directProductOptions}" var="option" varStatus="vs">
+							<div>옵션 
+								<c:if test="${not empty  option.DOptionName}">${vs.count} : ${option.DOptionName} - ${option.DSaleStatus}</c:if>
+								<c:if test="${empty option.DOptionName}">정보 없음</c:if>
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 				<div class="prod-container-column prod-col-3">

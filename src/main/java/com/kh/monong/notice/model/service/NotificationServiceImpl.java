@@ -25,6 +25,11 @@ public class NotificationServiceImpl implements NotificationService{
 	public int insertNotification(MemberNotification notice) {
 		return notificationDao.insertNotification(notice);
 	}
+	
+	@Override
+	public int notificationHasRead(long notiNo) {
+		return notificationDao.notificationHasRead(notiNo);
+	}
 	//---------------------------------------------수진끝
 
 	//---------------------------------------------선아시작

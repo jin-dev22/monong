@@ -7,6 +7,9 @@ import com.kh.monong.notice.model.dto.MemberNotification;
 public interface NotificationService {
 //---------------------------------------------수진시작
 	int insertNotification(MemberNotification notice);
+	
+	int notificationHasRead(long notiNo);
+	
 //---------------------------------------------수진끝
 	
 //---------------------------------------------선아시작

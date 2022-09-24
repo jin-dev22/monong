@@ -111,6 +111,11 @@ public interface MemberDao {
 
 	int getTotalOrderCntBySeller(Map<String, Object> param);
 
+	@Update("update member set member_del = 'Y', member_quit_date = current_date where member_id =#{memberId}")
+	int memberQuit(String memberId);
+	
+	@Delete("delete from member_authority where member_id =#{memberId}")
+	int deleteMemberAuth(String memberId);
 	//------------------------수진 끝 
 	
 	//------------------------수아 시작
@@ -255,6 +260,11 @@ public interface MemberDao {
 	//------------------수아끝
 
 	Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo);
+
+	List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param, RowBounds rowBounds);
+
+	@Select("select count(*) from direct_inquire where member_id= #{memberId}")
+	int getTotalMemberDirectInqList(String memberId);
 
 	
 }

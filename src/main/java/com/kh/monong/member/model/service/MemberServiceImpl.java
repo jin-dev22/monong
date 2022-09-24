@@ -250,6 +250,17 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateDirectInquireAnswered(dInquireNo);
 	}
 
+	@Override
+	public int memberQuit(String memberId) {
+		int result = memberDao.memberQuit(memberId);
+		result = deleteMemberAuth(memberId);
+		return result;
+	}
+	
+	@Override
+	public int deleteMemberAuth(String memberId) {
+		return memberDao.deleteMemberAuth(memberId);
+	}
 
 	//------------------수진 끝
 	
@@ -548,6 +559,19 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Map<String, Object> selectSubscriptionOrderBySOrderNo(String sOrderNo) {
 		return memberDao.selectSubscriptionOrderBySOrderNo(sOrderNo);
+	}
+	
+	@Override
+	public List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectMemberDirectInqList(param, rowBounds);
+	}
+	
+	@Override
+	public int getTotalMemberDirectInqList(String memberId) {
+		return memberDao.getTotalMemberDirectInqList(memberId);
 	}
 	//------------수아 끝
 }

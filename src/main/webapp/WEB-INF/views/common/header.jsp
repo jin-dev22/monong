@@ -71,11 +71,11 @@
 		<sec:authorize access="isAuthenticated()">
 			<nav class="nav flex-column login">
 				<nav class="nav justify-content-end">
-				<sec:authorize access="!hasRole('ROLE_SELLER') && !hasRole('ROLE_ADMIN')">
+				<sec:authorize access="!hasRole('ROLE_ADMIN')">
 					<a class="nav-link" href="${pageContext.request.contextPath}/notification/memberNotificationList.do">&#128276;</a>
 					
 						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
-                	</sec:authorize>
+                </sec:authorize>
 				</nav>
 				<nav class="nav justify-content-end">
 					<p>

@@ -35,7 +35,7 @@ public interface DirectService {
 	List<DirectProduct> orderByPriceAsc(Map<String, Integer> param);
 	
 	// 상품 후기
-	List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param);
+	List<Map<String, Object>> selectDirectProductReviewList(Map<String, Object> param);
 
 	int getTotalDirectReviewByDProductNo(String dProductNo);
 

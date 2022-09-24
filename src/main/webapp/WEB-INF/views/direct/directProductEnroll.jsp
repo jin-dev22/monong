@@ -63,7 +63,8 @@ div#enroll-container{
 }
 </style>
 <div id="enroll-container" class="mx-auto text-center">
-	<sec:authentication property="principal" var="loginMember"/>
+<sec:authentication property="principal" var="loginMember"/>
+<c:if test="${loginMember.memberId eq prod.memberId}">
 	<form name="productEnrollFrm" action="${pageContext.request.contextPath}/direct/directProductEnroll.do" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
         <div class="mx-auto">
         	<div class="enroll-info-container">
@@ -119,7 +120,7 @@ div#enroll-container{
         	</div>
 		</div>
 		<div class="enroll-info-container">
-	   		<span class="enroll-info-label">상품 옵션1</span>
+	   		<span class="enroll-info-label">상품 옵션</span>
     	 		<div class="opntion-list-container">
      				<div class="option-one">
 	     				<div class="option-row">
@@ -147,110 +148,31 @@ div#enroll-container{
      				</div>
      		</div>
         </div>
+        <div class = "option-add">
         	<button type="button" onclick="addOption(this.form)">옵션추가</button>
    			<button type="button" onclick="delOption(this.form)">옵션삭제</button>
-        <!-- <div class="enroll-info-container">
-	   		<span class="enroll-info-label">상품 옵션2</span>
-    	 		<div class="opntion-list-container">
-     				<div class="option-one">
-	     				<div class="option-row">
-		      				<label for="DOptionName2" class="optName-label">옵션2 이름</label>
-		    	   			<input type="text" name="directProductOptions[1].dOptionName" id="dOptionName2"/> 
-	     				</div>
-	     				<div class="option-row">
-							<span>가격 </span>
-							<input type="text" name="directProductOptions[1].dPrice" maxlength="10" class="price"/>
-	     				</div>
-	     				<div class="option-row">
-							<label for="dStock1">수량</label>
-							<input type="number" min="0" name="directProductOptions[1].dStock" id="dStock2" class="insert-dStock2" />
-	     				</div>
-	     				<div class="option-row">
-	     					<span>판매상태</span>
-	     					<select name="directProductOptions[1].dSaleStatus" id="direct-saleStatus2">
-								<option value="판매중">판매중</option>
-								<option value="판매중단">판매중단</option>
-								<option value="판매마감">판매마감</option>
-							</select>
-							<input type="hidden" name="directProductOptions[1].dOptionNo"/>
-	     				</div>
-	    				<br />
-     			</div>
-     		</div>
-        </div>
-        <div class="enroll-info-container">
-	   		<span class="enroll-info-label">상품 옵션3</span>
-    	 		<div class="opntion-list-container">
-     				<div class="option-one">
-	     				<div class="option-row">
-		      				<label for="DOptionName1" class="optName-label">옵션3 이름</label>
-		    	   			<input type="text" name="directProductOptions[2].dOptionName" id="dOptionName3"/> 
-	     				</div>
-	     				<div class="option-row">
-							<span>가격 </span>
-							<input type="text" name="directProductOptions[2].dPrice" maxlength="10" class="price"/>
-	     				</div>
-	     				<div class="option-row">
-							<label for="dStock1">수량</label>
-							<input type="number" min="0" name="directProductOptions[2].dStock" id="dStock2" class="insert-dStock2" />
-	     				</div>
-	     				<div class="option-row">
-	     					<span>판매상태</span>
-	     					<select name="directProductOptions[2].dSaleStatus" id="direct-saleStatus2">
-								<option value="판매중">판매중</option>
-								<option value="판매중단">판매중단</option>
-								<option value="판매마감">판매마감</option>
-							</select>
-							<input type="hidden" name="directProductOptions[2].dOptionNo"/>
-	     				</div>
-	    				<br />
-     			</div>
-     		</div>
-        </div>
-        <div class="enroll-info-container">
-	   		<span class="enroll-info-label">상품 옵션4</span>
-    	 		<div class="opntion-list-container">
-     				<div class="option-one">
-	     				<div class="option-row">
-		      				<label for="DOptionName1" class="optName-label">옵션4 이름</label>
-		    	   			<input type="text" name="directProductOptions[3].dOptionName" id="dOptionName4"/> 
-	     				</div>
-	     				<div class="option-row">
-							<span>가격 </span>
-							<input type="text" name="directProductOptions[3].dPrice" maxlength="10" class="price"/>
-	     				</div>
-	     				<div class="option-row">
-							<label for="dStock1">수량</label>
-							<input type="number" min="0" name="directProductOptions[3].dStock" id="dStock4" class="insert-dStock" />
-	     				</div>
-	     				<div class="option-row">
-	     					<span>판매상태</span>
-	     					<select name="directProductOptions[3].dSaleStatus" id="direct-saleStatus4">
-								<option value="판매중">판매중</option>
-								<option value="판매중단">판매중단</option>
-								<option value="판매마감">판매마감</option>
-							</select>
-							<input type="hidden" name="directProductOptions[3].dOptionNo"/>
-	     				</div>
-	    				<br />
-     			</div>
-     		</div>
-        </div> -->
+   		</div>
         <br/>
 		<sec:csrfInput />
-        <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
-        <input type="reset" class="btn btn-116530" value="취소">
+		<div class = "direct-add">
+	        <input type="submit" class="btn btn-EA5C2B" value="상품 등록">
+	        <input type="reset" class="btn btn-116530" value="취소">
+        </div>
 	</form>
+</c:if>
+<c:if test="${not(loginMember.memberId eq prod.memberId)}">
+	<h2>올바른 접근이 아닙니다.</h2><!-- 판매글 작성자가 아닌 다른 계정이 url로 접속할 경우 대비 -->
+</c:if>
 </div>
 <script>
 let newOptCnt = 1;
 /**
- * 추가한 옵션 삭제 메소드
+ * 옵션 삭제 메소드
  */
 function delOption(optList){
 	const lastOne = document.querySelector(".option-one:last-child");
-		lastOne.remove();
-		newOptCnt--;
+			lastOne.remove();
+			newOptCnt--;
 }
 
 /**
@@ -272,10 +194,13 @@ function addOption (optList)  {
 				<input type="text" name="directProductOptions[\${cnt}].dPrice" maxlength="10" class="price" value=""/>
 			</div>
 			<div class="option-row">
-				<label for="dStock\${cnt}">수량</label>
-				<input type="number" name="directProductOptions[\${cnt}].dStock" class="update-dStock" id="dStock\${cnt+1}" value=""/>
-					<select name="directProductOptions[\${cnt}].dSaleStatus" id="direct-saleStatus\${cnt+1}">
-						<option value="판매중" selected>판매중</option>
+				<label for="dStock1">수량</label>
+				<input type="number" min="0" name="directProductOptions[0].dStock" id="dStock1" class="insert-dStock1" />
+			</div>
+			<div class="option-row">
+				<span>판매상태</span>
+					<select name="directProductOptions[0].dSaleStatus" id="direct-saleStatus1">
+						<option value="판매중">판매중</option>
 						<option value="판매중단">판매중단</option>
 						<option value="판매마감">판매마감</option>
 					</select>
@@ -298,6 +223,8 @@ document.querySelectorAll("[name=upFile]").forEach((input) => {
 		}
 	});
 });
+
+// 서머노트 세팅
 $(document).ready(function() {
 	  $('#summernote').summernote({
  	    	placeholder: 'content',

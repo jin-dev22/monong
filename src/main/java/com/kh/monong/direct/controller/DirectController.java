@@ -68,7 +68,7 @@ public class DirectController {
 	public void directProductList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		// 1. content영역
 		Map<String, Integer> param = new HashMap<>();
-		int limit = 10;
+		int limit = 8;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		log.debug("param = {}", param);
@@ -91,7 +91,7 @@ public class DirectController {
 	public void orderByCreatedAt(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		// 1. content영역
 		Map<String, Integer> param = new HashMap<>();
-		int limit = 10;
+		int limit = 8;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		log.debug("param = {}", param);
@@ -115,7 +115,7 @@ public class DirectController {
 	public void orderByPriceDesc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 	// 1. content영역
 		Map<String, Integer> param = new HashMap<>();
-		int limit = 10;
+		int limit = 8;
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		log.debug("param = {}", param);
@@ -139,7 +139,7 @@ public class DirectController {
 	public void orderByPriceAsc(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 	// 1. content영역
 	Map<String, Integer> param = new HashMap<>();
-	int limit = 10;
+	int limit = 8;
 	param.put("cPage", cPage);
 	param.put("limit", limit);
 	log.debug("param = {}", param);
@@ -220,7 +220,7 @@ public class DirectController {
 		param.put("limit", limit);
 		param.put("dOptionName", dOptionName);
 		
-		List<Map<String, Object>> dReviewList = directService.selectdirectProductReviewList(param);
+		List<Map<String, Object>> dReviewList = directService.selectDirectProductReviewList(param);
 		int totalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
 		String url = request.getRequestURI(); 
 		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
