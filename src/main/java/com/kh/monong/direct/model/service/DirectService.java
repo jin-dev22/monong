@@ -61,6 +61,8 @@ public interface DirectService {
 	int insertMemberDirectOrder(Map<String, Object> param);
 	
 	String selectReviewAvgScoreByProductNo(String dProductNo);
+	
+	int enrollInquire(Map<String, Object> param);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작

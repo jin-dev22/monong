@@ -430,6 +430,25 @@ public class DirectController {
 		
 		return "jsonView";
 	}
+	
+	// 상품 문의 등록
+	@PostMapping("/enrollInquire.do")
+	public String enrollInquire(@RequestParam String dProductNo, @RequestParam String memberId, @RequestParam String inquireTitle, @RequestParam String content) {
+		log.debug("dProductNo = {}", dProductNo);
+		log.debug("memberId = {}", memberId);
+		log.debug("inquireTitle = {}", inquireTitle);
+		log.debug("content = {}", content);
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("dProductNo", dProductNo);
+		param.put("memberId", memberId);
+		param.put("inquireTitle", inquireTitle);
+		param.put("content", content);
+		
+		int result = directService.enrollInquire(param);
+		
+		return "jsonView";
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작

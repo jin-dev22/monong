@@ -242,6 +242,11 @@ public class DirectServiceImpl implements DirectService {
 	public String selectReviewAvgScoreByProductNo(String dProductNo) {
 		return directDao.selectReviewAvgScoreByProductNo(dProductNo);
 	}
+	
+	@Override
+	public int enrollInquire(Map<String, Object> param) {
+		return directDao.enrollInquire(param);
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작

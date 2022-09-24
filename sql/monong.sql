@@ -422,6 +422,32 @@ CREATE TABLE direct_inquire_answer (
 	constraint fk_d_inquire_no_01 foreign key(d_inquire_no) references direct_inquire(d_inquire_no)
 );
 
+-- direct_inquire, direct_inquire_answer의 d_inquire_no 컬럼 타입 number로 변경 (테이블 삭제 후 재생성)
+CREATE TABLE direct_inquire (
+	d_inquire_no	number		NOT NULL,
+	d_product_no	varchar2(100)		NOT NULL,
+	member_id	varchar2(100)		NOT NULL,
+	inquire_title	varchar2(255)		NULL,
+	content	 varchar2(2000)		NOT NULL,
+	created_at	date	DEFAULT current_date	NULL,
+	has_answer	varchar2(1)	DEFAULT 'N'	NULL,--컬럼명, 값 YN타입으로 변경
+    
+	constraint pk_direct_inquire  primary key(d_inquire_no),
+	constraint fk_d_product_no_01 foreign key(d_product_no) references direct_product(d_product_no),
+	constraint fk_member_id_02 foreign key(member_id) references member(member_id)
+);
+
+CREATE TABLE direct_inquire_answer (
+	d_inquire_no	number		NOT NULL,
+	d_inquire_a_content	varchar2(2000)		NOT NULL,
+	d_inquire_answered_at	date	DEFAULT current_date	NULL
+);
+
+ALTER TABLE direct_inquire_answer
+ADD constraint fk_d_inquire_no_01 FOREIGN KEY (d_inquire_no) 
+REFERENCES direct_inquire (d_inquire_no)
+ON DELETE CASCADE;
+
 CREATE TABLE direct_review (
 	d_review_no	varchar2(100)	NOT NULL,
 	d_option_no	varchar2(100)		NOT NULL,
