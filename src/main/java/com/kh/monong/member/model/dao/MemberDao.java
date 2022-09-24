@@ -173,8 +173,7 @@ public interface MemberDao {
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
-	@Select("select * from direct_order where member_id = #{memberId} order by d_order_no desc")
-	List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param, RowBounds rowBounds);
+	List<Map<String, Object>> selectDirectListByMemberId(Map<String, Object> param, RowBounds rowBounds);
 
 	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
 
