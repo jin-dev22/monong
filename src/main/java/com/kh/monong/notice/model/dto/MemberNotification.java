@@ -19,7 +19,7 @@ public class MemberNotification {
 	private long notiNo;
 	private String memberId;
 	private String notiContent;
-	private LocalDate notiCreadtedAt;
+	private LocalDate notiCreatedAt;
 	private YN notiIsRead;
 	private long inquireNo;//관리자문의
 	private long dInquireNo;//직거래 판매자문의
