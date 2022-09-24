@@ -208,8 +208,24 @@ public class DirectController {
 	}
 	
 	// 상품 이용 후기
-	@GetMapping("/directProductReview.do")
-	public void directProductReview() {
+	@GetMapping("/directProductReviewList.do")
+	public void directProductReviewList(@RequestParam(defaultValue = "1") int cPage,
+										Model model, HttpServletRequest request,
+										DirectProduct dp, DirectProductOption dpo) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		String dProductNo = dp.getDProductNo();
+		String dOptionName = dpo.getDOptionName();
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("dOptionName", dOptionName);
+		
+		List<Map<String, Object>> dReviewList = directService.selectdirectProductReviewList(param);
+		int totalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
+		String url = request.getRequestURI(); 
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("dReviewList", dReviewList);
 	}
 	
 	//----------------- 재경 끝

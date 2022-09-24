@@ -38,12 +38,13 @@ public class DirectServiceImpl implements DirectService {
 		// offset limit
 		int limit = param.get("limit");
 		int offset = (param.get("cPage") - 1) * limit;
-		RowBounds rowBounds = new RowBounds(offset, limit);
-		List<DirectProduct> list  = directDao.selectDirectProductList(param, rowBounds);
-		for(DirectProduct directProduct : list) {
+//		RowBounds rowBounds = new RowBounds(offset, limit);
+		List<DirectProduct> list  = directDao.selectDirectProductList(param);
+		List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, list);
+		for(DirectProduct directProduct : subList) {
 			directProduct.setDirectProductAttachments(selectDirectProductAttachmentList(directProduct.getDProductNo()));
 		}
-		return list;
+		return subList;
 	}
 	
 	@Override
@@ -81,7 +82,6 @@ public class DirectServiceImpl implements DirectService {
 			return list;
 	}
 	
-	// 가격 낮은순 정렬
 	@Override
 	public List<DirectProduct> orderByPriceAsc(Map<String, Integer> param) {
 		// mybatis에서 제공하는 페이징처리객체 RowBounds
@@ -140,10 +140,15 @@ public class DirectServiceImpl implements DirectService {
 	}
 	
 	@Override
-	public int reviewGetTotalContentByDProNo() {
-		// TODO Auto-generated method stub
+	public List<Map<String, Object>> selectdirectProductReviewList(Map<String, Object> param) {
+		return null;
+	}
+	
+	@Override
+	public int getTotalDirectReviewByDProductNo(String dProductNo) {
 		return 0;
 	}
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override
