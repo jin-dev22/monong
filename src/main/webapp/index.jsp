@@ -63,9 +63,32 @@
 </div>
 <script>
 window.onload = function(){
-	const weekCriterion = findMon();
-	let url = `${pageContext.request.contextPath}/notification/popup/\${weekCriterion}.do`;
-	window.open(url, '채소공지팝업', 'top=0, width=550, height=550, resizable=no, location=no');
+	//쿠키 불러오기
+	function getCookie(name){
+		let obj = name + "=";
+		let x = 0;
+		while(x <= document.cookie.length){
+			let y = (x + obj.length);
+			if(document.cookie.substring(x, y) == obj ){
+				if((endOfCookie = document.cookie.indexOf(";", y)) == -1)
+					endOfCookie = document.cookie.length;
+				value = document.cookie.substring(y, endOfCookie);
+				return unescape(value);
+			}
+			x = document.cookie.indexOf(" ", x) + 1;
+			if ( x == 0 ) break; 
+		};
+	    return "";
+	};
+
+	$(function(){    
+		if(getCookie("popToday") != "close"){
+			const weekCriterion = findMon();
+			let url = `${pageContext.request.contextPath}/notification/popup/\${weekCriterion}.do`;
+			window.open(url, '채소공지팝업', 'top=0, width=550, height=550, resizable=no, location=no');
+		}
+	});
+
 }
 // 배너 클릭 시 주간채소 모달창으로 공지
 document.querySelector("#showkModal").addEventListener('click', () => {
@@ -116,5 +139,6 @@ const findMon = () => {
 	
 	return yy + month + date;
 };
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
