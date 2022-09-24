@@ -16,28 +16,36 @@ display: flex;
 flex-wrap: wrap;
 }
 .directproductlist-wrapper {
-width: 200px;
+width: 260px;
 margin: 50px 20px;
+}
+
+.direct-card-img-top{
+height: 250px;
+width: 240px;
+}
+
+.text-decoration-none{
+font-size : 21px;
+font-weight : 900
 }
 </style>
 <h1 class="d-list" style="padding-bottom: 10px;color: #EA5C2B;border-bottom: 1px solid #EA5C2B;">농산물 직거래 장터</h1>
 <div class="d-flex flex-wrap justify-content-between">
 	<div class="align">
-		<select class="form-select" aria-label="Default select example" onchange="if(this.value) location.href=(this.value);">
+		<select class="form-select" aria-label="Default select example" onchange="if(this.value) location.href=(this.value);" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
 			<option value="${pageContext.request.contextPath}/direct/directProductList.do">정렬기준</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByCreatedAt.do" selected>최근 등록순</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByPriceDesc.do">가격 높은순</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByPriceAsc.do">가격 낮은순</option>
 		</select>
 	</div>
-</div>
-<sec:authorize access="hasRole('ROLE_SELLER')">
-<div class="d-flex flex-wrap justify-content-between">
+	<sec:authorize access="hasRole('ROLE_SELLER')">
 		<div class="productEnroll">
-			<input type="button" class="btn btn-EA5C2B float-right" onclick="location.href='directProductEnroll.do' "value="상품 등록" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
+			<input type="button" class="btn btn-EA5C2B" onclick="location.href='directProductEnroll.do' "value="상품 등록" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
 		</div>
+	</sec:authorize>
 </div>
-</sec:authorize>
 <c:if test="${empty list}">
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item">조회된 상품이 없습니다.</li>
@@ -47,8 +55,8 @@ margin: 50px 20px;
 	<div class="container">
 	<c:forEach items="${list}" var="directProduct">
 			<div class="directproductlist-wrapper row justify-content-center align-items-stretch">
-				<div class="card">
-					<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="card-img-top">
+				<div class="card bg-warning">
+					<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="direct-card-img-top" id=direct-card-img-top>
 					<div class="card-body">
 						<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none">
 				  			${directProduct.DProductName}
