@@ -21,11 +21,12 @@
 <!-- 모농모농css/js -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common.css" />
 
-<!-- sockjs cdn -->
+<%--  sockjs cdn 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- stompjs cdn -->
+--%>
+<%-- stompjs cdn 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+--%>
 
 <sec:authorize access="isAuthenticated()">
 	<script>
@@ -63,7 +64,7 @@
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
-					<a class="nav-link" href="${pageContext.request.contextPath}/member/selectEnrollType.do">회원가입</a>
+					<a class="nav-link" href="javascript:openEnrollModal();">회원가입</a>
 				</nav>
 			</nav>
 		 </sec:authorize>
@@ -97,6 +98,32 @@
 				</nav>
 	  		</nav>
 	  	</sec:authorize>
-	  	
+	  	<div id="enrollType-modal-container"></div>
 	</header>
+     <script>
+     function openEnrollModal(){
+    		const container = document.querySelector("#enrollType-modal-container");
+    	    const modal = `<div class="modal fade" id="member-enroll-modal" data-backdrop="false" data-bs-keyboard="false" tabindex="-1" role="dialog">
+    	            <div class="modal-dialog modal-dialog-centered" role="document" style="width: 390px;">
+    	                <div class="modal-content">
+    	                    <div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
+    	                        <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center;">
+    	                            <button style="border: none; background-color: transparent; font-size: 30px; color: #333; height: 40px; width: 30px;" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+    	                                <span aria-hidden="true">&times;</span>
+    	                            </button>
+    	                        </div>
+    	                    </div>
+    	                    <div class="modal-footer" style="justify-content: center; align-content: center; border-top: none; height: 185px;">
+    	                        <button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">일반회원 가입</button>
+    	                        <button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" onclick="location.href='${pageContext.request.contextPath}/member/sellerEnroll.do'">판매자회원 가입</button>
+    	                    </div>
+    	                </div>
+    	            </div>
+    	        </div>`;
+    	 
+    	 
+    	     container.innerHTML = modal;
+    	    $('#member-enroll-modal').modal('show')  
+    	}
+     </script>
 	<section id="content">

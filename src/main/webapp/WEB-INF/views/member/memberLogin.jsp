@@ -10,6 +10,18 @@
 	<jsp:param name="title" value="모농모농-로그인"></jsp:param>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
+<style>
+
+.modal-open { padding-right: 0px !important; }
+.modal { padding-right: 0px !important; }
+
+/* .modal-backdrop.show{
+	z-index: 10;
+	}
+.modal-content {
+	z-index: 1150;
+} */
+</style>
 <div id="login-container" class="mx-auto mt-10 text-center">
 	<div class="mb-5">
 		<h1>로그인</h1>
@@ -41,7 +53,8 @@
 			</div>
 			<div class="mt-5 mb-3">
 				<button type="submit" class="btn btn-EA5C2B">&nbsp;로그인&nbsp;</button>
-				<button type="button" class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/selectEnrollType.do';">회원가입</button>
+				<!-- <button type="button" class="btn btn-116530" id="enrollTynBtn" onclick="openModal()" >회원가입</button> -->
+				<button type="button" class="btn btn-116530" data-bs-dismiss="modal" id="btn-enrollType">회원가입</button>
 			</div>
 		</form:form>
 		
@@ -51,4 +64,10 @@
 			
 		</div>
 	</div>
+
+<script>
+document.querySelector('#btn-enrollType').addEventListener('click', (e)=>{
+	openEnrollModal();
+});
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
