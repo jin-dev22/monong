@@ -170,5 +170,10 @@ public interface SubscribeDao {
 
 	
 	//수아코드 끝
+	
+	//수진코드 시작
+	@Select("select (select member_id from subscription s  where s.s_no = so.s_no) member_id from subscription_order so where s_order_no =#{subOrderNo}")
+	String selectMemberIdBySoNo(String subOrderNo);
+	//수진코드 끝
 
 }

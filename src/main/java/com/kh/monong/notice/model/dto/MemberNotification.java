@@ -26,4 +26,6 @@ public class MemberNotification {
 	private String dOrderNo;
 	private String sOrderNo;//정기구독번호
 	private MessageType messageType; 
+	
+	
 }

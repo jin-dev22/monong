@@ -114,6 +114,9 @@
 		 action="${pageContext.request.contextPath}/member/deleteMemberDirectOrder.do"
 		 method="post">
 	  <input type="hidden" name="dOrderNo" value="${directOrder.DOrderNo}" />
+	  <c:forEach items="${directOptList}" var="dOList">
+	  	<input type="hidden" name="productNoList" value="${dOList.directOptions.DProductNo}"/>
+	  </c:forEach>
 	  <button type="submit" id="mypage-direct-del-btn" class="btn btn-EA5C2B" onclick="return confirm('주문을 취소하시겠습니까?')">주문취소</button>
 	</form:form>
 	  <br /><br />

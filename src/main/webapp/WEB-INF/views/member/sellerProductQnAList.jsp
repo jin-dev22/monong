@@ -51,6 +51,8 @@
 									<div class="px-2 d-flex flex-column justify-content-space-between">
 							        	<span>${inq.directInquireAnswer.DInquireAnsweredAt}</span>
 							        	<input type="hidden" name="dInquireNo" value="${inq.DInquireNo}"/>
+							        	<input type="hidden" name="memberId" value="${inq.memberId}"/>
+							        	<input type="hidden" name="notiContent" value="${inq.inquireTitle}"/>
 							        	<sec:csrfInput />
 							        	<br />
 							        	<button type="button" name="bntSubmitAns" class="btn btn-EA5C2B-reverse inquire-answer-btn" onclick="submitAnswer(this.form);" ${inq.hasAnswer eq 'Y' ? 'disabled' : ''}>답변등록</button>
@@ -67,20 +69,20 @@
 		const headers = {};
 		headers['${_csrf.headerName}'] = '${_csrf.token}';
 		const submitAnswer = (frm) =>{
-			const {dInquireAContent, dInquireNo, bntSubmitAns} = frm;
-			console.log(dInquireAContent.value, dInquireNo.value, bntSubmitAns);
+			const {dInquireAContent, dInquireNo, memberId, notiContent, bntSubmitAns} = frm;
+			console.log(dInquireAContent.value, dInquireNo.value, memberId.value, notiContent.value, bntSubmitAns);
 			
 			if(confirm("답변을 등록하시겠습니까?")){
 				$.ajax({
 					url : "${pageContext.request.contextPath}/member/sellerProductQnAList.do",
 					headers,
 					method : "POST",
-					data : {dInquireAContent : dInquireAContent.value, dInquireNo : dInquireNo.value},
+					data : {dInquireAContent : dInquireAContent.value, dInquireNo : dInquireNo.value, 
+						memberId : memberId.value, notiContent:notiContent.value},
 					success(result){
 						console.log(result);
 						if(result > 0){
 							bntSubmitAns.disabled = true;
-							//해보고 내용 남아있는지 확인하기
 						}
 						
 					},

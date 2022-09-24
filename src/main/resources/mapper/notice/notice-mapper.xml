@@ -6,19 +6,6 @@
   <insert id="insertNotification">
   	insert into member_notification 
   		values(seq_noti_no.nextval, #{memberId}, #{notiContent}, default, default, 
-  			<if test="inquireNo != null">
-  				#{inquireNo},
-  			</if>
-  			<if test="dInquireNo != null">
-  				#{dInquireNo},
-  			</if>
-  			<if test="dOrderNo != null">
-  				#{dOrderNo},
-  			</if>
-  			<if test="sOrderNo != null">
-  			  	#{sOrderNo},
-  			</if>
-  			#{messageType}
-  		)
+  				#{inquireNo}, #{dInquireNo}, #{dOrderNo},#{sOrderNo}, #{messageType})
   </insert>
 </mapper>

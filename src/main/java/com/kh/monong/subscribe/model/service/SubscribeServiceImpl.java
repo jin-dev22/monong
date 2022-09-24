@@ -256,4 +256,11 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.updateSubscriptionWeekVegs(subscriptionWeekVegs);
 	}
 	//수아코드 끝
+	
+	//수진코드 시작
+	@Override
+	public String selectMemberIdBySoNo(String subOrderNo) {
+		return subscribeDao.selectMemberIdBySoNo(subOrderNo);
+	}
+	//수진코드 끝
 }

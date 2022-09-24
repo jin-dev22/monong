@@ -125,4 +125,14 @@ public class MonongUtils {
 			return new ArrayList<>(list.subList(offset, paramTwo));
 		}
 	}
+	
+	/**
+	 * 알림 글자수 줄이기 메소드
+	 * @param content
+	 * @return
+	 */
+	public static String subStrContent(String content) {
+		String substrContent = content.length() > 10? content.substring(0, 9)+"...": content;
+		return substrContent;
+	}
 }

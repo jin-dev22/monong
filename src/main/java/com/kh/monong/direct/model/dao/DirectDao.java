@@ -144,6 +144,9 @@ public interface DirectDao {
 
 	@Insert("insert into direct_product_attachment values(seq_d_product_attach_no.nextval, #{dProductNo}, #{dProductOriginalFilename}, #{dProductRenamedFilename})")
 	int insertDPAttachment(DirectProductAttachment attach);
+	
+	@Select("select member_id from direct_product where d_product_no = #{no}")
+	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
 
 }

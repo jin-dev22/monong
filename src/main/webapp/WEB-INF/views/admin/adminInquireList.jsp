@@ -76,12 +76,12 @@
 					url : "${pageContext.request.contextPath}/admin/inquireAnswer.do",
 					headers,
 					method : "POST",
-					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value, memberId:memberId.value, notiContent:notiContent.value},
+					data : {inquireAContent : inquireAContent.value, inquireNo : inquireNo.value, 
+						memberId:memberId.value, notiContent:notiContent.value},
 					success(result){
 						console.log(result);
 						if(result > 0){
 							bntSubmitAns.disabled = true;
-							//해보고 내용 남아있는지 확인하기
 						}
 						
 					},
