@@ -63,7 +63,7 @@
 				</nav>
 				<nav class="nav justify-content-end">
 					<a class="nav-link" href="${pageContext.request.contextPath}/member/memberLogin.do">로그인</a>
-					<a class="nav-link" href="${pageContext.request.contextPath}/member/selectEnrollType.do">회원가입</a>
+					<a class="nav-link" onclick="clickErollModal();">회원가입</a>
 				</nav>
 			</nav>
 		 </sec:authorize>
@@ -99,4 +99,5 @@
 	  	</sec:authorize>
 	  	
 	</header>
+<!-- 	<div id="enrollType-modal-container"></div> -->
 	<section id="content">
