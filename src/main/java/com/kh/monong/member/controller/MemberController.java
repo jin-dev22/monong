@@ -30,15 +30,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -48,8 +49,6 @@ import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectInquireAnswer;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
-import com.kh.monong.direct.model.dto.DirectProductAttachment;
-import com.kh.monong.direct.model.dto.DirectProductEntity;
 import com.kh.monong.direct.model.dto.DirectReview;
 import com.kh.monong.direct.model.dto.DirectReviewAttachment;
 import com.kh.monong.direct.model.dto.MemberDirectOrder;
@@ -79,6 +78,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/member")
 @Slf4j
+@SessionAttributes({"next"})
 public class MemberController {
 	@Autowired
 	private MemberService memberService;
@@ -646,24 +646,22 @@ public class MemberController {
 	//----------------------수진 끝
 	//----------------------수아 시작
 	@GetMapping("/memberLogin.do")
-	public void memberLogin() {
-		
+	public void memberLogin(@RequestHeader("Referer") String referer, Model model) {
+		log.debug("referer = {}", referer);
+		model.addAttribute("next", referer);
 	}
 	
 
-	@PostMapping("/memberLoginSuccess.do")
-	public String memberLoginSuccess(HttpSession session) {
-		log.debug("memberLoginSuccess.do 호출!");
-		// 로그인 후처리
-		String location = "/";
-		
-		SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
-		if(savedRequest != null) {
-			location = savedRequest.getRedirectUrl();
-		}
-		log.debug("location = {}", location);
-		return "redirect:" + location;
-	}
+	/*
+	 * @PostMapping("/memberLoginSuccess.do") public String
+	 * memberLoginSuccess(HttpSession session) {
+	 * log.debug("memberLoginSuccess.do 호출!"); // 로그인 후처리 String location = "/";
+	 * 
+	 * SavedRequest savedRequest = (SavedRequest)
+	 * session.getAttribute("SPRING_SECURITY_SAVED_REQUEST"); if(savedRequest !=
+	 * null) { location = savedRequest.getRedirectUrl(); }
+	 * log.debug("location = {}", location); return "redirect:" + location; }
+	 */
 
 	@GetMapping("/memberIdSearchForm.do")
 	public void memberIdSearchForm() {
