@@ -157,6 +157,7 @@
   	  	  	  	</c:if>
   	  	  	  	<c:if test="${not empty dInquireList}">
   	  	  	  	<c:forEach items="${dInquireList}" var="inquireList">
+	  	  	  	<input type="hidden" name="dInquireNo" value="${inquireList.DInquireNo}" />
   	  	  	  	<tr class="tbl-click-toggle">
 	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">${inquireList.inquireTitle}</td>
 	  	  	  		<td>${inquireList.memberName}</td>
@@ -172,7 +173,11 @@
 	  	  	  	<tr class="tbl-toggle" style="display: none;">
 	  	  	  		<td colspan="4" style="background-color: rgb(250, 250, 250);">
 		  	  	  		<div class="inquire-content-container">
-		  	  	  			<div class="inquire-content"><div class="Q">Q</div><span class="inquire-q">${inquireList.content}</span></div>
+		  	  	  			<div class="inquire-content">
+		  	  	  				<div class="Q">Q</div>
+		  	  	  				<span class="inquire-q">${inquireList.content}</span>
+		  	  	  				<button id="deleteInquire" type="button">삭제</button>
+		  	  	  			</div>
 		  	  	  			<c:if test="${inquireList.directInquireAnswer.DInquireAContent ne null}">
 		  	  	  			<fmt:parseDate value="${inquireList.directInquireAnswer.DInquireAnsweredAt}" var="answerCreatedAt" pattern="yyyy-MM-dd" />
 		  	  	  			<div class="inquire-answer"><div class="A">A</div><span class="inquire-a">${inquireList.directInquireAnswer.DInquireAContent}</span><span class="inquire-a-answer"><fmt:formatDate value="${answerCreatedAt}" pattern="yy.MM.dd" /></span></div>
@@ -256,6 +261,20 @@
 </main>
 <div class="enroll-inquire-modal-container"></div>
 <div class="enroll-inquire-complete-container"></div>
+<div class="enroll-inquire-delete-container"></div>
+<div class="modal fade" id="inquire-delete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+    <div class="modal-content">
+      <div class="modal-body" style="display: flex; justify-content: center;">
+        <p style="margin: 34px 0 12px;">상품 문의를 삭제하시겠습니까?</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center; border-top: none;">
+      	<button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; border: 1px solid #dee2e6;">취소</button>
+        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;" onclick="clickInquire()">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
 // 후기 추천
 const dReviewRecommend = () => {	
@@ -311,18 +330,6 @@ const dReviewRecommend = () => {
 	
 	}
 };
-
-// 상품문의 토글
-if(document.querySelector('.tbl-inquire')) {
-	
-	$(function(){
-		$(".tbl-click-toggle").click(function (e){
-			let target = e.target;
-			console.log(target);
-	  	$(target).parent().next().toggle();
-	  });
-	});
-}
 
 //기존 버튼형 슬라이더
 $('.slider-1 > .page-btns > div').click(function(){
@@ -938,6 +945,12 @@ if(document.querySelector('#enrollInquire')) {
 				      </div>
 			          <textarea name="inquire_content" style="width: 538px; height: 200px; padding: 9px 7px; resize: none;" maxlength="300" placeholder="내용을 입력해 주세요. (최대 300자)&#13;&#10;&#13;&#10; - Q&A는 상품에 대해 판매자에게 문의하는 게시판입니다.&#13;&#10; - 상품과 관련 없는 비방/욕설/명예훼손성 게시글 및 상품과 관련 없는 광고글 등&#13;&#10;   부적절한 게시글 등록 시 글쓰기 제한 및 게시글이 삭제 조치될 수 있습니다." onkeyup="handleInputLength(this, 300)" required></textarea>
 			        </div>
+			        <div style="width: 100%; padding: 8px 0;">
+			        	<div style="display: inline-block; width: 100px;"></div>
+			        	<label for="checkSecret">
+				        	<input type="checkbox" id="checkSecret" name="check_secret" value=""/>비밀글로 문의하기
+			        	</label>
+			        </div>
 		      	</div>
 		      </div>
 		      <div class="modal-footer" style="justify-content: center; border-top: none; padding: 16px 20px;">
@@ -961,6 +974,14 @@ if(document.querySelector('#enrollInquire')) {
 		 	const memberId = document.querySelector("#memberId");
 		 	const inquireTitle = document.querySelector("[name=inquire_title]");
 		 	const inquireContent = document.querySelector("[name=inquire_content]");
+		 	const checkSecret = document.querySelector("[name=check_secret]");
+		 	
+		 	if(checkSecret.checked) {
+		 		checkSecret.value = 'Y';
+		 	}
+		 	else {
+		 		checkSecret.value = 'N';
+		 	}
 			
 		 	// 유효성 검사
 		 	if(inquireTitle.value.length == 0 || inquireContent.value.length == 0) {
@@ -974,7 +995,8 @@ if(document.querySelector('#enrollInquire')) {
 			 		data : {dProductNo : dProductNo.value,
 			 				memberId : memberId.value,
 			 				inquireTitle : inquireTitle.value,
-			 				content : inquireContent.value},
+			 				content : inquireContent.value,
+			 				checkSecret : checkSecret.value},
 			 		success(response) {
 	 					const containerCom = document.querySelector('.enroll-inquire-complete-container');
 	 					const modal = `
@@ -985,7 +1007,7 @@ if(document.querySelector('#enrollInquire')) {
 	 					        <p style="margin: 34px 0 12px;">상품 문의가 등록되었습니다.</p>
 	 					      </div>
 	 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
-	 					        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;" onclick="clickInquire()">확인</button>
+	 					        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire()">확인</button>
 	 					      </div>
 	 					    </div>
 	 					  </div>
@@ -1073,8 +1095,42 @@ function clickInquire (){
 	document.querySelector('.dProductInquire').style.display = 'block';
 	document.querySelector('.dProductReview').style.display = 'none';
 	
+	if(document.querySelector('.tbl-inquire')) {
+		
+		$(function(){
+			$(".tbl-click-toggle").click(function (e){
+				let target = e.target;
+				console.log(target);
+		  	$(target).parent().next().toggle();
+		  });
+		});
+	}
 // 	inquire.click();
 	
+}
+
+//상품문의 토글
+if(document.querySelector('.tbl-inquire')) {
+	
+	$(function(){
+		$(".tbl-click-toggle").click(function (e){
+			let target = e.target;
+			console.log(target);
+	  	$(target).parent().next().toggle();
+	  });
+	});
+}
+
+// 내 문의글 삭제
+if(document.querySelector("#deleteInquire")) {
+	document.querySelector("#deleteInquire").addEventListener('click', (e) => {
+		
+		$('#inquire-delete-modal').modal("show");
+		
+// 		$.ajax({
+// 			url:"${pageContext.request.contextPath}/"
+// 		});
+	});
 }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
