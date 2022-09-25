@@ -1,4 +1,4 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -134,7 +134,7 @@
 	  	<sec:authorize access="isAuthenticated()">
 		  	<div class="btn-dProductInquire">
 			  	<button type="button" id="enrollInquire" class="btn enrollInquire btn-116530">상품 문의하기</button>
-			  	<button type="button" id="findInquire" class="btn findInquire btn-116530-reverse" onclick="location.href = '${pageContext.request.contextPath}/member/memberDirectInquireList.do'">내 문의내역 조회</button>
+			  	<button type="button" id="findMyInquire" class="btn findInquire btn-116530-reverse" onclick="location.href = '${pageContext.request.contextPath}/member/memberDirectInquireList.do'">내 문의내역 조회</button>
 		  	</div>
 	  	</sec:authorize>
 	  	<div class="tbl-inquire-container">
@@ -148,25 +148,48 @@
 	  	  		</tr>
 	  	  	  </thead>
   	  	  	  <tbody>
-	  	  	  	<tr>
-	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">제목이다아아아아아아아아아아아</td>
-	  	  	  		<td>콜라볼랄라라</td>
-	  	  	  		<td>2022.08.08</td>
+  	  	  	  	<c:if test="${empty dInquireList}">
+  	  	  	  	<tr>
+  	  	  	  		<td colspan="4">
+  	  	  	  			<div style="height: 100px; display: flex; align-items: center; justify-content: center;">상품 문의내역이 존재하지 않습니다.</div>
+  	  	  	  		</td>
+  	  	  	  	</tr>
+  	  	  	  	</c:if>
+  	  	  	  	<c:if test="${not empty dInquireList}">
+  	  	  	  	<c:forEach items="${dInquireList}" var="inquireList">
+  	  	  	  	<tr class="tbl-click-toggle">
+	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">${inquireList.inquireTitle}</td>
+	  	  	  		<td>${inquireList.memberName}</td>
+	  	  	  		<fmt:parseDate value="${inquireList.createdAt}" var="createdAt" pattern="yyyy-MM-dd" />
+	  	  	  		<td><fmt:formatDate value="${createdAt}" pattern="yy.MM.dd" /></td>
+	  	  	  		<c:if test="${inquireList.hasAnswer eq 'Y'}">
 	  	  	  		<td>답변완료</td>
+	  	  	  		</c:if>
+	  	  	  		<c:if test="${inquireList.hasAnswer ne 'Y'}">
+	  	  	  		<td>답변대기</td>
+	  	  	  		</c:if>
 	  	  	  	</tr>
-	  	  	  	<tr>
+	  	  	  	<tr class="tbl-toggle" style="display: none;">
 	  	  	  		<td colspan="4" style="background-color: rgb(250, 250, 250);">
 		  	  	  		<div class="inquire-content-container">
-		  	  	  			<div class="inquire-content"><div class="Q">Q</div><span class="inquire-q">또잉</span></div>
-		  	  	  			<div class="inquire-answer"><div class="A">A</div><span class="inquire-a">답변이얌 ㅎㅎ</span></div>
+		  	  	  			<div class="inquire-content"><div class="Q">Q</div><span class="inquire-q">${inquireList.content}</span></div>
+		  	  	  			<c:if test="${inquireList.directInquireAnswer.DInquireAContent ne null}">
+		  	  	  			<fmt:parseDate value="${inquireList.directInquireAnswer.DInquireAnsweredAt}" var="answerCreatedAt" pattern="yyyy-MM-dd" />
+		  	  	  			<div class="inquire-answer"><div class="A">A</div><span class="inquire-a">${inquireList.directInquireAnswer.DInquireAContent}</span><span class="inquire-a-answer"><fmt:formatDate value="${answerCreatedAt}" pattern="yy.MM.dd" /></span></div>
+		  	  	  			</c:if>
 		  	  	  		</div>
 	  	  	  		</td>
 	  	  	  	</tr>
+  	  	  	  	</c:forEach>
+	  	  	  	</c:if>
 	  	  	  </tbody>
 	  	  </table>
 	  	</div>
+	  	<nav class="inquirePageBar">
+	  	${pagebar}
+	  	</nav>
 	  </div>
-	  <!-- 재경 시작 -->
+	 <!-- 재경 시작 -->
 	  <div class="dProductReview">
 	  <sec:authentication property="principal" var="loginMember" scope="page"/>
 
@@ -207,29 +230,29 @@
 						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
 					</td>
 					<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
-					  </tr>
-					  <tr>
-					    <td rowspan="2">
-					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
-		    					첨부된 사진이 없습니다
-		    				</c:if>
-					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
-					    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
-					    	</c:if>
-					    </td>
-					    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
-					    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
-					  </tr>
-					 </c:forEach>
-					</tbody>
-					</table>
-					<nav>
-						${rPagebar}
-					</nav>
-				</c:if>
-			</div>	
-	  </div>
+				</tr>
+				<tr>
+				    <td rowspan="2">
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
+				    	
+	    				</c:if>
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
+				    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
+				    	</c:if>
+				    </td>
+				    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
+				    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
+				</tr>
+			 </c:forEach>
+		</tbody>
+	  </table>
+		<nav>
+			${rPagebar}
+		</nav>
+	  </c:if>
+	  </div>	
 	  <!-- 재경 끝 -->
+  </div>
 </main>
 <div class="enroll-inquire-modal-container"></div>
 <div class="enroll-inquire-complete-container"></div>
@@ -288,6 +311,19 @@ const dReviewRecommend = () => {
 	
 	}
 };
+
+// 상품문의 토글
+if(document.querySelector('.tbl-inquire')) {
+	
+	$(function(){
+		$(".tbl-click-toggle").click(function (e){
+			let target = e.target;
+			console.log(target);
+	  	$(target).parent().next().toggle();
+	  });
+	});
+}
+
 //기존 버튼형 슬라이더
 $('.slider-1 > .page-btns > div').click(function(){
     var $this = $(this);
@@ -645,7 +681,6 @@ const totalCalc = () => {
 		return totalPrice;
 };
 
-
 // 장바구니 추가 및 주문하기
 const cart = document.querySelector('#cart');
 const order = document.querySelector('#order');
@@ -862,111 +897,113 @@ detailNav.forEach((nav) => {
 });
 
 // 상품문의 등록하기 폼
-document.querySelector('#enrollInquire').addEventListener('click', (e) => {
-	const container = document.querySelector(".enroll-inquire-modal-container");
-	const modal = `
-	<div class="modal fade" id="enroll-inquire-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
-	  <div style="max-width: 680px;" class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-		  <div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
-		  	<div style="width: 100%; display: flex; padding-bottom: 4px; border-bottom: 1px solid #dee2e6; justify-content: space-between; align-items: center;">
-		        <h5 class="modal-title" id="exampleModalLabel">상품 문의하기</h5>
-		        <button style="border: none; background-color: transparent; font-size: 30px; color: #333;" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		  	</div>
-	      </div>
-	      <div style="padding: 12px 20px; 0">
-	        <div style="width: 100%; display: flex; padding-bottom: 12px; align-items: center; justify-content: flex-start; border-bottom: 1px solid #dee2e6;">
-		        <div style="display: inline-flex; width: 100px;">
-		       	  <img style="width: 70px; height: 70px; display: inline-block;" src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" alt="" /> 
+if(document.querySelector('#enrollInquire')) {
+	document.querySelector('#enrollInquire').addEventListener('click', (e) => {
+		const container = document.querySelector(".enroll-inquire-modal-container");
+		const modal = `
+		<div class="modal fade" id="enroll-inquire-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+		  <div style="max-width: 680px;" class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+			  <div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
+			  	<div style="width: 100%; display: flex; padding-bottom: 4px; border-bottom: 1px solid #dee2e6; justify-content: space-between; align-items: center;">
+			        <h5 class="modal-title" id="exampleModalLabel">상품 문의하기</h5>
+			        <button style="border: none; background-color: transparent; font-size: 30px; color: #333;" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			  	</div>
+		      </div>
+		      <div style="padding: 12px 20px; 0">
+		        <div style="width: 100%; display: flex; padding-bottom: 12px; align-items: center; justify-content: flex-start; border-bottom: 1px solid #dee2e6;">
+			        <div style="display: inline-flex; width: 100px;">
+			       	  <img style="width: 70px; height: 70px; display: inline-block;" src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" alt="" /> 
+			        </div>
+			        <div style="display: inline;">
+			        	<span>${directProduct.DProductName}</span>
+			        </div>
 		        </div>
-		        <div style="display: inline;">
-		        	<span>${directProduct.DProductName}</span>
-		        </div>
-	        </div>
-	      </div>
-	      <div style="padding: 0 20px 0; border-bottom: none;" class="modal-body">
-	      	<div style="width: 100%; padding-bottom: 12px; border-bottom: 1px solid #dee2e6;">
-		        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
-		          <div style="width: 100px;">
-		        	<span style="padding-right: 65px; top: 8px; position: relative; display: inline;">제목</span>
-		          </div>
-		          <div style="width: 538px;">
-		        	<input type="text" name="inquire_title" placeholder="제목을 입력해 주세요. (최대 30자)" style="height: 38px; width: 100%; padding: 0 5px;" maxlength="30" onkeyup="handleInputLength(this, 30)" required />
-		          </div>
-		        </div>
-		        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
-		          <div style="width: 100px;">
-			        <span style="padding-right: 65px; top: 8px; position: relative; display: inline;">내용</span>
-			      </div>
-		          <textarea name="inquire_content" style="width: 538px; height: 200px; padding: 9px 7px; resize: none;" maxlength="300" placeholder="내용을 입력해 주세요. (최대 300자)&#13;&#10;&#13;&#10; - Q&A는 상품에 대해 판매자에게 문의하는 게시판입니다.&#13;&#10; - 상품과 관련 없는 비방/욕설/명예훼손성 게시글 및 상품과 관련 없는 광고글 등&#13;&#10;   부적절한 게시글 등록 시 글쓰기 제한 및 게시글이 삭제 조치될 수 있습니다." onkeyup="handleInputLength(this, 300)" required></textarea>
-		        </div>
-	      	</div>
-	      </div>
-	      <div class="modal-footer" style="justify-content: center; border-top: none; padding: 16px 20px;">
-	        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; border: 1px solid #dee2e6;">취소</button>
-	        <button type="button" id="sbmEnroll" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; background-color: #dee2e6; color: #fff; border: 1px solid #dee2e6; cursor: default;">등록</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>`;
-	
-	container.innerHTML = modal;
-	
-	$('#enroll-inquire-modal').modal("show");
-	
-	// 문의 등록
-	document.querySelector("#sbmEnroll").addEventListener('click', (sbm) => {
-	 	const headers = {};
-	 	headers['${_csrf.headerName}'] = '${_csrf.token}';
-	 	console.log(headers);
-	 	const dProductNo = document.querySelector('#dProductNo');
-	 	const memberId = document.querySelector("#memberId");
-	 	const inquireTitle = document.querySelector("[name=inquire_title]");
-	 	const inquireContent = document.querySelector("[name=inquire_content]");
+		      </div>
+		      <div style="padding: 0 20px 0; border-bottom: none;" class="modal-body">
+		      	<div style="width: 100%; padding-bottom: 12px; border-bottom: 1px solid #dee2e6;">
+			        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
+			          <div style="width: 100px;">
+			        	<span style="padding-right: 65px; top: 8px; position: relative; display: inline;">제목</span>
+			          </div>
+			          <div style="width: 538px;">
+			        	<input type="text" name="inquire_title" placeholder="제목을 입력해 주세요. (최대 30자)" style="height: 38px; width: 100%; padding: 0 5px;" maxlength="30" onkeyup="handleInputLength(this, 30)" required />
+			          </div>
+			        </div>
+			        <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 0;">
+			          <div style="width: 100px;">
+				        <span style="padding-right: 65px; top: 8px; position: relative; display: inline;">내용</span>
+				      </div>
+			          <textarea name="inquire_content" style="width: 538px; height: 200px; padding: 9px 7px; resize: none;" maxlength="300" placeholder="내용을 입력해 주세요. (최대 300자)&#13;&#10;&#13;&#10; - Q&A는 상품에 대해 판매자에게 문의하는 게시판입니다.&#13;&#10; - 상품과 관련 없는 비방/욕설/명예훼손성 게시글 및 상품과 관련 없는 광고글 등&#13;&#10;   부적절한 게시글 등록 시 글쓰기 제한 및 게시글이 삭제 조치될 수 있습니다." onkeyup="handleInputLength(this, 300)" required></textarea>
+			        </div>
+		      	</div>
+		      </div>
+		      <div class="modal-footer" style="justify-content: center; border-top: none; padding: 16px 20px;">
+		        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; border: 1px solid #dee2e6;">취소</button>
+		        <button type="button" id="sbmEnroll" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; background-color: #dee2e6; color: #fff; border: 1px solid #dee2e6; cursor: default;">등록</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>`;
 		
-	 	// 유효성 검사
-	 	if(inquireTitle.value.length == 0 || inquireContent.value.length == 0) {
-	 		e.preventDefault();
-	 	}
-	 	else {
-	 		$.ajax({
-		 		url : "${pageContext.request.contextPath}/direct/enrollInquire.do",
-		 		method : "POST",
-		 		headers,
-		 		data : {dProductNo : dProductNo.value,
-		 				memberId : memberId.value,
-		 				inquireTitle : inquireTitle.value,
-		 				content : inquireContent.value},
-		 		success(response) {
- 					const containerCom = document.querySelector('.enroll-inquire-complete-container');
- 					const modal = `
- 					<div class="modal fade" id="inquire-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
- 					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
- 					    <div class="modal-content">
- 					      <div class="modal-body" style="display: flex; justify-content: center;">
- 					        <p style="margin: 34px 0 12px;">상품 문의가 등록되었습니다.</p>
- 					      </div>
- 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
- 					        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;">확인</button>
- 					      </div>
- 					    </div>
- 					  </div>
- 					</div>`;
- 					
- 					containerCom.innerHTML = modal;
- 					
- 					inquireTitle.value = "";
- 					inquireContent.value = "";
- 					
- 					$('#inquire-complete-modal').modal("show");
-		 		},
-		 		error : console.log
-		 	});
-	 	}
+		container.innerHTML = modal;
+		
+		$('#enroll-inquire-modal').modal("show");
+		
+		// 문의 등록
+		document.querySelector("#sbmEnroll").addEventListener('click', (sbm) => {
+		 	const headers = {};
+		 	headers['${_csrf.headerName}'] = '${_csrf.token}';
+		 	console.log(headers);
+		 	const dProductNo = document.querySelector('#dProductNo');
+		 	const memberId = document.querySelector("#memberId");
+		 	const inquireTitle = document.querySelector("[name=inquire_title]");
+		 	const inquireContent = document.querySelector("[name=inquire_content]");
+			
+		 	// 유효성 검사
+		 	if(inquireTitle.value.length == 0 || inquireContent.value.length == 0) {
+		 		e.preventDefault();
+		 	}
+		 	else {
+		 		$.ajax({
+			 		url : "${pageContext.request.contextPath}/direct/enrollInquire.do",
+			 		method : "POST",
+			 		headers,
+			 		data : {dProductNo : dProductNo.value,
+			 				memberId : memberId.value,
+			 				inquireTitle : inquireTitle.value,
+			 				content : inquireContent.value},
+			 		success(response) {
+	 					const containerCom = document.querySelector('.enroll-inquire-complete-container');
+	 					const modal = `
+	 					<div class="modal fade" id="inquire-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+	 					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+	 					    <div class="modal-content">
+	 					      <div class="modal-body" style="display: flex; justify-content: center;">
+	 					        <p style="margin: 34px 0 12px;">상품 문의가 등록되었습니다.</p>
+	 					      </div>
+	 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
+	 					        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;" onclick="clickInquire()">확인</button>
+	 					      </div>
+	 					    </div>
+	 					  </div>
+	 					</div>`;
+	 					
+	 					containerCom.innerHTML = modal;
+	 					
+	 					inquireTitle.value = "";
+	 					inquireContent.value = "";
+	 					
+	 					$('#inquire-complete-modal').modal("show");
+			 		},
+			 		error : console.log
+			 	});
+		 	}
+		});
 	});
-});
+}
 
 // 등록 글자수 체크
 function handleInputLength(el, max) {
@@ -1020,6 +1057,24 @@ function handleInputLength(el, max) {
 			return false;
 		}
 	}
+}
+
+function clickInquire (){
+	$('.tbl-inquire').load(window.location.href+' .tbl-inquire');
+	const info = document.querySelector('#info');
+	const inquire = document.querySelector('#inquire');
+	const review = document.querySelector('#review');
+	
+	inquire.classList.add('is-active');
+	info.classList.remove('is-active');
+	review.classList.remove('is-active');
+	
+	document.querySelector('.dProductContent').style.display = 'none';
+	document.querySelector('.dProductInquire').style.display = 'block';
+	document.querySelector('.dProductReview').style.display = 'none';
+	
+// 	inquire.click();
+	
 }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

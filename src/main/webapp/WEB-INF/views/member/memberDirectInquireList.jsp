@@ -16,7 +16,7 @@
 	<c:if test="${empty directInqList}">
 		<div class="mx-auto mt-5 text-center">
 			<h3>문의하신 내역이 없어요 :(</h3>
-			<span>상품 페이지에서 판매자에게 문의하실 수 있습니다</span>
+			<span>상품 페이지에서 판매자에게 문의하실 수 있어요!</span>
 		</div>
 	</c:if>
 	<c:if test="${not empty directInqList}">

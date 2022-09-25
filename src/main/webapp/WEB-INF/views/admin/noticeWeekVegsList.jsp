@@ -14,7 +14,7 @@
 <div id="admin-notice-week-vags-list-container" class="mx-auto mt-5 mb-5 text-center">
 <c:if test="${empty noticeVegsList}">
 		<div class="mx-auto text-center">
-			<h3>공지 히스토리가 없습니다 :(</h3>
+			<h3>공지 히스토리가 없어요 :(</h3>
 		</div>
 </c:if>
 <c:if test="${not empty noticeVegsList}">

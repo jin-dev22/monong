@@ -86,6 +86,11 @@ footer .btn {
 	color: #fff;
 	background-color: #116530;
 }
+
+/* 모달창 중앙정렬 */
+.modal {padding-right: 0px !important}
+.modal-open { padding-right: 0px !important; }
+
 /*
 ------------------- header -------------------
 */

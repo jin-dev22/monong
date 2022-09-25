@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dto.Cart;
 import com.kh.monong.direct.model.dto.DOrderStatus;
+import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -275,6 +276,28 @@ public class DirectController {
 		log.debug("dReviewList = {}", dReviewList);
 		
 		// 재경 끝
+		// 민지 시작
+		// 상품 문의
+		Map<String, Object> map = new HashMap<>();
+		int _limit = 10;
+		map.put("cPage", cPage);
+		map.put("limit", _limit);
+		map.put("dProductNo", dProductNo);
+		
+		List<DirectInquire> dInquireList = new ArrayList<>();
+		
+		dInquireList = directService.findInquireAll(map);
+		
+		int totalContent = directService.getInquireTotalContent(dProductNo);
+		
+		String url = request.getRequestURI();
+		url += "?dProductNo=" + dProductNo;
+		String pagebar = MonongUtils.getPagebar(cPage, _limit, totalContent, url);
+		
+		model.addAttribute("dInquireList", dInquireList);
+		model.addAttribute("pagebar", pagebar);
+		// 민지 끝
+		
 		
 		DirectProduct directProduct = directService.selectOneDirectProduct(dProductNo);
 		
@@ -411,7 +434,7 @@ public class DirectController {
 	}
 	
 	// 결제 처리
-	@PostMapping("directPay.do")
+	@PostMapping("/directPay.do")
 	public String directPay(DirectOrder directOrder, 
 						  @RequestParam(value="optionNoList[]") List<String> optionNoList,
 						  @RequestParam(value="productNoList[]") List<String> productNoList, 
