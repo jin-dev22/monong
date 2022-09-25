@@ -5,9 +5,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.monong.admin.controller.AdminController;
+import com.kh.monong.common.MonongUtils;
 
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,11 +40,25 @@ public class NotificationController {
 	SubscribeService subscribeService;
 	//---------------------------------------------수진시작
 	@GetMapping("/memberNotificationList.do")
-	public void memberNotificationList(Authentication authentication, Model model){
+	public void memberNotificationList(Authentication authentication, 
+								@RequestParam(defaultValue = "1") int cPage, 
+								Model model, HttpServletRequest request){
 		String memberId = authentication.getName();
-		List<MemberNotification> notificationList = notificationService.selectNotificationListByMemberId(memberId);
+		
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId",memberId);
+		
+		List<MemberNotification> notificationList = notificationService.selectNotificationListByMemberId(param);
 		log.debug("notificationList={}",notificationList);
 		model.addAttribute("notificationList", notificationList);
+		
+		int totalContent = notificationService.getNoticeCount(memberId);
+		String url = request.getRequestURI();
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		model.addAttribute("pagebar", pagebar);
 	}
 	
 	@PostMapping("/memberNotificationList.do")
@@ -48,6 +66,13 @@ public class NotificationController {
 		int result = notificationService.notificationHasRead(notiNo);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	@PostMapping("/newNotice.do")
+	public ResponseEntity<?> newNotice(@RequestParam String memberId){
+		int count = notificationService.getNewNoticeCount(memberId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(count);
 	}
 	//---------------------------------------------수진끝
 	

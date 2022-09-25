@@ -95,7 +95,8 @@
 	</task:scheduled-tasks>
 	
 	<!-- #14.1. echoHandler 등록 -->
-	<!-- <websocket:handlers>
+	<!-- 
+	<websocket:handlers>
 		<websocket:mapping handler="echoHandler" path="/echo"/>
 		<websocket:sockjs/>
 	</websocket:handlers>
@@ -105,5 +106,8 @@
 			<websocket:sockjs/>
 		</websocket:stomp-endpoint>
 		<websocket:simple-broker prefix="/topic, /app"/>
-	</websocket:message-broker> -->
+	</websocket:message-broker>
+ -->
+	
+	
 </beans:beans>

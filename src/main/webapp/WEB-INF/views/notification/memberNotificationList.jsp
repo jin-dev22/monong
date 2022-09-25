@@ -97,7 +97,9 @@ table.tbl-notification tr>td{
 		</tbody>
 	</table>
 </div>
-
+<nav>
+${pagebar}
+</nav>
 <script>
 const headers = {};
 headers['${_csrf.headerName}'] = '${_csrf.token}';

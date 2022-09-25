@@ -1,8 +1,10 @@
 package com.kh.monong.notice.model.service;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 
 import com.kh.monong.notice.model.dao.NotificationDao;
 import com.kh.monong.notice.model.dto.MemberNotification;
@@ -30,13 +32,26 @@ public class NotificationServiceImpl implements NotificationService{
 	public int notificationHasRead(long notiNo) {
 		return notificationDao.notificationHasRead(notiNo);
 	}
-	//---------------------------------------------수진끝
-
-	//---------------------------------------------선아시작
+	
 	@Override
-	public List<MemberNotification> selectNotificationListByMemberId(String memberId) {
-		return notificationDao.selectNotificationListByMemberId(memberId);
+	public int getNoticeCount(String memberId) {
+		return notificationDao.getNoticeCount(memberId);
 	}
-	//---------------------------------------------선아끝
+	
+	@Override
+	public int getNewNoticeCount(String memberId) {
+		return notificationDao.getNewNoticeCount(memberId);
+	};
+	
+	@Override
+	public List<MemberNotification> selectNotificationListByMemberId(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		String memberId = (String) param.get("memberId");
+		return notificationDao.selectNotificationListByMemberId(memberId, rowBounds);
+	}
+	
+	//---------------------------------------------수진끝
 
 }
