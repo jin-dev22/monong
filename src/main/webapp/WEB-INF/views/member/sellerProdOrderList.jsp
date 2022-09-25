@@ -38,7 +38,7 @@
 	</script>
 	<span>해당 기간의 총 주문 건수는 ${totalContent}건 입니다.</span>
 	<c:if test="${empty orderList}">	
-		<div>해당상품의 주문내역이 없습니다.</div>
+		<div>해당상품의 주문내역이 없어요.</div>
 	</c:if>
 	
 	<br />

@@ -426,6 +426,17 @@
  
  <!-- ==================================================수아 끝 -->
  <!-- ==================================================미송 시작 -->
+   <select id="getTotalSubscriptionContent" resultType="_int">
+   		select
+		count(*)
+	from
+	    subscription_order so
+	        left join subscription s 
+	            on so.s_no = s.s_no
+	where s.member_id = #{memberId}
+  </select>
+  
+  
    <resultMap type="subscriptionOrderExt" id="subscriptionListMap">
   	<id column="s_order_no" property="sOrderNo"/>
   		<result column="s_no" property="sNo"/>
@@ -442,7 +453,7 @@
   	</association>
   </resultMap>
    
-  <select id="getTotalContent" resultType="_int">
+  <select id="getTotalSubscriptionReviewContent" resultType="_int">
  	select
 		count(*)
 	from

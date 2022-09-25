@@ -77,14 +77,14 @@
                         <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
                     </span>
                     <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"
-                            disabled/><!-- 완성후 기능 살려놓기 -->
+                         disabled/><!-- 완성후 기능 살려놓기 -->
                 </span>
             </div>
             <div class="enroll-info-container">
                 <span class="enroll-info enroll-eamilKey-container">
                     <input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
                             readonly/>
-                    <input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
+                    <input type="hidden" id="emailKeyValid" value="0"/><!-- 불일치 0, 일치 1 -->
                     <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"
                         disabled/>
                 </span>
@@ -485,17 +485,6 @@ document.querySelector("#address").addEventListener('click', function(){
         }
     }).open();
 });  
-/*//검색버튼?
-document.querySelector("#bnt-srch").addEventListener('click', function(){
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-            document.querySelector("#address").value = data.address;
-            document.querySelector("#address-ex").focus();
-        }
-    }).open();
-});
-*/
 
 
 //이메일 인증코드 전송
@@ -558,10 +547,10 @@ document.querySelector("#btn-email-enterKey").addEventListener("click", (e)=>{
 
 //사업자등록번호 유효성
 const invalidRegNoFeedback = document.querySelector(".invalid-feedback.feedback-regNo");
-document.querySelector("#sellerRegNo").addEventListener("blur", (e)=>{
+document.querySelector("#sellerRegNo").addEventListener("focusout", (e)=>{
 	const regNo = e.target;
-	const regExp = /([0-9]{3})-?([0-9]{2})-?([0-9]{5})/;
-	
+	const regExp = /([0-9]{3})-([0-9]{2})-([0-9]{5})/;
+		
 	if(!regExp.test(regNo.value)){
 		invalidRegNoFeedback.style.display = "inline";
 		regNo.value = "";

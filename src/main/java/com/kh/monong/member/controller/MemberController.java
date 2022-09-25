@@ -873,7 +873,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/memberSubscribeList.do")
-	public void memberSubscribeList(Authentication authentication, Model model, HttpServletRequest request) {
+	public void memberSubscribeList(@RequestParam(defaultValue = "1") int cPage, Authentication authentication, Model model, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		Subscription recentSubscription = memberService.selectRecentSubById(authentication.getName()); 
 		log.debug("recentSubscription={}",recentSubscription);
@@ -887,11 +887,30 @@ public class MemberController {
 		}
 
 		String memberId = authentication.getName();
-		List<SubscriptionOrderExt> subList = memberService.selectSubscriptionListById(memberId);
+		// 미송 코드 시작
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("memberId", memberId);
+		int totalContent = memberService.getTotalSubscriptionContent(memberId);
+		log.debug("totalContent = {}", totalContent);
+		
+		List<SubscriptionOrderExt> subList = memberService.selectSubscriptionListById(param);
+		
+		String url = request.getRequestURI();
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("pagebar", pagebar);
+		// 미송 코드 끝
+		
 		if(subList != null) {
 			log.debug("subList={}",subList);
 			model.addAttribute("subList", subList);
 		}
+		
+		
+		
 	}	
 		
 	@GetMapping("/memberDirectList.do")
@@ -966,7 +985,7 @@ public class MemberController {
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		log.debug("memberId = {}", memberId);
-		int totalContent = memberService.getTotalContent(memberId);
+		int totalContent = memberService.getTotalSubscriptionReviewContent(memberId);
 		log.debug("totalContent = {}", totalContent);
 		
 		List<SubscriptionReview> sReviewList = memberService.selectSubscriptionReviewList(param, memberId);

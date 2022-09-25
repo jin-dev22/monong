@@ -1,4 +1,4 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -189,7 +189,7 @@
 	  	${pagebar}
 	  	</nav>
 	  </div>
-	  <!-- 재경 시작 -->
+	 <!-- 재경 시작 -->
 	  <div class="dProductReview">
 	  <sec:authentication property="principal" var="loginMember" scope="page"/>
 
@@ -220,30 +220,30 @@
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach items="${dReviewList}" var="dReviewList">
-			<tr class="table-active">
-				<td style="text-align:left;">${dReviewList.dReviewTitle}</td>
-				<td style="text-align:left;">${dReviewList.reviewOpt.DOptionName}</td>
-				<td style="text-align:left;">⭐ ${dReviewList.reviewRating}</td>
-				<td style="text-align:left;">
-					<fmt:parseDate value="${dReviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
-					<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
-				</td>
-				<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
-		    </tr>
-		    <tr>
-		    	<td rowspan="2">
-		    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
-   					첨부된 사진이 없습니다
-   				</c:if>
-		    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
-		    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
-		    	</c:if>
-		    	</td>
-		    	<td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
-		    	<!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
-			</tr>
-		</c:forEach>
+			<c:forEach items="${dReviewList}" var="dReviewList">
+				<tr class="table-active">
+					<td style="text-align:left;">${dReviewList.dReviewTitle}</td>
+					<td style="text-align:left;">${dReviewList.reviewOpt.DOptionName}</td>
+					<td style="text-align:left;">⭐ ${dReviewList.reviewRating}</td>
+					<td style="text-align:left;">
+						<fmt:parseDate value="${dReviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
+						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
+					</td>
+					<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
+				</tr>
+				<tr>
+				    <td rowspan="2">
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
+				    	
+	    				</c:if>
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
+				    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
+				    	</c:if>
+				    </td>
+				    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
+				    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
+				</tr>
+			 </c:forEach>
 		</tbody>
 	  </table>
 		<nav>
