@@ -149,7 +149,7 @@ body {
 }
 
 .attach-info.active{
-	border-bottom: 2px solid #116530;
+	border-bottom: 3px solid #116530;
 }
 
 .attach-sub-info{
@@ -212,7 +212,8 @@ body {
             <textarea class="m-s-review-content" name="sReviewContent">${sReview.SReviewContent}</textarea>
             <div class="content-length-wrapper">
                 <span class="m-s-review-content-length">${fn:length(sReview.SReviewContent)}</span>
-                <span>/ 500</span>
+                <span>/</span>
+                <span>500</span>
             </div>
         </div>
 		<div class="m-s-review-attach-container">
@@ -463,7 +464,19 @@ document.querySelector(".stars-wrapper").addEventListener('mouseleave', () => {
 
 document.querySelector(".m-s-review-content").addEventListener('keyup', (e) => {
     // console.log(e.target.value.length);
-    document.querySelector(".m-s-review-content-length").innerHTML = e.target.value.length;
+    const contentLength = document.querySelector(".m-s-review-content-length");
+    const maxLength = 500;
+    
+    if(e.target.value.length >= maxLength){
+    	contentLength.nextElementSibling.nextElementSibling.style.color = "red";
+    	e.target.value = e.target.value.substr(0, maxLength);
+    }
+    else{
+    	contentLength.nextElementSibling.nextElementSibling.style.color = "black";
+    }
+    
+	contentLength.innerHTML = e.target.value.length;
+    
     checkSubmissionAvailablity();
 });
 </script>

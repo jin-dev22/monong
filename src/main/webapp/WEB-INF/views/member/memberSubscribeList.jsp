@@ -8,6 +8,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <fmt:requestEncoding value="utf-8" />
 <jsp:include page="/WEB-INF/views/member/memberMyPage.jsp">
 	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>

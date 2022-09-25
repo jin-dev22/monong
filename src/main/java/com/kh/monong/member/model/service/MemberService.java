@@ -123,7 +123,7 @@ public interface MemberService {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(Map<String, Object> param);
 
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
@@ -142,13 +142,15 @@ public interface MemberService {
 	int deleteMemberSubscribeOrder(String sNo);
 //-----------수아 끝
 //-----------미송 시작
+	int getTotalSubscriptionContent(String memberId);
+	
 	int insertSubscriptionReview(SubscriptionReview review);
 	
 	int getSubscriptionReviewYn(String sOrderNo);
 	
 	List<SubscriptionReview> selectSubscriptionReviewList(Map<String, Integer> param, String memberId);
 	
-	int getTotalContent(String memberId);
+	int getTotalSubscriptionReviewContent(String memberId);
 	
 	SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo);
 
@@ -190,6 +192,8 @@ public interface MemberService {
 	List<DirectInquire> selectMemberDirectInqList(Map<String, Object> param);
 
 	int getTotalMemberDirectInqList(String memberId);
+
+	
 
 
 	

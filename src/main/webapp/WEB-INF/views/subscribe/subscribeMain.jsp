@@ -13,6 +13,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sMain.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sReview.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="container subMain-container">
 	<div class="row row1">
 		<div class="col"><a href="#sub-info">이용 안내</a></div>
