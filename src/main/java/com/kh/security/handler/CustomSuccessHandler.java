@@ -52,9 +52,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         		if(next.contains(specialLocation[i])) {
             		targetUrl = "/";
             	}	
-        		
         	}
-        	
         }
         else {
         	targetUrl = next;

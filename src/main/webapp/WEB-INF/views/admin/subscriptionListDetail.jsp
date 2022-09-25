@@ -22,7 +22,7 @@
 	<span>조회결과가 없어요.&#128546;</span>
 </c:if>
 <c:if test="${not empty subscriptionListDetail}">
-<p style="text-align: right;">(총 ${fn:length(subscriptionListDetail)} 건)</p>
+<p style="text-align: right;">(총 ${totalContent} 건)</p>
 	<c:forEach items="${subscriptionListDetail}" var="subDetail" varStatus="vs">
 		<table class="table admin-subscriptionList">
 			<thead>
