@@ -465,7 +465,7 @@ public class DirectController {
 		String notiContent = "상품["+dProductNo+"]에 문의가 등록되었습니다.";
 		String sellerId = directService.selectSellerIdByProdNo(dProductNo);
 		MemberNotification notice = MemberNotification.builder()
-				.memberId(memberId)
+				.memberId(sellerId)
 				.notiContent(notiContent)
 				.messageType(MessageType.NEW_D_INQ)
 				.build();
