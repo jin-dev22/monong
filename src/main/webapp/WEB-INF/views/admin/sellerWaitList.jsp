@@ -12,8 +12,18 @@
 <jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp">
 	<jsp:param name="title" value="모농모농-판매자회원관리"></jsp:param>
 </jsp:include>
+
 <div id="admin-waitList-container" class="mt-5 mx-auto text-center">
-<div id="admin-sellerList-wait-container">
+<c:if test="${empty sellerWaitList}">
+	<div class="mx-auto mt-5 text-center">
+		<h3>판매자 대기 목록이 없어요 :(</h3>
+	</div>
+</c:if>
+
+<c:if test="${not empty sellerWaitList}">
+<div id="admin-wait-sellerList-container">
+
+<div id="admin-sellerList-wait-total-container">
 	<h2><%=LocalDate.now()%></h2>
 	<h2>현재 가입 대기 건수</h2>
 	<h1><strong>${totalWaitSeller}</strong>건</h1>
@@ -81,13 +91,12 @@
 		</tbody>	
 	</table>
   </c:forEach>
-</div>
   <nav>
 	${pagebar}
   </nav>
-<script>
-document.querySelector
-</script>
+</div>
+</c:if>
+</div>
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

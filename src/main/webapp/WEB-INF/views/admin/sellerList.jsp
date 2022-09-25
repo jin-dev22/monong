@@ -12,6 +12,14 @@
 	<jsp:param name="title" value="모농모농-판매자회원관리"></jsp:param>
 </jsp:include>
 <div id="admin-sellerList-container" class="mt-5 mx-auto text-center">
+
+<c:if test="${empty sellerList}">
+	<div class="mx-auto mt-5 text-center">
+		<h3>판매자 목록이 없어요 :(</h3>
+	</div>
+</c:if>
+
+<c:if test="${not empty sellerList}">
 <div id="admin-sellerList-wait-container">
 	<h1>가입 대기</h1>
 	<h1><strong><a href="${pageContext.request.contextPath}/admin/sellerWaitList.do">${totalWaitSeller} 명</a></strong></h1>
@@ -64,11 +72,9 @@
 		
 	</table>
   </c:forEach>
-</div>
-
   <nav>
 	${pagebar}
   </nav>
-
-
+</c:if>
+</div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

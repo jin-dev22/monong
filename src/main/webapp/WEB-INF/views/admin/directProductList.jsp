@@ -19,7 +19,7 @@
 		</select>
 	</form>
 	<c:if test="${empty prodList}">	
-		<div>등록된 직거래 상품이 없습니다.</div>
+		<div>등록된 직거래 상품이 없어요 :(</div>
 	</c:if>
 	<c:if test="${not empty prodList}">
 		<c:forEach items="${prodList}" var="prod">
