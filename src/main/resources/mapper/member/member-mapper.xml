@@ -334,7 +334,7 @@
 	from
 	 subscription
 	where   
-	    member_id=#{memberId} and rownum =1
+	    member_id=#{memberId} and rownum =1 and s_quit_yn = 'N'
 	order by 
 	    s_no desc
   </select>
