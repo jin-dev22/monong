@@ -360,8 +360,17 @@
   
   <select id="selectSubscriptionListById" resultMap="subscriptionListMap">
     select
-	    so.*,
-	    sr.s_review_no
+    	so.s_order_no,
+        so.s_no,
+	    so.s_times,
+	    so.s_price,
+	    so.s_order_date,
+	    so.s_order_status,
+	    so.so_delivery_cycle,
+	    so.so_exclude_vegs,
+	    so.so_delivery_completed_date,
+        add_months(so.so_delivery_completed_date, +1) review_end_date,
+        sr.s_review_no
 	from
 	    subscription_order so left join subscription_review sr on so.s_order_no=sr.s_order_no
 	where
@@ -441,6 +450,8 @@
 		<result column="s_order_status" property="sOrderStatus"/>
 		<result column="so_delivery_cycle" property="soDeliveryCycle"/>
 		<result column="so_exclude_vegs" property="soExcludeVegs"/>
+		<result column="so_delivery_completed_date" property="soDeliveryCompletedDate"/>
+		<result column="review_end_date" property="reviewEndDate"/>
   	<association property="sReviewNo" javaType="string">
   		<result column="s_review_no" property="sReviewNo"/>
   	</association>
