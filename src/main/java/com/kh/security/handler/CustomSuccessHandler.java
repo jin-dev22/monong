@@ -50,9 +50,6 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         	if(next.contains("member/memberPwSearchForm.do")) {
         		targetUrl = "/";
         	}
-        	else if(next.contains("member/memberIdSearchForm.do")) {
-        		
-        	}
         	else {
 	        	targetUrl = next;
 	        	session.removeAttribute("next");

@@ -298,11 +298,13 @@ public class AdminController {
 		List<SubscriptionOrder> subscriptionListDetail = subscribeService.getSubscriptionListBySubNo(param);
 		int totalContent = subscribeService.getTotalSubscriptionListBySubNo(subNo);
 
-		String url = request.getRequestURI(); 
+		String url = request.getRequestURI();
+		url += "?subNo=" + subNo;
 		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
 		
 		model.addAttribute("subscriptionListDetail",subscriptionListDetail);
 		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("totalContent", totalContent);
 	}
 	
 	

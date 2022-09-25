@@ -29,7 +29,6 @@
 		<intercept-url pattern="/member/memberIdSearchForm.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberPwSearchForm.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/sellerEnroll.do" access="isAnonymous()"/>
-		<!-- <intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/> -->
 		<intercept-url pattern="/member/memberLogout.do" access="permitAll"/>
 		<intercept-url pattern="/member/seller*" access="hasRole('ROLE_SELLER')"/>
 		<intercept-url pattern="/member/**" access="hasAnyRole('ROLE_MEMBER','ROLE_SELLER')"/>
