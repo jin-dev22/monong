@@ -250,6 +250,7 @@
 	<result column="content" property="content"/>
 	<result column="created_at" property="createdAt"/>
 	<result column="has_answer" property="hasAnswer"/>
+	<result column="check_secret" property="checkSecret"/>
   	<result column="member_name" property="memberName"/>
   	<association property="directInquireAnswer" javaType="DirectInquireAnswer">
   		<id column="d_inquire_a_no" property="dInquireNo"/>

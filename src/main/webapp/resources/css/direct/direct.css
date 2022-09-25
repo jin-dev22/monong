@@ -975,7 +975,7 @@
 	min-height:	58px;
 	padding: 18px 0 10px;
 	display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .inquire-answer {
 	min-height:	58px;
@@ -1045,7 +1045,7 @@ input[name="check_secret"]:checked {
 	background: rgb(246, 216, 96);
     border: 1px solid #999;
 }
-#deleteInquire {
+.deleteInquire {
 	border: none;
 	background-color: transparent;
 	width: 60px;
