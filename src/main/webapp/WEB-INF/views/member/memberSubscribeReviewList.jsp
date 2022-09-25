@@ -23,6 +23,8 @@
 
 .table-tr.active{
 	background-color: #f2f2f2;
+	border-top: 1px solid lightgrey;
+	border-bottom: 1px solid lightgrey;
 }
 
 .m-s-review-content{
@@ -56,6 +58,10 @@
     overflow: hidden;
 }
 
+.btn-wrapper{
+	margin-top: 10px;
+}
+
 .m-s-review-detail-imgs{
     display: inline-block;
 }
@@ -65,13 +71,13 @@
     width: 150px;
 }
 </style>
-<c:if test="${empty orderProdList}">
-		<br /><br />
-		<div class="mx-auto text-center">
-			<h3>구독 히스토리가 없어요 :(</h3>
-			<span>결제가 완료된 후에 히스토리를 확인하실 수 있어요!</span>
-		</div>
-	</c:if>
+<c:if test="${empty sReviewList}">
+	<br /><br />
+	<div class="mx-auto text-center">
+		<h3>작성완료된 정기구독 후기가 없어요 :(</h3>
+		<span>후기를 입력한 후에 히스토리를 확인하실 수 있어요!</span>
+	</div>
+</c:if>
 <c:if test="${not empty sReviewList}">
 	<table class="table table-borderless m-s-review-table">
 		<thead>
@@ -158,9 +164,9 @@ const sReviewDetail = (review) => {
 					}
 				});
 				
-				review.nextElementSibling.innerHTML += `<div>
-						<input type="button" class="btn btn-116530" id="btnUpdateReview" value="수정하기" onclick="btnUpdateReview(this)" data-review-no="\${sReviewNo}"/>
-						<input type="button" class="btn btn-116530" id="btnDeleteReview" value="삭제하기" onclick="btnDeleteReview(this)" data-review-no="\${sReviewNo}"/>
+				review.nextElementSibling.innerHTML += `<div class="btn-wrapper">
+						<input type="button" class="btn btn-116530" value="수정하기" onclick="btnUpdateReview(this)" data-review-no="\${sReviewNo}"/>
+						<input type="button" class="btn btn-EA5C2B" value="삭제하기" onclick="btnDeleteReview(this)" data-review-no="\${sReviewNo}"/>
 					</div>`;
 			}
 			
