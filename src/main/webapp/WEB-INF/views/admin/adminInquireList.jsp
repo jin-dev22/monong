@@ -10,26 +10,43 @@
 <fmt:requestEncoding value="utf-8" />
 <jsp:include page="/WEB-INF/views/admin/adminMyPage.jsp"></jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
-<h4>관리자 1:1 문의</h4>
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
-		<div>문의 내역이 없습니다.</div>
+		<div class="mx-auto text-center">문의 내역이 없습니다.</div>
 	</c:if>
 	<c:if test="${not empty inqList}">
-		<div class="inquireList-header">
-			<span class="inq-header-item">제목</span>
-			<span class="inq-header-item">작성일</span>
-			<span class="inq-header-item">답변</span>
-		</div>
+	<div class="mx-auto mt-5 text-center">
+			<h3>관리자 문의내역</h3>
+	</div>
+		<table class="table table-border text-center mb-0">
+		<colgroup>
+		<col style="width: 100px">
+		<col style="width: 120px">
+		<col style="width: 100px">
+		<col style="width: 740px">
+		</colgroup>
+		<thead>
+		  <tr class="table-active">
+		    <td>작성일</td>
+		    <td>답변상태</td>
+		    <td>제목</td>
+		    <td></td>
+		  </tr>
+		</thead>
+		</table>
 		<div class="accordion" id="inqList-accordion">
 			<c:forEach items="${inqList}" var="inq" varStatus="vs">
 				<div class="accordion-item">
 				    <div class="accordion-header" id="heading${vs.count}">
-				      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${vs.count}" aria-expanded="true" aria-controls="collapse${vs.count}">
+				      <button class="accordion-button collapsed" type="button" 
+				      		data-bs-toggle="collapse" data-bs-target="#collapse${vs.count}" 
+				      		aria-expanded="true" aria-controls="collapse${vs.count}">
 				        <div class="inq-title-align">
-					        <span class="inq-title-item">${inq.inquireTitle}</span>
 							<span class="inq-title-item">${inq.inquireCreatedAt}</span>
-							<span class="inq-title-item">${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>
+							&emsp;
+							<span class="inq-title-item ${inq.hasAnswer eq 'Y' ? 'text-success' : 'text-danger'}">${inq.hasAnswer eq 'Y' ? '&nbsp;답변완료&nbsp;' : '답변 대기중'}</span>
+							&emsp;&emsp;
+					        <span class="inq-title-item ">${inq.inquireTitle}</span>
 				        </div>
 				      </button>
 				    </div>
@@ -63,6 +80,7 @@
 				    </div>			
 				</div>
 			</c:forEach>
+			<nav>${pagebar}</nav>
 		</div>
 		<script>
 		const headers = {};

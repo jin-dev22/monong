@@ -9,7 +9,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
-	<h2>관리자 문의</h2>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
+	<div class="mx-auto mt-5 text-center">
+			<h3>관리자 문의내역</h3>
+	</div>
 	<div id="enroll-container" class="mx-auto d-flex justify-content-center">
 	    <form name="inquireFrm" action="${pageContext.request.contextPath}/inquire/inquireAdmin.do" method="POST" accept-charset="UTF-8" >
             <label for="inquireTitle" class="item">제목 : </label>
