@@ -44,6 +44,7 @@
 				<button type="submit" class="btn btn-EA5C2B">&nbsp;로그인&nbsp;</button>
 				<button type="button" class="btn btn-116530" id="enroll" onclick="clickEnrollModal();">회원가입</button>
 			</div>
+			
 		</form:form>
 		
 		<div id="login-search-container">
