@@ -60,6 +60,16 @@ public interface DirectDao {
 
 	int getTotalDirectReviewByDProductNo(String dProductNo);
 	
+	// 후기 추천
+	@Select("select count(*) from recommended_direct_review where member_id = #{memberId} and d_review_no = #{dReviewNo}")
+	int getRecommendedYn(Map<String, String> param);
+
+	@Update("update direct_review set d_review_recommend  = s_review_recommend + 1 where d_review_no = #{dReviewNo}")
+	int updateDirectReviewRecommendAdd(Map<String, String> param);
+
+	@Update("update direct_review set d_review_recommend  = d_review_recommend_num - 1 where d_review_no = #{dReviewNo}")
+	int updateDirectReviewRecommendCancel(Map<String, String> param);
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	// 상품 상세 조회

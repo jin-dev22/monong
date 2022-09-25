@@ -39,6 +39,13 @@ public interface DirectService {
 
 	int getTotalDirectReviewByDProductNo(String dProductNo);
 
+	// 후기 추천
+	int getRecommendedYn(Map<String, String> param);
+
+	int updateDirectReviewRecommendAdd(Map<String, String> param);
+
+	int updateDirectReviewRecommendCancel(Map<String, String> param);
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	DirectProduct selectOneDirectProduct(String dProductNo);
