@@ -69,6 +69,20 @@
 													cols="100" rows="5" style="resize: none;" readOnly>${inq.content}</textarea></td>
 										</tr>
 									</tbody>
+									<tfoot>
+										<c:if test="${inq.checkSecret eq 'Y'}">
+										<input type="hidden" name="dInquireNo" value="${inq.DInquireNo}"/>
+										<tr>
+											<td colspan="2" style="text-align: right;"><span><img style="display: inline-block; position: relative; margin-right: 2px; bottom: 2px;" src="${pageContext.request.contextPath}/resources/images/secret.png" alt="" />비밀글</span><button style="border-radius: 6px; border: 3px solid #EA5C2B; margin: 0px 35px; background-color: transparent;" type="button" class="deleteInquire">삭제</button></td>
+										</tr>
+										</c:if>
+										<c:if test="${inq.checkSecret eq 'N'}">
+										<input type="hidden" name="dInquireNo" value="${inq.DInquireNo}"/>
+										<tr>
+											<td colspan="2" style="text-align: right;"><button style="border-radius: 6px; border: 3px solid #EA5C2B; margin: 0px 35px; background-color: transparent;" type="button" class="deleteInquire">삭제</button></td>
+										</tr>
+										</c:if>
+									</tfoot>
 								</table>
 							</div>
 							<br />
@@ -103,7 +117,66 @@
 	</c:if>
 
 </div>
+<div class="modal fade" id="inquire-delete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+    <div class="modal-content">
+      <div class="modal-body" style="display: flex; justify-content: center;">
+        <p style="margin: 34px 0 12px;">상품 문의를 삭제하시겠습니까?</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center; border-top: none;">
+      	<button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; border: 1px solid #dee2e6;">취소</button>
+        <button type="button" id="deleteInquireBtn" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="inquire-delete-complete-container"></div>
 <script>
 $("#lnik-dInqList").css("color","EA5C2B");
+
+//내 문의글 삭제
+if(document.querySelector(".deleteInquire")) {
+	document.querySelectorAll(".deleteInquire").forEach((no) => {
+		no.addEventListener('click', (e) => {
+			const dInquireNo = e.target.parentElement.parentElement.previousElementSibling;
+			console.log(dInquireNo);
+			const headers = {};
+			headers['${_csrf.headerName}'] = '${_csrf.token}';
+			console.log(headers);
+			
+			$('#inquire-delete-modal').modal("show");
+			
+			document.querySelector('#deleteInquireBtn').addEventListener('click', (e) => {
+				$.ajax({
+	 				url:"${pageContext.request.contextPath}/direct/deleteInquire.do",
+	 				method : "POST",
+	 				headers,
+	 				data : {dInquireNo : Number(dInquireNo.value)},
+	 				success(response) {
+	 					const containerCom = document.querySelector('.inquire-delete-complete-container');
+	 					const modal = `
+	 					<div class="modal fade" id="inquire-delete-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+	 					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+	 					    <div class="modal-content">
+	 					      <div class="modal-body" style="display: flex; justify-content: center;">
+	 					        <p style="margin: 34px 0 12px;">상품 문의가 삭제되었습니다.</p>
+	 					      </div>
+	 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
+	 					        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="location.reload();">확인</button>
+	 					      </div>
+	 					    </div>
+	 					  </div>
+	 					</div>`;
+	 					
+	 					containerCom.innerHTML = modal;
+	 					
+	 					$('#inquire-delete-complete-modal').modal("show");
+	 				},
+	 				error : console.log
+	 			});
+			});
+		});
+	});
+}	
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
