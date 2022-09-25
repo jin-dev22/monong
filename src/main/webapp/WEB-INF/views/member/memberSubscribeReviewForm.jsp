@@ -104,7 +104,7 @@ body {
 }
 
 .m-s-review-stars.filled{
-	color: #EA5C2B;
+	color: #F6D860;;
 }
 
 .m-s-review-content-container{
@@ -174,7 +174,7 @@ body {
     <input type="hidden" name="sOrderNo" value="${subOrder.SOrderNo}"/>
     <div class="m-s-review-container">
         <p class="m-s-review-info">이번 구독에 만족하셨나요?</p>
-        <div>
+        <div class="stars-wrapper">
         <button type="button" class="m-s-review-stars star1">★</button>
         <button type="button" class="m-s-review-stars star2">★</button>
         <button type="button" class="m-s-review-stars star3">★</button>
@@ -186,10 +186,10 @@ body {
     <div class="m-s-review-container">
         <p class="m-s-review-info content-info">어떤 점이 좋았나요?</p>
         <div class="m-s-review-content-container">
-            <textarea class="m-s-review-content" name="sReviewContent" cols="30" rows="10" placeholder="최소 10자 이상 입력해주세요."></textarea>
+            <textarea class="m-s-review-content" name="sReviewContent" placeholder="최소 10자 이상 입력해주세요."></textarea>
             <div class="content-length-wrapper">
                 <span class="m-s-review-content-length">0</span>
-                <span>/ 1000</span>
+                <span>/ 500</span>
             </div>
         </div>
 		<div class="m-s-review-attach-container">
@@ -213,6 +213,38 @@ document.querySelector(".attach-info").addEventListener('click', (e) => {
 
 document.reviewEnrollFrm.addEventListener('submit', (e) => {
 	e.preventDefault();
+	
+	// 첨부파일 확장자 제한
+	const frm = e.target;
+	const upFiles = frm.upFiles;
+	console.log('upFiles', upFiles);
+	
+	let msg = null;
+	if(upFiles.length >= 2){
+		upFiles.forEach(function(file){
+			const filePath = file.value;
+			const fileExt = filePath.substr(filePath.length-3).toLowerCase();
+			
+			if(fileExt !== ''){
+				if(!(fileExt === 'jpg' || fileExt === 'png')){
+					msg = '확장자가 jpg와 png 파일만 첨부 가능합니다.';
+				}
+			}
+		});
+	}
+	else{
+		const filePath = upFiles.value;
+		const fileExt = filePath.substr(filePath.length-3).toLowerCase();
+		if(!(fileExt === 'jpg' || fileExt === 'png')){
+			msg = '확장자가 jpg와 png 파일만 첨부 가능합니다.';
+		}
+	}
+	
+	if(msg !== null){
+		alert(msg);
+		return false;
+	}
+	
 	
 	const frmData = new FormData(e.target);
 	
@@ -261,11 +293,8 @@ const checkSubmissionAvailablity = () => {
 
 const stars = document.querySelectorAll(".m-s-review-stars");
 stars.forEach(function(star, index) {
-    
-    star.addEventListener('click', () =>{
-    	const rate = index + 1;
-        document.querySelector(".m-s-review-stars-selected").value = rate;
-
+	
+	star.addEventListener('mouseover', () => {
         if(!star.classList.contains('filled')){
             console.log('star', star, 'index', index);
             star.classList.add('filled');
@@ -281,20 +310,57 @@ stars.forEach(function(star, index) {
             }
         }
         
-        document.querySelector(".content-info").innerHTML = '만족도 ' + rate + '점을 주셨네요.<br/>';
-        if(rate >= 3){
-        	document.querySelector(".content-info").innerHTML += '어떤 점이 좋았나요?';
+    });
+	
+    star.addEventListener('click', () => {
+    	const rate = index + 1;
+        document.querySelector(".m-s-review-stars-selected").value = rate;
+
+        /* if(!star.classList.contains('filled')){
+			console.log('star', star, 'index', index);
+			star.classList.add('filled');
+            
+            for (let i = 0; i < index; i++) {
+                stars[i].classList.add('filled');
+            }
         }
         else{
-        	document.querySelector(".content-info").innerHTML += '어떤 점이 아쉬웠나요?';
+            console.log('filled-star', star, 'filled-index', index);
+            for (let i = index + 1; i < 5; i++) {
+                stars[i].classList.remove('filled');
+            }
+        } */
+        
+		const contentInfo = document.querySelector(".content-info");
+        contentInfo.innerHTML = '만족도 ' + rate + '점을 주셨네요.<br/>';
+        if(rate >= 3){
+        	contentInfo.innerHTML += '어떤 점이 좋았나요?';
+        }
+        else{
+        	contentInfo.innerHTML += '어떤 점이 아쉬웠나요?';
         }
         
     });
+
 
     star.addEventListener('click', () =>{
         checkSubmissionAvailablity();
     }, {once: true});
 
+});
+
+document.querySelector(".stars-wrapper").addEventListener('mouseleave', () => {
+	const starVal = document.querySelector(".m-s-review-stars-selected").value;
+
+	for(let i = 1; i <= 5; i++){
+		if(i <= starVal){
+			document.querySelector(`.star\${i}`).classList.add('filled');
+		}
+		else{
+			document.querySelector(`.star\${i}`).classList.remove('filled');
+		}
+	}
+   
 });
 
 document.querySelector(".m-s-review-content").addEventListener('keyup', (e) => {
