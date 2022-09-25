@@ -9,22 +9,23 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
+<style>
+#content {
+background-color: #fffbf9;
+}
+</style>
 
 <!-- 메인화면 슬라이드 -->
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 	<div class="carousel-indicators">
 		<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
 		<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-		<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
 	</div>
 	<div class="carousel-inner">
 		<div class="carousel-item active banner1" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">
 			<img src="${pageContext.request.contextPath}/resources/images/banner_1.jpg" class="d-block w-100" alt="주간채소공지">
 		</div>
-		<div class="carousel-item banner2" id="show_popup">
-			<img src="${pageContext.request.contextPath}/resources/images/banner_2.jpg" class="d-block w-100" alt="채소구성">
-		</div>
-		<div class="carousel-item banner3">
+		<div class="carousel-item banner2" onclick="location.href='${pageContext.request.contextPath}/common/brandStory.do'">
 			<img src="${pageContext.request.contextPath}/resources/images/banner_3.jpg" class="d-block w-100" alt="브랜드스토리">
 		</div>
 	</div>
@@ -37,12 +38,11 @@
 		<span class="visually-hidden">Next</span>
 	</button>
 </div>
-
-<!-- 가격동향 -->
-<table>
-	<thead></thead>
-	<tbody></tbody>
-</table>
+<div id="carouselExampleIndicators" class="carousel">
+	<div class="showWeekVegs" id="show_popup">
+		<img src="${pageContext.request.contextPath}/resources/images/banner_2.jpg" class="d-block w-100" alt="채소구성">
+	</div>
+</div>
 
 <script>
 window.onload = function(){
@@ -103,6 +103,5 @@ const findMon = () => {
 	
 	return yy + month + date;
 };
-
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -61,6 +61,10 @@ public interface SubscribeService {
 
 	int getTotalsearchPeriodData(Map<String, Object> param);
 	
+	List<SubscriptionOrder> getSubscriptionListBySubNo(Map<String, Object> param);
+
+	int getTotalSubscriptionListBySubNo(String subNo);
+	
 	/**
 	 * 주간채소 팝업
 	 */
@@ -114,6 +118,7 @@ public interface SubscribeService {
 	//수진코드 시작
 	String selectMemberIdBySoNo(String subOrderNo);
 	//수진코드 끝
+
 
 
 }

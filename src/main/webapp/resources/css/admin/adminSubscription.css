@@ -31,6 +31,9 @@
 #admin-subscriptionList-container .admin-subscriptionList {
 	width: 100%;
 }
+.admin-subscriptionList:hover {
+	cursor: pointer;
+}
 #admin-subscriptionList-container .admin-subscriptionList-table-header th:nth-of-type(2) {
 	width: 500px;
 }

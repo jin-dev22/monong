@@ -1,14 +1,13 @@
 package com.kh.monong.notice.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.monong.notice.model.dao.NotificationDao;
 import com.kh.monong.notice.model.dto.MemberNotification;
-
-import org.springframework.transaction.annotation.Transactional;
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,13 +29,10 @@ public class NotificationServiceImpl implements NotificationService{
 	public int notificationHasRead(long notiNo) {
 		return notificationDao.notificationHasRead(notiNo);
 	}
-	//---------------------------------------------수진끝
-
-	//---------------------------------------------선아시작
+	
 	@Override
 	public List<MemberNotification> selectNotificationListByMemberId(String memberId) {
 		return notificationDao.selectNotificationListByMemberId(memberId);
 	}
-	//---------------------------------------------선아끝
-
+	//---------------------------------------------수진끝
 }

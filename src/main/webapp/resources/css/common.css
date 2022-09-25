@@ -43,8 +43,7 @@ footer .btn {
 	margin-right: 10px;
 }
 /*
------- footer에 있는 버튼으로 해당 색상으로 클래스명 생성했습니다. -------
------- 해당 색상의 아이콘 사용하시려면 클래스에 추가하시면 됩니다. --------
+----------------------- btn ------------------
 */
 .btn-EA5C2B {
 	color: #fff;
@@ -232,8 +231,8 @@ footer {
 #content {
 	width: 1240px;
 	margin: auto;
-	/* header때문에 추가해야함 */
 	padding-top: 150px;
+	padding-bottom: 100px;
 }
 
 /*
@@ -316,10 +315,10 @@ footer {
 */
 #carouselExampleIndicators {
 	width: 80%;
-	margin: auto;
-}
-.carousel-inner {
+	margin: 30px auto;
 	cursor: pointer;
 }
-
+#carouselExampleIndicators  img {
+	border-radius: 10px;
+}
 

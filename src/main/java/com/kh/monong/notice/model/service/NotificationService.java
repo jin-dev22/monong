@@ -10,10 +10,8 @@ public interface NotificationService {
 	
 	int notificationHasRead(long notiNo);
 	
+	List<MemberNotification> selectNotificationListByMemberId(String memberId);
 //---------------------------------------------수진끝
 	
-//---------------------------------------------선아시작
-	List<MemberNotification> selectNotificationListByMemberId(String memberId);
-//---------------------------------------------선아끝
 
 }

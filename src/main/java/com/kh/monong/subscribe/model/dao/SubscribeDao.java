@@ -90,6 +90,13 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription_order where so_delivery_completed_date between to_date(#{searchStartDate}) and to_date(#{searchEndDate})+ 0.99999 and s_order_status = #{deliveryStatus}")
 	int getTotalsearchPeriodData(Map<String, Object> param);
 	
+	@Select("select * from subscription_order where s_no = #{subNo} order by s_order_no desc")
+	List<SubscriptionOrder> getSubscriptionListBySubNo(RowBounds rowBounds, Map<String, Object> param);
+	
+	@Select("select count(*) from subscription_order where s_no = #{subNo}")
+	int getTotalSubscriptionListBySubNo(String subNo);
+	
+	
 	/**
 	 * 주간채소 팝업
 	 */
@@ -175,5 +182,6 @@ public interface SubscribeDao {
 	@Select("select (select member_id from subscription s  where s.s_no = so.s_no) member_id from subscription_order so where s_order_no =#{subOrderNo}")
 	String selectMemberIdBySoNo(String subOrderNo);
 	//수진코드 끝
+
 
 }

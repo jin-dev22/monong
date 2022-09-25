@@ -89,7 +89,7 @@
 	<task:scheduler id="scheduler" pool-size="10"/>
  	<task:scheduled-tasks scheduler="scheduler">
 		<!-- 테스트용 -->
-<!-- 		<task:scheduled ref="subscribeController" method="payschedule" cron = "0 0/1 3-4 * * *"/> -->
+		<!-- <task:scheduled ref="subscribeController" method="payschedule" cron = "0 5 * * * *"/> -->
 		<task:scheduled ref="subscribeController" method="payschedule" cron = "0 58 * * * WED"/>
 		<task:scheduled ref="adminController" method="dStatusschedule" cron = "0 0 18 * * Fri"/>
 	</task:scheduled-tasks>

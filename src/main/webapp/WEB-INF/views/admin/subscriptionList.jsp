@@ -28,7 +28,7 @@
 <c:forEach items="${subscriptionList}" var="sub" varStatus="vs">
 	<table class="table admin-subscriptionList">
 		<thead>
-			<tr class="admin-subscriptionList-table-header">
+			<tr class="admin-subscriptionList-table-header" data-subscription-no="${sub.SNo}">
 				<th scope="col" colspan="2">구독번호 - ${sub.SNo}</th>
 				<th scope="col">다음 결제일: ${sub.SPaymentDate}</th>
 				<th scope="col">다음 배송일: ${sub.SNextDeliveryDate}</th>
@@ -50,7 +50,7 @@
 				</td>
 				<td>배송주기: ${sub.SDeliveryCycle}주</td>
 			</tr>
-			<tr>
+			<tr data-subscription-no="${sub.SNo}">
 				<td>수령자: ${sub.SRecipient}</td>
 				<td>배송지: ${sub.SAddress} ${sub.SAddressEx}</td>
 				<c:set value="${sub.SPhone}" var="phone"></c:set>
@@ -66,6 +66,18 @@
 	${pagebar}
 </nav>
 <script>
+// 회원별 구독결제내역
+const tagClickHandler = (e) => {
+	const parent = e.target.parentElement;
+	const subNo = parent.dataset.subscriptionNo;
+	if(subNo)
+		location.href = `${pageContext.request.contextPath}/admin/subscriptionListDetail.do?subNo=\${subNo}`;
+};
+document.querySelectorAll("[data-subscription-no]").forEach((tag) => {
+	tag.addEventListener('click', tagClickHandler);
+});
+
+// 구독여부 필터링
 const findByQuitYn = (num) => {
 	const container = document.querySelector("#admin-subscriptionList-container"); 
 	const selectOption = $(".form-select option:selected").val();
