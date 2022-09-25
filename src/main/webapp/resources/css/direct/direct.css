@@ -975,7 +975,7 @@
 	min-height:	58px;
 	padding: 18px 0 10px;
 	display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 .inquire-answer {
 	min-height:	58px;
@@ -1006,6 +1006,8 @@
 .inquire-q {
 	position: relative;
 	padding: 12px 10px;
+	width: 683px;
+    text-align: left;
 }
 .inquire-a {
 	width: 660px;
@@ -1025,6 +1027,31 @@
 }
 .modal-body textarea::placeholder {
 	font-size: 13px;
+}
+input[name="check_secret"] {
+	width: 1rem; 
+	height: 1rem; 
+	border-radius: 50%; 
+	border: 1px solid #999; 
+	appearance: none; 
+	cursor: pointer; 
+	transition: background 0.2s;
+	margin-right: 5px;
+	vertical-align: middle;
+	position: relative;
+    bottom: 1px;
+}
+input[name="check_secret"]:checked {
+	background: rgb(246, 216, 96);
+    border: 1px solid #999;
+}
+#deleteInquire {
+	border: none;
+	background-color: transparent;
+	width: 60px;
+	font-size: 13px;
+	height: 42px;
+	color: #999;
 }
 
 /* 민지 끝 */

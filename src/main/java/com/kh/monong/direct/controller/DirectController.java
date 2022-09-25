@@ -514,17 +514,20 @@ public class DirectController {
 	
 	// 상품 문의 등록
 	@PostMapping("/enrollInquire.do")
-	public String enrollInquire(@RequestParam String dProductNo, @RequestParam String memberId, @RequestParam String inquireTitle, @RequestParam String content) {
+	public String enrollInquire(@RequestParam String dProductNo, @RequestParam String memberId, @RequestParam String inquireTitle, @RequestParam String content, @RequestParam String checkSecret) {
 		log.debug("dProductNo = {}", dProductNo);
 		log.debug("memberId = {}", memberId);
 		log.debug("inquireTitle = {}", inquireTitle);
 		log.debug("content = {}", content);
+		log.debug("checkSecret = {}", checkSecret);
+		
 		
 		Map<String, Object> param = new HashMap<>();
 		param.put("dProductNo", dProductNo);
 		param.put("memberId", memberId);
 		param.put("inquireTitle", inquireTitle);
 		param.put("content", content);
+		param.put("checkSecret", checkSecret);
 		
 		//수진시작
 		String notiContent = "상품["+dProductNo+"]에 문의가 등록되었습니다.";

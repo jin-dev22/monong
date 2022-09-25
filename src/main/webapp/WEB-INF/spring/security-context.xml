@@ -21,14 +21,15 @@
 		<intercept-url pattern="/index.jsp" access="permitAll"/>
 		<intercept-url pattern="/notification/popup.jsp" access="permitAll"/> <!-- 주간채소공지 팝업 -->
 		<intercept-url pattern="/notification/popup/**" access="permitAll"/> <!-- 주간채소공지 팝업 -->
-		<intercept-url pattern="/member/memberEnroll.do" access="permitAll"/>
-		<intercept-url pattern="/member/selectEnrollType.do" access="permitAll"/>
 		<intercept-url pattern="/direct/directProductDetail" access="permitAll"/>
 		<intercept-url pattern="/direct/directProductList.do" access="permitAll"/>
+		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/sellerEnroll.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberIdSearchForm.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberPwSearchForm.do" access="isAnonymous()"/>
-		<intercept-url pattern="/member/sellerEnroll.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/memberCheckForm.do" access="isAuthenticated()"/>
+		<intercept-url pattern="/member/memberUpdate.do" access="hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')"/>
 		<intercept-url pattern="/member/memberLogout.do" access="permitAll"/>
 		<intercept-url pattern="/member/seller*" access="hasRole('ROLE_SELLER')"/>
 		<intercept-url pattern="/member/**" access="hasAnyRole('ROLE_MEMBER','ROLE_SELLER')"/>
