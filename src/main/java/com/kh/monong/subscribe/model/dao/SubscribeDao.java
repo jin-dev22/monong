@@ -103,9 +103,6 @@ public interface SubscribeDao {
 	@Select("select * from subscription_week_vegs where week_criterion = #{weekCriterion}")
 	SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion);
 	
-	@Select("select * from (select * from subscription_week_vegs order by week_criterion desc) where rownum = 1")
-	SubscriptionWeekVegs getRecentWeekVegsNotice();
-	
 	// 선아코드 끝
 	
 	// 미송코드 시작
