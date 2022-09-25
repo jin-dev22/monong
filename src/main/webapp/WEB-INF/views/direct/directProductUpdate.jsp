@@ -66,23 +66,25 @@ div#enroll-container{
 
 div.option-row{
 	height: 30px;
-	display: flex;
-	width: 500px;
-	
+	display: flex; 
+
 }
-label.optName-label{
+label.opt-label{
 	width:50px;
 }
 div.option-row input.update-dStock{
 	width: 50px;
 }
-div.opntion-list-container{
-	/* display: flex;
-	align-items: center; */
-}
 div.note-toolbar {
    /*  position: relative; */
     z-index: 0;
+}
+div.option-one{
+	display: inline-block;
+	
+}
+div.opntion-list-container{
+	width: 300px;
 }
 </style>
 <div id="enroll-container" class="mx-auto text-center">
@@ -165,18 +167,18 @@ div.note-toolbar {
      			<c:forEach items="${prod.directProductOptions}" var="opt" varStatus="vStatus">
      				<div class="option-one">
 	     				<div class="option-row">
-		      				<label for="dOptionName${vStatus.count}" class="optName-label">옵션${vStatus.count}</label>
+		      				<label for="dOptionName${vStatus.count}" class="optname-label opt-label">옵션${vStatus.count}</label>
 		    	   			<input type="text" name="directProductOptions[${vStatus.index}].dOptionName" 
 		    	   					id="dOptionName${vStatus.count}" value="${opt.DOptionName}" readOnly/> 
 	     				</div>
 	     				<div class="option-row">
-							<span>가격 </span>
+							<label for="dPrice${vStatus.count}" class="opt-label">가격 </label>
 							<input type="text" name="directProductOptions[${vStatus.index}].dPrice" 
-									maxlength="10" onkeyup="inputNumberFormat(this);"
+									id="dPrice${vStatus.count}" maxlength="10" onkeyup="inputNumberFormat(this);"
 									class="price" value="<fmt:formatNumber value="${opt.DPrice}" pattern="#,###" />" />
 	     				</div>
 	     				<div class="option-row">
-							<label for="dStock${vStatus.count}">수량</label>
+							<label for="dStock${vStatus.count}"  class="opt-label">수량</label>
 							<input type="number" min="0" name="directProductOptions[${vStatus.index}].dStock" class="update-dStock" 
 									id="dStock${vStatus.count}" value="${opt.DStock}" onchange="checkStatus(this)"/>
 			       			<select name="directProductOptions[${vStatus.index}].dSaleStatus" id="direct-saleStatus${vStatus.count}">
