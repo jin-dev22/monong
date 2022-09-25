@@ -169,11 +169,6 @@ public class SubscribeServiceImpl implements SubscribeService {
 		return subscribeDao.getWeekVegsNotice(weekCriterion);
 	}
 	
-	@Override
-	public SubscriptionWeekVegs getRecentWeekVegsNotice() {
-		return subscribeDao.getRecentWeekVegsNotice();
-	}
-	
 	// 선아코드 끝
 		
 	// 미송코드 시작
