@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -206,34 +207,75 @@ public class DirectController {
 		return "redirect:/direct/directProductList.do";
 	
 	}
+	// 리뷰 추천
+	@GetMapping("/directReviewRecommended.do")
+	public ResponseEntity<?> directReviewRecommended(@RequestParam String dReviewNo, @RequestParam String memberId) {
+		log.debug("dReviewNo = {}", dReviewNo);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("dReviewNo", dReviewNo);
+		log.debug("param = {}", param);
+		
+		int dRecommendedYn = directService.getRecommendedYn(param);
+		boolean recommended = dRecommendedYn == 1;
+		log.debug("recommended = {}", recommended);
+		
+		return ResponseEntity.ok(recommended);
+	}
 	
-	// 상품 이용 후기
-	@GetMapping("/directProductReviewList.do")
-	public void directProductReviewList(@RequestParam(defaultValue = "1") int cPage,
-										Model model, HttpServletRequest request,
-										DirectProduct dp, DirectProductOption dpo) {
+	@PostMapping("/directReviewRecommendAdd.do")
+	public ResponseEntity<?> directReviewRecommendAdd(@RequestParam String memberId, @RequestParam String dReviewNo) {
+		log.debug("memberId = {}", memberId);
+		log.debug("dReviewNo = {}", dReviewNo);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("dReviewNo", dReviewNo);
+		int result = directService.updateDirectReviewRecommendAdd(param);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@PostMapping("/directReviewRecommendCancel.do")
+	public ResponseEntity<?> directReviewRecommendCancel(@RequestParam String memberId, @RequestParam String dReviewNo) {
+		log.debug("memberId = {}", memberId);
+		log.debug("dReviewNo = {}", dReviewNo);
+		
+		Map<String, String> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("dReviewNo", dReviewNo);
+		int result = directService.updateDirectReviewRecommendCancel(param);
+		
+		return ResponseEntity.ok(result);
+	}
+	//----------------- 재경 끝
+	
+	// 상품 상세 불러오기
+	@GetMapping("/directProductDetail.do")
+	public void directProductDetail(@RequestParam String dProductNo, Model model, @RequestParam(defaultValue = "1") int cPage,
+									HttpServletRequest request, DirectProduct dp, DirectProductOption dpo) {
+		// 재경시작
 		Map<String, Object> param = new HashMap<>();
 		int limit = 5;
-		String dProductNo = dp.getDProductNo();
 		String dOptionName = dpo.getDOptionName();
 		param.put("cPage", cPage);
 		param.put("limit", limit);
 		param.put("dOptionName", dOptionName);
+		param.put("dProductNo", dProductNo);
 		
+		log.debug("dProductNo = {}", dProductNo);
 		List<Map<String, Object>> dReviewList = directService.selectDirectProductReviewList(param);
-		int totalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
-		String url = request.getRequestURI(); 
-		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
-		model.addAttribute("pagebar", pagebar);
+//		int rTotalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
+//		String url = request.getRequestURI(); 
+//		String rPagebar = MonongUtils.getPagebar(cPage, limit, rTotalContent, url);
+//		model.addAttribute("rPagebar", rPagebar);
 		model.addAttribute("dReviewList", dReviewList);
-	}
-	
-	//----------------- 재경 끝
-	//----------------- 민지 시작
-
-	// 상품 상세 불러오기
-	@GetMapping("/directProductDetail.do")
-	public void directProductDetail(@RequestParam String dProductNo, Model model) {
+		log.debug("dReviewList = {}", dReviewList);
+		
+		// 재경 끝
+		
 		DirectProduct directProduct = directService.selectOneDirectProduct(dProductNo);
 		
 		log.debug("directProduct = {}", directProduct);
