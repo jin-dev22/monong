@@ -1,6 +1,7 @@
 package com.kh.monong.notice.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.monong.notice.model.dto.MemberNotification;
 
@@ -10,10 +11,10 @@ public interface NotificationService {
 	
 	int notificationHasRead(long notiNo);
 	
-//---------------------------------------------수진끝
+	List<MemberNotification> selectNotificationListByMemberId(Map<String, Object> param);
 	
-//---------------------------------------------선아시작
-	List<MemberNotification> selectNotificationListByMemberId(String memberId);
-//---------------------------------------------선아끝
+	int getNoticeCount(String memberId);
 
+	int getNewNoticeCount(String memberId);
+//---------------------------------------------수진끝
 }
