@@ -64,23 +64,6 @@
 	<!-- #13.1 jackson message converter bean 등록 -->
 	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 
-<!-- #14.1. echoHandler 등록 -->
-	<beans:bean id="echoHandler" class="com.kh.monong.notice.EchoHandler" />
-	<websocket:handlers>
-	    <websocket:mapping handler="echoHandler" path="/echo-ws" />
-	    <websocket:handshake-interceptors>
-	        <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
-	    </websocket:handshake-interceptors>	
-	    <websocket:sockjs />
-	</websocket:handlers>
-	<!-- 
-	<websocket:message-broker application-destination-prefix="/app">
-		<websocket:stomp-endpoint path="/stomp">
-			<websocket:sockjs/>
-		</websocket:stomp-endpoint>
-		<websocket:simple-broker prefix="/topic, /app"/>
-	</websocket:message-broker>
- -->
 	<!-- 메일 관련 bean 등록-->
 	<beans:bean id="mailSender"	class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<beans:property name="host" value="smtp.gmail.com" />
@@ -111,7 +94,20 @@
 		<task:scheduled ref="adminController" method="dStatusschedule" cron = "0 0 18 * * Fri"/>
 	</task:scheduled-tasks>
 	
+	<!-- #14.1. echoHandler 등록 -->
+	<!-- 
+	<websocket:handlers>
+		<websocket:mapping handler="echoHandler" path="/echo"/>
+		<websocket:sockjs/>
+	</websocket:handlers>
 	
+	<websocket:message-broker application-destination-prefix="/app">
+		<websocket:stomp-endpoint path="/stomp">
+			<websocket:sockjs/>
+		</websocket:stomp-endpoint>
+		<websocket:simple-broker prefix="/topic, /app"/>
+	</websocket:message-broker>
+ -->
 	
 	
 </beans:beans>
