@@ -13,7 +13,7 @@
 </jsp:include>
 <div id="member-orderList-container" class="mx-auto mt-5 text-center">
 <c:if test="${empty directOrderList}">
-	<h3>주문 내역이 없습니다.</h3>
+	<h3>주문 내역이 없어요 :(</h3>
 </c:if>
 <c:if test="${not empty directOrderList}">
 	<c:forEach items="${directOrderList}" var="oList" varStatus="vs">			

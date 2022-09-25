@@ -50,7 +50,7 @@ if(document.querySelector('#enrollHeader')) {
 
  function clickEnrollModal(){
 		const container = document.querySelector("#enrollType-modal-container");
-		const modal = `<div class="modal fade" id="inquire-complete-modal" data-bs-keyboard="false" tabindex="-1" role="dialog">
+		const modal = `<div class="modal fade" id="enroll-type-modal" data-bs-keyboard="false" tabindex="-1" role="dialog">
 				<div class="modal-dialog modal-dialog-centered" role="document" style="width: 390px;">
  					<div class="modal-content">
  						<div style="padding: 10px 1rem 0px; border-bottom: none;" class="modal-header">
@@ -67,10 +67,10 @@ if(document.querySelector('#enrollHeader')) {
  					</div>
  				</div>
  			</div>`;
-	 
+ 			
 	 
  		 container.innerHTML = modal;
- 		$('#inquire-complete-modal').modal('show');
+ 		$('#enroll-type-modal').modal('show');
  }
 </script>
 <!-- footer 끝 -->

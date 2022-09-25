@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
 <div id="member-inquire-container">
 	<c:if test="${empty inqList}">
-		<div class="mx-auto text-center">문의 내역이 없습니다.</div>
+		<div class="mx-auto text-center">문의 내역이 없어요 :(</div>
 	</c:if>
 	<c:if test="${not empty inqList}">
 	<div class="mx-auto mt-5 text-center">

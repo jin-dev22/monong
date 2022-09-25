@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -59,6 +60,16 @@ public interface DirectDao {
 	List<Map<String, Object>> selectDirectProductReviewList(Map<String, Object> param, RowBounds rowBounds);
 
 	int getTotalDirectReviewByDProductNo(String dProductNo);
+	
+	// 후기 추천
+	@Select("select count(*) from recommended_direct_review where member_id = #{memberId} and d_review_no = #{dReviewNo}")
+	int getRecommendedYn(Map<String, String> param);
+
+	@Update("update direct_review set d_review_recommend  = s_review_recommend + 1 where d_review_no = #{dReviewNo}")
+	int updateDirectReviewRecommendAdd(Map<String, String> param);
+
+	@Update("update direct_review set d_review_recommend  = d_review_recommend_num - 1 where d_review_no = #{dReviewNo}")
+	int updateDirectReviewRecommendCancel(Map<String, String> param);
 	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
@@ -133,6 +144,12 @@ public interface DirectDao {
 	@Insert("insert into direct_inquire values (seq_d_inquire_no.nextval, #{dProductNo}, #{memberId}, #{inquireTitle}, #{content}, default, default)")
 	@SelectKey(statement = "select seq_d_inquire_no.currval from dual", before = false, keyProperty = "dInquireNo", resultType = int.class)
 	int enrollInquire(Map<String, Object> param);
+	
+	// 상품 문의 전체 조회
+	List<DirectInquire> findInquireAll(Map<String, Object> map);
+	
+	@Select("select count(*) from direct_inquire where d_product_no = #{dProductNo}")
+	int getInquireTotalContent(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작

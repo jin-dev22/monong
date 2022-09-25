@@ -871,6 +871,9 @@
   padding-top: 40px;
   padding-bottom: 2px;
 }
+.direct-detail-nav:hover {
+  cursor: pointer;
+}
 
 .direct-detail-nav-item {
   color: #fff;
@@ -978,7 +981,7 @@
 	min-height:	58px;
 	padding: 10px 0 18px;
 	display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 .Q, .A {
 	display: inline-flex;
@@ -1005,8 +1008,16 @@
 	padding: 12px 10px;
 }
 .inquire-a {
+	width: 660px;
 	position: relative;
 	padding: 9px 10px;
+	text-align: left;
+}
+.inquire-a-answer {
+	position: relative;
+	padding: 9px 10px;
+	width: 83px;
+	color: #999;
 }
 
 .modal-body input::placeholder {

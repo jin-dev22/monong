@@ -22,7 +22,7 @@
 </style>
 <div id="member-subscribetionList-container" class="mx-auto mt-5 text-center">
 <c:if test="${empty subList}">
-	<h3>구독 히스토리가 없습니다.</h3>
+	<h3>구독 히스토리가 없어요 :(</h3>
 </c:if>
 <c:if test="${not empty subList}">
 	<table class="table table-borderless text-center member-subscription-tbl">

@@ -12,6 +12,12 @@
 	<jsp:param name="title" value="모농모농-일반회원관리"></jsp:param>
 </jsp:include>
 <div id="admin-memberList-container" class="mt-5 mx-auto text-center">
+<c:if test="${empty memberList}">
+	<div class="mx-auto mt-5 text-center">
+		<h3>회원 목록이 없어요 :(</h3>
+	</div>
+</c:if>
+<c:if test="${not empty memberList}">
 <c:forEach items="${memberList}" var="mem" varStatus="vs">
 	<table class="table mt-5 table-borderless">
 	<colgroup>
@@ -58,10 +64,10 @@
 		
 	</table>
   </c:forEach>
- </div> 
   <nav>
 	${pagebar}
   </nav>
-
+</c:if>
+</div> 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

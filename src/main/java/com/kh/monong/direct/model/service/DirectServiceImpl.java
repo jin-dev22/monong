@@ -1,5 +1,6 @@
 package com.kh.monong.direct.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.monong.common.MonongUtils;
 import com.kh.monong.direct.model.dao.DirectDao;
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -152,6 +154,23 @@ public class DirectServiceImpl implements DirectService {
 		return directDao.getTotalDirectReviewByDProductNo(dProductNo);
 	}
 	
+	// 후기 추천
+	@Override
+	public int getRecommendedYn(Map<String, String> param) {
+		return directDao.getRecommendedYn(param);
+	}
+	
+	@Override
+	public int updateDirectReviewRecommendAdd(Map<String, String> param) {
+		return directDao.updateDirectReviewRecommendAdd(param);
+	}
+	
+	@Override
+	public int updateDirectReviewRecommendCancel(Map<String, String> param) {
+		return directDao.updateDirectReviewRecommendCancel(param);
+	}
+	
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override
@@ -264,6 +283,24 @@ public class DirectServiceImpl implements DirectService {
 		return result;
 	}
 
+	@Override
+	public List<DirectInquire> findInquireAll(Map<String, Object> map) {
+		int limit = (int) map.get("limit");
+		int offset = ((int) map.get("cPage") - 1) * limit;
+		List<DirectInquire> directInquireList = directDao.findInquireAll(map);
+		List<DirectInquire> subList = new ArrayList<>();
+		if(!directInquireList.isEmpty()) {
+			subList = (List<DirectInquire>) MonongUtils.customRowBounds(offset, limit, directInquireList);
+			log.debug("subList = {}", subList);
+		}
+		return subList;
+	}
+	
+	
+	@Override
+	public int getInquireTotalContent(String dProductNo) {
+		return directDao.getInquireTotalContent(dProductNo);
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작

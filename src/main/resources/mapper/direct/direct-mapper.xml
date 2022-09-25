@@ -17,14 +17,13 @@
             insert (d_option_no, d_product_no, d_option_name, d_sale_status, d_price, d_stock) values ('DO'||seq_d_option_no.nextval, #{dProductNo}, #{dOptionName}, #{dSaleStatus}, #{dPrice}, #{dStock})
   </update>
 <!-- 리뷰 조회 -->
-<select id="selectdirectProductReviewList">
+	<select id="selectDirectProductReviewList" resultMap="proNoDirectReviewMap">
 	select
 		dr.*,
-		dra.d_review_renamed_filename,
-		dra.d_review_original_filename,
-		dra.d_review_attach_no,
-		dpo.d_option_name,
-		dp.d_product_no
+	    dra.d_review_renamed_filename,
+	    dpo.d_option_name,
+	    dp.d_product_name,
+	    dp.d_product_no
 	from
 		direct_review dr
 		left join direct_review_attachment dra
@@ -34,8 +33,44 @@
 		left join direct_product dp
 		on dpo.d_product_no = dp.d_product_no
 	where
-		dr.d_review_no= #{dReviewNo}
-</select>
+		dpo.d_product_no= #{dProductNo}
+	</select>
+
+	<resultMap type="map" id="proNoDirectReviewMap">
+ 		<id column="d_review_no" property="dReviewNo"/>
+ 		<result column="d_option_no" property="dOptionNo"/>
+ 		<result column="d_order_no" property="dOrderNo"/>
+ 		<result column="d_review_title" property="dReviewTitle"/>
+ 		<result column="member_id" property="memberId"/>
+ 		<result column="d_review_content" property="dReviewContent"/>
+ 		<result column="review_rating" property="reviewRating"/>
+ 		<result column="d_review_recommend" property="dReviewRecommend"/>
+ 		<result column="d_review_created_at" property="dReviewCreatedAt"/>
+ 		<result column="d_review_updated_at" property="dReviewUpdatedAt"/>
+ 		<association property="reviewAttach" javaType="directReviewAttachment">
+ 			<id column="d_review_attach_no" property="dReviewAttachNo"/>
+ 			<result column="d_review_no" property="dReviewNo"/>
+ 			<result column="d_review_renamed_filename" property="dReviewRenamedFilename"/>
+ 			<result column="d_review_original_filename" property="dReviewOriginalFilename"/>
+ 		</association>
+ 		<association property="reviewOpt" javaType="directProductOption">
+ 			<id column="d_option_no" property="dOptionNo"/>
+ 			<result column="d_option_name" property="dOptionName"/>
+ 			<result column="d_product_no" property="dProductNo"/>
+ 		</association>
+ 		<association property="reviewProd" javaType="directProductEntity">
+ 			<id column="d_product_no" property="dProductNo"/>
+ 			<result column="d_product_name" property="dProductName"/>
+ 		</association>
+ 	</resultMap>
+ 	<select id="getTotalDirectReviewByDProductNo" resultType="_int">
+ 	select count(*)
+ 	from
+ 	(select distinct d_review_no
+ 	 from direct_review
+ 	 		left join
+ 	 		direct_product using)
+ 	</select>
 <!-- 재경 끝 -->
 <!-- 민지 시작 -->
   <select id="selectOneDirectProductCollection" resultMap="directProductMap">
@@ -192,6 +227,36 @@
   	</collection>
   </resultMap>
   
+  <select id="findInquireAll" resultMap="directInquireListMap">
+	select
+  		i.*, 
+  		ia.*, 
+  		(select substr(member_name, 1, 1) || lpad('*', length(member_name)-2, '*') || substr(member_name, length(member_name), 1) from member m where m.member_id = i.member_id) member_name 
+	from 
+  		direct_inquire i 
+  			left join direct_inquire_answer ia 
+  				on i.d_inquire_no = ia.d_inquire_no 
+  	where 
+  		i.d_product_no = #{dProductNo} 
+  	order by 
+  		i.d_inquire_no desc
+  </select>
+  
+  <resultMap type="DirectInquire" id="directInquireListMap">
+  	<id column="d_inquire_no" property="dInquireNo"/>
+	<result column="d_product_no" property="dProductNo"/>
+	<result column="member_id" property="memberId"/>
+	<result column="inquire_title" property="inquireTitle"/>
+	<result column="content" property="content"/>
+	<result column="created_at" property="createdAt"/>
+	<result column="has_answer" property="hasAnswer"/>
+  	<result column="member_name" property="memberName"/>
+  	<association property="directInquireAnswer" javaType="DirectInquireAnswer">
+  		<id column="d_inquire_no" property="dInquireNo"/>
+		<result column="d_inquire_a_content" property="dInquireAContent"/>
+		<result column="d_inquire_answered_at" property="dInquireAnsweredAt"/>
+  	</association>
+  </resultMap>
 <!-- 민지 끝 -->
 
 <!-- 수진 시작 -->
