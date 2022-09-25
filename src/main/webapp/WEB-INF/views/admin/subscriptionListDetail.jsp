@@ -19,7 +19,7 @@
 
 <div id="admin-subscriptionList-container" class="mt-5 mx-auto text-center">
 <c:if test="${empty subscriptionListDetail}">
-	<span>조회 결과가 없습니다.</span>
+	<span>조회결과가 없어요.&#128546;</span>
 </c:if>
 <c:if test="${not empty subscriptionListDetail}">
 <p style="text-align: right;">(총 ${fn:length(subscriptionListDetail)} 건)</p>

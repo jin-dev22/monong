@@ -36,18 +36,20 @@
 }
 
 .s-review-wrapper{
-    border: 2px solid #EA5C2B;
+    border: 1px solid #EA5C2B;
     /* background-color: #f7f7f7; */
-    width: 303px;
+    width: 302px;
     margin: 20px 0;
     height: fit-content;
     cursor: pointer;
+    border-radius: 11px;
 }
 
 .s-review-wrapper img {
 	width: 299px;
-	height: 298px;
+	height: 299px;
     object-fit: cover;
+    border-radius: 10px 10px 0 0;
 }
 
 .s-review-container.no-img{
@@ -172,7 +174,7 @@
 }
 
 .modal-s-review-container{
-	margin: 10px 0 0 10px;
+	margin: 10px 0 0 15px;
 	width: 500px;
 }
 

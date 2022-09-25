@@ -168,7 +168,7 @@ public interface MemberDao {
 	
 	int updateSubscribeOrder(Subscription subscription);
 
-	List<SubscriptionOrderExt> selectSubscriptionListById(String memberId);
+	List<SubscriptionOrderExt> selectSubscriptionListById(Map<String, Object> param, RowBounds rowBounds);
 	
 	@Select("select * from subscription_order where s_order_no = #{sOrderNo}")
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
@@ -193,6 +193,8 @@ public interface MemberDao {
 
 	//------------------------수아 끝
 	//-----------미송 시작
+	int getTotalSubscriptionContent(String memberId);
+	
 	@Insert("insert into subscription_review values('SR' || seq_s_review_no.nextval, #{sOrderNo}, #{sReviewContent}, #{sReviewStar}, default, default, null)")
 	@SelectKey(statement = "select 'SR' || seq_s_review_no.currval from dual", before = false, keyProperty = "sReviewNo", resultType = String.class)
 	int insertSubscriptionReview(SubscriptionReview review);
@@ -204,8 +206,8 @@ public interface MemberDao {
 	int getSubscriptionReviewYn(String sOrderNo);
 
 	List<SubscriptionReview> selectSubscriptionReviewList(RowBounds rowBounds, String memberId);
-
-	int getTotalContent(String memberId);
+	
+	int getTotalSubscriptionReviewContent(String memberId);
 
 	@Select("select * from subscription_review_attachment where s_attach_no = #{attachNo}")
 	SubscriptionReviewAttachment selectOneSubscriptionAttachment(int attachNo);
@@ -264,6 +266,8 @@ public interface MemberDao {
 
 	@Select("select count(*) from direct_inquire where member_id= #{memberId}")
 	int getTotalMemberDirectInqList(String memberId);
+
+	
 
 	
 }

@@ -18,13 +18,15 @@ body {
 	color: #333;
 }
 a {display: block; color: #333; text-decoration: none;}
-#popup {
+
+#popup, #clickPopup {
 	width: 95%;
 	height: 93%;
 	background-image: url("../images/noticeWeekBG.jpg");
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
+
 .popupWrapper {
 	width: 90%;
 	height: 100%;
