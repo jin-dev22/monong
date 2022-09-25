@@ -167,14 +167,16 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="checkModalCenterTitle">구독 안내사항</h5>
+				<h5 class="modal-title" id="checkModalCenterTitle">&#128226;모농모농 정기구독 구독 안내사항</h5>
 				<button type="button" class="close closeModalBtn" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-			구독 진행 시 선택하신 주기에 맞춰 [수요일]에 자동으로 결제가 됩니다.<br />
-			구독 취소 및 배송미루기는 마이페이지에서 가능하며,<br />수요일 결제 이후 구독 취소 및 배송미루기 시에는 그 다음주부터 적용이 됩니다. 
+			첫 구독은 결제예정일에 맞춰 결제가 진행되며, <br/>
+			이후 결제는 선택하신 주기에 맞춰 [수요일]에 자동으로 결제가 됩니다.<br />
+			구독 취소 및 배송 미루기는 마이페이지에서 가능하며,<br />
+			수요일 결제 이후 구독 취소 및 배송 미루기를 하실 경우 그다음 주부터 적용이 되는 점 확인 부탁드립니다.&#128591;
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary closeModalBtn" data-dismiss="modal">취소</button>

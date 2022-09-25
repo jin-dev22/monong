@@ -99,13 +99,13 @@ public class SubscribeController {
 			subscriptionList = subscribeService.selectSubscription(subscription.getSNo());
 		}
 		redirectAttr.addFlashAttribute("subscriptionList", subscriptionList);
-		return "redirect:/subscribe/subComplate.do";
+		return "redirect:/subscribe/subComplete.do";
 	}
 	
 	/**
 	 * 구독 완료 페이지
 	 */
-	@GetMapping("/subComplate.do")
+	@GetMapping("/subComplete.do")
 	public void subComplete(Authentication authentication, Model model) {
 		List<SubscriptionProduct> subscriptionProduct = subscribeService.getSubscriptionProduct();
 		model.addAttribute("subscriptionProduct", subscriptionProduct);
