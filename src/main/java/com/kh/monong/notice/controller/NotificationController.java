@@ -67,6 +67,13 @@ public class NotificationController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
+	
+	@PostMapping("/newNotice.do")
+	public ResponseEntity<?> newNotice(@RequestParam String memberId){
+		int count = notificationService.getNewNoticeCount(memberId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(count);
+	}
 	//---------------------------------------------수진끝
 	
 	//---------------------------------- 선아 시작
