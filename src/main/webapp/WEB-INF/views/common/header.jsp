@@ -95,7 +95,7 @@ span#new-notice{
 							headers['${_csrf.headerName}'] = '${_csrf.token}';
 							const newNotice = document.querySelector("#new-notice");
 							const memberId = document.querySelector("[name=memberIdForNotice]").value;
-							console.log(newNotice)
+							//console.log(newNotice)
 						   $.ajax({
 							   url : "${pageContext.request.contextPath}/notification/newNotice.do",
 								headers,
