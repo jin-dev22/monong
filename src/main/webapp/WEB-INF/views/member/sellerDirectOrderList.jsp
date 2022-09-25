@@ -7,10 +7,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
-<style>
-.order-container-opt-price{}
 
-</style>
 <div id="prodList-container">
 	<form name="directProdOrdFilterFrm" action="${pageContext.request.contextPath}/member/sellerDirectOrderList.do" method="GET">
 		<input type="hidden" name="prodNo" value="${param.prodNo}"/>
@@ -51,10 +48,10 @@
 		<c:forEach items="${orderList}" var="order" varStatus="vs">
 			<div class="prod-order-container">
 				<div class="order-container-row ord-row-1">
-					<span>주문번호 ${order.dOrderNo}</span>
-					<span>주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
+					<span class="order-head">주문번호 ${order.dOrderNo}</span>
+					<span class="order-head">주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
 				</div>
-				<div class="order-container-opt-price">
+				<div class="order-container-put-toghether">
 					<div class="order-container-left">
 					<c:forEach items="${order.orderProducts}" var="prod">
 						<div class="product-container">
@@ -72,7 +69,8 @@
 					</div>
 					<div class="order-container-right">
 						<div>총 결제금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
-						<div class="order-customer">주문자 아이디 : <br />${order.customerId}</div>
+						<div class="order-customer">주문자 아이디 : ${order.customerId}</div>
+						<br />
 						<div class="order-status">
 							<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
 								method="POST" accept-charset="UTF-8">
@@ -97,16 +95,17 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="order-container-row ord-row-4">
-					<div class="order-address">${order.dDestAddress}, ${order.dDestAddressEx}</div>
-				</div>
-				<div class="order-container-row ord-row-5">
-					<span class="order-req">배송요청사항 : ${order.dDeliveryRequest}</span>	
-					<div>
-						<span class="order-receive">수령인 : ${order.dRecipient}</span>&nbsp;&nbsp;		
-						<span class="order-recPhone">${order.dOrderPhone}</span>
-					</div>	
+				<div class="order-container-put-toghether">	
+					<div class="order-container-row ord-row-4">
+						<div class="order-address">주소 : ${order.dDestAddress}, ${order.dDestAddressEx}</div>
+					</div>
+					<div class="order-container-row ord-row-5 order-container-right">
+						<span class="order-req">배송요청사항 : ${order.dDeliveryRequest}</span>	
+						<div>
+							<span class="order-receive">수령인 : ${order.dRecipient}</span>&nbsp;&nbsp;		
+							<span class="order-recPhone">${order.dOrderPhone}</span>
+						</div>	
+					</div>
 				</div>
 			</div>
 		</c:forEach>
