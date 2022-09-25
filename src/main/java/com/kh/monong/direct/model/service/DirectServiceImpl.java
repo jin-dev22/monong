@@ -152,6 +152,23 @@ public class DirectServiceImpl implements DirectService {
 		return directDao.getTotalDirectReviewByDProductNo(dProductNo);
 	}
 	
+	// 후기 추천
+	@Override
+	public int getRecommendedYn(Map<String, String> param) {
+		return directDao.getRecommendedYn(param);
+	}
+	
+	@Override
+	public int updateDirectReviewRecommendAdd(Map<String, String> param) {
+		return directDao.updateDirectReviewRecommendAdd(param);
+	}
+	
+	@Override
+	public int updateDirectReviewRecommendCancel(Map<String, String> param) {
+		return directDao.updateDirectReviewRecommendCancel(param);
+	}
+	
+	
 	//----------------- 재경 끝
 	//----------------- 민지 시작
 	@Override

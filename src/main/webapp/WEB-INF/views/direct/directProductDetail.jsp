@@ -168,6 +168,11 @@
 	  </div>
 	  <!-- 재경 시작 -->
 	  <div class="dProductReview">
+	  <sec:authentication property="principal" var="loginMember" scope="page"/>
+
+	  <sec:authorize access="isAuthenticated()">
+		<input type="hidden" class="d-review-login-member" data-member-id="${loginMember.memberId}"/>
+	  </sec:authorize>
 	  <c:if test="${empty dReviewList}">
 	  	<div class="mx-auto mt-5 text-center">
 			<h3>작성한 후기가 없습니다.</h3>
@@ -177,9 +182,10 @@
       <table id="direct-reviewList-tbl" class="table" style="undefined;table-layout: fixed; width: 1100px">
       	<colgroup>
 			<col style="width: 300px">
-			<col style="width: 400px">
 			<col style="width: 200px">
 			<col style="width: 200px">
+			<col style="width: 300px">
+			<col style="width: 100px">
 		</colgroup>
 		<thead>
 			<tr>
@@ -193,53 +199,95 @@
 		<tbody>
 			<c:forEach items="${dReviewList}" var="dReviewList">
 				<tr class="table-active">
-					<td>${dReviewList.DReviewTitle}</td>
-					<td>${dReviewList.DReviewOpt.DOptionName}</td>
-					<td>⭐ ${dReviewList.reviewRating}</td>
-					<td>
-						<fmt:parseDate value="${reviewList.DReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
+					<td style="text-align:left;">${dReviewList.dReviewTitle}</td>
+					<td style="text-align:left;">${dReviewList.reviewOpt.DOptionName}</td>
+					<td style="text-align:left;">⭐ ${dReviewList.reviewRating}</td>
+					<td style="text-align:left;">
+						<fmt:parseDate value="${dReviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
 						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
 					</td>
-					<td>${dReviewList.dReview}
+					<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
 					  </tr>
 					  <tr>
 					    <td rowspan="2">
-					    	<c:if test="${dReviewList.dReviewAttach.DReviewRenamedFilename == null}">
-					    		
+					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
+		    					첨부된 사진이 없습니다
+		    				</c:if>
+					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
+					    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
 					    	</c:if>
-					    	<c:if test="${dReviewList.dReviewAttach.DReviewRenamedFilename != null}">
-					    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${dReviewList.dReviewAttach.DReviewRenamedFilename}" alt="" />
-					    	</c:if>
 					    </td>
-					    <td colspan="2" rowspan="2">${dReviewList.dReviewContent}</td>
-					    <td>
-							<button class="btn btn-116530" onclick="location.href='${pageContext.request.contextPath}/member/memberDirectReviewUpdateForm.do?dReviewNo=${reviewList.dReviewNo}'">수정</button>
-					    </td>
-					  </tr>
-					  <tr>
-					    <td>
-					    <form:form
-					    	action="${pageContext.request.contextPath}/member/deleteDirectReview.do">
-					    	<input type="hidden" name="dReviewNo" value="${reviewList.dReviewNo}" />
-						    <button type="submit" class="btn btn-danger" onclick="return confirm('리뷰를 삭제하시겠습니까?')">삭제</button>
-					    </form:form>
-					    </td>
+					    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
+					    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
 					  </tr>
 					 </c:forEach>
 					</tbody>
 					</table>
 					<nav>
-						${pagebar}
+						${rPagebar}
 					</nav>
 				</c:if>
 			</div>	
 	  </div>
 	  <!-- 재경 끝 -->
-  </div>
 </main>
 <div class="enroll-inquire-modal-container"></div>
 <div class="enroll-inquire-complete-container"></div>
 <script>
+// 후기 추천
+const dReviewRecommend = () => {	
+	const loginMember = document.querySelector(".d-review-login-member");
+	console.log('loginMember', loginMember);
+		
+	if(loginMember === null){
+		alert('로그인 후 이용가능합니다.');
+	}
+	else{
+		console.log('loginMember', loginMember.dataset.memberId);
+		const memberId = loginMember.dataset.memberId;
+		  
+		const recommend = document.querySelector(".d-review-recommend");		
+		const dReviewNo = recommend.dataset.dReviewNo;
+			
+		const btnRecommend = document.querySelector(".btn-d-review-recommend");
+		const recommended = btnRecommend.dataset.recommended;	
+			
+		// 추천이 되어있는 경우 -> 추천 취소하기
+		if(recommended === "true"){
+			$.ajax({
+				url : "${pageContext.request.contextPath}/direct/directReviewRecommendCancel.do",
+				data: {memberId, dReviewNo},
+				method : "POST",
+				beforeSend : function(xhr){  
+								xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+					       	},
+				success(result){
+					recommend.innerHTML = Number(recommend.innerHTML) - 1;
+					btnRecommend.dataset.recommended = "false";
+				},
+				error : console.log
+			});
+		}
+			
+		// 추천이 안되어있는 경우 -> 추천하기
+		else{
+			$.ajax({
+				url : "${pageContext.request.contextPath}/subscribe/subscribeReviewRecommendAdd.do",
+				data: {memberId, sReviewNo},
+				method : "POST",
+				beforeSend : function(xhr){  
+					            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				       		 },
+				success(result){
+					recommend.innerHTML = Number(recommend.innerHTML) + 1;
+					btnRecommend.dataset.recommended = "true";
+				},
+				error : console.log
+			});
+		}
+	
+	}
+};
 //기존 버튼형 슬라이더
 $('.slider-1 > .page-btns > div').click(function(){
     var $this = $(this);
