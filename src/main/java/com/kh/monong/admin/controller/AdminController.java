@@ -284,6 +284,28 @@ public class AdminController {
 		model.addAttribute("pagebar", pagebar);
 	}
 	
+	@GetMapping("/subscriptionListDetail.do")
+	public void subscriptionListBySubNo(
+			@RequestParam String subNo, Model model,
+			@RequestParam(defaultValue = "1") int cPage, HttpServletRequest request
+			) {
+		Map<String, Object> param = new HashMap<>();
+		int limit = 5;
+		param.put("cPage", cPage);
+		param.put("limit", limit);
+		param.put("subNo", subNo);
+		
+		List<SubscriptionOrder> subscriptionListDetail = subscribeService.getSubscriptionListBySubNo(param);
+		int totalContent = subscribeService.getTotalSubscriptionListBySubNo(subNo);
+
+		String url = request.getRequestURI(); 
+		String pagebar = MonongUtils.getPagebar(cPage, limit, totalContent, url);
+		
+		model.addAttribute("subscriptionListDetail",subscriptionListDetail);
+		model.addAttribute("pagebar", pagebar);
+	}
+	
+	
 	/**
 	 * 구독 여부 조회
 	 */
@@ -399,7 +421,6 @@ public class AdminController {
 			}
 		}
 	}
-	
 	
 	
 	//--------------------------------------------------------선아 끝

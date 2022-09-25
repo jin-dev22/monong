@@ -11,9 +11,10 @@
 
 	<!-- #7.1. 암호화처리 빈 등록 -->
 	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
+	<beans:bean id="customSuccessHandler" class="com.kh.security.handler.CustomSuccessHandler"></beans:bean>
 	<!-- #7.3. 인증 /권한 관련 설정 -->
 	<http security="none" pattern="/resources/**"/>
+	
 	
 	<http auto-config="true">
 		<intercept-url pattern="/" access="permitAll"/>
@@ -38,6 +39,16 @@
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
 		<intercept-url pattern ="/**" access="isAuthenticated()"/>
 		
+		<!-- <form-login 
+			login-page="/member/memberLogin.do" 
+			login-processing-url="/member/memberLogin.do" 
+			default-target-url="/" 
+			always-use-default-target="false" 
+			username-parameter="memberId" 
+			password-parameter="memberPassword" 
+			authentication-success-forward-url="/member/memberLoginSuccess.do"/> -->
+		
+		
 		<form-login 
 			login-page="/member/memberLogin.do" 
 			login-processing-url="/member/memberLogin.do" 
@@ -45,7 +56,9 @@
 			always-use-default-target="false" 
 			username-parameter="memberId" 
 			password-parameter="memberPassword" 
-			authentication-success-forward-url="/member/memberLoginSuccess.do"/>
+			authentication-success-handler-ref="customSuccessHandler"/>
+
+		
 		<logout logout-url="/member/memberLogout.do" logout-success-url="/"/>
 		
 		<csrf disabled="false"/>

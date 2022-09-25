@@ -45,7 +45,7 @@
 				<div class="accordion-item">
 				    <div class="accordion-header" id="heading${vs.count}">
 				      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${vs.count}" aria-expanded="true" aria-controls="collapse${vs.count}">
-				        <span>${inq.inquireCreatedAt}&emsp;&emsp;&emsp;<span ${inq.hasAnswer eq 'Y' ? "class='text-success'" : "class='text-danger'"}>${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;${inq.inquireTitle}</span>
+				        <span>${inq.inquireCreatedAt}&emsp;&emsp;&emsp;<span ${inq.hasAnswer eq 'Y' ? "class='text-success'" : "class='text-danger'"}>${inq.hasAnswer eq 'Y' ? '답변완료' : '답변 대기중'}</span>&emsp;&emsp;&emsp;&emsp;${inq.inquireTitle}</span>
 				      </button>
 				    </div>
 					<div id="collapse${vs.count}" class="accordion-collapse collapse" aria-labelledby="heading${vs.count}" data-bs-parent="#inqList-accordion">

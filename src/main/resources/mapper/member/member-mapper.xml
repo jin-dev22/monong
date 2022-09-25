@@ -386,21 +386,6 @@
 	    	so.s_order_no desc
   </select>
   
-   <select id="selectProdListBydOrderNo" resultType="directProductEntity">
-  select
-    *
-	from
-	    direct_product
-	where
-	  d_product_no in  (
-	    select
-	       d_product_no
-	    from
-	        member_direct_order
-	    where
-	        d_order_no = #{dOrderNo} )
-  </select>
-  
   <select id="selectDirectOptionList" resultMap="orderDirectOptionMap">
   	select
   	    *
@@ -690,6 +675,8 @@
 	    on di.d_inquire_no = dia.d_inquire_no
 	where
 	    di.member_id=#{memberId}
+	order by 
+		di.d_inquire_no desc
  	</select>
  	
  	<select id="selectDirectListByMemberId" resultMap="directByMemberIdMap">
@@ -707,6 +694,8 @@
 	    on mdo.d_product_no = dpa.d_product_no
 	where 
 	   rnum =1 and do.member_id= #{memberId}
+	order by
+       do.d_order_date desc
  	</select>
  	
  	<resultMap type="map" id="directByMemberIdMap">

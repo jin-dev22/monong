@@ -46,8 +46,9 @@
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
 				<label for="memberId">아이디</label> 
+				<sec:authentication property="principal.username" var="memberId"/>
 				<input type="text" name="memberId" class="form-control" id="memberId"
-					value="<sec:authentication property="principal.username" var="memberId"/>" readonly required>
+					value="${memberId}" readonly required>
 			</div>
 		</div>
 		<div class="row mb-2 col-md-13 justify-content-center">

@@ -32,14 +32,26 @@
 	<script>
 	const memberId = "<sec:authentication property='principal.username'/>";
 	</script>
+<%-- 	
 <script src="${pageContext.request.contextPath}/resources/js/ws.js"></script>
+ --%>
 </sec:authorize>
 <c:if test="${not empty msg}">
 <script>
 	alert("${msg}");
 </script>
 </c:if>
-
+<style>
+span#new-notice{
+ 	display: none;
+    border-radius: 50%;
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    color: FFF;
+ }
+</style>
 </head>
 <body>
 
@@ -49,7 +61,7 @@
 			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</a>
 		<nav class="nav mainmenu">
-			<a class="nav-link" href="#">&#128204;사이트소개</a>
+			<a class="nav-link" href="${pageContext.request.contextPath}/common/brandStory.do">&#128204;사이트소개</a>
 			<a class="nav-link"	href="${pageContext.request.contextPath}/subscribe/subscribeMain.do">정기구독&#127822;</a>
 			<a class="nav-link" href="${pageContext.request.contextPath}/direct/directProductList.do">직거래&#127805;</a>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -74,7 +86,38 @@
 				<nav class="nav justify-content-end">
 				<sec:authorize access="!hasRole('ROLE_ADMIN')">
 					<a class="nav-link" href="${pageContext.request.contextPath}/notification/memberNotificationList.do">&#128276;</a>
-					
+					<!-- 알림표시용 -->
+					<span id="new-notice"></span>
+					<input type="hidden" name="memberIdForNotice" value="<sec:authentication property="principal.username"/>"/>
+					<script>
+						(function(){
+							const headers = {};
+							headers['${_csrf.headerName}'] = '${_csrf.token}';
+							const newNotice = document.querySelector("#new-notice");
+							const memberId = document.querySelector("[name=memberIdForNotice]").value;
+							console.log(newNotice)
+						   $.ajax({
+							   url : "${pageContext.request.contextPath}/notification/newNotice.do",
+								headers,
+								method : "POST",
+								data : {memberId},
+								success(count){
+									console.log(count);
+									if(count > 0){
+										newNotice.innerHTML = count;
+										newNotice.style.display = "inline-block";
+									}else{
+										newNotice.style.display = "none";
+									}
+								},
+								error(jqxhr, statusText, err){
+									console.log(jqxhr, statusText, err);
+								}  
+						   });
+				        })()
+						
+					</script>
+					<!-- 알림표시용 -->
 						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
                 </sec:authorize>
 				</nav>

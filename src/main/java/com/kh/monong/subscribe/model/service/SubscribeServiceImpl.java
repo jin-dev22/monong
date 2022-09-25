@@ -19,11 +19,8 @@ import com.kh.monong.subscribe.model.dto.SubscriptionReview;
 import com.kh.monong.subscribe.model.dto.SubscriptionWeekVegs;
 import com.kh.monong.subscribe.model.dto.Vegetables;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Transactional(rollbackFor = Exception.class)
 @Service
-@Slf4j
 public class SubscribeServiceImpl implements SubscribeService {
 	
 	@Autowired
@@ -149,6 +146,19 @@ public class SubscribeServiceImpl implements SubscribeService {
 	@Override
 	public int getTotalsearchPeriodData(Map<String, Object> param) {
 		return subscribeDao.getTotalsearchPeriodData(param);
+	}
+	
+	@Override
+	public List<SubscriptionOrder> getSubscriptionListBySubNo(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return subscribeDao.getSubscriptionListBySubNo(rowBounds, param);
+	}
+	
+	@Override
+	public int getTotalSubscriptionListBySubNo(String subNo) {
+		return subscribeDao.getTotalSubscriptionListBySubNo(subNo);
 	}
 	
 	/**
