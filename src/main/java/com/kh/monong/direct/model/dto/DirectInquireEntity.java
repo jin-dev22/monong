@@ -25,4 +25,5 @@ public class DirectInquireEntity {
 	private String content;
 	private LocalDate createdAt;
 	private YN hasAnswer;
+	private YN checkSecret;
 }
