@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -73,6 +74,10 @@ public interface DirectService {
 	String selectReviewAvgScoreByProductNo(String dProductNo);
 	
 	int enrollInquire(Map<String, Object> param);
+	
+	List<DirectInquire> findInquireAll(Map<String, Object> map);
+
+	int getInquireTotalContent(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작

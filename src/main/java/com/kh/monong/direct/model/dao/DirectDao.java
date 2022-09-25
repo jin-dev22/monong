@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.monong.direct.model.dto.Cart;
+import com.kh.monong.direct.model.dto.DirectInquire;
 import com.kh.monong.direct.model.dto.DirectOrder;
 import com.kh.monong.direct.model.dto.DirectProduct;
 import com.kh.monong.direct.model.dto.DirectProductAttachment;
@@ -143,6 +144,12 @@ public interface DirectDao {
 	@Insert("insert into direct_inquire values (seq_d_inquire_no.nextval, #{dProductNo}, #{memberId}, #{inquireTitle}, #{content}, default, default)")
 	@SelectKey(statement = "select seq_d_inquire_no.currval from dual", before = false, keyProperty = "dInquireNo", resultType = int.class)
 	int enrollInquire(Map<String, Object> param);
+	
+	// 상품 문의 전체 조회
+	List<DirectInquire> findInquireAll(Map<String, Object> map);
+	
+	@Select("select count(*) from direct_inquire where d_product_no = #{dProductNo}")
+	int getInquireTotalContent(String dProductNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
