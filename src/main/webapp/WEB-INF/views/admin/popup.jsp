@@ -21,7 +21,7 @@
 
 </head>
 <body>
-<c:if test="${noticeWeekVegs eq null}">
+<c:if test="${noticeWeekVegs eq null && recentNoticeWeekVegs eq null}">
 	<div id="popup">
 		<div class="popupWrapper">
 			<div class="popup_title">
@@ -30,47 +30,47 @@
 			</div>
 			<div class="popup_content">
 				<p>텅!</p>
-				<p>빠른 시간내로 공지하겠습니다.</p>
+				<p>죄송합니다. 빠른 시간내로 공지하겠습니다.&#128591;</p>
 			</div>
 		</div>
 	</div>
 </c:if>
 <c:if test="${noticeWeekVegs ne null}">
-<div id="popup">
-	<div class="popupWrapper">
-		<div>
-			<h1 class="popup_date">${noticeWeekVegs.weekCriterion}</h1>
-			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
+	<div id="popup">
+		<div class="popupWrapper">
+			<div>
+				<h1 class="popup_date">${noticeWeekVegs.weekCriterion}</h1>
+				<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
+			</div>
+			<div class="popup_content">
+				<span>&#128226;</span>
+				<span>${noticeWeekVegs.vegComposition}</span>
+				<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
+			</div>
 		</div>
-		<div class="popup_content">
-			<span>&#128226;</span>
-			<span>${noticeWeekVegs.vegComposition}</span>
-			<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
+		<div class="popup_btn">
+			<!-- 하루동안 보지않기 -->
+			<a href="javascript:closeToday();" id="chk_today">&#128581; 오늘 하루 안보기</a>
+			<!-- 일요일까지 보지않기 -->
+			<a href="javascript:closeToSunday();" id="chk_sunday">&#128581; 일요일까지 안보기</a>
 		</div>
 	</div>
-	<div class="popup_btn">
-		<!-- 하루동안 보지않기 -->
-		<a href="javascript:closeToday();" id="chk_today">&#128581; 오늘 하루 안보기</a>
-		<!-- 일요일까지 보지않기 -->
-		<a href="javascript:closeToSunday();" id="chk_sunday">&#128581; 일요일까지 안보기</a>
-	</div>
-</div>
 </c:if>
 
 <c:if test="${recentNoticeWeekVegs ne null}">
-<div id="popup">
-	<div class="popupWrapper">
-		<div>
-			<h1 class="popup_date">${recentNoticeWeekVegs.weekCriterion}</h1>
-			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
-		</div>
-		<div class="popup_content">
-			<span>&#128226;</span>
-			<span>${recentNoticeWeekVegs.vegComposition}</span>
-			<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
+	<div id="clickPopup">
+		<div class="popupWrapper">
+			<div>
+				<h1 class="popup_date">${recentNoticeWeekVegs.weekCriterion}</h1>
+				<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
+			</div>
+			<div class="popup_content">
+				<span>&#128226;</span>
+				<span>${recentNoticeWeekVegs.vegComposition}</span>
+				<span class="popup_notice">※제외 품목에 따라 구성이 달라질 수 있습니다. </span>
+			</div>
 		</div>
 	</div>
-</div>
 </c:if>
 </body>
 <script>
@@ -80,6 +80,7 @@ function setCookie(name, value, expiredays){
 	todayDate.setDate(todayDate.getDate() + expiredays);
 	document.cookie = name + "=" + value + "; path=/; expires=" + todayDate.toUTCString() + ";";
 }
+
 $(function(){
 	if(document.cookie.indexOf("popToday=close") < 0){ // 쿠키 저장여부 체크
 		document.getElementById("popup").style.display = 'block';
@@ -87,6 +88,8 @@ $(function(){
 		document.getElementById("popup").style.display = 'none';
 	}
 })
+
+
 // 오늘 하루 안보기 버튼
 function closeToSunday(){
 	setCookie("popToday", "close", 1);
