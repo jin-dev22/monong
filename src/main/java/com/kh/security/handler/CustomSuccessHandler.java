@@ -46,18 +46,20 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
          * (우선순위2) 로그인폼페이지 요청전 페이지 
          */
         String next = (String) session.getAttribute("next");
+        String[] specialLocation = {"member/memberPwSearchForm.do", "member/memberIdSearchForm.do", "member/sellerEnroll.do","member/memberLogin.do"};
         if(next != null && !next.isEmpty()) {
-        	if(next.contains("member/memberPwSearchForm.do")) {
-        		targetUrl = "/";
-        	}
-        	else if(next.contains("member/memberIdSearchForm.do")) {
+        	for(int i=0; i<specialLocation.length; i++) {
+        		if(next.contains(specialLocation[i])) {
+            		targetUrl = "/";
+            	}	
         		
         	}
-        	else {
-	        	targetUrl = next;
-	        	session.removeAttribute("next");
-        	}
+        	
         }
+        else {
+        	targetUrl = next;
+        	session.removeAttribute("next");
+    	}
 
         /**
          * (우선순위1) 인증하지않고 접근하려던 페이지 
