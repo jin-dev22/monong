@@ -113,15 +113,16 @@
 			</sec:authorize>
 		</div>
 	</div>
+
 <div id="sub-review"></div>
-<h1>후기</h1>
+<h1>이용후기</h1>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 
 <sec:authorize access="isAuthenticated()">
 	<input type="hidden" class="s-review-login-member" data-member-id="${loginMember.memberId}"/>
 </sec:authorize>
 
-<p>모농모농의 정기구독을 이용하신 고객님들의 후기입니다.</p>
+<p>모농모농의 정기구독을 이용하신 회원님들의 후기입니다.</p>
 <div class="s-review-statistics">
     <div class="s-review-stat-star">전체 만족도<span class="s-review-statistics-data">${sReviewStarAvg}</span></div>
     <div class="s-review-stat-num">전체 후기 수<span class="s-review-statistics-data">${totalContent}</span></div>
@@ -157,9 +158,6 @@
 				<button type="button" class="btn-s-review-recommend" data-recommended="false">👍&nbsp도움돼요<span class="modal-s-review-recommend-num"></span></button>
 	    	</div>
 	    </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -257,7 +255,7 @@ const sReviewList = (num) => {
 			    }
 				else{
 					html += `
-						<p class="s-review-content">\${sreviewContent.length > 38 ? sreviewContent.substr(0, 38) + '...': sreviewContent}</p>`;
+						<p class="s-review-content">\${sreviewContent.length > 41 ? sreviewContent.substr(0, 41) + '...': sreviewContent}</p>`;
 			    }
 			    
 			    const year = sreviewCreatedAt[0];
@@ -347,7 +345,7 @@ function pageLink(cPage, totalPages, funName){
 };
 
 
-const reviewDetail = (obj, sReviewNo) =>{
+const reviewDetail = (obj, sReviewNo) => {
 	console.log('obj: ', obj, 'sReviewNo: ', sReviewNo);
 
 	const loginMember = document.querySelector(".s-review-login-member");
@@ -386,13 +384,26 @@ const reviewDetail = (obj, sReviewNo) =>{
 			console.log('sAttach', sAttach);
 			
 		 	const modalImg = document.querySelector(".modal-img");
-			if(sAttach[0]){
+			if(sAttach.length >= 1){
 				document.querySelector(".modal-dialog").classList.remove("no-img");
 				document.querySelector(".modal-dialog").classList.add("with-img");
-			
-				const html = `   
-			      	<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" width="300px" class="modal-s-review-img"/>
-			      `;
+				
+				let html;
+				html = `<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" class="main-img" alt="대표첨부사진" width="300px"/>`;
+				
+				if(sAttach.length >= 2){
+					html += `
+			            <div class="sub-imgs">
+				            <img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" class="sub-img" alt="첨부사진1" onclick="viewImg(this)">
+				            <img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[1].sreviewRenamedFilename}" class="sub-img" alt="첨부사진2" onclick="viewImg(this)">`;
+					if(sAttach.length === 3){
+						html += `
+			            		<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[2].sreviewRenamedFilename}" class="sub-img" alt="첨부사진3" onclick="viewImg(this)">`;
+					}
+				}
+				
+				html += `</div>`;
+				
 		     	modalImg.innerHTML = html;
 			}
 			else{
@@ -432,6 +443,7 @@ const reviewDetail = (obj, sReviewNo) =>{
 	});
 	
 	setTimeout(showModal, 100);
+
 }
 
 const showModal = () => {
@@ -439,12 +451,25 @@ const showModal = () => {
 	myModal.show();
 };
 
+const viewImg = (selectedImg) => {
+	selectedImg.style.opacity= "1";
+    document.querySelector(".main-img").src = selectedImg.src;
+    
+	document.querySelectorAll(".sub-img").forEach(function(subImg){
+		if(subImg !== selectedImg){
+			subImg.style.opacity= "0.5";
+		}
+	});
+
+}
+
 const sReviewRecommend = () => {	
 	const loginMember = document.querySelector(".s-review-login-member");
 	console.log('loginMember', loginMember);
 	
 	if(loginMember === null){
 		alert('로그인 후 이용가능합니다.');
+		location.href = `${pageContext.request.contextPath}/member/memberLogin.do`;
 	}
 	else{
 		console.log('loginMember', loginMember.dataset.memberId);
@@ -494,4 +519,7 @@ const sReviewRecommend = () => {
 };
 
 </script>
+<style>
+
+</style>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

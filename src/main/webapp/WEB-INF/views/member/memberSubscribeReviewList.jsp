@@ -23,6 +23,8 @@
 
 .table-tr.active{
 	background-color: #f2f2f2;
+	border-top: 1px solid lightgrey;
+	border-bottom: 1px solid lightgrey;
 }
 
 .m-s-review-content{
@@ -56,22 +58,32 @@
     overflow: hidden;
 }
 
+.content-container{
+	margin-top:10px;
+}
+
 .m-s-review-detail-imgs{
     display: inline-block;
 }
 
 .m-s-review-detail-imgs img{
     display: inline-block;
-    width: 150px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.btn-wrapper{
+	margin-top: 15px;
 }
 </style>
-<c:if test="${empty orderProdList}">
-		<br /><br />
-		<div class="mx-auto text-center">
-			<h3>구독 히스토리가 없어요 :(</h3>
-			<span>결제가 완료된 후에 히스토리를 확인하실 수 있어요!</span>
-		</div>
-	</c:if>
+<c:if test="${empty sReviewList}">
+	<br /><br />
+	<div class="mx-auto text-center">
+		<h3>작성완료된 정기구독 후기가 없어요 :(</h3>
+		<span>후기를 입력한 후에 히스토리를 확인하실 수 있어요!</span>
+	</div>
+</c:if>
 <c:if test="${not empty sReviewList}">
 	<table class="table table-borderless m-s-review-table">
 		<thead>
@@ -89,8 +101,8 @@
 				<td class="m-s-review-content" data-s-review-no="${sReview.SReviewNo}" style="padding-left: 128px; padding-right: 128px;">
 					<span onclick="sReviewDetail(this)">
 					<c:choose>
-					 	<c:when test="${fn:length(sReview.SReviewContent) gt 38}">
-					 		${fn:substring(sReview.SReviewContent, 0, 38)}...
+					 	<c:when test="${fn:length(sReview.SReviewContent) gt 37}">
+					 		${fn:substring(sReview.SReviewContent, 0, 37)}...
 					 	</c:when>
 					 	<c:otherwise>
 					 		${sReview.SReviewContent}
@@ -152,21 +164,21 @@ const sReviewDetail = (review) => {
 						console.log('이미지 있음');
 						review.nextElementSibling.innerHTML += `
 							<div class="m-s-review-detail-imgs">
-								<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${attach.sreviewRenamedFilename}" width="300px">
+								<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${attach.sreviewRenamedFilename}">
 							</div>
 							`;
 					}
 				});
 				
-				review.nextElementSibling.innerHTML += `<div>
-						<input type="button" class="btn btn-116530" id="btnUpdateReview" value="수정하기" onclick="btnUpdateReview(this)" data-review-no="\${sReviewNo}"/>
-						<input type="button" class="btn btn-116530" id="btnDeleteReview" value="삭제하기" onclick="btnDeleteReview(this)" data-review-no="\${sReviewNo}"/>
+				review.nextElementSibling.innerHTML += `<div class="btn-wrapper">
+						<input type="button" class="btn btn-116530" value="수정하기" onclick="btnUpdateReview(this)" data-review-no="\${sReviewNo}"/>
+						<input type="button" class="btn btn-EA5C2B" value="삭제하기" onclick="btnDeleteReview(this)" data-review-no="\${sReviewNo}"/>
 					</div>`;
 			}
 			
 			else {
 				review.nextElementSibling.innerHTML = '';
-				review.innerHTML = `\${sreviewContent.length > 38 ? sreviewContent.substr(0, 38) + '...': sreviewContent}`;
+				review.innerHTML = `\${sreviewContent.length > 37 ? sreviewContent.substr(0, 37) + '...': sreviewContent}`;
 			}
 			
 		},
