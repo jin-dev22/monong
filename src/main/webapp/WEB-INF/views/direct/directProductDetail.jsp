@@ -230,28 +230,27 @@
 						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
 					</td>
 					<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
-					  </tr>
-					  <tr>
-					    <td rowspan="2">
-					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
-					    	
-		    				</c:if>
-					    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
-					    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
-					    	</c:if>
-					    </td>
-					    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
-					    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
-					  </tr>
-					 </c:forEach>
-					</tbody>
-					</table>
-					<nav>
-						${rPagebar}
-					</nav>
-				</c:if>
-			</div>	
-	  </div>
+				</tr>
+				<tr>
+				    <td rowspan="2">
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
+				    	
+	    				</c:if>
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
+				    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
+				    	</c:if>
+				    </td>
+				    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
+				    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
+				</tr>
+			 </c:forEach>
+		</tbody>
+	  </table>
+		<nav>
+			${rPagebar}
+		</nav>
+	  </c:if>
+	  </div>	
 	  <!-- 재경 끝 -->
   </div>
 </main>
