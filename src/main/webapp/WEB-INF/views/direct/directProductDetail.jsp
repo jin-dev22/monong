@@ -251,18 +251,42 @@
 	  <c:if test="${empty dReviewList}">
 	  	<div class="mx-auto mt-5 text-center">
 	  		<span style="font-size: 20px; display: block; position: relative; padding: 20px 0 70px;">Review</span>
-			<h3>작성한 후기가 없습니다.</h3>
+	  		<table id="direct-reviewList-tbl" class="table" style="text-align: center;">
+		      	<colgroup>
+					<col style="width: 270px">
+					<col style="width: 200px">
+					<col style="width: 100px">
+					<col style="width: 160px">
+					<col style="width: 80px">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>제목</th>
+						<th>옵션</th>
+						<th>별점</th>
+						<th>작성일</th>
+						<th>추천수</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5">
+							<h3 style="margin: 60px 0;">작성한 후기가 없습니다.</h3>
+						</td>
+					</tr>
+				</tbody>
+			  </table>
 		</div>
 	  </c:if>
 	  <c:if test="${not empty dReviewList}">	
 	  <span style="font-size: 20px; display: block; position: relative; padding: 20px 0 70px;">Review</span>
-      <table id="direct-reviewList-tbl" class="table" style="undefined;table-layout: fixed; width: 1100px">
+      <table id="direct-reviewList-tbl" class="table" style="text-align: center;">
       	<colgroup>
-			<col style="width: 300px">
+			<col style="width: 270px">
 			<col style="width: 200px">
-			<col style="width: 200px">
-			<col style="width: 300px">
 			<col style="width: 100px">
+			<col style="width: 160px">
+			<col style="width: 80px">
 		</colgroup>
 		<thead>
 			<tr>
@@ -277,9 +301,9 @@
 			<c:forEach items="${dReviewList}" var="dReviewList">
 				<tr class="table-active">
 					<td style="text-align:left;">${dReviewList.dReviewTitle}</td>
-					<td style="text-align:left;">${dReviewList.reviewOpt.DOptionName}</td>
-					<td style="text-align:left;">⭐ ${dReviewList.reviewRating}</td>
-					<td style="text-align:left;">
+					<td style="text-align:center;">${dReviewList.reviewOpt.DOptionName}</td>
+					<td style="text-align:center;">⭐ ${dReviewList.reviewRating}</td>
+					<td style="text-align:center;">
 						<fmt:parseDate value="${dReviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
 						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
 					</td>
@@ -287,11 +311,11 @@
 				</tr>
 				<tr>
 				    <td rowspan="2">
-				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename == null}">
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename eq null}">
 				    	
 	    				</c:if>
-				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename != null}">
-				    		<img src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${reviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
+				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename ne null}">
+				    		<img style="display: inline-block; float: left; height: 120px; margin: 0 30px; width: 120px; object-fit: contain;" src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${dReviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
 				    	</c:if>
 				    </td>
 				    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
