@@ -123,15 +123,16 @@
   <div class="direct-footer-container">
   	  <div style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb;"></div>
   	  <nav class="direct-detail-nav">
-		  <div id="info" class="direct-detail-nav-item is-active">상품 정보</div>
-		  <div id="inquire" class="direct-detail-nav-item">상품 문의</div>
-		  <div id="review" class="direct-detail-nav-item">이용 후기</div>
+		  <a href="#contentLink" id="info" class="direct-detail-nav-item is-active">상품 정보</a>
+		  <a href="#inquireLink" id="inquire" class="direct-detail-nav-item">상품 문의</a>
+		  <a href="#reviewLink" id="review" class="direct-detail-nav-item">이용 후기</a>
 	  </nav>
-	  <div style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
+	  <div id="contentLink" style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
 	  <div class="dProductContent">
 	  	${directProduct.DProductContent}
 	  </div>
-	  <div class="dProductInquire">
+	  <div id="inquireLink" style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb; margin: 65px 0;"></div>
+	  <div id="dProductInquire" class="dProductInquire">
 	  	<span style="font-size: 20px; display: block; position: relative; padding: 20px 0;">Q & A</span>
 	  	<sec:authorize access="isAuthenticated()">
 		  	<div class="btn-dProductInquire">
@@ -239,8 +240,9 @@
 	  	${pagebar}
 	  	</nav>
 	  </div>
+	  <div id="reviewLink" style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb; margin: 65px 0;"></div>
 	 <!-- 재경 시작 -->
-	  <div class="dProductReview">
+	  <div id="dProductReview" class="dProductReview">
 	  <sec:authentication property="principal" var="loginMember" scope="page"/>
 
 	  <sec:authorize access="isAuthenticated()">
@@ -248,10 +250,12 @@
 	  </sec:authorize>
 	  <c:if test="${empty dReviewList}">
 	  	<div class="mx-auto mt-5 text-center">
+	  		<span style="font-size: 20px; display: block; position: relative; padding: 20px 0 70px;">Review</span>
 			<h3>작성한 후기가 없습니다.</h3>
 		</div>
 	  </c:if>
 	  <c:if test="${not empty dReviewList}">	
+	  <span style="font-size: 20px; display: block; position: relative; padding: 20px 0 70px;">Review</span>
       <table id="direct-reviewList-tbl" class="table" style="undefined;table-layout: fixed; width: 1100px">
       	<colgroup>
 			<col style="width: 300px">
@@ -315,7 +319,7 @@
       </div>
       <div class="modal-footer" style="justify-content: center; border-top: none;">
       	<button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; border: 1px solid #dee2e6;">취소</button>
-        <button type="button" id="deleteInquireBtn" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire()">확인</button>
+        <button type="button" id="deleteInquireBtn" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;">확인</button>
       </div>
     </div>
   </div>
@@ -923,32 +927,6 @@ items.forEach((item, index) => {
   item.classList.contains('is-active') && handleIndicator(item);
 });
 
-
-const detailNav = document.querySelectorAll(".direct-detail-nav-item");
-detailNav.forEach((nav) => {
-	nav.addEventListener('click', (e) => {
-		const info = document.querySelector('.dProductContent');
-		const inquire = document.querySelector('.dProductInquire');
-		const review = document.querySelector('.dProductReview');
-		
-		if(e.target.id == "info") {
-			info.style.display = 'block';
-			inquire.style.display = 'none';
-			review.style.display = 'none';
-		}
-		if(e.target.id == "inquire") {
-			info.style.display = 'none';
-			inquire.style.display = 'block';
-			review.style.display = 'none';
-		}
-		if(e.target.id == "review") {
-			info.style.display = 'none';
-			inquire.style.display = 'none';
-			review.style.display = 'block';
-		}
-	});
-});
-
 // 상품문의 등록하기 폼
 if(document.querySelector('#enrollInquire')) {
 	document.querySelector('#enrollInquire').addEventListener('click', (e) => {
@@ -1128,32 +1106,18 @@ function handleInputLength(el, max) {
 }
 
 function clickInquire (){
-	$('.tbl-inquire').load(window.location.href+' .tbl-inquire');
-	const info = document.querySelector('#info');
-	const inquire = document.querySelector('#inquire');
-	const review = document.querySelector('#review');
-	
-	inquire.classList.add('is-active');
-	info.classList.remove('is-active');
-	review.classList.remove('is-active');
-	
-	document.querySelector('.dProductContent').style.display = 'none';
-	document.querySelector('.dProductInquire').style.display = 'block';
-	document.querySelector('.dProductReview').style.display = 'none';
-	
-	if(document.querySelector('.tbl-inquire')) {
-		
-		$(function(){
-			$(".tbl-click-toggle").click(function (e){
-				let target = e.target;
-				console.log(target);
-		  	$(target).parent().next().toggle();
-		  });
-		});
-	}
-// 	inquire.click();
-	
+	location.reload();
+	location.href="#inquireLink";
 }
+document.querySelectorAll('.page-item').forEach((click) => {
+	click.addEventListener('click', (e) => {
+	const dProduct = document.querySelector('#dProductNo').value;
+	let cPage = e.target.innerText;
+		e.target.href=`?dProductNo=\${dProduct}&cPage=\${cPage}#inquireLink`;
+	})
+})
+
+
 
 //상품문의 토글
 if(document.querySelector('.tbl-inquire')) {
@@ -1161,7 +1125,6 @@ if(document.querySelector('.tbl-inquire')) {
 	$(function(){
 		$(".tbl-click-toggle").click(function (e){
 			let target = e.target;
-			console.log(target);
 	  	$(target).parent().next().toggle();
 	  });
 	});
@@ -1194,7 +1157,7 @@ if(document.querySelector(".deleteInquire")) {
 	 					        <p style="margin: 34px 0 12px;">상품 문의가 삭제되었습니다.</p>
 	 					      </div>
 	 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
-	 					        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire()">확인</button>
+	 					        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire();">확인</button>
 	 					      </div>
 	 					    </div>
 	 					  </div>
