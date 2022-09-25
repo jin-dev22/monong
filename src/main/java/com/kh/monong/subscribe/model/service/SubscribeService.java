@@ -70,10 +70,6 @@ public interface SubscribeService {
 	 */
 	SubscriptionWeekVegs getWeekVegsNotice(String weekCriterion);
 	
-	SubscriptionWeekVegs getRecentWeekVegsNotice();
-	
-	
-	
 	// 선아코드 끝
 		
 	// 미송코드 시작

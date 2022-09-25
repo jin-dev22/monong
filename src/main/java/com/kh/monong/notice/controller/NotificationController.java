@@ -96,10 +96,11 @@ public class NotificationController {
 	/**
 	 * 배너 클릭 시 주간채소 팝업
 	 */
-	@GetMapping("/popup/recent.do")
+	@GetMapping("/popup/recent/{weekCriterion}.do")
 	public String getRecentWeekVegsNotice(
+			@PathVariable String weekCriterion,
 			Model model, HttpServletRequest request) {
-		SubscriptionWeekVegs recentNoticeWeekVegs = subscribeService.getRecentWeekVegsNotice();
+		SubscriptionWeekVegs recentNoticeWeekVegs = subscribeService.getWeekVegsNotice(weekCriterion);
 		model.addAttribute("recentNoticeWeekVegs", recentNoticeWeekVegs);
 		return "/admin/popup";
 	}

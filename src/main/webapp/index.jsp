@@ -75,7 +75,8 @@ window.onload = function(){
 }
 // 배너 클릭 시 주간채소 팝업창으로 공지
 document.querySelector("#show_popup").addEventListener('click', () => {
-	let url = `${pageContext.request.contextPath}/notification/popup/recent.do`;
+	const weekCriterion = findMon();
+	let url = `${pageContext.request.contextPath}/notification/popup/recent/\${weekCriterion}.do`;
 	window.open(url, '채소공지팝업2', 'top=0, width=550, height=550, resizable=no, location=no');
 	
 });
