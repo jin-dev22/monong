@@ -544,6 +544,16 @@ public class DirectController {
 		
 		return "jsonView";
 	}
+	// 상품 문의 삭제
+	@PostMapping("/deleteInquire.do")
+	public String deleteInquire(@RequestParam int dInquireNo) {
+		log.debug("dInquireNo = {}", dInquireNo);
+		
+		int result = directService.deleteInquire(dInquireNo);
+		
+		return "jsonView";
+	}
+	
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작

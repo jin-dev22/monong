@@ -301,6 +301,24 @@ public class DirectServiceImpl implements DirectService {
 	public int getInquireTotalContent(String dProductNo) {
 		return directDao.getInquireTotalContent(dProductNo);
 	}
+	
+	@Override
+	public int deleteInquire(int dInquireNo) {
+		int result = 0;
+		
+		// 판매자 답변 조회
+		int checkCount = directDao.checkInquireAnswer(dInquireNo);
+		// 답변이 있는 경우
+		if(checkCount > 0) {
+			result = directDao.deleteInquireAnswer(dInquireNo);
+		}
+		
+		result = directDao.deleteInquire(dInquireNo);
+				
+		log.debug("result = {}", result);
+		
+		return result;
+	}
 	//----------------- 민지 끝
 	
 	//----------------- 수진 시작

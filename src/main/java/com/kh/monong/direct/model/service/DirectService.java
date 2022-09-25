@@ -78,6 +78,8 @@ public interface DirectService {
 	List<DirectInquire> findInquireAll(Map<String, Object> map);
 
 	int getInquireTotalContent(String dProductNo);
+	
+	int deleteInquire(int dInquireNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -99,6 +101,7 @@ public interface DirectService {
 
 	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
+
 
 }
 

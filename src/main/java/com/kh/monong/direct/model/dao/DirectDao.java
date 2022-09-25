@@ -150,6 +150,17 @@ public interface DirectDao {
 	
 	@Select("select count(*) from direct_inquire where d_product_no = #{dProductNo}")
 	int getInquireTotalContent(String dProductNo);
+	
+	// 판매자 답변 조회
+	@Select("select count(*) from direct_inquire_answer where d_inquire_no = #{dInquireNo}") 
+	int checkInquireAnswer(int dInquireNo);
+	
+	// 판매자 답변 삭제
+	@Delete("delete from direct_inquire_answer where d_inquire_no = #{dInquireNo}")
+	int deleteInquireAnswer(int dInquireNo);
+	
+	@Delete("delete from direct_inquire where d_inquire_no = #{dInquireNo}")
+	int deleteInquire(int dInquireNo);
 	//----------------- 민지 끝
 
 	//----------------- 수진 시작
@@ -177,5 +188,8 @@ public interface DirectDao {
 	@Select("select member_id from direct_product where d_product_no = #{no}")
 	String selectSellerIdByProdNo(String no);
 	//----------------- 수진 끝
+
+
+
 
 }

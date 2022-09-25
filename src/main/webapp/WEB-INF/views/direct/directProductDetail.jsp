@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/direct/direct.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginMember" scope="page" />
+	<c:set var="loginMemberId" value="${loginMember.memberId}"/>
 	<input type="hidden" id="memberId" value="<sec:authentication property='principal.username'/>" />
 </sec:authorize>
 <main class="main-container">
@@ -157,7 +159,15 @@
   	  	  	  	</c:if>
   	  	  	  	<c:if test="${not empty dInquireList}">
   	  	  	  	<c:forEach items="${dInquireList}" var="inquireList">
-	  	  	  	<input type="hidden" name="dInquireNo" value="${inquireList.DInquireNo}" />
+  	  	  	  	<c:if test="${inquireList.checkSecret eq 'Y' && inquireList.memberId ne loginMemberId}">
+  	  	  	  	<tr>
+  	  	  	  		<td colspan="4" style="text-align: left; padding: 0 14px; height: 58px;">
+  	  	  	  			<img style="display: inline-block; position: relative; bottom: 3px; padding-right: 5px;" src="${pageContext.request.contextPath}/resources/images/secret.png" alt="" />비밀글입니다.
+  	  	  	  		</td>
+  	  	  	  	</tr>
+  	  	  	  	</c:if>
+  	  	  	  	<c:if test="${inquireList.checkSecret eq 'Y' && inquireList.memberId eq loginMemberId}">
+  	  	  		<input type="hidden" name="dInquireNo" value="${inquireList.DInquireNo}" />
   	  	  	  	<tr class="tbl-click-toggle">
 	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">${inquireList.inquireTitle}</td>
 	  	  	  		<td>${inquireList.memberName}</td>
@@ -176,7 +186,42 @@
 		  	  	  			<div class="inquire-content">
 		  	  	  				<div class="Q">Q</div>
 		  	  	  				<span class="inquire-q">${inquireList.content}</span>
-		  	  	  				<button id="deleteInquire" type="button">삭제</button>
+		  	  	  				<c:if test='${inquireList.memberId eq loginMemberId}'>
+		  	  	  				<button class="deleteInquire" type="button">삭제</button>
+		  	  	  				</c:if>
+		  	  	  			</div>
+		  	  	  			<c:if test="${inquireList.directInquireAnswer.DInquireAContent ne null}">
+		  	  	  			<fmt:parseDate value="${inquireList.directInquireAnswer.DInquireAnsweredAt}" var="answerCreatedAt" pattern="yyyy-MM-dd" />
+		  	  	  			<div class="inquire-answer"><div class="A">A</div><span class="inquire-a">${inquireList.directInquireAnswer.DInquireAContent}</span><span class="inquire-a-answer"><fmt:formatDate value="${answerCreatedAt}" pattern="yy.MM.dd" /></span></div>
+		  	  	  			</c:if>
+		  	  	  		</div>
+	  	  	  		</td>
+	  	  	  	</tr>
+  	  	  	  	</c:if>
+  	  	  	  	<c:if test="${inquireList.checkSecret eq 'N'}">
+	  	  	  	<input type="hidden" name="dInquireNo" value="${inquireList.DInquireNo}" />
+  	  	  	  	<tr class="tbl-click-toggle">
+	  	  	  		<td style="text-align: left; padding: 0 14px; height: 58px;">${inquireList.inquireTitle}</td>
+	  	  	  		<td>${inquireList.memberName}</td>
+	  	  	  		<fmt:parseDate value="${inquireList.createdAt}" var="createdAt" pattern="yyyy-MM-dd" />
+	  	  	  		<td><fmt:formatDate value="${createdAt}" pattern="yy.MM.dd" /></td>
+	  	  	  		<c:if test="${inquireList.hasAnswer eq 'Y'}">
+	  	  	  		<td>답변완료</td>
+	  	  	  		</c:if>
+	  	  	  		<c:if test="${inquireList.hasAnswer ne 'Y'}">
+	  	  	  		<td>답변대기</td>
+	  	  	  		</c:if>
+	  	  	  	</tr>
+	  	  	  	</c:if>
+	  	  	  	<tr class="tbl-toggle" style="display: none;">
+	  	  	  		<td colspan="4" style="background-color: rgb(250, 250, 250);">
+		  	  	  		<div class="inquire-content-container">
+		  	  	  			<div class="inquire-content">
+		  	  	  				<div class="Q">Q</div>
+		  	  	  				<span class="inquire-q">${inquireList.content}</span>
+		  	  	  				<c:if test='${inquireList.memberId eq loginMemberId}'>
+		  	  	  				<button class="deleteInquire" type="button">삭제</button>
+		  	  	  				</c:if>
 		  	  	  			</div>
 		  	  	  			<c:if test="${inquireList.directInquireAnswer.DInquireAContent ne null}">
 		  	  	  			<fmt:parseDate value="${inquireList.directInquireAnswer.DInquireAnsweredAt}" var="answerCreatedAt" pattern="yyyy-MM-dd" />
@@ -261,7 +306,7 @@
 </main>
 <div class="enroll-inquire-modal-container"></div>
 <div class="enroll-inquire-complete-container"></div>
-<div class="enroll-inquire-delete-container"></div>
+<div class="inquire-delete-container"></div>
 <div class="modal fade" id="inquire-delete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
     <div class="modal-content">
@@ -269,12 +314,13 @@
         <p style="margin: 34px 0 12px;">상품 문의를 삭제하시겠습니까?</p>
       </div>
       <div class="modal-footer" style="justify-content: center; border-top: none;">
-      	<button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; width: 80px; border: 1px solid #dee2e6;">취소</button>
-        <button type="button" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: 13px;" onclick="clickInquire()">확인</button>
+      	<button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 16px; border: 1px solid #dee2e6;">취소</button>
+        <button type="button" id="deleteInquireBtn" class="btn btn-116530" data-bs-dismiss="modal" style="font-size: font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire()">확인</button>
       </div>
     </div>
   </div>
 </div>
+<div class="inquire-delete-complete-container"></div>
 <script>
 // 후기 추천
 const dReviewRecommend = () => {	
@@ -1122,15 +1168,47 @@ if(document.querySelector('.tbl-inquire')) {
 }
 
 // 내 문의글 삭제
-if(document.querySelector("#deleteInquire")) {
-	document.querySelector("#deleteInquire").addEventListener('click', (e) => {
-		
-		$('#inquire-delete-modal').modal("show");
-		
-// 		$.ajax({
-// 			url:"${pageContext.request.contextPath}/"
-// 		});
+if(document.querySelector(".deleteInquire")) {
+	document.querySelectorAll(".deleteInquire").forEach((no) => {
+		no.addEventListener('click', (e) => {
+			const dInquireNo = e.target.parentElement.parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling;
+			const headers = {};
+			headers['${_csrf.headerName}'] = '${_csrf.token}';
+			console.log(headers);
+			
+			$('#inquire-delete-modal').modal("show");
+			
+			document.querySelector('#deleteInquireBtn').addEventListener('click', (e) => {
+				$.ajax({
+	 				url:"${pageContext.request.contextPath}/direct/deleteInquire.do",
+	 				method : "POST",
+	 				headers,
+	 				data : {dInquireNo : Number(dInquireNo.value)},
+	 				success(response) {
+	 					const containerCom = document.querySelector('.inquire-delete-complete-container');
+	 					const modal = `
+	 					<div class="modal fade" id="inquire-delete-complete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
+	 					  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 330px;">
+	 					    <div class="modal-content">
+	 					      <div class="modal-body" style="display: flex; justify-content: center;">
+	 					        <p style="margin: 34px 0 12px;">상품 문의가 삭제되었습니다.</p>
+	 					      </div>
+	 					      <div class="modal-footer" style="justify-content: center; border-top: none;">
+	 					        <button type="button" class="btn" data-bs-dismiss="modal" style="font-size: 13px; background-color: #F6D860; color: #fff; border: 1px solid #F6D860;" onclick="clickInquire()">확인</button>
+	 					      </div>
+	 					    </div>
+	 					  </div>
+	 					</div>`;
+	 					
+	 					containerCom.innerHTML = modal;
+	 					
+	 					$('#inquire-delete-complete-modal').modal("show");
+	 				},
+	 				error : console.log
+	 			});
+			});
+		});
 	});
-}
+}	
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
