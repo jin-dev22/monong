@@ -97,7 +97,7 @@
 			  <tr>
 			    <th>결제정보</th>
 			    <td></td>
-			    <td>결제일자 : ${subDetail.sub.SPaymentDate}</td>
+			    <td class="payDate">결제일자 : ${fn:substring(subDetail.sOrderDate,0,10)}</td>
 			  </tr>
 			  <tr>
 			    <td>카드</td>
@@ -115,4 +115,5 @@
 	<h2>합계 : ${subDetail.sPrice + subDetail.prod.SDeliveryFee} 원</h2>
 	
 </div>
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

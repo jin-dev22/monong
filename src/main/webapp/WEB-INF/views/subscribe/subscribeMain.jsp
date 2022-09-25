@@ -13,8 +13,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sMain.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/subscribe/sReview.css">
-
-	<h1>모농모농 정기구독 이용안내</h1>
+<div class="container subMain-container">
+	<div class="row row1">
+		<div class="col"><a href="#sub-info">이용 안내</a></div>
+	</div>
+	<div class="row">
+		<div class="col"><a href="#sub-review">이용 후기</a></div>
+	</div>
+</div>
+<div id="sub-info"></div>
+<h1 id="sub-info">모농모농 정기구독 이용안내</h1>
 	<div class="s-info-step step1">
 		<div class="s-info-step-title">
 			<span class="badge rounded-pill text-dark">Step 1</span> <span>구독신청</span>
@@ -88,10 +96,14 @@
 		<div class="step2-footer">
 			<span>&#128504; 배송 미루기</span> <span>&#128504; 구독 플랜 수정하기</span><br />
 			<span>※ 매주 화요일까지 변경 가능</span><br />
-			<sec:authorize access="isAnonymous()"> 
+			<sec:authorize access="isAnonymous()">
 				<button type="button" id="gotoLogin" class="btn btn-EA5C2B">구독하기</button>
 			</sec:authorize>
-			<sec:authorize access="isAuthenticated()">
+			<sec:authorize access="hasRole('ROLE_SELLER')">
+					<button type="button" id="onlyMemberUse" class="btn btn-EA5C2B" disabled>구독하기</button></br>
+					<span>판매자는 이용하실 수 없습니다. 일반회원으로 회원가입 후 이용해주세요!</span>
+				</sec:authorize>
+			<sec:authorize access="hasRole('ROLE_MEMBER')">
 		    	<c:if test="${isSubscribe eq 'Y'}">
 					<button type="button" id="gotoPlan" class="btn btn-EA5C2B" disabled>구독하기</button>
 				</c:if>
@@ -101,7 +113,7 @@
 			</sec:authorize>
 		</div>
 	</div>
-
+<div id="sub-review"></div>
 <h1>후기</h1>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 
@@ -168,7 +180,6 @@ if(gotoPlan != null){
 		location.href = `${pageContext.request.contextPath}/subscribe/subscribePlan.do`;
 	});
 }
-
 
 window.onload = () => {
 	sReviewList();

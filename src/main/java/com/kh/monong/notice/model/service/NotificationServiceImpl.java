@@ -1,16 +1,15 @@
 package com.kh.monong.notice.model.service;
 
+import java.util.List;
+
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 import com.kh.monong.notice.model.dao.NotificationDao;
 import com.kh.monong.notice.model.dto.MemberNotification;
-
-import org.springframework.transaction.annotation.Transactional;
-
 
 import lombok.extern.slf4j.Slf4j;
 

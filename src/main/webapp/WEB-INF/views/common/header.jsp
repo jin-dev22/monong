@@ -61,7 +61,7 @@ span#new-notice{
 			<img src="${pageContext.request.contextPath}/resources/images/logo.PNG" alt="모농모농 로고이미지" />
 		</a>
 		<nav class="nav mainmenu">
-			<a class="nav-link" href="#">&#128204;사이트소개</a>
+			<a class="nav-link" href="${pageContext.request.contextPath}/common/brandStory.do">&#128204;사이트소개</a>
 			<a class="nav-link"	href="${pageContext.request.contextPath}/subscribe/subscribeMain.do">정기구독&#127822;</a>
 			<a class="nav-link" href="${pageContext.request.contextPath}/direct/directProductList.do">직거래&#127805;</a>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">

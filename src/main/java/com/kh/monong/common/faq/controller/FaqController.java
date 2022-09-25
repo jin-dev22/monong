@@ -28,6 +28,15 @@ public class FaqController {
 	@Autowired
 	private FaqService faqService;
 	
+	/**
+	 * 브랜드스토리
+	 */
+	@GetMapping("/brandStory.do")
+	public void brandStory() {}
+	
+	/**
+	 * FAQ
+	 */
 	@GetMapping("/faqList.do")
 	public void faqList(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		Map<String, Integer> param = new HashMap<>();

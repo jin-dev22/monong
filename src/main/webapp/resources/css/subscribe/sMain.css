@@ -1,14 +1,37 @@
 /* 선아 시작 */
-#content {
-	width: 1240px;
-	margin: auto;
-	/* header때문에 추가해야함 */
-	padding-top: 150px;
+.subMain-container {
+	position: fixed;
+	width: 100px;
+	text-align: center;
+	font-size: 20px;
+	right: 20px;
+	background-color: #fff;
+	border-radius: 10px;
 }
-
+.subMain-container .row1{
+	margin-bottom: 5px;
+}
+.subMain-container .col {
+	background-color: #f6d8603d;
+	border-radius: 10px;
+}
+.subMain-container .col:hover {
+	cursor: pointer;
+	background-color: #f6d860;
+	border-radius: 10px;
+}
+.subMain-container .col a {
+	display: block;
+	text-decoration: none;
+	padding: 15px;
+}
+.subMain-container .col a:hover {
+	color: inherit;
+}
 #content h1 {
 	color: #EA5C2B;
 	font-weight: 700;
+	margin-top: 50px;
 }
 
 .s-info-step {
