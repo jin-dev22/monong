@@ -11,6 +11,7 @@
 <jsp:include page="/WEB-INF/views/member/memberMyPage.jsp">
 	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>
 </jsp:include>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
 <div id="member-directInquire-container">
 	<c:if test="${empty directInqList}">
 		<div class="mx-auto mt-5 text-center">
@@ -20,7 +21,7 @@
 	</c:if>
 	<c:if test="${not empty directInqList}">
 		<div class="mx-auto mt-5 text-center">
-			<h3>관리자 문의내역</h3>
+			<h3>판매자 문의내역</h3>
 		</div>
 		<table class="table table-border text-center mb-0">
 		<colgroup>
