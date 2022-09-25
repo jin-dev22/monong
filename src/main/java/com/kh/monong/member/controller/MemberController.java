@@ -703,7 +703,7 @@ public class MemberController {
 		
 		redirectAttr.addFlashAttribute("msg", email+"로 아이디를 보냈습니다. 이메일을 확인해주세요");
 		
-		return "redirect:/member/memberIdSearchForm.do";
+		return "redirect:/member/memberLogin.do";
 	} 
 	
 	@GetMapping("/memberPwSearchForm.do")
@@ -732,12 +732,12 @@ public class MemberController {
 		map.put("memberTempPw", memberTempPw);
 		int result = memberService.updateTempPw(map);
 		
-		UserDetails updatedMember = memberSecurityService.loadUserByUsername(member.getMemberId());
-		Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
-				updatedMember, 
-				updatedMember.getPassword(),
-				updatedMember.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+//		UserDetails updatedMember = memberSecurityService.loadUserByUsername(member.getMemberId());
+//		Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+//				updatedMember, 
+//				updatedMember.getPassword(),
+//				updatedMember.getAuthorities());
+//		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 		
 		sendMail.setSubject("모농모농 임시 비밀번호 발급");
 		sendMail.setText("<h1>임시 비밀번호</h1>"
