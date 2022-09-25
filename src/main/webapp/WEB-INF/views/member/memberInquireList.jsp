@@ -17,7 +17,7 @@
 	<c:if test="${empty inqList}">
 		<div class="mx-auto mt-5 text-center">
 			<h3>문의하신 내역이 없어요 :(</h3>
-			<span>아래 '문의하기' 에서 관리자에게 문의하실 수 있습니다</span>
+			<span>아래 '문의하기' 에서 관리자에게 문의하실 수 있어요!</span>
 		</div>
 	</c:if>
 	<c:if test="${not empty inqList}">

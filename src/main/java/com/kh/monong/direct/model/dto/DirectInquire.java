@@ -17,10 +17,11 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 public class DirectInquire extends DirectInquireEntity {
 	private String dProductName;
+	private String memberName;
 	private DirectInquireAnswer directInquireAnswer;
 	
 	public DirectInquire(long dInquireNo, String dProductNo, String memberId, String inquireTitle,
-						String content, LocalDate createdAt, YN hasAnswer) {
-		super(dInquireNo, dProductNo, memberId, inquireTitle, content, createdAt, hasAnswer);
+						String content, LocalDate createdAt, YN hasAnswer, YN checkSecret) {
+		super(dInquireNo, dProductNo, memberId, inquireTitle, content, createdAt, hasAnswer, checkSecret);
 	}
 }

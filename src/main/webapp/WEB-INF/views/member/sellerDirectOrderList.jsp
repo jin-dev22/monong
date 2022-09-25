@@ -39,7 +39,7 @@
 	</script>
 	<span>해당 기간의 총 주문 건수는 ${totalContent}건 입니다.</span>
 	<c:if test="${empty orderList}">	
-		<div>해당상품의 주문내역이 없습니다.</div>
+		<div>해당상품의 주문내역이 없어요 :(</div>
 	</c:if>
 	
 	<br />
@@ -114,13 +114,40 @@
 		</nav>
 	</c:if>
 </div>
+
+
 <script>
-$("#lnik-orderList").css("color","EA5C2B")
+	/**
+	 * 페이지 로드시 주문상태 이전단계 disabled처리
+	 */
+	(function(){
+		const allOrderStatus = document.querySelectorAll("[name=orderStatus]");
+		//console.log(allOrderStatus);
+		let cnt = 0;
+		allOrderStatus.forEach((select)=>{
+			const opts =  Array.from(select.getElementsByTagName("option"));
+			switch(select.value){
+			case 'P': cnt = 1; break;
+			case 'R': cnt = 2; break;
+			case 'C': cnt = 3; break;
+			case 'D': cnt = 4; break;
+			case 'F': cnt = 5; break;
+			}
+			opts.forEach((opt, i)=>{
+				if(i < cnt){
+					opt.disabled = true;
+					console.log("옵션"+i,opt);
+				}
+			});
+		})
+	})();
+
+
 
 	const headers = {};
 	headers['${_csrf.headerName}'] = '${_csrf.token}';
 	const chkSubmit = (frm) =>{
-		console.log(frm);
+		//console.log(frm);
 		const {orderStatus, dOrderNo, dOrderMember} = frm;
 		const dOptionNoList = Array.from(frm.querySelectorAll("[name=dOptionNo]"));
 		const dOptionCountList = Array.from(frm.querySelectorAll("[name=dOptionCount]"));
@@ -132,7 +159,7 @@ $("#lnik-orderList").css("color","EA5C2B")
 			arr.push(input.value);
 			return arr;
 		},[]);
-		console.log(dOptionNo, dOptionCount);
+		//console.log(dOptionNo, dOptionCount);
 		let StatusforAlert = "";
 		let cnt = 0;
 		switch(orderStatus.value){
@@ -142,10 +169,10 @@ $("#lnik-orderList").css("color","EA5C2B")
 		case 'D': StatusforAlert = "배송중"; cnt = 4; break;
 		case 'F': StatusforAlert = "배송완료"; cnt = 5; break;
 		}
-		console.log(StatusforAlert);
+		//console.log(StatusforAlert);
 		if(confirm("진행상태는 변경 후 이전단계로 돌릴 수 없어요.\n주문번호["+dOrderNo.value+"]의 진행상태를 ["+StatusforAlert+"](으)로 변경하시겠어요?")){
 			const opts =  Array.from(orderStatus.getElementsByTagName("option"));
-			console.log(opts);
+			//console.log(opts);
 			//return;
 			$.ajax({
 				url : "${pageContext.request.contextPath}/member/updateDOrderStatus.do",
@@ -159,7 +186,7 @@ $("#lnik-orderList").css("color","EA5C2B")
 						opts.forEach((opt, i)=>{
 							if(i < cnt){
 								opt.disabled = true;
-								console.log(opt.disabled);
+								//console.log("옵션"+i,opt);
 							}
 						});
 					};
@@ -173,6 +200,8 @@ $("#lnik-orderList").css("color","EA5C2B")
 		
 	};
 	
+	//현재 탭 표시	
+	$("#lnik-orderList").css("color","EA5C2B")	
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
