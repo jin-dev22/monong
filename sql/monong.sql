@@ -478,6 +478,15 @@ alter table direct_review_attachment drop constraint fk_direct_review_no;
 alter table direct_review_attachment add constraint fk_direct_review_no foreign key(d_review_no) 
 references direct_review(d_review_no) on delete cascade;
 
+-- 0925 재경 - 회원별 직거래후기 추천 목록 테이블 생성
+CREATE TABLE recommended_direct_review (
+	member_id	varchar2(100)		NOT NULL,
+	d_review_no	varchar2(100)		NOT NULL
+);
+ALTER TABLE recommended_direct_review ADD CONSTRAINT PK_RECOMMENDED_DIRECT_REVIEW PRIMARY KEY (member_id, d_review_no);
+ALTER TABLE recommended_direct_review ADD CONSTRAINT fk_r_d_r_member_id FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE recommended_direct_review ADD CONSTRAINT fk_r_d_r_d_review_no FOREIGN KEY (d_review_no) REFERENCES direct_review (d_review_no);
+
 create sequence seq_d_product_no;
 create sequence seq_d_product_attach_no;
 create sequence seq_d_option_no;
@@ -486,6 +495,9 @@ create sequence seq_d_inquire_no;
 create sequence seq_d_review_no;
 create sequence seq_d_review_attach_no;
 commit;
+
+-- 회원별 정기구독후기 추천 목록 테이블 생성(9/13)
+
 -- 직거래 끝
 
 --security remember-me 테이블
