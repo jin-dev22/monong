@@ -47,8 +47,8 @@
 		<c:forEach items="${orderList}" var="order">
 			<div class="prod-order-container">
 				<div class="order-container-row ord-row-1">
-					<span>주문번호 ${order.dOrderNo}</span>
-					<span>주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
+					<span class="order-head">주문번호 ${order.dOrderNo}</span>
+					<span class="order-head">주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
 				</div>
 				<div class="order-container-row ord-row-2">
 					<div class="order-prodName">${prodName}</div>

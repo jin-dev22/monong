@@ -7,6 +7,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="/WEB-INF/views/member/sellerMyPage.jsp"></jsp:include>
+
 <div id="prodList-container">
 	<form name="directProdOrdFilterFrm" action="${pageContext.request.contextPath}/member/sellerDirectOrderList.do" method="GET">
 		<input type="hidden" name="prodNo" value="${param.prodNo}"/>
@@ -44,61 +45,67 @@
 	<br />
 
 	<c:if test="${not empty orderList}">
-		<c:forEach items="${orderList}" var="order">
+		<c:forEach items="${orderList}" var="order" varStatus="vs">
 			<div class="prod-order-container">
 				<div class="order-container-row ord-row-1">
-					<span>주문번호 ${order.dOrderNo}</span>
-					<span>주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
+					<span class="order-head">주문번호 ${order.dOrderNo}</span>
+					<span class="order-head">주문일자 : <fmt:formatDate value="${order.dOrderDate}" pattern="yyyy-MM-dd"/></span>
 				</div>
-				<div class="order-container-row ord-row-2">
-				<c:forEach items="${order.orderProducts}" var="prod">
-					<div class="product-container">
-						<div class="order-prodName">${prod.dProductName}</div>
-						<div class="order-options">
-							<c:forEach items="${prod.orderOptions}" var="opt">
-								<span>선택옵션 : ${opt.dOptionName}</span>&nbsp;&nbsp;
-								<span>수량 : ${opt.dOptionCnt}</span>
-								<span>주문금액 :<fmt:formatNumber value="${opt.dOptPrice * opt.dOptionCnt}" pattern="#,###" /> </span>
-								<br />
-							</c:forEach>
+				<div class="order-container-put-toghether">
+					<div class="order-container-left">
+					<c:forEach items="${order.orderProducts}" var="prod">
+						<div class="product-container">
+							<div class="order-prodName">${prod.dProductName}</div>
+							<div class="order-options">
+								<c:forEach items="${prod.orderOptions}" var="opt">
+									<span>선택옵션 : ${opt.dOptionName}</span>&nbsp;&nbsp;
+									<span>수량 : ${opt.dOptionCnt}</span>
+									<span>주문금액 :<fmt:formatNumber value="${opt.dOptPrice * opt.dOptionCnt}" pattern="#,###" /> </span>
+									<br />
+								</c:forEach>
+							</div>
+						</div>
+					</c:forEach>
+					</div>
+					<div class="order-container-right">
+						<div>총 결제금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
+						<div class="order-customer">주문자 아이디 : ${order.customerId}</div>
+						<br />
+						<div class="order-status">
+							<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
+								method="POST" accept-charset="UTF-8">
+								<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);"
+										${order.dOrderStatus eq 'C' ? 'disabled' : ''}>
+									<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
+									<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
+									<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
+									<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
+									<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
+								</select>
+								<input type="hidden" name="dOrderNo" value="${order.dOrderNo}"/>
+								<input type="hidden" name="dOrderMember" value="${order.customerId}"/>
+								<c:forEach items="${order.orderProducts}" var="prod">
+									<c:forEach items="${prod.orderOptions}" var="opt">
+										<input type="hidden" name="dOptionNo"  value="${opt.dOptionNo}" />
+										<input type="hidden" name="dOptionCount" value="${opt.dOptionCnt}" />
+									</c:forEach>
+								</c:forEach>
+								<sec:csrfInput />
+							</form>
 						</div>
 					</div>
-				</c:forEach>
-						<div>총 결제금액 : <fmt:formatNumber value="${order.dTotalPrice}" pattern="#,###" /> </div>
-					<div class="order-customer">주문자 아이디 : <br />${order.customerId}</div>
-					<div class="order-status">
-						<form class="ordStatusUpdateFrm" action="${pageContext.request.contextPath}/member/updateOrderStatus.do"
-							method="POST" accept-charset="UTF-8">
-							<select name="orderStatus" class="order-status-update"  onchange="chkSubmit(this.form);"
-									${order.dOrderStatus eq 'C' ? 'disabled' : ''}>
-								<option value="P" ${order.dOrderStatus eq 'P' ? 'selected' : ''}>결제완료</option>
-								<option value="R" ${order.dOrderStatus eq 'R' ? 'selected' : ''}>상품준비중</option>
-								<option value="C" ${order.dOrderStatus eq 'C' ? 'selected' : ''}>주문취소</option>
-								<option value="D" ${order.dOrderStatus eq 'D' ? 'selected' : ''}>배송중</option>
-								<option value="F" ${order.dOrderStatus eq 'F' ? 'selected' : ''}>배송완료</option>
-							</select>
-							<input type="hidden" name="dOrderNo" value="${order.dOrderNo}"/>
-							<input type="hidden" name="dOrderMember" value="${order.customerId}"/>
-							<c:forEach items="${order.orderProducts}" var="prod">
-								<c:forEach items="${prod.orderOptions}" var="opt">
-									<input type="hidden" name="dOptionNo"  value="${opt.dOptionNo}" />
-									<input type="hidden" name="dOptionCount" value="${opt.dOptionCnt}" />
-								</c:forEach>
-							</c:forEach>
-							<sec:csrfInput />
-						</form>
+				</div>
+				<div class="order-container-put-toghether">	
+					<div class="order-container-row ord-row-4">
+						<div class="order-address">주소 : ${order.dDestAddress}, ${order.dDestAddressEx}</div>
 					</div>
-				</div>
-
-				<div class="order-container-row ord-row-3">
-					<div class="order-address">${order.dDestAddress}, ${order.dDestAddressEx}</div>
-				</div>
-				<div class="order-container-row ord-row-4">
-					<span class="order-req">배송요청사항 : ${order.dDeliveryRequest}</span>	
-					<div>
-						<span class="order-receive">수령인 : ${order.dRecipient}</span>&nbsp;&nbsp;		
-						<span class="order-recPhone">${order.dOrderPhone}</span>
-					</div>	
+					<div class="order-container-row ord-row-5 order-container-right">
+						<span class="order-req">배송요청사항 : ${order.dDeliveryRequest}</span>	
+						<div>
+							<span class="order-receive">수령인 : ${order.dRecipient}</span>&nbsp;&nbsp;		
+							<span class="order-recPhone">${order.dOrderPhone}</span>
+						</div>	
+					</div>
 				</div>
 			</div>
 		</c:forEach>
