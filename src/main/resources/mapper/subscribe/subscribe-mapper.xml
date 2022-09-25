@@ -36,9 +36,9 @@
 	     subscription_review sr
 	        left join subscription_review_attachment sra
 	            on sr.s_review_no = sra.s_review_no
-	        join subscription_order so
+	        left join subscription_order so
 	            on sr.s_order_no = so.s_order_no
-	        join subscription s
+	        left join subscription s
 	            on so.s_no = s.s_no
 	order by sr.s_review_created_at desc
   </select>
@@ -57,9 +57,9 @@
 	    subscription_review sr 
 	        left join subscription_review_attachment sra
 	            on sr.s_review_no = sra.s_review_no
-	        join subscription_order so
+	        left join subscription_order so
 	            on sr.s_order_no = so.s_order_no
-	        join subscription s 
+	        left join subscription s 
 	            on so.s_no = s.s_no
 	where sr.s_review_no = #{sReviewNo}
   </select>

@@ -89,6 +89,11 @@ body {
     margin-bottom: 10px;
 }
 
+.stars-wrapper{
+	width: fit-content;
+    margin: 0 auto;
+}
+
 .m-s-review-stars{
 	font-size: 50px;
 	background-color: white;
@@ -104,7 +109,7 @@ body {
 }
 
 .m-s-review-stars.filled{
-	color: #EA5C2B;
+	color: #F6D860;;
 }
 
 .m-s-review-content-container{
@@ -147,12 +152,20 @@ body {
 	border-bottom: 2px solid #116530;
 }
 
+.attach-sub-info{
+	margin-bottom: 5px;
+}
+
 .m-s-review-attachs{
 	display: none;
 }
 
 .m-s-review-attachs.active{
 	display: block;
+}
+
+.m-s-review-attachs img{
+	cursor: pointer;
 }
 
 .m-s-review-attach{
@@ -163,7 +176,15 @@ body {
     margin: 5px 0;
 }
 
- 
+.img-wrapper-delete{
+	border: 3px solid red;
+    background-color: #eda9a9;
+    width: fit-content;
+    height: fit-content;
+    margin: 0 auto;
+    display: absolute;
+}
+
 </style>
 <body>
 
@@ -176,86 +197,110 @@ body {
     <input type="hidden" name="sReviewNo" value="${sReview.SReviewNo}"/>
     <div class="m-s-review-container">
         <p class="m-s-review-info">이번 구독에 만족하셨나요?</p>
-        <div>
+        <div class="stars-wrapper">
         <button type="button" class="m-s-review-stars star1">★</button>
         <button type="button" class="m-s-review-stars star2">★</button>
         <button type="button" class="m-s-review-stars star3">★</button>
         <button type="button" class="m-s-review-stars star4">★</button>
         <button type="button" class="m-s-review-stars star5">★</button>
         </div>
-        <input type="hidden" class="m-s-review-stars-selected" name="sReviewStar" value="0">
+        <input type="hidden" class="m-s-review-stars-selected" name="sReviewStar" value="${sReview.SReviewStar}">
     </div>
     <div class="m-s-review-container">
         <p class="m-s-review-info content-info">어떤 점이 좋았나요?</p>
         <div class="m-s-review-content-container">
-            <textarea class="m-s-review-content" name="sReviewContent" cols="30" rows="10">${sReview.SReviewContent}</textarea>
+            <textarea class="m-s-review-content" name="sReviewContent">${sReview.SReviewContent}</textarea>
             <div class="content-length-wrapper">
                 <span class="m-s-review-content-length">${fn:length(sReview.SReviewContent)}</span>
-                <span>/ 1000</span>
+                <span>/ 500</span>
             </div>
         </div>
 		<div class="m-s-review-attach-container">
-	        <p class="m-s-review-info attach-info">사진 첨부하기</p>
+	        <p class="m-s-review-info attach-info"></p>
 	        <div class="m-s-review-attachs">
-		        <p>최대 3개까지 첨부 가능합니다.</p>
+		        <p class="attach-sub-info">최대 3개까지 첨부 가능합니다.</p>
 		        <c:forEach items="${sReview.SAttachments}" var="attach">
-		        	<div onclick="delImg(this)">
-		        	<input type="checkbox" id="delFile${vs.count}" class="attachTest" name="delFiles" value="${attach.SAttachNo}" style="display:none;">
-		        	<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/${attach.SReviewRenamedFilename}" alt="" width="300px"/>
+		        	<div onclick="delImg(this)" style="margin: 10px 0;">
+			        	<input type="checkbox" id="delFile${vs.count}" name="delFiles" value="${attach.SAttachNo}" style="display:none;">
+			        	<div>
+			        		<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/${attach.SReviewRenamedFilename}" alt="" width="300px"/>
+			        	</div>
 		        	</div>
-				
 		        </c:forEach>
-		        <input type="hidden" class="attach-cnt" name="" value="${fn:length(sReview.SAttachments)}"/>
-		        <div class="attach-container">
-		        
-			 	</div>
+		        <input type="hidden" class="attached-cnt" value="${fn:length(sReview.SAttachments)}"/>
+		        <div class="attach-container"></div>
 		 	</div>
 		</div>
     </div>
-    <button class="btn btn-EA5C2B-reverse btn-m-s-review-submit" disabled>후기 수정</button>
+    <button class="btn btn-EA5C2B btn-m-s-review-submit">후기 수정</button>
 
 </form>
 </section>
 <script>
-let attachCnt;
+let attachedCnt = Number(document.querySelector(".attached-cnt").value);
+console.log('attachedCnt', attachedCnt);
+
 window.onload = () => {
-	attachCnt = document.querySelector(".attach-cnt").value;
+	const starVal = document.querySelector(".m-s-review-stars-selected").value;
+	console.log('starVal', starVal);
 	
-	for(let i = 1; i <= 3 - attachCnt; i++){
-		document.querySelector(".attach-container").innerHTML +=
-			`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" multiple>`;
-		
+	// 기존에 선택했던 별점 나타내기
+	for(let i = 1; i <= starVal; i++){
+		// console.log(document.querySelector(`.star\${i}`));
+		document.querySelector(`.star\${i}`).classList.add('filled');
 	}
 	
+	// 기존후기 사진첨부 개수에 따라 사진첨부창 추가
+	for(let i = 1; i <= 3 - attachedCnt; i++){
+		document.querySelector(".attach-container").innerHTML +=
+			`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" accept="image/*" multiple>`;
+	}
 	
-}
-let cnt;
+	// 기존후기 사진첨부 유무에 따라 첨부 안내문구 다르게 하기
+	if(attachedCnt === 0){
+		document.querySelector(".attach-info").innerHTML = '사진 첨부하기';
+	}
+	else{
+		document.querySelector(".attach-info").innerHTML = '사진첨부목록 확인 및 수정';
+		document.querySelector(".attach-sub-info").insertAdjacentHTML('afterend', '<p>사진을 클릭한 상태로 제출하시면 해당 사진은 삭제됩니다.</p>'); 
+	}
+};
+
+
 const delImg = (img) => {
-	console.log('사진삭제!');
-	console.log(img.firstElementChild.checked);
-	if(img.firstElementChild.checked){
-		img.firstElementChild.checked = false;
-		img.lastElementChild.style.border = "none";
-		document.querySelector(".attach-container").innerHTML ='';
-		attachCnt++;
-		console.log(attachCnt);
-		for(let i = 1; i <= 3 - attachCnt; i++){
-			document.querySelector(".attach-container").innerHTML +=
-				`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" multiple>`;
-			
+	const delCheckbox = img.firstElementChild;
+	const delImg = img.lastElementChild.firstElementChild;
+	const attachContainer = document.querySelector(".attach-container");
+	const delImgWrapper = img.lastElementChild;
+		
+	let upFileNum;
+	
+	// 삭제를 위해 사진이 선택되어 있는 경우 -> 선택 초기화 및 사진첨부창 추가
+	if(delCheckbox.checked){
+		delCheckbox.checked = false;
+		delImg.style.opacity = "1";
+		delImgWrapper.classList.remove("img-wrapper-delete");
+		
+		attachContainer.innerHTML ='';
+		attachedCnt++;
+		
+		for(let i = 1; i <= 3 - attachedCnt; i++){
+			attachContainer.innerHTML +=
+				`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${i}" accept="image/*" multiple>`;
 		}
 	}
 	else{
-		img.firstElementChild.checked = true;
-		img.lastElementChild.style.border = "3px solid red";
-		cnt = 3 - attachCnt + 1
-		document.querySelector(".attach-container").innerHTML += `<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${cnt}" multiple>`;
-		attachCnt--;
+		delCheckbox.checked = true;
+		delImg.style.opacity = "0.4";
+		delImgWrapper.classList.add("img-wrapper-delete");
+		
+		upFileNum = 3 - attachedCnt + 1;
+		attachContainer.innerHTML += 
+			`<input type="file" class="m-s-review-attach" name="upFiles" id="upFile\${upFileNum}" accept="image/*" multiple>`;
+		attachedCnt--;
 		
 	}
-	console.log(img.firstElementChild.checked);
 }
-
 
 
 document.querySelector(".attach-info").addEventListener('click', (e) => {	
@@ -265,6 +310,39 @@ document.querySelector(".attach-info").addEventListener('click', (e) => {
 
 document.reviewUpdateFrm.addEventListener('submit', (e) => {
 	e.preventDefault();
+	
+	// 첨부파일 확장자 제한
+	const frm = e.target;
+	const upFiles = frm.upFiles;
+	console.log('upFiles', upFiles);
+	
+	let msg = null;
+	if(upFiles.length >= 2){
+		upFiles.forEach(function(file){
+			const filePath = file.value;
+			const fileExt = filePath.substr(filePath.length-3).toLowerCase();
+			
+			if(fileExt !== ''){
+				if(!(fileExt === 'jpg' || fileExt === 'png')){
+					msg = '확장자가 jpg와 png인 파일만 첨부 가능합니다.';
+				}
+			}
+		});
+	}
+	else{
+		const filePath = upFiles.value;
+		const fileExt = filePath.substr(filePath.length-3).toLowerCase();
+		if(fileExt !== ''){
+			if(!(fileExt === 'jpg' || fileExt === 'png')){
+				msg = '확장자가 jpg와 png 파일만 첨부 가능합니다.';
+			}
+		}
+	}
+	
+	if(msg !== null){
+		alert(msg);
+		return false;
+	}
 	
 	
 	const frmData = new FormData(e.target); 
@@ -295,11 +373,10 @@ document.reviewUpdateFrm.addEventListener('submit', (e) => {
 
 
 const checkSubmissionAvailablity = () => {
-    const starVal = document.querySelector(".m-s-review-stars-selected").value;
     const contentLen = document.querySelector(".m-s-review-content").value.length;
 	const btnSubmit = document.querySelector(".btn-m-s-review-submit");
 	
-    if(Number(starVal) >= 1 && contentLen >= 10){
+    if(contentLen >= 10){
     	btnSubmit.disabled = false;
     	btnSubmit.classList.remove('btn-EA5C2B-reverse');
         btnSubmit.classList.add('btn-EA5C2B');
@@ -314,11 +391,8 @@ const checkSubmissionAvailablity = () => {
 
 const stars = document.querySelectorAll(".m-s-review-stars");
 stars.forEach(function(star, index) {
-    
-    star.addEventListener('click', () => {
-    	const rate = index + 1;
-        document.querySelector(".m-s-review-stars-selected").value = rate;
-
+	
+    star.addEventListener('mouseover', () => {
         if(!star.classList.contains('filled')){
             console.log('star', star, 'index', index);
             star.classList.add('filled');
@@ -334,21 +408,58 @@ stars.forEach(function(star, index) {
             }
         }
         
-        document.querySelector(".content-info").innerHTML = '만족도 ' + rate + '점을 주셨네요.<br/>';
-        if(rate >= 3){
-        	document.querySelector(".content-info").innerHTML += '어떤 점이 좋았나요?';
+    });
+    
+
+    star.addEventListener('click', () => {
+    	const rate = index + 1;
+        document.querySelector(".m-s-review-stars-selected").value = rate;
+
+        /* if(!star.classList.contains('filled')){
+            console.log('star', star, 'index', index);
+            star.classList.add('filled');
+            
+            for (let i = 0; i < index; i++) {
+                stars[i].classList.add('filled');
+            }
         }
         else{
-        	document.querySelector(".content-info").innerHTML += '어떤 점이 아쉬웠나요?';
+            console.log('filled-star', star, 'filled-index', index);
+            for (let i = index + 1; i < 5; i++) {
+                stars[i].classList.remove('filled');
+            }
+        } */
+        
+        const contentInfo = document.querySelector(".content-info");
+        contentInfo.innerHTML = '만족도 ' + rate + '점을 주셨네요.<br/>';
+        if(rate >= 3){
+        	contentInfo.innerHTML += '어떤 점이 좋았나요?';
+        }
+        else{
+        	contentInfo.innerHTML += '어떤 점이 아쉬웠나요?';
         }
         
     });
-
-    star.addEventListener('click', () =>{
-    	checkSubmissionAvailablity();
-    }, {once: true});
+    
+   
 
 });
+
+
+document.querySelector(".stars-wrapper").addEventListener('mouseleave', () => {
+	const starVal = document.querySelector(".m-s-review-stars-selected").value;
+		
+	for(let i = 1; i <= 5; i++){
+		if(i <= starVal){
+			document.querySelector(`.star\${i}`).classList.add('filled');
+		}
+		else{
+			document.querySelector(`.star\${i}`).classList.remove('filled');
+		}
+	}
+   
+});
+
 
 document.querySelector(".m-s-review-content").addEventListener('keyup', (e) => {
     // console.log(e.target.value.length);

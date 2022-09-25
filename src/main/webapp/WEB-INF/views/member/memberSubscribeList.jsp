@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="com.kh.monong.member.model.dto.Member"%>
 <%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,18 +12,35 @@
 <jsp:include page="/WEB-INF/views/member/memberMyPage.jsp">
 	<jsp:param name="title" value="모농모농-마이페이지"></jsp:param>
 </jsp:include>
+<style>
+.member-subscription-tbl th {
+	line-height: 35px;
+}
+.btn-s-order-review{
+	margin-left: 10px;
+}
+</style>
 <div id="member-subscribetionList-container" class="mx-auto mt-5 text-center">
 <c:if test="${empty subList}">
 	<h3>구독 히스토리가 없습니다.</h3>
 </c:if>
 <c:if test="${not empty subList}">
-		<table id="member-subScription-tbl" class="table table-borderless text-center">
-	<c:forEach items="${subList}" var="subList">
+	<table class="table table-borderless text-center member-subscription-tbl">
+		<c:forEach items="${subList}" var="subList">
 			<thead>
 			  <tr class="table-active">
 			    <th>${subList.SOrderDate}</th>
 			    <th colspan="2"><a class="s-order-no" href="${pageContext.request.contextPath}/member/memberSubscribeDetail.do?sOrderNo=${subList.SOrderNo}">${subList.SOrderNo}</a></th>
-			    <th class="s-order-status" data-review-no="${subList.SReviewNo}">${subList.SOrderStatus}</th>			    
+<%
+	LocalDate today = LocalDate.now();
+	pageContext.setAttribute("today", today);
+%>
+			    <th class="s-order-status" data-order-no="${subList.SOrderNo}">
+			    	${subList.SOrderStatus}
+					<c:if test="${subList.SOrderStatus eq '배송완료' && empty subList.SReviewNo && subList.reviewEndDate > today}">
+					 	<input type="button" class="btn btn-116530 btn-s-order-review" id="btnWriteReview" value="리뷰쓰기" />
+					</c:if>	    
+	    		</th>
 			  </tr>
 			</thead>
 			<tbody>
@@ -34,8 +52,8 @@
 			  </tr>
 			</tbody>
 		<input type="hidden" class="s-review-no" value="${subList.SReviewNo}"/>
-	</c:forEach>
-		</table>
+		</c:forEach>
+	</table>
 </c:if>
 
 <nav id="pagebar">
@@ -49,26 +67,7 @@
 	<input type="hidden" name="sOrderNo"/>
 </form>
 
-<style>
-.btn-s-order-review{
-	margin-left: 10px;
-}
-</style>
 <script>
-const sOrderStatus = document.querySelectorAll(".s-order-status");
-console.log('sOrderStatus', sOrderStatus);
-
-sOrderStatus.forEach(function(status){
-	console.log('status', status);
-	console.log('reviewNo', status.dataset.reviewNo);
-	const reviewNo = status.dataset.reviewNo;
-	
-	if(status.innerHTML === "배송완료" && reviewNo === ""){
-		status.innerHTML += 
-				`<input type="button" class="btn btn-116530 btn-s-order-review" id="btnWriteReview" value="리뷰쓰기" />`;
-	}
-});
-
 const btnWriteReview = document.querySelectorAll("#btnWriteReview");
 console.log('btnWriteReview', btnWriteReview);
 
