@@ -416,6 +416,9 @@ CREATE TABLE direct_inquire (
 	constraint fk_member_id_02 foreign key(member_id) references member(member_id)
 );
 
+-- direct_inquire check_secret 컬럼 추가 (민지 22/09/26)
+alter table direct_inquire add check_secret varchar2(1) default 'N' null;
+
 CREATE TABLE direct_inquire_answer (
 	d_inquire_no	number		NOT NULL,
 	d_inquire_a_content	varchar2(2000)		NOT NULL,
