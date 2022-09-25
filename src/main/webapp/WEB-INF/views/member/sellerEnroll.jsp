@@ -485,17 +485,6 @@ document.querySelector("#address").addEventListener('click', function(){
         }
     }).open();
 });  
-/*//검색버튼?
-document.querySelector("#bnt-srch").addEventListener('click', function(){
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-            document.querySelector("#address").value = data.address;
-            document.querySelector("#address-ex").focus();
-        }
-    }).open();
-});
-*/
 
 
 //이메일 인증코드 전송

@@ -97,7 +97,7 @@
 			const {dInquireAContent, dInquireNo, memberId, notiContent, bntSubmitAns} = frm;
 			console.log(dInquireAContent.value, dInquireNo.value, memberId.value, notiContent.value, bntSubmitAns);
 			
-			if(confirm("답변을 등록하시겠습니까?")){
+			if(confirm("답변 등록시 수정/삭제할 수 없습니다. 등록하시겠습니까?")){
 				$.ajax({
 					url : "${pageContext.request.contextPath}/member/sellerProductQnAList.do",
 					headers,
