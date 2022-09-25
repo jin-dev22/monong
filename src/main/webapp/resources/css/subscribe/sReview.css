@@ -132,6 +132,7 @@
 
 .modal-body{
 	display: flex;
+	margin-bottom: 20px;
 }
 
 .modal-dialog {
@@ -148,14 +149,30 @@
 	width: 500px;
 }
 
-.modal-img img {
-    width: 299px;
-    height: 298px;
+.modal-img .main-img {
+	width: 300px;
+    height: 300px;
     object-fit: cover;
 }
 
+.modal-img .sub-imgs{
+	display: flex;
+	width: 300px;
+	background-color: #fff5e5;
+}
+
+.modal-img .sub-img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.modal-img .sub-img:hover{
+	cursor: pointer;
+}
+
 .modal-s-review-container{
-	margin: auto 0 auto 10px;
+	margin: 10px 0 0 10px;
 	width: 500px;
 }
 
