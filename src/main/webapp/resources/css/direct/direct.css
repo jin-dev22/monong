@@ -904,18 +904,16 @@
 }
 
 .dProductContent {
-	padding: 30px 2px 20px 2px;
+	padding: 120px 2px 20px 2px;
 	text-align: center;
 }
 .dProductInquire {
 	padding: 30px 2px 30px 2px;
 	text-align: center;
-	display: none;
 }
 .dProductReview {
 	padding: 30px 2px 20px 2px;
 	text-align: center;
-	display: none;
 }
 
 /***** 상품 문의 *****/
