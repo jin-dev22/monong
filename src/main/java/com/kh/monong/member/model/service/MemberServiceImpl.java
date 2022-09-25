@@ -362,10 +362,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public List<SubscriptionOrderExt> selectSubscriptionListById(String memberId) {
-		return memberDao.selectSubscriptionListById(memberId);
+	public List<SubscriptionOrderExt> selectSubscriptionListById(Map<String, Object> param) {
+		int limit = (int) param.get("limit");
+		int offset = ((int)param.get("cPage") - 1) * limit;
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return memberDao.selectSubscriptionListById(param, rowBounds);
 	}
-	
 	@Override
 	public SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo) {
 		return memberDao.selectOneSubscriptionOrder(sOrderNo);
@@ -412,6 +414,11 @@ public class MemberServiceImpl implements MemberService {
 	
 	//-----------미송 시작
 	@Override
+	public int getTotalSubscriptionContent(String memberId) {
+		return memberDao.getTotalSubscriptionContent(memberId);
+	}
+
+	@Override
 	public int insertSubscriptionReview(SubscriptionReview review) {
 		int result = memberDao.insertSubscriptionReview(review);
 		List<SubscriptionReviewAttachment> attachments = review.getSAttachments();
@@ -444,8 +451,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int getTotalContent(String memberId) {
-		return memberDao.getTotalContent(memberId);
+	public int getTotalSubscriptionReviewContent(String memberId) {
+		return memberDao.getTotalSubscriptionReviewContent(memberId);
 	}
 	
 	@Override
