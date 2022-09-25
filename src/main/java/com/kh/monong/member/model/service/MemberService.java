@@ -127,7 +127,7 @@ public interface MemberService {
 
 	SubscriptionOrder selectOneSubscriptionOrder(String sOrderNo);
 
-	List<DirectOrder> selectDirectListByMemberId(Map<String, Object> param);
+	List<Map<String, Object>> selectDirectListByMemberId(Map<String, Object> param);
 
 	List<DirectProductEntity> selectProdListBydOrderNo(String dOrderNo);
 

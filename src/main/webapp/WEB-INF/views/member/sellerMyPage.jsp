@@ -29,10 +29,10 @@
 	setPhoneNumber(phoneNumber.innerHTML, phoneNumber);
 	</script>
 	<nav class="nav justify-content-around mt-5">
-		<a href="${pageContext.request.contextPath}/member/sellerProdList.do">판매상품목록</a>
-		<a href="${pageContext.request.contextPath}/member/sellerDirectOrderList.do">주문내역관리</a>
-		<a href="${pageContext.request.contextPath}/member/sellerProductQnAList.do">상품문의</a>
-		<a href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
+		<a class="nav-link" id="lnik-prodList" href="${pageContext.request.contextPath}/member/sellerProdList.do">판매상품목록</a>
+		<a class="nav-link" id="lnik-orderList" href="${pageContext.request.contextPath}/member/sellerDirectOrderList.do">주문내역관리</a>
+		<a class="nav-link" id="lnik-dInqList" href="${pageContext.request.contextPath}/member/sellerProductQnAList.do">상품문의</a>
+		<a class="nav-link" id="lnik-inqList" href="${pageContext.request.contextPath}/member/memberInquireList.do">관리자 문의</a>
 	</nav>
 </div>
 

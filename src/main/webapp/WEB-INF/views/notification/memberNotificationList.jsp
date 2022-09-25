@@ -15,7 +15,7 @@
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 <style>
-.btn-notice-moveTo{
+input.btn-notice-moveTo{
 	background-color: transparent;
     background-repeat: no-repeat;
     border: none;
@@ -23,75 +23,93 @@
     overflow: hidden;
     outline: none;
 }
+table.tbl-notification th{
+	text-align:center;
+}
+table.tbl-notification tr>td{
+	text-align:center;
+}
 </style>
 <div id="member-notification-list-container">
-	<div class="noticeList-header">
-		<span>알림</span><span>내용</span><span>발생일</span><span>확인</span>
-	</div>
-	<c:if test="${empty notificationList}">
-		<div class="mx-auto mt-5 text-center">
-			<h3>알림 내역이 없어요 :(</h3>
-		</div>
-	</c:if>
-	<c:if test="${not empty notificationList}">
-		<c:forEach items="${notificationList}" var="notice">
-			<div class="mx-auto mt-5 text-center">
-				<form name="noticeFrm"  accept-charset="UTF-8" enctype="multipart/form-data">
-					<span>
-						<c:choose>
-							<c:when test="${notice.messageType eq MessageType.SO_STATUS}">
-								정기구독
-								<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberSubscribeList.do"/>
-							</c:when>
-							<c:when test="${notice.messageType eq MessageType.DO_STATUS}">
-								직거래
-								<sec:authorize access="hasRole('ROLE_MEMBER')">
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberDirectDetail.do?dOrderNo=${notice.DOrderNo}"/>
-								</sec:authorize>
-								<sec:authorize access="hasRole('ROLE_SELLER')">
-									<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/sellerDirectOrderList.do"/>
-								</sec:authorize>
-							</c:when>
-							<c:when test="${notice.messageType eq MessageType.INQ_ANSWERD}">
-								관리자문의
-								<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberInquireList.do"/>
-							</c:when>
-							<c:when test="${notice.messageType eq MessageType.D_INQ_ANSWERED}">
-								판매자문의
-								<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/memberDirectInquireList.do"/>
-							</c:when>
-							<c:when test="${notice.messageType eq MessageType.NEW_D_INQ}">
-								상품문의
-								<input type="hidden" name="url" value="${pageContext.request.contextPath}/member/sellerProductQnAList.do"/>
-							</c:when>
-						</c:choose>
-					</span>
-					<span>
- 						<input type="button" class="btn-notice-moveTo" value="${notice.notiContent}" onclick="moveTo(this.form)"/>
-					</span>
-					<span>
-						<fmt:parseDate value="${notice.notiCreatedAt}" pattern="yyyy-MM-dd" var="createdAt"/>
-						<fmt:formatDate value="${createdAt}" pattern="yyyy-MM-dd"/>
-					</span>
-					<span class="notice-isRead">
-						${notice.notiIsRead eq YN.N ? "미확인" : "확인"}
-					</span>
-					<input type="hidden" name="notiNo" value="${notice.notiNo}" />
-					<sec:csrfInput />
-				</form>
-			</div>
-		</c:forEach>
-	</c:if>
+	<table class="table tbl-notification">
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">알림</th>
+				<th scope="col">내용</th>
+				<th scope="col">발생일</th>
+				<th scope="col">확인</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:if test="${not empty notificationList}">
+				<c:forEach items="${notificationList}" var="notice" varStatus="vs">
+					<tr>
+						<td>
+							<div class="notice-url${vs.count}">
+								<c:choose>
+									<c:when test="${notice.messageType eq MessageType.SO_STATUS}">
+										정기구독
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberSubscribeList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.DO_STATUS}">
+										직거래
+										<sec:authorize access="hasRole('ROLE_MEMBER')">
+											<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberDirectDetail.do?dOrderNo=${notice.DOrderNo}"/>
+										</sec:authorize>
+										<sec:authorize access="hasRole('ROLE_SELLER')">
+											<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/sellerDirectOrderList.do"/>
+										</sec:authorize>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.INQ_ANSWERD}">
+										관리자문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberInquireList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.D_INQ_ANSWERED}">
+										판매자문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/memberDirectInquireList.do"/>
+									</c:when>
+									<c:when test="${notice.messageType eq MessageType.NEW_D_INQ}">
+										상품문의
+										<input type="hidden" name="url${vs.count}" value="${pageContext.request.contextPath}/member/sellerProductQnAList.do"/>
+									</c:when>
+								</c:choose>
+							</div>
+						</td>
+						<td>
+						<div class="btn-notice${vs.count}">
+	 						<input type="button" name="notiContent${vs.count}" class="btn-notice-moveTo" value="${notice.notiContent}" onclick="moveTo(${vs.count})"/>
+							<input type="hidden" name="notiNo${vs.count}" value="${notice.notiNo}" />
+						</div>
+						</td>
+						<td>
+							<fmt:parseDate value="${notice.notiCreatedAt}" pattern="yyyy-MM-dd" var="createdAt"/>
+							<fmt:formatDate value="${createdAt}" pattern="yyyy-MM-dd"/>
+						</td>
+						<td>
+							<span class="notice-isRead${vs.count}">
+								${notice.notiIsRead eq YN.N ? "미확인" : "확인"}
+							</span>
+							<sec:csrfInput />
+						</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+		</tbody>
+	</table>
 </div>
+<nav>
+${pagebar}
+</nav>
 <script>
 const headers = {};
 headers['${_csrf.headerName}'] = '${_csrf.token}';
 console.log(headers);
 
-function moveTo(frm){
-	const {url, notiNo} = frm;
-	const hasRead = frm.querySelector(".notice-isRead");
-	console.log(url, notiNo, hasRead.innerText);
+function moveTo(cnt){
+	const notiNo = document.querySelector(`[name=notiNo\${cnt}]`);
+	const url = document.querySelector(`[name=url\${cnt}]`);
+	const hasRead = document.querySelector(`.notice-isRead\${cnt}`);
+	console.log(notiNo.value, url.value);
 	
 	$.ajax({
 		url : "${pageContext.request.contextPath}/notification/memberNotificationList.do",

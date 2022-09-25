@@ -377,21 +377,6 @@
 	    	so.s_order_no desc
   </select>
   
-   <select id="selectProdListBydOrderNo" resultType="directProductEntity">
-  select
-    *
-	from
-	    direct_product
-	where
-	  d_product_no in  (
-	    select
-	       d_product_no
-	    from
-	        member_direct_order
-	    where
-	        d_order_no = #{dOrderNo} )
-  </select>
-  
   <select id="selectDirectOptionList" resultMap="orderDirectOptionMap">
   	select
   	    *
@@ -668,16 +653,56 @@
  	
  	<select id="selectMemberDirectInqList" resultMap="directInqMap">
  	select 
-	    * 
+	    di.*,
+	    dp.d_product_name,
+	    dia.*
 	from 
-		direct_inquire di
-		left join direct_inquire_answer da
-		on di.d_inquire_no = da.d_inquire_no
-	where 
-		di.member_id = #{memberId}
+	    direct_inquire di
+	    left join direct_product dp
+	    on di.d_product_no =dp.d_product_no
+	    left join direct_inquire_answer dia
+	    on di.d_inquire_no = dia.d_inquire_no
+	where
+	    di.member_id=#{memberId}
 	order by 
-		di.created_at
- 	
+		di.d_inquire_no desc
  	</select>
+ 	
+ 	<select id="selectDirectListByMemberId" resultMap="directByMemberIdMap">
+ 	select  
+   		do.*,
+   		dp.d_product_name,
+   		dpa.d_product_renamed_filename
+	from
+	    direct_order do
+	    left join (select row_number() over(partition by member_direct_order.d_order_no order by member_direct_order.d_option_no) as rnum,member_direct_order.* from member_direct_order) mdo
+	    on mdo.d_order_no = do.d_order_no
+	    left join direct_product dp
+	    on mdo.d_product_no = dp.d_product_no
+	    left join direct_product_attachment dpa
+	    on mdo.d_product_no = dpa.d_product_no
+	where 
+	   rnum =1 and do.member_id= #{memberId}
+	order by
+       do.d_order_date desc
+ 	</select>
+ 	
+ 	<resultMap type="map" id="directByMemberIdMap">
+ 		<id column="d_order_no" property="dOrderNo"/>
+ 		<result column="member_id" property="memberId"/>
+ 		<result column="d_total_price" property="dTotalPrice"/>
+ 		<result column="d_order_date" property="dOrderDate"/>
+ 		<result column="d_order_status" property="dOrderStatus"/>
+ 		<result column="d_payments" property="dPayments"/>
+ 		<association property="prod" javaType="directProductEntity">
+ 			<id column="d_product_no" property="dProductNo"/>
+ 			<result column="d_product_name" property="dProductName"/>
+ 		</association>
+ 		<association property="attach" javaType="directProductAttachment">
+ 			<id column="d_product_attach_no" property="dProductAttachNo"/>
+ 			<result column="d_product_no" property="dProductNo"/>
+ 			<result column="d_product_renamed_filename" property="dProductRenamedFilename"/>
+ 		</association>
+ 	</resultMap>
  <!--=================================수아 끝-->
 </mapper>

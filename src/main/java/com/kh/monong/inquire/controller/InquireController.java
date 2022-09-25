@@ -33,6 +33,7 @@ public class InquireController {
 		log.debug("inquire = {}", inquire);
 		int result = inquireService.insertInquire(inquire);
 		redirectAttr.addFlashAttribute("msg", "관리자 문의가 등록되었습니다.");
-		return "redirect:/inquire/inquireAdmin.do";
+			
+		return "redirect:/member/memberInquireList.do";
 	}
 }

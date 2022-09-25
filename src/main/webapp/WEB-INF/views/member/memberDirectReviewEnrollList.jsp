@@ -65,4 +65,10 @@
 	<nav>${pagebar}</nav>
 	</c:if>
 </div>
+<script>
+
+$("#navbarDropdown").css("color","EA5C2B");
+$("#lnik-dReviewEnrollList").css("color","EA5C2B");
+
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -141,6 +141,7 @@ window.onload = function isActiveDel(){
 	
 };
 
+$("#lnik-dOList").css("color","EA5C2B");
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
