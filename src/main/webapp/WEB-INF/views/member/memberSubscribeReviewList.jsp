@@ -58,8 +58,8 @@
     overflow: hidden;
 }
 
-.btn-wrapper{
-	margin-top: 10px;
+.content-container{
+	margin-top:10px;
 }
 
 .m-s-review-detail-imgs{
@@ -68,7 +68,13 @@
 
 .m-s-review-detail-imgs img{
     display: inline-block;
-    width: 150px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.btn-wrapper{
+	margin-top: 15px;
 }
 </style>
 <c:if test="${empty sReviewList}">
@@ -95,8 +101,8 @@
 				<td class="m-s-review-content" data-s-review-no="${sReview.SReviewNo}" style="padding-left: 128px; padding-right: 128px;">
 					<span onclick="sReviewDetail(this)">
 					<c:choose>
-					 	<c:when test="${fn:length(sReview.SReviewContent) gt 38}">
-					 		${fn:substring(sReview.SReviewContent, 0, 38)}...
+					 	<c:when test="${fn:length(sReview.SReviewContent) gt 37}">
+					 		${fn:substring(sReview.SReviewContent, 0, 37)}...
 					 	</c:when>
 					 	<c:otherwise>
 					 		${sReview.SReviewContent}
@@ -158,7 +164,7 @@ const sReviewDetail = (review) => {
 						console.log('이미지 있음');
 						review.nextElementSibling.innerHTML += `
 							<div class="m-s-review-detail-imgs">
-								<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${attach.sreviewRenamedFilename}" width="300px">
+								<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${attach.sreviewRenamedFilename}">
 							</div>
 							`;
 					}
@@ -172,7 +178,7 @@ const sReviewDetail = (review) => {
 			
 			else {
 				review.nextElementSibling.innerHTML = '';
-				review.innerHTML = `\${sreviewContent.length > 38 ? sreviewContent.substr(0, 38) + '...': sreviewContent}`;
+				review.innerHTML = `\${sreviewContent.length > 37 ? sreviewContent.substr(0, 37) + '...': sreviewContent}`;
 			}
 			
 		},
