@@ -73,7 +73,7 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription where s_quit_yn = #{selectOption}")
 	int getTotalFindByQuitYnSubList(String selectOption);
 	
-	@Select("select * from subscription_order where s_order_status = #{deliveryStatus}")
+	@Select("select * from subscription_order where s_order_status = #{deliveryStatus} order by so_delivery_completed_date desc")
 	List<SubscriptionOrder> getSubscriptionOrderListAll(RowBounds rowBounds, String deliveryStatus);
 	
 	@Select("select count(*) from subscription_order where s_order_status = #{deliveryStatus}")
@@ -84,7 +84,7 @@ public interface SubscribeDao {
 	@Select("select * from subscription_order where so_delivery_date = #{today}")
 	List<SubscriptionOrder> getSubOrderList(LocalDate today);
 	
-	@Select("select * from subscription_order where so_delivery_completed_date between to_date(#{searchStartDate}) and to_date(#{searchEndDate})+ 0.99999 and s_order_status = #{deliveryStatus}")
+	@Select("select * from subscription_order where so_delivery_completed_date between to_date(#{searchStartDate}) and to_date(#{searchEndDate})+ 0.99999 and s_order_status = #{deliveryStatus} order by so_delivery_completed_date desc")
 	List<SubscriptionOrder> searchPeriodData(RowBounds rowBounds, Map<String, Object> param);
 	
 	@Select("select count(*) from subscription_order where so_delivery_completed_date between to_date(#{searchStartDate}) and to_date(#{searchEndDate})+ 0.99999 and s_order_status = #{deliveryStatus}")
