@@ -22,9 +22,16 @@ background-color: #fffbf9;
 		<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
 	</div>
 	<div class="carousel-inner">
+		<sec:authorize access="isAnonymous()">
 		<div class="carousel-item active banner1" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">
 			<img src="${pageContext.request.contextPath}/resources/images/banner_1.jpg" class="d-block w-100" alt="주간채소공지">
 		</div>
+		</sec:authorize>
+		<sec:authorize access="isAuthenticated()">
+		<div class="carousel-item active banner1" onclick="alert('이미 회원가입한 회원입니다!!')">
+			<img src="${pageContext.request.contextPath}/resources/images/banner_1.jpg" class="d-block w-100" alt="주간채소공지">
+		</div>
+		</sec:authorize>
 		<div class="carousel-item banner2" onclick="location.href='${pageContext.request.contextPath}/common/brandStory.do'">
 			<img src="${pageContext.request.contextPath}/resources/images/banner_3.jpg" class="d-block w-100" alt="브랜드스토리">
 		</div>
