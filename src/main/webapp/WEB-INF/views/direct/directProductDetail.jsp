@@ -109,13 +109,23 @@
 	    	<button type="button" class="btn-add-cart btn-116530" id="cart" onclick="checkLogin();">장바구니</button>
 	    </sec:authorize>
 	    <sec:authorize access="isAuthenticated()">
+	    	<sec:authorize access="!hasRole('ROLE_MEMBER')">
+	    	<button type="button" class="btn-add-cart btn-116530" onclick="alert('일반회원만 이용 가능합니다.'); return false;">장바구니</button>
+	    	</sec:authorize>
+	    	<sec:authorize access="hasRole('ROLE_MEMBER')">
 	    	<button type="button" class="btn-add-cart btn-116530" id="cart">장바구니</button>
+	    	</sec:authorize>
 	    </sec:authorize>
 	    <sec:authorize access="isAnonymous()">
 	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order" onclick="checkLogin();">주문하기</button>
 	    </sec:authorize>
 	    <sec:authorize access="isAuthenticated()">
+	    	<sec:authorize access="!hasRole('ROLE_MEMBER')">
+	    	<button type="button" class="btn-add-order btn-EA5C2B" onclick="alert('일반회원만 이용 가능합니다.'); return false;">주문하기</button>
+		    </sec:authorize>
+	    	<sec:authorize access="hasRole('ROLE_MEMBER')">
 	    	<button type="button" class="btn-add-order btn-EA5C2B" id="order">주문하기</button>
+		    </sec:authorize>
 	    </sec:authorize>
 	</div>
 	<div class="modal-container"></div>
