@@ -118,8 +118,10 @@ span#new-notice{
 						
 					</script>
 					<!-- 알림표시용 -->
-						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
                 </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_MEMBER')">
+						<a class="nav-link" href="${pageContext.request.contextPath}/direct/cart.do">&#128722;</a>
+				</sec:authorize>
 				</nav>
 				<nav class="nav justify-content-end">
 					<p>
