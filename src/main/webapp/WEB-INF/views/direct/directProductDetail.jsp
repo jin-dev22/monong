@@ -920,7 +920,7 @@ window.addEventListener('load', (e) => {
 <img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
 <img src="${pageContext.request.contextPath}/resources/images/emptystar.png" alt="" />`).split("\n").join("");
 			}
-			else if(Number(reviewAvgScore) = 5) {
+			else {
 				reviewStar.innerHTML = (`<img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
 <img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
 <img src="${pageContext.request.contextPath}/resources/images/star.png" alt="" />
