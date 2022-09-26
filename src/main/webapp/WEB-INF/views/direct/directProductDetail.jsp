@@ -320,7 +320,7 @@
 				    		<img style="display: inline-block; float: left; height: 120px; margin: 0 30px; width: 120px; object-fit: contain;" src="${pageContext.request.contextPath}/resources/upload/directReviewAttach/${dReviewList.reviewAttach.DReviewRenamedFilename}" alt="" />
 				    	</c:if>
 				    </td>
-				    <td colspan="4" style="text-align:left;">${dReviewList.dReviewContent}</td>
+				    <td colspan="4" style="text-align:left; vertical-align: middle;">${dReviewList.dReviewContent}</td>
 				    <!-- <td><button type="button" class="btn-d-review-recommend" onclick="dReviewRecommend(); data-recommended="false">👍&nbsp추천하기<span class="d-review-recommend"></span></button></td> -->
 				</tr>
 			 </c:forEach>
