@@ -77,7 +77,7 @@
                         <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
                     </span>
                     <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"
-                         disabled/><!-- 완성후 기능 살려놓기 -->
+                         /><!-- 완성후 기능 살려놓기 -->
                 </span>
             </div>
             <div class="enroll-info-container">
@@ -86,7 +86,7 @@
                             readonly/>
                     <input type="hidden" id="emailKeyValid" value="0"/><!-- 불일치 0, 일치 1 -->
                     <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"
-                        disabled/>
+                        />
                 </span>
             </div>
             <div class="enroll-info-container">
@@ -275,8 +275,9 @@
             </div>
         </div>
         <sec:csrfInput />
-        <input type="submit" value="가입" >
-        <input type="reset" value="취소">
+        <button type="submit" class="btn-EA5C2B">가입</button>
+        <button type="reset" class="btn-EA5C2B-reverse">취소</button>
+       
     </form>
 </div>  
 <script>

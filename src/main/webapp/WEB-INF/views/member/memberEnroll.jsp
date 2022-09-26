@@ -252,8 +252,8 @@
             </div>
         </div>
         <sec:csrfInput />
-        <input type="submit" value="가입" >
-        <input type="reset" value="취소">
+        <button type="submit" class="btn-EA5C2B">가입</button>
+        <button type="reset" class="btn-EA5C2B-reverse">취소</button>
     </form>
 </div>  
 <script>
