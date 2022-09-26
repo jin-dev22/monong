@@ -392,15 +392,15 @@ const reviewDetail = (obj, sReviewNo) => {
 				
 				let html;
 				html = `<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" class="main-img" alt="대표첨부사진" width="300px"/>`;
-				
+
 				if(sAttach.length >= 2){
 					html += `
 			            <div class="sub-imgs">
 				            <img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[0].sreviewRenamedFilename}" class="sub-img" alt="첨부사진1" onclick="viewImg(this)">
-				            <img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[1].sreviewRenamedFilename}" class="sub-img" alt="첨부사진2" onclick="viewImg(this)">`;
+				            <img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[1].sreviewRenamedFilename}" class="sub-img" alt="첨부사진2" onclick="viewImg(this)" style="opacity: 0.5;">`;
 					if(sAttach.length === 3){
 						html += `
-			            		<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[2].sreviewRenamedFilename}" class="sub-img" alt="첨부사진3" onclick="viewImg(this)">`;
+			            		<img src="${pageContext.request.contextPath}/resources/upload/subscribe/review/\${sAttach[2].sreviewRenamedFilename}" class="sub-img" alt="첨부사진3" onclick="viewImg(this)" style="opacity: 0.5;">`;
 					}
 				}
 				
