@@ -51,13 +51,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         	for(int i=0; i<specialLocation.length; i++) {
         		if(next.contains(specialLocation[i])) {
             		targetUrl = "/";
-            	}	
+            	}
+				else {
+					targetUrl = next;
+					session.removeAttribute("next");
+				}
         	}
         }
-        else {
-        	targetUrl = next;
-        	session.removeAttribute("next");
-    	}
+       
 
         /**
          * (우선순위1) 인증하지않고 접근하려던 페이지 
