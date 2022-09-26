@@ -546,8 +546,7 @@ public class MemberController {
 		SecurityContextHolder.getContext().setAuthentication(updateAthentication);
 		log.debug("member={}", updatedMember);
 		redirectAttr.addFlashAttribute("msg", "회원 정보가 수정되었습니다!");
-		return "redirect:/member/sellerUpdate.do";
-		
+		return "redirect:/member/sellerUpdate.do";		
 	}
 	
 	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

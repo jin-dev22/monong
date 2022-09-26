@@ -11,7 +11,7 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquire/inquireAccordion.css" />
 	<div class="mx-auto mt-5 text-center">
-			<h3>관리자 문의내역</h3>
+			<h3>관리자 문의하기</h3>
 	</div>
 	<div id="enroll-container" class="mx-auto d-flex justify-content-center">
 	    <form name="inquireFrm" action="${pageContext.request.contextPath}/inquire/inquireAdmin.do" method="POST" accept-charset="UTF-8" >

@@ -105,7 +105,7 @@ public class MonongUtils {
 	}
 	
 	/**
-	 * Mybatis Collection - rowBounds 오류 해결용 커스텀 bounds
+	 * Mybatis Collection사용시 rowBounds 오류 발생으로 작성한 커스텀 bounds
 	 * @param offset
 	 * @param limit
 	 * @param prodList
