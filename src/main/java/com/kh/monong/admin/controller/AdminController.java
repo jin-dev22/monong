@@ -370,6 +370,7 @@ public class AdminController {
 		model.addAttribute("subscriptionOrderList",subscriptionOrderList);
 		model.addAttribute("pagebar", pagebar);
 		model.addAttribute("deliveryStatus", deliveryStatus);
+		model.addAttribute("totalContent", totalContent);
 	}
 	
 	/**
