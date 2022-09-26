@@ -22,7 +22,7 @@ div#enroll-container{
     margin-left: 15px;
  } 
  .enroll-info-container{
-    width: 600px;
+    width: 1200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,6 +86,12 @@ div.option-one{
 div.opntion-list-container{
 	width: 300px;
 }
+div#product-content-align{
+	display: block;
+	padding-left: 30%;
+	text-align: left;
+}
+
 </style>
 <div id="enroll-container" class="mx-auto text-center">
 <sec:authentication property="principal" var="loginMember"/>
@@ -133,9 +139,9 @@ div.opntion-list-container{
            		</span>
            </div>
            
-           <div class="enroll-info-container">
+           <div class="enroll-info-container" id="product-content-align">
         		<span class="enroll-info-label">상품 상세 설명<span class="enroll-form-required">*</span></span>
-       			<span class="enroll-info">
+       			<span class="enroll-info product-summernote">
        				<span id="DProductContent-container">
                        	<textarea name="DProductContent" id="summernote"></textarea>
                        </span>
