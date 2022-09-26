@@ -541,10 +541,11 @@
 	        direct_order
 	    where
 	        member_id=#{memberId} and d_order_status='F'
-	    ) and
-	    mdo.d_option_no not in (
+	    ) 
+	    and
+	    mdo.d_order_no not in (
 	    select
-	        d_option_no
+	        d_order_no
 	    from
 	        direct_review
 	    where
