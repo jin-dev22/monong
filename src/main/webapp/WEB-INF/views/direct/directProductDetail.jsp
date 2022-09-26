@@ -252,7 +252,7 @@
 	  </sec:authorize>
 	  <c:if test="${empty dReviewList}">
 	  	<div class="mx-auto mt-5 text-center">
-	  		<span style="font-size: 20px; display: block; position: relative; padding: 20px 0 70px;">Review</span>
+	  		<span style="font-size: 20px; display: block; position: relative; padding: 20px 0 40px;">Review</span>
 	  		<table id="direct-reviewList-tbl" class="table" style="text-align: center;">
 		      	<colgroup>
 					<col style="width: 270px">
