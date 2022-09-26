@@ -64,12 +64,14 @@
  		</association>
  	</resultMap>
  	<select id="getTotalDirectReviewByDProductNo" resultType="_int">
- 	select count(*)
+ 	select
+ 		count(*)
  	from
- 	(select distinct d_review_no
- 	 from direct_review
- 	 		left join
- 	 		direct_product using)
+ 		direct_review
+	left join
+		direct_product_option using (d_option_no)
+ 	where
+ 		d_product_no = #{dProductNo}
  	</select>
 <!-- 재경 끝 -->
 <!-- 민지 시작 -->

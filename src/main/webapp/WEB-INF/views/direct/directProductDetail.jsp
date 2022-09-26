@@ -129,7 +129,9 @@
 	  </nav>
 	  <div id="contentLink" style="border-top: 1px solid #EA5C2B; background-color: #EA5C2B;"></div>
 	  <div class="dProductContent">
-	  	${directProduct.DProductContent}
+	  	<div style="max-width: 830px;">
+	  		${directProduct.DProductContent}
+	  	</div>
 	  </div>
 	  <div id="inquireLink" style="border-top: 1px solid #e5e7eb; background-color: #e5e7eb; margin: 65px 0;"></div>
 	  <div id="dProductInquire" class="dProductInquire">
@@ -307,7 +309,7 @@
 						<fmt:parseDate value="${dReviewList.dReviewCreatedAt}" pattern="yyyy-MM-dd HH:mm:ss" var="reviewDate"/>
 						<fmt:formatDate value="${reviewDate}" pattern="yyyy-MM-dd"/>
 					</td>
-					<td style="text-align:center;">${dReviewList.dReviewRecommend}<td>
+					<td style="text-align:center;">${dReviewList.dReviewRecommend}</td>
 				</tr>
 				<tr>
 				    <td rowspan="2">
@@ -325,7 +327,7 @@
 		</tbody>
 	  </table>
 		<nav>
-			${rPagebar}
+		${rPagebar}
 		</nav>
 	  </c:if>
 	  </div>	
@@ -1137,7 +1139,12 @@ document.querySelectorAll('.page-item').forEach((click) => {
 	click.addEventListener('click', (e) => {
 	const dProduct = document.querySelector('#dProductNo').value;
 	let cPage = e.target.innerText;
-		e.target.href=`?dProductNo=\${dProduct}&cPage=\${cPage}#inquireLink`;
+		if(e.target.parentElement.parentElement.parentElement.parentElement.className == "dProductInquire") {
+			e.target.href=`?dProductNo=\${dProduct}&cPage=\${cPage}#inquireLink`;
+		}
+		else if(e.target.parentElement.parentElement.parentElement.parentElement.className == "dProductReview") {
+			e.target.href=`?dProductNo=\${dProduct}&cPage=\${cPage}#reviewLink`;
+		}
 	})
 })
 

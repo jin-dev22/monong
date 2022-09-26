@@ -268,10 +268,11 @@ public class DirectController {
 		
 		log.debug("dProductNo = {}", dProductNo);
 		List<Map<String, Object>> dReviewList = directService.selectDirectProductReviewList(param);
-//		int rTotalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
-//		String url = request.getRequestURI(); 
-//		String rPagebar = MonongUtils.getPagebar(cPage, limit, rTotalContent, url);
-//		model.addAttribute("rPagebar", rPagebar);
+		int rTotalContent = directService.getTotalDirectReviewByDProductNo(dProductNo);
+		String rUrl = request.getRequestURI(); 
+		rUrl += "?dProductNo=" + dProductNo;
+		String rPagebar = MonongUtils.getPagebar(cPage, limit, rTotalContent, rUrl);
+		model.addAttribute("rPagebar", rPagebar);
 		model.addAttribute("dReviewList", dReviewList);
 		log.debug("dReviewList = {}", dReviewList);
 		
