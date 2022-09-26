@@ -95,7 +95,6 @@
 										value="${dReview.reviewAttach.DReviewAttachNo}" />
 									삭제
 								</label>
-								<c:out value="${dReview.reviewAttach.DReviewAttachNo}"/>
 							</div>
 						</c:if>
 				    </td>
@@ -122,12 +121,13 @@ document.directReviewUpdateFrm.addEventListener('submit', (e)=>{
 	console.log("newFile="+newFile, "recent="+recentFile);
 	
 	if(recentFile){
-		if(newFile){
+		if(newFile.value != null){
 			const delFileNo = document.querySelector("#deleteFileNo");
 			e.preventDefault();
 			delFileNo.checked = true;
 			console.log('checked!!');
 		}
+		e.target.submit();
 	}
 	
 	
