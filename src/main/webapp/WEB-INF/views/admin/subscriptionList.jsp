@@ -29,6 +29,7 @@
 	<span>구독중인 결과가 없어요.&#128546;</span>
 </c:if>
 <c:if test="${not empty subscriptionList}">
+	<p style="text-align:left;">총 ${totalContent}건</p>
 	<c:forEach items="${subscriptionList}" var="sub" varStatus="vs">
 		<table class="table admin-subscriptionList">
 			<thead>
