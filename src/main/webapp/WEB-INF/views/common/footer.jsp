@@ -61,7 +61,7 @@ if(document.querySelector('#enrollHeader')) {
  							</div>
  						</div>
  						<div class="modal-footer" style="justify-content: center; align-content: center; border-top: none; height: 185px;">
- 							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;" data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">일반회원 가입</button>
+ 							<button type="button" class="btn btn-EA5C2B" style="width: 180px; height: 54px;" data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">일반회원 가입</button>
  							<button type="button" class="btn btn-116530" style="width: 180px; height: 54px;"  data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/member/sellerEnroll.do'">판매자회원 가입</button>
  						</div>
  					</div>
