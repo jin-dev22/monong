@@ -309,7 +309,6 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
  */
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	const {value : memberId} = e.target;
-	console.log(memberId);	
 	
 	if(memberId.length < 4){
 		idValid.value = "0";
@@ -330,10 +329,9 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 		headers,
 		data : {memberId},
 		success(response){
-			console.log(response, typeof response); // js object
 			
 			const {available} = response;
-			console.log(available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
+			console.log("사용가능여부: ",available);//xml mapper의존주석처리, 메세지컨버터의존활성화함 
 			
 			if(available && regExp.test(memberId)){
 				invalidIdFeedBack.style.display = "none";

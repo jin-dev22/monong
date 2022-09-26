@@ -115,6 +115,7 @@ public class MemberController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", memberId);
 		map.put("available", available);
+		log.debug("map={}", map);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(map);
 	}
