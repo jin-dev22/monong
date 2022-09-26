@@ -312,7 +312,7 @@
 					<td style="text-align:center;">${dReviewList.dReviewRecommend}</td>
 				</tr>
 				<tr>
-				    <td rowspan="2">
+				    <td>
 				    	<c:if test="${dReviewList.reviewAttach.DReviewRenamedFilename eq null}">
 				    	
 	    				</c:if>
