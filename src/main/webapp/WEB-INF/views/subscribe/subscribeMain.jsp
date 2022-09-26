@@ -253,7 +253,7 @@ const sReviewList = (num) => {
 					
 			    if(!sAttach[0]){
 			    	html += `
-			    		<p class="s-review-content">\${sreviewContent}</p>`;
+			    		<p class="s-review-content">\${sreviewContent.length > 187? sreviewContent.substr(0, 187) + '...': sreviewContent}</p>`;
 			    }
 				else{
 					html += `
