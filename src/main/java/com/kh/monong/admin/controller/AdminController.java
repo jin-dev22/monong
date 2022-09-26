@@ -282,6 +282,7 @@ public class AdminController {
 		
 		model.addAttribute("subscriptionList",subscriptionList);
 		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("totalContent", totalContent);
 	}
 	
 	@GetMapping("/subscriptionListDetail.do")
