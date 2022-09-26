@@ -40,10 +40,10 @@
             <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
         </c:if>
         <c:if test="${not empty directProduct.directProductAttachments[2].DProductRenamedFilename}">
-            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[2].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
         </c:if>
         <c:if test="${not empty directProduct.directProductAttachments[3].DProductRenamedFilename}">
-            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[1].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
+            <div style="background-image:url(${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[3].DProductRenamedFilename});background-size: cover;background-position: center;"> </div>
         </c:if>
         </div>
         <div class="side-btns">
