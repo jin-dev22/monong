@@ -109,6 +109,7 @@ public class MemberServiceImpl implements MemberService {
 		log.debug("limit = {}, offset = {}", limit, offset);
 		List<DirectProduct> prodList  = memberDao.selectDirectListBySellerId(param);
 		if(!prodList.isEmpty()) {
+			@SuppressWarnings("unchecked")
 			List<DirectProduct> subList = (List<DirectProduct>) MonongUtils.customRowBounds(offset, limit, prodList);
 			for(DirectProduct prod : subList) {
 				prod.setDirectProductAttachments(selectDirectAttachments(prod.getDProductNo()));
