@@ -5,7 +5,7 @@
 div#enroll-container { width:500px; }
 div#enroll-container input, div#enroll-container select { margin-bottom:10px; }
 div#enroll-container table td { text-align:left; }
- */
+*/
  div#enroll-container{
     margin: 50px auto;
     width: fit-content;
@@ -124,14 +124,17 @@ form[name="memberUpdateFrm"] input:focus{
 
 /*회원 마이페이지*/
 div#mypage-subcribe-container{
-	padding: 50px 70px;
-	border: 3px solid #116530;
+	padding: 30px 50px;
+	border: 2px solid #116530;
 	border-radius: 25px;
 	margin: 30px 130px;
 }
 div#mypage-subcribe-container img{
 	width: 300px;
 	height: 260px;
+}
+#member-subscribe-tbl img {
+	border-radius: 15px;
 }
 nav#member-mypage-nav h5>a{
 	color: EA5C2B;
@@ -356,6 +359,13 @@ div#review-enroll-header-container{
 .member-mypage-color-a:hover{
 	color: #116530;
 }
-
-
+.container {
+	border-radius: 10px;
+}
+.container .nav-link:hover {
+	color: #EA5C2B;
+}
+.container .dropdown-menu.show li a:hover {
+	background-color: 
+}
 

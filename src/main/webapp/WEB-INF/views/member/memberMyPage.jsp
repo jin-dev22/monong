@@ -46,21 +46,22 @@
 					<img src="${pageContext.request.contextPath}/resources/images/subscribe/라지.jpg" alt="라지 이미지">
 				</c:if>
 			</td>
-		    <td colspan="2"><h4>다음 배송일: ${recentSubscription.SNextDeliveryDate} </h4></td>
+		    <td colspan="2"><h4>다음 결제일: ${recentSubscription.SPaymentDate} </h4></td>
 		  </tr>
 		  <tr>
 		  	<td><h4>${recentSubProduct.SProductName}&nbsp;&nbsp;&nbsp;${recentSubProduct.SProductInfo}</h4></td>
 		    <td><h4>배송주기: ${recentSubscription.SDeliveryCycle}주</h4></td>
 		  </tr>
 		  <tr>
-		    <td><h4>제외채소 : ${recentSubscription.SExcludeVegs != null ? recentSubscription.SExcludeVegs : '없음'}</h4></td>
-		    <td>
-		    <button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button>
+		    <td colspan="2">
+		    	<h4>제외채소 : ${recentSubscription.SExcludeVegs != null ? recentSubscription.SExcludeVegs : '없음'}</h4>
 		    </td>
 		  </tr>
 		  <tr>
 		  	<td></td>
-			<td></td>
+		  	<td style="text-align: right;">
+		    	<button id="mypage-subscribe-btn" type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/member/memberSubscribeOrder.do';">구독관리</button>
+		    </td>
 		  </tr>
 		</thead>
 		</table>

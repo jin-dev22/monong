@@ -35,7 +35,7 @@
 	</form>
 </div>
 <c:if test="${searchEndDate ne null && searchStartDate ne null}">
-	<span>조회일자: ${searchStartDate} ~ ${searchEndDate}</span>
+	<span>조회일자: ${searchStartDate} ~ ${searchEndDate} (총 ${totalContent}건)</span>
 </c:if>
 <div id="admin-subscriptionList-container" class="mt-5 mx-auto text-center">
 <c:if test="${empty subscriptionOrderList}">
