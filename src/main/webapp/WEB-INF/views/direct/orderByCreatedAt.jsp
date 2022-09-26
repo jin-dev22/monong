@@ -9,20 +9,21 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param name="title" value="모농모농"></jsp:param>
 </jsp:include>
-<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/direct.css" />
+<link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/direct/direct.css" />
 <style>
 div.container{
 display: flex;
 flex-wrap: wrap;
 }
 .directproductlist-wrapper {
-width: 260px;
-margin: 50px 20px;
+width: 270px;
+margin: 30px 17px;
 }
 
 .direct-card-img-top{
-height: 250px;
+height: 240px;
 width: 240px;
+border-radius: 5px;
 }
 
 .text-decoration-none{
@@ -33,7 +34,7 @@ font-weight : 900
 <h1 class="d-list" style="padding-bottom: 10px;color: #EA5C2B;border-bottom: 1px solid #EA5C2B;">농산물 직거래 장터</h1>
 <div class="d-flex flex-wrap justify-content-between">
 	<div class="align">
-		<select class="form-select" aria-label="Default select example" onchange="if(this.value) location.href=(this.value);" style="display: block; width: 220px; padding: 15px; margin: 40px auto;">
+		<select class="form-select" aria-label="Default select example" onchange="if(this.value) location.href=(this.value);" style="display: block; width: 210px; padding: 8px; margin: 40px auto;">
 			<option value="${pageContext.request.contextPath}/direct/directProductList.do">정렬기준</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByCreatedAt.do" selected>최근 등록순</option>
 			<option value="${pageContext.request.contextPath}/direct/orderByPriceDesc.do">가격 높은순</option>
@@ -55,8 +56,10 @@ font-weight : 900
 	<div class="container">
 	<c:forEach items="${list}" var="directProduct">
 			<div class="directproductlist-wrapper row justify-content-center align-items-stretch">
-				<div class="card bg-warning">
-					<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="direct-card-img-top" id=direct-card-img-top>
+				<div class="card bg-white" style="padding-top: 14px;">
+					<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none" style="display: flex; justify-content: center;">
+						<img src="${pageContext.request.contextPath}/resources/upload/product/${directProduct.directProductAttachments[0].DProductRenamedFilename}" class="direct-card-img-top" id=direct-card-img-top>
+					</a>
 					<div class="card-body">
 						<a href = "${pageContext.request.contextPath}/direct/directProductDetail.do?dProductNo=${directProduct.DProductNo}" class="text-decoration-none">
 				  			${directProduct.DProductName}
