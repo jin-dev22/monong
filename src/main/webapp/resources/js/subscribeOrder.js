@@ -43,6 +43,20 @@ document.querySelector("#sPhone").addEventListener('input', (e) => {
 		sPhone.style.borderBottom = "1px solid #116530";
 	}
 });
+document.querySelector("#sPhone").addEventListener('blur', (e) => {
+	const sPhone = e.target;
+	const error = document.querySelector(".sPhoneCheck.error");
+	if(!/^[0-9]{11}$/.test(sPhone.value)){
+		error.style.display = "block";
+		sPhone.style.borderBottom = "1px solid red";
+		sPhone.select();
+		return;
+	}
+	else {
+		error.style.display = "none";
+		sPhone.style.borderBottom = "1px solid #116530";
+	}
+});
 // 수령인 유효성 검사
 document.querySelector("#sRecipient").addEventListener('input', (e) => {
 	const sRecipient = e.target;
@@ -50,6 +64,20 @@ document.querySelector("#sRecipient").addEventListener('input', (e) => {
 	if(!/^[a-zA-z가-힣]+$/.test(sRecipient.value)){
 		error.style.display = "block";
 		sRecipient.style.borderBottom = "1px solid red";
+		return;
+	}
+	else {
+		error.style.display = "none";
+		sRecipient.style.borderBottom = "1px solid #116530";
+	}
+});
+document.querySelector("#sRecipient").addEventListener('blur', (e) => {
+	const sRecipient = e.target;
+	const error = document.querySelector(".sRecipientCheck.error");
+	if(!/^[a-zA-z가-힣]+$/.test(sRecipient.value)){
+		error.style.display = "block";
+		sRecipient.style.borderBottom = "1px solid red";
+		sRecipient.select();
 		return;
 	}
 	else {

@@ -11,6 +11,11 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/brandStory.css" />
 <!-- 브랜드스토리 -->
+<style>
+#content {
+	overflow: hidden;
+}
+</style>
 <div class="story-head">
 	<div class="story-head-title">
 		<p>잘 자란 농산물의 1/3이 버려지고 있어요&#128549;</p>
@@ -38,7 +43,7 @@
 <div class="story-footer">
 	<p>모두의 미션</p>
 	<p class="story-border-bottom">지속가능한 식탁을 만듭니다.</p>
-	<div class="">
+	<div>
 		<p>농산물의 폐기 문제는 지구 온난화의 원인이 되고 물과 비료, 노동 에너지의 낭비로 이어집니다.</p>
 		<p>농산물들의 제 가치를 찾아, 음식물 폐기는 줄이고 친환경 땅을 늘림으로써</p>
 		<p>소비자의 건강한 식탁과 미래를 위한 환경이 지속가능하게 합니다.</p>
@@ -53,5 +58,14 @@
 	</div>
 	<button type="button" class="btn btn-EA5C2B" onclick="location.href='${pageContext.request.contextPath}/subscribe/subscribeMain.do'">모농모농과 함께하기</button>
 </div>
+<script>
+document.addEventListener('scroll', function(){
+	const sEvent = document.querySelector(".story-footer");
+	const y = scrollY;
+	if(scrollY > 1000){
+		sEvent.classList.add('translateX');
+	}
+});
+</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
