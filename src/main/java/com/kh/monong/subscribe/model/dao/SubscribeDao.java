@@ -49,7 +49,7 @@ public interface SubscribeDao {
 	@Select("select * from card_info where card_info_no = #{cardNo}")
 	CardInfo getCardInfoList(int cardNo);
 	
-	@Select("select * from subscription_order where s_no = #{sNo}")
+	@Select("select rownum, so.* from (select * from subscription_order where s_no = #{sNo} order by s_order_no desc) so where rownum = 1")
 	SubscriptionOrder getTimesBysNo(String sNo);
 	
 	@Insert("insert into subscription_order values(#{sOrderNo}, #{sNo}, #{sTimes}, #{sPrice}, default, default, #{soCardInfoNo}, #{soProductCode}, #{soExcludeVegs}, #{soDeliveryCycle}, #{soDeliveryDate}, #{soDelayYn}, #{soRecipient}, #{soPhone}, #{soAddress}, #{soAddressEx}, #{soDeliveryRequest}, default)")
@@ -67,7 +67,7 @@ public interface SubscribeDao {
 	@Select("select count(*) from subscription where s_quit_yn = 'N'")
 	int getTotalSubscriptionListAll();
 	
-	@Select("select * from subscription where s_quit_yn = #{selectOption}")
+	@Select("select * from subscription where s_quit_yn = #{selectOption} order by card_info_no desc")
 	List<Subscription> findByQuitYnSubList(String selectOption, RowBounds rowBounds);
 	
 	@Select("select count(*) from subscription where s_quit_yn = #{selectOption}")

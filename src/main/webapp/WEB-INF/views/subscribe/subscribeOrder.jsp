@@ -296,7 +296,6 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 		const frm = document.subscribeOrderFrm;
 		
 		let sNo = sNoMaker(); // 구독번호, 고유번호로 변경x
-		console.log(sNo);
 		let pg = document.querySelector("[name=s-card]:checked").value;
 		
 		let productName = '정기구독 ' + frm.sProductName.value;
@@ -319,7 +318,6 @@ document.querySelector("#showkModal").addEventListener('click', () => {
 	    if(pg == 'kakaoPay'){
 	    	pg = 'kakaopay.TCSUBSCRIP'; // 카카오페이
 	    }
-	    console.log(pg);
 		IMP.request_pay({
 			pg: pg,
 			pay_method: "card",

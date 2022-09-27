@@ -41,10 +41,10 @@ public class RequestSubPayment {
 		
 		Gson var = new Gson();
 		String json = var.toJson(map);
-		log.debug("json = {}", json);
+		// log.debug("json = {}", json);
 		HttpEntity<String> entity = new HttpEntity<>(json, headers);
 		
-		return restTemplate.postForObject("https://api.iamport.kr/subscribe/payments/again", entity, String.class); 
+		return restTemplate.postForObject(
+				"https://api.iamport.kr/subscribe/payments/again", entity, String.class); 
 	}
-
 }
