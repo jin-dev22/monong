@@ -875,7 +875,8 @@ public class MemberController {
 	@GetMapping("/memberSubscribeList.do")
 	public void memberSubscribeList(@RequestParam(defaultValue = "1") int cPage, Authentication authentication, Model model, HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		Subscription recentSubscription = memberService.selectRecentSubById(authentication.getName()); 
+		Subscription recentSubscription = memberService.selectRecentSubById(authentication.getName());
+		model.addAttribute("recentSubscription", recentSubscription);
 		log.debug("recentSubscription={}",recentSubscription);
 		if(recentSubscription != null) {
 			String pCode = recentSubscription.getSProductCode();
@@ -885,7 +886,8 @@ public class MemberController {
 			session.setAttribute("recentSubscription", recentSubscription);
 			session.setAttribute("recentSubProduct", recentSubProduct);
 		}
-
+		
+		
 		String memberId = authentication.getName();
 		// 미송 코드 시작
 		Map<String, Object> param = new HashMap<>();
