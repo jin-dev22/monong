@@ -88,9 +88,9 @@
 	<task:annotation-driven scheduler="scheduler"/>
 	<task:scheduler id="scheduler" pool-size="10"/>
  	<task:scheduled-tasks scheduler="scheduler">
-		<!-- 테스트용 -->
-		<!-- <task:scheduled ref="subscribeController" method="payschedule" cron = "0 5 * * * *"/> -->
+		<!-- 수요일 결제 진행 -->
 		<task:scheduled ref="subscribeController" method="payschedule" cron = "0 58 * * * WED"/>
+		<!-- 금요일 배송상태 변경 -->
 		<task:scheduled ref="adminController" method="dStatusschedule" cron = "0 0 18 * * Fri"/>
 	</task:scheduled-tasks>
 	

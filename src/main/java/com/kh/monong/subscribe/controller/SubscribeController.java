@@ -129,7 +129,6 @@ public class SubscribeController {
 		if(todayDay == 3) {
 			// 현재 날짜와 결제예정일이 일치하는 구독 조회
 			List<Subscription> payLists = subscribeService.getPayList(today);
-//			log.debug("payLists = {}", payLists);
 			Map<String, Object> map = new HashMap<>();
 			if(payLists != null) {
 				String customerUid = "";
