@@ -27,7 +27,7 @@
 	method="post">
 <div id="admin-notice-week-vegs-container">
 	<div class="s-form-part-container">
-        <h2 class="s-form-part-title">제외 채소 선택</h2>
+        <h2 class="s-form-part-title">공지 채소 선택</h2>
         <span>공지할 채소 5가지를 선택해주세요</span>
         <div class="notice-vegs-cnt-info">
 	        <span class="notice-vegs-cnt"></span>
