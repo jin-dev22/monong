@@ -154,6 +154,7 @@ public class MemberServiceImpl implements MemberService {
 		List<Map<String, Object>> ordList = memberDao.selectOrderListBySeller(param);
 		log.debug("ordList={}",ordList);
 		if(!ordList.isEmpty()) {
+			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> subList = (List<Map<String, Object>>) MonongUtils.customRowBounds(offset, limit, ordList);
 			return subList;
 		}
@@ -162,8 +163,6 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override//기간별 판매자 주문내역 총 개수
 	public int getTotalOrderCntBySeller(Map<String, Object> param) {
-		int limit = (int) param.get("limit");
-		int offset = ((int)param.get("cPage") - 1) * limit;
 		return memberDao.getTotalOrderCntBySeller(param);
 	}
 	

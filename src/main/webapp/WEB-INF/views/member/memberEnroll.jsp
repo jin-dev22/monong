@@ -68,17 +68,14 @@
                         <span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span>
                         <input type="hidden" id="emailValid" value="0"/><!-- 사용불가 0, 사용가능 1 -->
                     </span>
-                    <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"
-                            disabled/><!-- 완성후 기능 살려놓기 -->
+                    <input type="button" class="enroll-info-btn" id="btn-email-sendKey" value="이메일 인증"/>
                 </span>
             </div>
             <div class="enroll-info-container">
                 <span class="enroll-info enroll-eamilKey-container">
-                    <input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required 
-                            readonly/>
-                    <input type="hidden" id="emailKeyValid" value="1"/><!-- 불일치 0, 일치 1 -->
-                    <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"
-                        disabled/>
+                    <input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required/>
+                    <input type="hidden" id="emailKeyValid" value="0"/><!-- 불일치 0, 일치 1 -->
+                    <input type="button" class="enroll-info-btn" id="btn-email-enterKey" value="확인"/>
                 </span>
             </div>
             <div class="enroll-info-container">
@@ -296,12 +293,12 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	}
 	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
+	*/
 	if(emailKeyValid === "0"){
 		e.preventDefault();
 		alert("이메일 인증코드를 확인해주세요.");
 		return;
 	}
-	*/
 });
 
 /**
@@ -459,17 +456,6 @@ document.querySelector("#address").addEventListener('click', function(){
         }
     }).open();
 });  
-/*//검색버튼?
-document.querySelector("#bnt-srch").addEventListener('click', function(){
-    new daum.Postcode({
-        oncomplete: function(data) {
-            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-            document.querySelector("#address").value = data.address;
-            document.querySelector("#address-ex").focus();
-        }
-    }).open();
-});
-*/
 
 
 //이메일 인증코드 전송
