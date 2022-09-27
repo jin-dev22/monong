@@ -88,18 +88,15 @@
 					<span class="invalid-feedback feedback-email">이미 사용중이거나 유효하지 않은 이메일형식입니다.</span> 
 					<input type="hidden" id="emailValid" value="1" /><!-- 사용불가 0, 사용가능 1 -->
 				</span> 
-				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-sendKey" value="이메일 인증" 
-							disabled /><!-- 완성후 기능 살려놓기 -->
+				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-sendKey" value="이메일 인증"/><!-- 완성후 기능 살려놓기 -->
 			</div>
 		</div>
 
 		<div class="row mb-2 col-md-13 justify-content-center">
 			<div class="col-sm-9">
-				<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required
-							readonly /><!-- 프로젝트 완성 후 readolny해제 -->
+				<input type="text" id="emailKey" placeholder="인증코드를 입력하세요." required/><!-- 프로젝트 완성 후 readolny해제 -->
 				<input type="hidden" id="emailKeyValid" value="1" /><!-- 불일치 0, 일치 1 -->
-				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-enterKey" value="확인" 
-							disabled /><!-- 프로젝트 완성 후 disabled해제 -->
+				<input type="button" class="enroll-info-btn btn btn-outline-success" id="btn-email-enterKey" value="확인"/><!-- 프로젝트 완성 후 disabled해제 -->
 			</div>
 		</div>
 
@@ -170,6 +167,9 @@
 	<div class="quit-gide" style="display:none;">판매자 회원 탈퇴는 관리자1:1 문의로 신청하시면 확인 후 탈퇴처리가 진행됩니다.</div>
 </div>
 <script>
+const idValid = document.querySelector("#idValid");
+
+
 document.querySelector("#btn-memberQuit").addEventListener('click', (e)=>{
 	const guideText = document.querySelector(".quit-gide");
 	guideText.style.display = "block";
@@ -214,12 +214,12 @@ document.memberUpdateFrm.addEventListener('submit', (e) => {
 	
 	//이메일 인증
 	/*테스트용 가입처리시 인증 불가능. 전체 사이트 완성 후 주석풀기
+	*/
 	if(emailKeyValid === "0"){
 		e.preventDefault();
 		alert("이메일 인증코드를 확인해주세요.");
 		return;
 	}
-	*/
 });
 
 /**
@@ -250,6 +250,7 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 
 	//기존 이메일을 수정했을 경우 유효성 검사를 위해 0으로 변경
 	emailValid.value = "0";
+	emailKeyValid.value = "0";
 	
 	const {value : email} = e.target;
 	console.log(email);	
@@ -263,6 +264,7 @@ const invalidEmailFeedBack = document.querySelector(".invalid-feedback.feedback-
 	//post요청 전 기존 이메일 다시 입력시 검사하지 않고 리턴 
 	if(rememberEmail === email){
 		emailValid.value = "1";
+		emailKeyValid.value = "1";
 		return;
 	}
 	
