@@ -1,4 +1,4 @@
-# monong - 파이널 프로젝트 모농모농(모두의 농산물)
+# monong - 모농모농(모두의 농산물)
 
 발표 영상
 https://youtu.be/FcsjXLHFKWA
